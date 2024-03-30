@@ -1,0 +1,27 @@
+<!-- Opcione del menu para el vendedor -->
+
+<!-- Clientes -->
+
+
+<li>
+	<a href="{% url 'cliente:listar' %}"><i class="fa fa-users"></i><span >Gestionar Clientes</span></a>
+</li>
+
+
+
+<!-- Cotizacion -->
+<li>
+	<a href="{% url 'cotizacion:listar' %}"><i class="fa fa-calculator"></i><span >Cotizacion</span></a>
+</li>
+
+ 
+<!-- Ventas -->
+ <li class="has-sub">
+	<li><a href="{% url 'venta:listar' %}"><i class="fa fa-car"></i><span >Ventas</span></a></li>
+</li>
+
+
+<!-- Inventario Carros-->
+<li>
+	<a href="{% url 'vehiculo:listar-vehiculos-inventario' %}"><i class="fa fa-car"></i><span >Inventario</span></a>
+</li>

@@ -1,0 +1,74 @@
+{% extends 'login/base_login.html' %}
+{% load staticfiles %}
+{% load extra_filters %}
+
+	{% block content %}
+	      <div class="login-cover">
+            <div class="login-cover-image"><img src="{% static 'color_admin/assets/img/login-bg/bg-6.jpg' %}" data-id="login-cover-image" alt="" /></div>
+            <div class="login-cover-bg"></div>
+        </div>
+        <!-- begin #page-container -->
+        <div id="page-container" class="fade">
+            <!-- begin login -->
+            <div class="login login-v2" data-pageload-addclass="animated flipInX">
+                <!-- begin brand -->
+                <div class="login-header">
+                    <div class="brand">
+                        <img src="{% static 'color_admin/assets/img/logo.png' %}"  alt=""  width=250"/>
+                        <!--<small>Sistema de Gestión Institucional Pública</small>-->
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-sign-in"></i>
+                    </div>
+                </div>
+                <!-- end brand -->
+                <div class="login-content">
+                    <form action="" method="post" id="formulario">
+        				<h3 style="color:#fff !important">Iniciar Sesión</h3>
+        				{% if form.non_field_errors %}
+        					<div class="alert alert-danger alert-dismissable">
+        				    	<button type="button" class="close" data-dismiss="alert">×</button>
+        				      	{% for err in form.non_field_errors %}
+        					  		{{ err }}
+        					  	{% endfor %}
+        				    </div>
+        				{% endif %}
+        				{% csrf_token %}
+        				{% for field in form %}
+        					<div class="form-group {% if field.errors %}has-error{% endif %}">
+        						<div class="controls">
+        							<div class="input-group">
+        								<span class="input-group-addon">
+        									{% if field.auto_id == "id_username" %}
+        									<i class="fa fa-user"></i>
+        									{% else %}
+        									<i class="fa fa-key"></i>
+        									{% endif %}
+        								</span>
+        						    	{{ field|addCss:' form-control' }}
+        						    </div>
+        						    <span class="help-block">
+        						    	{{ field.help_text }}
+        						        <strong>{{ field.errors }}</strong>
+        						    </span>
+        						</div>
+        					</div>
+        				{% endfor %}
+        				<p></p>
+        				<div class="form-group">
+        					<div class="controls">
+        						<input type="submit" value="Ingresar" class="btn btn-lg btn-default btn-block" />
+        					</div>
+        				</div>
+        			</form>
+        			
+                </div>
+            </div>
+            <!-- end login -->
+           
+        </div>
+        <!-- end page container -->
+        {% endblock %}
+
+
+    

@@ -1,0 +1,121 @@
+{% load staticfiles %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+</head>
+<style>
+    body{
+        font-family: "Courier New", Courier, monospace;
+    }
+     .head{
+        width: 100%;
+        text-align: center;
+    }
+    #detail{
+        width: 100%;
+     font-size: 9pt;
+     letter-spacing: 2px
+    }
+    .contenido{
+        width: 100%;
+        padding: 1px 0;
+        font-size: 8pt;
+        letter-spacing: 2px;
+        position: absolute;
+        left:40px;
+    }
+    .contenido td{
+        padding: 0.5px 0px;
+                text-align: center;
+        letter-spacing: 2px;
+        font-size: 8pt;
+    }
+    .foot table td{
+        letter-spacing: 2px;
+        font-size: 12pt;
+    }
+    .valores{
+        text-align: right;
+        padding: 0px 5px;
+       font-size: 12pt;
+        margin: 0;
+    }
+    .foot{
+        text-align: center;
+        letter-spacing: 2px;
+    }
+    h1{
+        line-height: 1px;
+        width: 700px;
+        text-align: center;
+        font-size: 12pt;
+        letter-spacing: 2px;
+    }
+    h3{
+        line-height: 2px;
+        letter-spacing: 2px;
+    }
+    .foot{
+        text-align: left;
+        letter-spacing: 2px;
+        width: 100%;
+        font-size: 7pt;
+    }
+</style>
+<script src="{% static 'color_admin/assets/plugins/jquery-1.8.2/jquery-1.8.2.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/masked-input/NumeroALetras.js' %}"></script>
+<body>
+    <br/><br/>
+    <div class="contenido">
+            <table border="0" style="font-size:12px; font-weight: bold; font-family: 'Lucida Console';top:2px;position: relative;" cellpadding="0" cellspacing="0" width="100%">
+            <tbody style="padding-top: 15px; margin: 0px; letter-spacing: 2px " >
+
+                          <tr>
+                           <td width="5%"></td> <td width="50%" style="text-align: left">  {{ beneficiario}}</td>
+                            <td style="width:40%; text-align: left; left:15px;position: relative;">{{ movimiento.monto_cheque  |floatformat:2}}</td>
+
+                          </tr>
+
+                           </tbody>
+
+        </table>
+        <table border="0" style="font-size:14px;font-weight: bold; font-family: 'Lucida Console'; margin-top: -2px;" cellpadding="0" cellspacing="0" width="100%">
+            <tbody style="padding-top: 15px; margin: 0px; letter-spacing: 2px " >
+             <tr>
+                             <td width="5%"></td> <td width="90%" style="text-align: left"> <br> <span id="cantidad_letras" style="width: 100%"></span></td>
+                            <td style="width:10%; text-align: left;"></td>
+
+                          </tr>
+
+            </tbody>
+
+        </table>
+        <br>
+        <table border="0" style="font-size:14px;font-weight: bold; font-family: 'Lucida Console'" cellpadding="0" cellspacing="0" width="100%">
+            <tbody style="padding-top: 15px; margin: 0px; letter-spacing: 2px " >
+
+                          <tr>
+                            <td width="30%"> <br>   Guayaquil, {{ movimiento.fecha_cheque | date:'Y-m-d' }}</td>
+                            <td style="width:60%; text-align: left;"></td>
+
+                          </tr>
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+    
+ </body>
+
+<script>
+    $(document).ready(function () {
+        $("#cantidad_letras").text(NumeroALetras({{movimiento.monto_cheque}}));
+                $("#cantidad_letras2").text(NumeroALetras({{movimiento.monto_cheque}}));
+        window.print();
+    });
+</script>
+</html>

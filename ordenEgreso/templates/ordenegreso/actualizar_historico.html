@@ -1,0 +1,595 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Requisición-Historico{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario
+{% endblock %}
+
+{% block content %}
+
+  <style>
+       .panel-border{border: 1px solid #ddd !important}
+       .form-ajust .form-group{margin-bottom: 0px !important}
+      input[type="text"],select,input[type="number"]
+      {
+
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    box-shadow: none;
+    font-size: 12px;
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+       }
+
+    
+
+    </style>
+    {% if mensaje %}
+    <div class="alert alert-success alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        {{ mensaje }}
+
+                    </div>
+     {% else %}
+     {% endif %}
+     <form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+            <!-- begin row -->
+          <div class="row">
+                    <!-- begin col-6 -->
+        <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Requisición</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-10">
+                            <div>
+
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                  <li role="presentation" class="active"><a href="#principales" aria-controls="principales" role="tab" data-toggle="tab">Documento</a></li>
+                </ul>
+                              
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade in active" id="principales">
+                                        <!--INICIO ORDEN PRODUCCION-->
+                                        
+                                        <div class="row">
+                                            <div class="col-md-7">
+                        <div class="panel panel-default panel-border">
+                            <div class="panel-heading">Documento</div>
+                            <div class="panel-body">
+                             
+                            <div class="col-md-4">
+                              <label for="exampleInputName2">Numero</label>
+                               {% bootstrap_field ordenegreso_form.codigo show_label=False %}
+                            </div>
+                            <div class="col-md-8">
+                              <label for="exampleInputEmail2">Fecha</label>
+                                {% bootstrap_field ordenegreso_form.fecha show_label=False %}
+                            </div>
+                            
+                            
+                              
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-md-5">
+                        <div class="panel panel-default panel-border">
+                            <div class="panel-heading">Estado</div>
+                            <div class="panel-body">
+                             
+                            <div class="form-group text-center">
+                                                                        Aprobado{% bootstrap_field ordenegreso_form.aprobada show_label=False %}
+                                                   Anulado {% bootstrap_field ordenegreso_form.anulado show_label=False %}
+
+                                                        </div>
+                            
+                              
+                            </div>
+                        </div>
+                        </div>
+                                            
+                                        </div>
+                    <div class="row">
+                                            <div class="col-md-12">
+                        <div class="panel panel-default panel-border">
+                            <div class="panel-heading">Datos Principales</div>
+                            <div class="panel-body">
+                             
+                            <div class="form-horizontal form-ajust">
+                                                                    <div class="form-group">
+                                                                         <label for="inputEmail3" class="col-sm-3 control-label">Concepto</label>
+                                                                        
+                                                                         <div class="col-sm-6">
+                                                                          {% bootstrap_field ordenegreso_form.concepto_orden_egreso show_label=False %}
+
+                                                                         </div>
+                                                                     </div>
+                                  
+                                    <div class="form-group">
+                                                                         <label for="inputEmail332" class="col-sm-3 control-label">Bodega interna</label>
+                                                                        
+                                                                         <div class="col-sm-6">
+{% bootstrap_field ordenegreso_form.bodega show_label=False %}
+                                                                         </div>
+                                                                    </div>
+                                    <div class="form-group">
+                                                                         <label for="fecha" class="col-sm-3 control-label">Fecha de compra</label>
+                                                                         <div class="col-sm-9">
+{% bootstrap_field ordenegreso_form.fecha show_label=False %}                                                                      </div>
+                                                                         
+                                                                    </div>
+                                                                        <div class="form-group">
+                                                                         <label for="fecha" class="col-sm-3 control-label">Orden Produccion</label>
+                                                                         <div class="col-sm-6">
+                                                    {% bootstrap_field ordenegreso_form.orden_produccion_codigo show_label=False %}
+                                                                    </div>
+                                                                      </div>
+                                    <div class="form-group">
+                                                                         <label for="fecha" class="col-sm-3 control-label">Comentario</label>
+                                                                         <div class="col-sm-9">
+
+                                                                           
+                                                    {% bootstrap_field ordenegreso_form.comentario show_label=False %}
+                                      
+                                                                         </div>
+                                                                         
+                                                                    </div>
+                                     
+                                    
+                            </div>
+                            
+                            </div>
+                        </div>
+                        </div>
+                       
+                                            
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                        <div class="panel panel-default panel-border">
+                            <!-- Default panel contents -->
+                            <div class="panel-heading">Productos</div>
+                            <div class="panel-body">
+                              
+                            </div>
+                          
+                            <!-- Table -->
+                            <table class="table" id="tabla">
+                              <tr>
+                            <th></th>
+                            <th>Item</th>
+                            <th>Nombre</th>
+                            
+                            <th>Med</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Subtotal</th>
+                           
+                              </tr>
+                              <tr>
+                           
+                            </td>
+                               {% if detalle %}
+                                                    {% for kit  in detalle %}
+    <tr>
+                                                    <td class="eliminar"><a class="btn btn-danger remove_fields" onclick="eliminarEgreso({{ kit.id }})">
+                                                        <i class=" glyphicon glyphicon-trash icon-white"></i>
+                                                      </a>
+                                                    </td>
+                                                    <td> 
+                                                      <input type="hidden" class="form-control" id="id_detalle{{ forloop.counter }}" name="id_detalle{{ forloop.counter }}" value="{{ kit.id }}"/>
+                                                    <input type="hidden" class="form-control" id="id_kits{{ forloop.counter }}" name="id_kits{{ forloop.counter }}" value="{{ kit.producto.producto_id }}"/>
+                                                    <input type="text" class="form-control" id="codigo_kits{{ forloop.counter }}" name="codigo_kits{{ forloop.counter }}" onfocus="mostrarProductos({{ forloop.counter }})" value="{{ kit.producto.codigo_producto }}" required="required" readonly="readonly"></td>
+                                                    <td><span  id="nombre_kits{{ forloop.counter }}" name="nombre_kits{{ forloop.counter }}">{{ kit.producto.descripcion_producto }}</span></td>
+                                                    <td><input type="text" class="form-control" id="medida_kits{{ forloop.counter }}" name="medida_kits{{ forloop.counter }}" value="{{ kit.unidad_medida }}" readonly="readonly"></td>
+                                                    <td><input type="text" class="form-control" id="cantidad_kits{{ forloop.counter }}" name="cantidad_kits{{ forloop.counter }}" onkeyup="actualizarCosto({{ forloop.counter }})" value="{{ kit.cantidad }}" required="required"></td>
+                                                    <td><input type="text" class="form-control" id="costo_kits{{ forloop.counter }}" name="costo_kits{{ forloop.counter }}" value="{{ kit.precio_compra }}" onkeyup="actualizarCosto({{ forloop.counter }})" required="required"></td>
+                                                    <td><input type="text" class="form-control" id="total_kits{{ forloop.counter }}" name="total_kits{{ forloop.counter }}" value="{{ kit.total }}" readonly="readonly"></td>
+                                                    
+                                                  </tr>
+
+                         {% endfor %}
+                         {% else %}
+                          {% endif %}
+                                <tfoot>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <th>Total:</th>
+                                                    <th> 
+
+                                                    <input type="text" class="form-control" id="total23" name="total23" value="{{ ordenegreso_form.subtotal.value }}" />
+</th>
+                                                  </tfoot>
+                            </table>
+                        </div>
+                         <p class="text-center">
+                                             <button type="button" class="btn btn-primary btn-lg" id="add" >Agregar</button>
+
+                                                                                    
+                                        </p>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                        
+                                        
+                                        <!--FIN ORDEN PRODUCCION-->
+                                    </div>
+                                   
+                                   
+                                </div>
+                              
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="row">
+                             
+                  <!--  <p class="text-center">
+                    <a type="button" class="btn btn-success btn-block" href="/ordenEgreso/OrdenEgreso/nuevo">Agregar <i class=" glyphicon glyphicon-plus icon-white"></i></a>
+                    </p>
+                    <p class="text-center">
+                    <a type="button" class="btn btn-danger btn-block" href="/ordenEgreso/{{ ordenegreso_form.id.value }}/eliminar/">Eliminar <i class=" glyphicon glyphicon-trash icon-white"></i></a>
+                    </p>
+                   
+                    <p class="text-center">
+                    <button type="button" class="btn btn-default btn-block">Imprimir <i class=" glyphicon glyphicon-print icon-white"></i></button>
+                    </p>
+                              -->
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div
+    
+   <p class="text-center">
+
+                                    <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+                                            <a class="default btn btn-link" href="/ordenEgreso/OrdenEgresoHistorico/"><button type="button" class="btn btn-primary btn-lg">  Regresar</button></a>
+                                        </p>
+<!--  <p class="text-right m-b-0">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-cog"></i> Guardar</button>
+                                </p>
+                                <a class="default btn btn-link" href="/inventario/producto">
+      <i class="fa fa-times"></i> Regresar
+    </a> -->
+    {% if detalle %}
+<input type="hidden" name="columnas_receta" id="columnas_receta" value="{{ detalle|length }}" />
+{% else %}
+<input type="hidden" name="columnas_receta" id="columnas_receta" value="1" />
+
+{% endif %}
+<input type="hidden" name="id_fila_cambiar" id="id_fila_cambiar" value="" />
+
+                            </form>
+                          <div class="modal fade" id="modal-dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                             <div class="panel-body">
+                                <div class="table-responsive">
+                                                    <table class="table table-striped table-bordered" id="tabla2">
+                                                        <thead>
+                                                            <tr>
+                                                            <td></td>
+                                                                <th>Codigo</th>
+                                                                <th>Nombre</th>
+                                                                
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for producto  in productos %}
+                                                            <tr>
+                                                                <td  onclick="cargarCodigoProducto('{{ producto.producto_id }}','{{ producto.codigo_producto }}','{{ producto.descripcion_producto }}','{{ producto.medida }}','{{ producto.costo }}','{{ producto.unidad }}')"><a class="btn btn-danger remove_fields">
+                                                        <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                                      </a></td><td>{{ producto.codigo_producto }}</td>
+                                                                <td>{{ producto.descripcion_producto }}</td>
+                                                            </tr >
+                                                        {% endfor %} 
+                                                        
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <button type="button" onclick="cerrar()" class="btn btn-danger btn-block">Cerrar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+                                            
+
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+<script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/data-table.js' %}"></script> 
+
+<!-- ================== END PAGE LEVEL JS ================== -->
+<script>
+  $(document).ready(function() {
+    // App.init();
+    $('#tabla2').DataTable();
+
+    //FormWizardValidation.init();
+  });
+</script>
+<script>
+    $(document).ready(function() {
+      $('#id_fecha').attr('readonly','readonly');
+      $('#id_bodega').attr('readonly','readonly');
+      $('#id_bodega option[value=1]').attr('selected','selected');
+      $('#id_nro_compra').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        
+    });
+
+</script>
+<script>
+    $(document).ready(function() {
+
+      
+      
+        $("#id_aprobada").change(function() {
+         var aprobado=$("#id_aprobada").val();
+      cambiarestado(aprobado,'apr');
+         });
+        
+         $("#id_anulado").change(function(){
+          var anulado=$("#id_anulado").val();
+     cambiarestado(anulado,'anu');
+         });
+        
+        
+
+      $('#id_codigo_producto').each(function(){
+  $(this).attr('readonly','readonly');
+});
+       $('#id_created_by').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_updated_by').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_created_at').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_updated_at').each(function(){
+  $(this).attr('readonly','readonly');
+});
+      var codigo_producto=$('#id_codigo_producto').val();
+      //alert(codigo_producto);
+            var num_recetas=$('#columnas_receta').val();
+
+      for (i = 1; i <= num_recetas; i++) {
+
+        if ($('#total_kits'+i).length){
+            var cantidad=$('#cantidad_kits'+i).val();
+            var costo=$('#costo_kits'+i).val();
+            var total=$('#total_kits'+i).val();
+var total23=$('#total23').val();
+            $('#cantidad_kits'+i).val(cantidad.toString().replace(/\,/g,'.'));
+            $('#costo_kits'+i).val(costo.toString().replace(/\,/g,'.'));
+
+            $('#total_kits'+i).val(total.toString().replace(/\,/g,'.'));
+           $('#total23').val(total23.toString().replace(/\,/g,'.'));
+
+
+          }
+        
+         
+      }
+ actualizarTotal();
+      if(codigo_producto==""){
+         $.ajax({
+                url: "/config/obtenerSecuencial/", // the endpoint
+                type : "POST", // http method
+                data : { id : 'producto','csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+                success:function(data){
+                 $('#id_codigo_producto').val(data);
+                  
+                },
+                error: function(){
+                 
+                },
+              });
+      }
+      
+        
+    });
+    
+    function cambiarestado(data,estado){
+      if (estado=='anu') {
+          if (data=='2') {
+               $('#id_aprobada').select2().select2("val", "1");
+            $("#id_aprobada").val(1);
+
+               //code
+          }else{
+               
+               
+          }
+          //code
+      }else{
+          if (data=='2') {
+            $("#id_anulado").val(1);
+               $('#id_anulado').select2().select2("val", "1");
+
+               //code
+          }else{
+               
+               
+          }
+          
+      }
+    }
+    
+    function mostrarProductos(data){
+       $('#id_fila_cambiar').val(data);
+       $(".modal").modal('toggle');
+    }
+function cerrar(){
+       $(".modal").modal('toggle');
+    }
+    function cargarCodigoProducto(id,codigo,descripcion,medida,costo,unidad){
+      var fila=$('#id_fila_cambiar').val();
+         $('#id_kits'+fila).val(id);
+         costo = costo.toString().replace(/\,/g,'.'); 
+         //alert(costo);
+
+        $('#codigo_kits'+fila).val(codigo);
+         $('#nombre_kits'+fila).append(descripcion);
+           $('#medida_kits'+fila).val(unidad);
+         $('#costo_kits'+fila).val(costo);
+          $('#total_kits'+fila).val('');
+          $('#cantidad_kits'+fila).val('');
+cerrar();
+
+    }
+  function actualizarCosto(data){
+      var cantidad=$('#cantidad_kits'+data).val();
+      var costo= $('#costo_kits'+data).val();
+     var medida= $('#medida_kits'+data).val();
+
+
+       var valor=parseFloat(parseFloat(cantidad)*parseFloat(costo)).toFixed(2);
+
+      //  alert(data);
+      // alert(costo);
+      // alert(valor);
+      $('#total_kits'+data).val(valor);
+      actualizarTotal();
+    }
+    function actualizarTotal(){
+      var num_recetas=$('#columnas_receta').val();
+      var total=0;
+      var cantidad=0;
+      var i;
+      //alert(' BNUM RECETS'+num_recetas);
+      for (i = 1; i <= num_recetas; i++) {
+
+        if ($('#total_kits'+i).length){
+            cantidad=$('#total_kits'+i).val();
+            total=parseFloat(total)+ parseFloat(cantidad);
+          }
+
+
+      }
+      $('#total23').val(total.toFixed(3));
+
+       $('#total_23').val(total.toString().replace(/\,/g,'.'));
+    }
+
+</script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        /**
+         * Funcion para añadir una nueva columna en la tabla
+         */
+          $("#add").click(function(){
+            // Obtenemos el numero de filas (td) que tiene la primera columna
+            // (tr) del id "tabla"
+            var num_recetas=$('#columnas_receta').val();
+            num_recetas=parseInt(num_recetas)+1;
+
+            var tds=$("#tabla tr:first td").length;
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla tr").length;
+            var nuevaFila='<tr><td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+                nuevaFila+='<td><input type="hidden" class="form-control" id="id_kits'+num_recetas+'" name="id_kits'+num_recetas+'"> ';
+                nuevaFila+='<input type="text" required="required" class="form-control" id="codigo_kits'+num_recetas+'" name="codigo_kits'+num_recetas+'" onfocus="mostrarProductos('+num_recetas+')" readonly="readonly"></td>';
+                 nuevaFila+='<td><span  id="nombre_kits'+num_recetas+'" name="nombre_kits'+num_recetas+'" ></span></td>';
+                   nuevaFila+='<td><input type="text" class="form-control" id="medida_kits'+num_recetas+'" name="medida_kits'+num_recetas+'" readonly="readonly"></td>';
+                nuevaFila+='<td><input type="text" class="form-control" required="required" id="cantidad_kits'+num_recetas+'" name="cantidad_kits'+num_recetas+'" onkeyup="actualizarCosto('+num_recetas+')"></td>';
+              
+                nuevaFila+='<td><input type="text" class="form-control" id="costo_kits'+num_recetas+'" name="costo_kits'+num_recetas+'" onkeyup="actualizarCosto('+num_recetas+')" required="required"></td>';
+                nuevaFila+='<td><input type="text" class="form-control" id="total_kits'+num_recetas+'" name="total_kits'+num_recetas+'" readonly="readonly"></td>';
+                nuevaFila+='</tr>';
+
+              $('#columnas_receta').val(num_recetas);
+            // for(var i=0;i<tds;i++){
+            //     // añadimos las columnas
+            //     nuevaFila+="<td>columna "+(i+1)+" Añadida con jquery</td>";
+            // }
+            // // Añadimos una columna con el numero total de columnas.
+            // // Añadimos uno al total, ya que cuando cargamos los valores para la
+            // // columna, todavia no esta añadida
+            // nuevaFila+="<td>"+(trs+1)+" columnas";
+            // nuevaFila+="</tr>";
+            $("#tabla").append(nuevaFila);
+        });
+ 
+        /**
+         * Funcion para eliminar la ultima columna de la tabla.
+         * Si unicamente queda una columna, esta no sera eliminada
+         */
+        $("#del").click(function(){
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla tr").length;
+            if(trs>1)
+            {
+                // Eliminamos la ultima columna
+                $("#tabla tr:last").remove();
+            }
+             actualizarTotal();
+        });
+
+
+        $(document).on("click",".eliminar",function(){
+            var parent = $(this).parent();
+  $(parent).remove();
+   actualizarTotal();
+
+          });
+
+
+
+    });
+  function eliminarEgreso(id){
+      
+          $.ajax({
+                url: "/config/eliminarEgreso/", // the endpoint
+                type : "POST", // http method
+                data : { id : id,'csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+                success:function(data){
+                  alert("Se elimino el item de la Orden de Egreso satisfactoriamente")
+                },
+                error: function(){
+                 
+                },
+              });
+    }
+    </script>
+{% endblock %}                                                                                                                                                                                                                                                                

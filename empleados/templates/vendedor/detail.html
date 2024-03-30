@@ -1,0 +1,14 @@
+{% extends "login/base-detail.html" %}
+{% load extra_filters %}
+
+{% block breadcrumbs %}
+    {{ block.super }} » <a href="{% url "empleado-list" %}">{{verbose_name}}</a> » Detalle
+{% endblock %}
+
+{% block back-list %}
+{% url "producto-list" %}
+{% endblock %}
+
+{% block detail-url-edit %}
+{% url "producto-update" object.id %}
+{% endblock %}

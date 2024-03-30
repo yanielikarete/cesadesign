@@ -1,0 +1,164 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>ORDENES DE COMPRA</title>
+</head>
+<style>
+    
+    .head{
+        margin-top: 1px ;
+        width: 100%;
+        text-align: center;
+        font-size: 9pt
+    }
+    
+    #detail{
+        width: 100%;
+     font-size: 9pt
+    }
+    
+    .contenido{
+        width: 100%;
+        padding: 2px 0;
+        font-size: 9pt;
+    }
+    
+    .contenido td{
+        padding: 0px 0px;
+                text-align: center;
+
+        font-size: 8pt;
+    }
+    .foot table td{
+
+        font-size: 8pt;
+    }
+    .valores{
+        text-align: right;
+        padding: 1px 5px;
+       font-size: 9pt;
+    }
+    
+    .foot{
+        text-align: center;
+    }
+    h1{
+        line-height: 2px;
+    }
+    h3{
+        line-height: 2px;
+    }
+    @page {
+        size: 21.5cm 14cm;
+        margin: 1cm;
+        
+    }
+    
+    
+</style>
+<body>
+    <div class="head">
+        <h1>MUEDIRSA</h1>
+        <h3>ORDENES DE COMPRA - INGRESOS POR COMPRA NO.{{orden.nro_compra}}
+        <br /></h3><h3 style="text-align:right; font-size:10px">
+                FECHA{{orden.fecha |date:'d-m-Y H:i'}}</h3>
+
+    </div>
+
+    <div id="detail" >
+       
+        <table width="250" style="font-size:10px">
+             <tr>
+                <td width="80">
+                    <b>ENTIDAD:</b>
+                </td>
+                <td width="170">
+                    <span>{{orden.proveedor}}</span>
+                </td>
+            </tr>
+
+            <tr>
+                <td >
+                    <b>CONCEPTO:</b>
+                </td>
+                <td >
+                    <span>{{orden.notas}}</span>
+                </td>
+            </tr>
+           
+            <tr>
+                <td >
+                    <b>BOD INTERNA:</b>
+                </td>
+                <td >
+                    <span>{{orden.bodega}}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="contenido">
+        <table border="1" >
+            <thead>
+                <tr>
+                    <th>ITEMS</th><th width="250px"> DESCRIPCION</th><th>UNIDADES</th><th>COSTO</th><th>SUBTOTAL</th>
+                </tr><br>
+            </thead>
+            </table>
+            <table border="0" style="font-size:10px">
+                <br>
+            <tbody>
+                 {% if detalle %}
+                                                    {% for kit  in detalle %}
+    <tr>
+                                                  
+                                                    <td>  {{ kit.producto.codigo_producto }}</td>
+                                                    <td  width="250px">{{ kit.producto.descripcion_producto }}</td>
+                                                    <td class="valores">{{ kit.cantidad |floatformat:2 }} {{ kit.unidad_medida }}</td>
+                                                    <td class="valores">{{ kit.precio_compra |floatformat:2 }}</td>
+                                                    <td class="valores">{{ kit.total |floatformat:2}}</td>
+                                                    
+                                                  </tr>
+
+                         {% endfor %}
+                         {% else %}
+                          {% endif %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" ></td><td><b>SUBTOTAL</b></td><td class="valores">{{orden.subtotal |floatformat:2}}</td>
+                </tr>
+                <tr>
+                    <td colspan="3" ></td><td><b>IVA</b></td><td class="valores">{{orden.iva |floatformat:2}}</td>
+                </tr>
+                <tr>
+                    <td colspan="3" ></td><td><b>TOTAL</b></td ><td class="valores">{{orden.total |floatformat:2}}</td>
+                </tr>
+            </tfoot>
+        </table>
+        
+    </div>
+    <div class="foot">
+        <br><br>
+        <table style="font-size:10px">
+            <tr>
+                    <td>ELABORADO POR</td><td>REVISADO POR</td><td>APROBADO POR</td>
+                </tr>
+                 <tr>
+                    <td>&nbsp;</td><td> &nbsp;</td><td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>___________________</td><td> ___________________</td><td>___________________</td>
+                </tr>
+                <tr>
+                    <td>{{orden.created_by}}</td><td>Jefe de Produccion </td><td>Gerente de Produccion</td>
+                </tr>
+            </tbody>
+            
+        </table>
+    </div>
+   
+   
+</body>
+</html>

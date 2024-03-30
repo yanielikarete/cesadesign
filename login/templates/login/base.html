@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xml:lang="es" lang="es">
+    <head>
+        {% block stylesheets %}
+        {% endblock %}
+        {% include "login/base-head.html" %}
+    </head>
+    <body>
+        <!-- header -->
+        <header>
+            {% include "login/menu_old.html" %}
+        </header>
+        <!-- end header -->
+        <!-- content -->
+        <div class="main">
+            {% if user.is_authenticated %}
+            <div class="main-header">
+                <div class="container">
+                    {% if user.docente.foto %}
+						<img class="avatar" style="float: left; margin-left: .75em; margin-top:0.375em;border: 1px solid #E6E6E6;border-radius: 50%;" width="41px" height="41px" src="{{ user.docente.foto.url }}" />
+					{% else %}
+                        <img class="avatar" src="http://explaintoon.co/images/userIcon.png" style="float: left; margin-left: .75em; margin-top:0.375em" width="40px" height="40px">
+					{% endif %}
+                    {% csrf_token %}
+                    <span class="avatar-name">{{user.first_name}} {{user.last_name}}</span>
+			<select name="empresa" id="empresa_session" class="text-field form-control" style="float: right;margin: 9px;"><option value="0">Seleccione</option>
+ 			{% for e in EMPRESASDB %}
+                    		<option value="{{ e.empresa_id }}">{{ e.nombre_empresa }}</option>
+
+                  	 {% endfor %}
+			</select>
+                </div>
+            </div>
+            {% endif %}
+            <div class="container">
+                <div class="page-content">
+                    <div class="main-content">
+                    <div class="page-head">
+                        {% block content-title %}
+                        {% endblock %}
+                    </div>
+                    {% block content %}
+                    {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end content-->
+
+        <!--ajax loading-->
+        <div class="loading-ajax"><i class="fa fa-refresh fa-spin"></i></div>
+        <!--end ajax-->
+
+        {% include "login/base-footer.html" %}
+        {% block javascript %}
+        {% endblock %}
+    </body>
+</html>

@@ -1,0 +1,144 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>ORDEN DE INGRESO - MUEDIRSA</title>
+</head>
+<style>
+    
+    .head{
+        width: 100%;
+        text-align: center;
+        
+    }
+    
+    #detail{
+        width: 100%;
+     
+    }
+    
+    .contenido{
+        width: 100%;
+        padding: 2px 0;
+        
+    }
+    
+    .contenido td{
+        text-align: right;
+        padding: 3px 5px
+    }
+    
+    .foot{
+        text-align: center;
+    }
+    @page {
+        /*size: a4 landscape;*/
+        size: 21.5cm 14cm;
+        margin: 1cm;
+        
+    }
+    
+    
+</style>
+<body>
+    <div class="head">
+        <h1>MUEDIRSA</h1>
+        <h3>ORDEN DE INGRESO - {{orden.notas}}</h3>
+    </div>
+    <div id="detail" >
+       
+        <table width="250">
+             <tr>
+                <td width="80">
+                    <b>ORDEN:</b>
+                </td>
+                <td width="170">
+                    <span>{{orden.codigo}}</span>
+                </td>
+            </tr>
+              <tr>
+                <td>
+                    <b>FECHA:</b>
+                </td>
+                <td>
+                    <span>{{orden.fecha}}</span>
+                </td>
+            </tr>
+         
+            <tr>
+                <td >
+                    <b>CONCEPTO:</b>
+                </td>
+                <td >
+                    <span>{{orden.concepto_orden_ingreso}}</span>
+                </td>
+            </tr>
+        
+            <tr>
+                <td >
+                    <b>BOD INTERNA:</b>
+                </td>
+                <td >
+                    <span>{{orden.bodega}}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="contenido">
+        <br>
+        <br>
+        <table border="1">
+            <thead>
+                <tr>
+                   <th>AREAS</th><th>OP</th> <th>ITEMS</th><th> DESCRIPCION</th><th>UNIDADES</th>
+            </thead>
+            <tbody>
+                 {% if detalle %}
+                                                    {% for kit  in detalle %}
+    <tr>
+         <td>  {{ kit.areas.descripcion }}</td>
+                                                   <td>
+                                                    {% if kit.op %}
+                                                    {{ kit.orden_produccion_receta.suborden_produccion.orden_produccion.tipo }}-{{ kit.orden_produccion_receta.suborden_produccion.orden_produccion.codigo }}
+                                                   {% endif %}</td>
+                                                  
+                                                    <td>  {{ kit.producto.codigo_producto }}</td>
+                                                    <td>{{ kit.producto.descripcion_producto }}</td>
+                                                    <td>{{ kit.cantidad }} {{ kit.unidad_medida }}</td>
+                                                    
+                                                    
+                                                  </tr>
+
+                         {% endfor %}
+                         {% else %}
+                          {% endif %}
+            </tbody>
+            
+        </table>
+        
+    </div>
+    <div class="foot">
+        <br><br><br>
+        <table>
+            <tr>
+                    <td>ELABORADO POR</td><td>REVISADO POR</td><td>APROBADO POR</td>
+                </tr>
+                 <tr>
+                    <td>&nbsp;</td><td> &nbsp;</td><td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>___________________</td><td> ___________________</td><td>___________________</td>
+                </tr>
+                <tr>
+                    <td>{{orden.created_by}}</td><td> FIRMA 2</td><td>FIRMA 3</td>
+                </tr>
+            </tbody>
+            
+        </table>
+    </div>
+   
+   
+</body>
+</html>
+

@@ -1,0 +1,23 @@
+{% extends 'login/base-reporte.html' %}
+{% load extra_filters %}
+
+
+{% block page-size %}{{ pagesize }}{% endblock %}
+
+{% block page-top %}{{ header_height }}{% endblock %}
+
+{% block header-height %}{{ header_height }}{% endblock %}
+
+{% block footer-height %}{{ footer_height }}{% endblock %}
+
+{% block header-content %}
+<div>{{ reporte.header_contenido|safe }}</div>
+{% endblock %}
+
+{% block content %}
+<div>{{ reporte.contenido|safe }}</div>
+{% endblock %}
+
+{% block footer-content %}
+<div>{{ reporte.footer_contenido|safe }}</div>
+{% endblock %}

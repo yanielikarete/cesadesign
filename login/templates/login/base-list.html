@@ -1,0 +1,81 @@
+{% extends "login/base_nuevo.html" %}
+{% load static from staticfiles %}
+{% load extra_filters %}
+{% load render_table from django_tables2 %}
+
+{% block content-title %}
+    <div class="title clearfix">
+        <h1>
+            Mis {% block list-title %}{{verbose_name_plural}}{% endblock %}
+            <div class="pull-right print-no">
+               
+                    {% block list-add %}{% endblock %}
+            </div>
+        </h1>
+    </div>
+{% endblock %}
+{% block content %}
+    <div class="panel-list">
+                <div class="clearfix action-list">
+                    <div class="pull-right">
+                        {% block extra-actions %}
+                        {% endblock %}
+                        {% include "login/table-header.html" %}
+                    </div>
+                </div>
+                {% if messages %}
+                    {% for message in messages %}
+                    <br>
+                    <div class="alert alert-{% if message.tags == "error" %}danger{% else %}{{message.tags}}{% endif %} alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+             
+
+                <form action="." method="get" class="nav collapse" id="form-filtro">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                {% block filter-table %}
+                                    {% for field in filter.form %}
+                                        <div class="col-md-2 form-group padding-5">
+                                            <label>{{ field.label }}</label>
+                                            <div>
+                                            {{ field|addCss:'text-field form-control' }}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endblock %}
+                            </tr>
+                            <tr>
+                                <td>
+                                    {% if filter_num > 0 %}
+                                    <a href="?" class="btn btn-danger pull-right">Cancelar Filtro</a>
+                                    {% else %}
+                                    <button type="button" class="btn btn-danger pull-right dropdown-toggle" data-toggle="collapse" href="#form-filtro">
+                                        Cancelar
+                                    </button>
+                                    {% endif %}
+                                    <button type="submit" style="margin-right: 10px;" class="btn btn-success pull-right">Aplicar Filtro</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+                {% if entities %}
+                    {% block list-table %}
+                        {% render_table table %}
+                    {% endblock %}
+                {% else %}
+                    <br>
+                    <div class="well text-center">
+                        <h4>
+                        Lista de {{verbose_name_plural}} vacía.
+                        </h4>
+                    </div>
+                {% endif %}
+            </div>
+    </div>
+{% endblock %}

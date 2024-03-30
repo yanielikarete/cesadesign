@@ -1,0 +1,616 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block css %}
+    {{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+     <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+{% block section_title %} Editar Clientes {% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+    <style>
+        .panel-border {
+            border: 1px solid #ddd !important;
+        }
+
+        .form-group {
+            margin-bottom: 0px !important;
+        }
+    </style>
+    <div class="row">
+        <!-- begin col-6 -->
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <form class="form-horizontal" id="formulario" method="post" data-validate="parsley">
+                    {% csrf_token %}
+                    <ul class="nav nav-tabs nav-tabs-inverse">
+                        <li class="active">
+                            <a data-toggle="tab" href="#datos-generales" aria-controls="datos-generales" role="tab">Datos Principales</a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#datos-retenciones" aria-controls="datos-retenciones" role="tab">Retenciones</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" id="datos-generales" class="tab-pane fade in active">
+                            <div class="panel-heading">
+                                <div class="panel panel-inverse">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">
+                                            <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                                               data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                                <i class="fa fa-plus-circle pull-right"></i>
+                                                Datos Principales
+                                            </a>
+                                        </h3>
+                                    </div>
+                                    <div id="collapseOne" aria-expanded="true" id="collapseOne"
+                                         class="panel-collapse collapse in">
+                                         <br>
+                                            <div class="panel panel-default panel-border">
+                                                <div class="panel-heading">Id del Registro</div>
+                                                <div class="panel-body">
+
+                                                    <div class="col-md-4">
+                                                      <label for="codigo_cliente">C&oacute;digo</label>
+                                                        <input class="form-control" type="text" name="codigo_cliente" value="{{ clientes.codigo_cliente }}" required>
+
+                                                   </div>
+                                                    <div class="col-md-4">
+                                                      <label for="nommbre">Nombre</label>
+                                                         <input class="form-control" type="text" name="nombre_cliente" value="{{ clientes.nombre_cliente }}" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <div class="panel-body panel-border">
+                                            <div class="form-group">
+                                                 <label class="col-sm-1 control-label"
+                                                       for="apellido">Apellido</label>
+                                                 <div class="col-sm-4">
+                                                    <input class="form-control" type="text" name="apellido" value="{{ clientes.apellido }}" required>
+                                                </div>
+
+                                                <label class="col-sm-2 control-label" for="razon_social">Raz&oacute;n Social</label>
+                                                <div class="col-sm-4">
+                                                    <input class="form-control" type="text" name="razon_social" value="{{ clientes.razon_social }}" required>
+                                                </div>
+
+                                            </div>
+                                             <div class="form-group">
+                                                 <label class="col-sm-1 control-label"
+                                                       for="fecha_emision">Fecha de Emisi&oacute;n</label>
+                                                 <div class="col-sm-4">
+                                                    <input id="fecha_hoy" class="form-control" type="text" name="fecha_emision" value="{{ clientes.fecha_emision }}" required>
+                                                </div>
+                                                <label class="col-sm-2 control-label" for="cuenta_contable_venta">Cuenta Contable</label>
+                                                <div class="col-sm-4">
+                                                    <select class="form-control" name="cuenta_contable_venta" required>
+                                                        <option value="" selected>Seleccione una cuenta
+                                                        </option>
+                                                        {% for cuenta_contable_venta in cuenta_contable_ventas %}
+                                                            <option value="{{ cuenta_contable_venta.plan_id }}">{{ cuenta_contable_venta.nombre_plan }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                          <div class="form-group">
+                                                <label class="col-sm-1 control-label"
+                                                       for="tipo_persona">Tipo persona</label>
+                                                 <div class="col-sm-4">
+                                                    <select class="form-control" name="tipo_persona" required>
+                                                        <option value="" selected>Seleccione tipo</option>
+                                                        <option value="persona natural">Persona Natrual</option>
+                                                        <option value="persona juridica">Persona Juridica</option>
+                                                    </select>
+                                                </div>
+
+                                                <label class="col-sm-2 control-label" for="tipo_cliente">Tipo Cliente</label>
+                                                <div class="col-sm-4">
+                                                    <select class="form-control" name="tipo_cliente" required>
+                                                        <option value="" selected>Seleccione Cliente</option>
+                                                        <option value="varios">Varios</option>
+                                                        <option value="administrativo">Administrativo</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                          <div class="form-group">
+                                                <label class="col-sm-1 control-label" for="ruc">R.U.C</label>
+                                                    <div class="col-sm-4">
+                                                        <input class="form-control" type="text" name="ruc" value="{{ clientes.ruc }}">
+                                                    </div>
+                                                <label class="col-sm-2 control-label"
+                                                       for="cedula">C.Identidad</label>
+                                                 <div class="col-sm-4">
+                                                    <input class="form-control" type="text" name="cedula" required value="{{ clientes.cedula }}">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                 <label class="col-sm-1 control-label"
+                                                       for="telefono1">T&eacute;lefonos</label>
+                                                 <div class="col-sm-4">
+                                                    <input class="form-control" type="text" name="telefono1" value="{{ clientes.telefono1 }}" required>
+                                                </div>
+
+                                                <label class="col-sm-2 control-label" for="direccion1">Domicilio</label>
+                                                <div class="col-sm-4">
+                                                    <input class="form-control" type="text" name="direccion1" value="{{ clientes.direccion1 }}">
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                 <label class="col-sm-1 control-label" for="cuenta_cobrar">Cuenta Cobrar</label>
+                                                <div class="col-sm-4">
+                                                    <select class="form-control" name="cuenta_cobrar" required>
+                                                        <option value="" selected>Seleccione una cuenta
+                                                        </option>
+                                                        {% for cuenta_cobrar in cuenta_cobrars %}
+                                                            <option value="{{ cuenta_cobrar.plan_id }}">{{ cuenta_cobrar.nombre_plan }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <label class="col-sm-2 control-label"
+                                                       for="vendedor">Vendedor</label>
+                                                 <div class="col-sm-4">
+                                                    <select class="form-control" name="vendedor" required>
+                                                        <option value="" selected>Seleccione vendedor</option>
+                                                        {% for vendedor in vendedores %}
+                                                            <option value="{{ vendedor.id }}">{{ vendedor.nombre }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group">
+                                                 <label class="col-sm-1 control-label"
+                                                       for="email1">Email</label>
+                                                 <div class="col-sm-4">
+                                                    <input class="form-control" type="text" name="email1"  value="{{ clientes.email1 }}" required>
+                                                </div>
+
+                                                <label class="col-sm-2 control-label" for="fax">Fax</label>
+                                                <div class="col-sm-4">
+                                                    <input class="form-control" type="text" name="fax" value="{{ clientes.fax }}">
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                 <label class="col-sm-1 control-label"
+                                                       for="serie">Series</label>
+                                                 <div class="col-sm-4">
+                                                    <input class="form-control" type="text" name="serie" value="{{ clientes.serie }}" required>
+                                                </div>
+
+                                                <label class="col-sm-2 control-label" for="dias_credito">D&iacute;as Credito</label>
+                                                <div class="col-sm-4">
+                                                    <input class="form-control" type="text" name="dias_credito" value="{{ clientes.dias_credito }}">
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-1 control-label" for="pais">Pais</label>
+                                                <div class="col-sm-4">
+                                                    <select class="form-control" name="pais" required>
+                                                        <option value="" selected>Seleccione una pais
+                                                        </option>
+                                                        {% for pais in paises %}
+                                                            <option value="{{ pais.id }}">{{ pais.nombre }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+
+                                                <label class="col-sm-2 control-label" for="provincia">Provincia</label>
+                                                <div class="col-sm-4">
+                                                    <select class="form-control" name="provincia" required>
+                                                        <option value="" selected>Seleccione una provincia
+                                                        </option>
+                                                        {% for provincia in provincias %}
+                                                            <option value="{{ provincia.id }}">{{ provincia.nombre }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-1 control-label"
+                                                       for="ciudad">Ciudad</label>
+                                                <div class="col-sm-4">
+                                                    <select class="form-control" name="ciudad" required>
+                                                        <option value="" selected>Seleccione una ciudad</option>
+                                                        {% for ciudad in ciudades %}
+                                                            <option value="{{ ciudad.id }}">{{ ciudad.nombre }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+
+                                                <label class="col-sm-2 control-label"
+                                                       for="comentario">Comentarios</label>
+                                                 <div class="col-sm-4">
+                                                    <input class="form-control" type="text" name="comentario" value="{{ clientes.comentario }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div role="tabpanel" id="datos-retenciones" class="tab-pane fade">
+                            <div class="row">
+                                <div class="table-responsive">
+                                <table class="table table-striped" id="tabla-retencion">
+                                    <thead style="background-color: #ccd0d4">
+                                    <tr>
+                                        <th>Acción</th>
+                                        <th>Código</th>
+                                        <th>Concepto</th>
+                                        <th>Cuenta Contable</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                                 <button style="margin-left: 1%;" type="button" class="btn btn-inverse" data-toggle="modal"
+                                        data-target="#modal-retencion-fuente">
+                                    <i class="fa fa-plus-circle"></i>
+                                    Retención fuente
+                                </button>
+                                <button style="margin-left: 1%;" type="button" class="btn btn-inverse" data-toggle="modal"
+                                        data-target="#modal-retencion-iva">
+                                    <i class="fa fa-plus-circle"></i>
+                                    Retención IVA
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-inverse"><i class="fa fa-save"></i> Guardar </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+                     <!-- Modal Retencion fuente-->
+    <div class="modal fade bs-example-modal-lg" id="modal-retencion-fuente">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Retención en la fuente</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-retencion-fuente">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Porcentaje</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for retencion_fuente  in retenciones_fuente %}
+                                <tr>
+                                    <td>{{ retencion_fuente.codigo }}</td>
+                                    <td>{{ retencion_fuente.descripcion }}</td>
+                                    <td>{{ retencion_fuente.porcentaje }}</td>
+                                    <td onclick="cargar_retencion('{{ retencion_fuente.id }}','{{ retencion_fuente.codigo }}','{{ retencion_fuente.descripcion }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Retencion iva-->
+    <div class="modal fade bs-example-modal-lg" id="modal-retencion-iva">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Retención en IVA</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-retencion-iva">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Porcentaje</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for retencion_iva  in retenciones_iva %}
+                                <tr>
+                                    <td>{{ retencion_iva.codigo }}</td>
+                                    <td>{{ retencion_iva.descripcion }}</td>
+                                    <td>{{ retencion_iva.porcentaje }}</td>
+                                    <td onclick="cargar_retencion_iva('{{ retencion_iva.id }}','{{ retencion_iva.codigo }}','{{ retencion_iva.descripcion }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+      <!-- Modal Plan Cuenta-->
+    <div class="modal fade bs-example-modal-lg" id="modal-plan-cuenta">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Plan de cuenta</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-plan-cuenta">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Acción</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for cuenta  in cuenta_cobrars %}
+                                <tr>
+                                    <td>{{ cuenta.codigo_plan }}</td>
+                                    <td>{{ cuenta.nombre_plan }}</td>
+                                    <td onclick="cargar_plan_cuenta('{{ cuenta.plan_id }}','{{ cuenta.nombre_plan }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/data-table.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/parsley/src/parsley.js' %}"></script>
+
+
+    <script>
+      $('#fecha_emision').datepicker({todayHighlight: true, autoclose: true});
+        $('#fecha_emision').val(getFechaHoy());
+        $('#fecha_entrega').datepicker({todayHighlight: true, autoclose: true});
+        $('#fecha_entrega').val(getFechaHoy());
+        $('input[name="retencion-fecha-emision"]').datepicker({todayHighlight: true, autoclose: true});
+        $('input[name="retencion-fecha-emision"]').val(getFechaHoy());
+        $('#fecha_hoy').datepicker({todayHighlight: true, autoclose: true});
+        $('#fecha_hoy').val(getFechaHoy());
+
+        function getFechaHoy() {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear();
+
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+            today = dd + '/' + mm + '/' + yyyy;
+            return today;
+        }
+          $(document).ready(function () {
+            $('#tabla-retencion-fuente').DataTable();
+            $('#tabla-retencion-iva').DataTable();
+            $('#tabla-plan-cuenta').DataTable();
+        });
+
+         $("select[name='ciudad']").val("{{ clientes.ciudad_id }}");
+
+         $("select[name='provincia']").val("{{ clientes.provincia_id }}");
+
+         $("select[name='pais']").val("{{ clientes.pais_id }}");
+
+         $("select[name='cuenta_contable_compra']").val("{{ clientes.cuenta_contable_compra_id }}");
+
+         $("select[name='tipo_persona']").val("{{ clientes.tipo_persona }}");
+
+         $("select[name='tipo_cliente']").val("{{ clientes.tipo_cliente }}");
+
+         $("select[name='cuenta_contable_venta']").val("{{ clientes.cuenta_contable_venta_id }}");
+
+         $("select[name='vendedor']").val("{{ clientes.vendedor_id }}");
+
+         $("select[name='cuenta_cobrar']").val("{{ clientes.cuenta_cobrar_id }}");
+
+         $('#formulario').submit(function () {
+            var retenciones = JSON.stringify(get_array_retenciones());
+            var data = $(this).serialize() +
+                    '&arreglo_retenciones=' + retenciones;
+            $.ajax({
+                type: "POST",
+                url: "{% url "cliente-update" clientes.id_cliente %}",
+                data: data
+            });
+        });
+
+    function cargar_retencion(id, codigo, descripcion) {
+            var retencion =
+                    '<tr>' +
+                    '<td style="display:none;" name="retencion-id">' + id + '</td>' +
+                    '<td class="eliminar">' +
+                    '<a class="btn btn-danger remove-field-secuencia">' +
+                    '<i class="glyphicon glyphicon-trash icon-white"></i>' +
+                    '</a>' +
+                    '</td>' +
+                    '<td name="retencion-codigo">' + codigo + '</td>' +
+                    '<td name="retencion-descripcion">' + descripcion + '</td>' +
+                    '<td >' +
+                    '<div class="input-group add-on">'+
+                    '<input type="hidden" name="plan-cuenta-id"/>'+
+                    '<input type="text"  name="plan-cuenta-descripcion" class="form-control" readonly required>' +
+                    '<div class="input-group-btn">' +
+                    '<a class="btn btn-inverse" data-toggle="modal" data-target="#modal-plan-cuenta">'+
+                    '<i class=" glyphicon glyphicon-search icon-white">' +
+                    '</i>'+
+                    '</a>'+
+                    '</div>'+
+                    '</div>'+
+                    '</td>' +
+                    '</tr>';
+            var resultado = validar_registro_tabla('tabla-retencion', id, 'retencion-id');
+            if (resultado) {
+                alert("Registro ya se encuentra en la tabla.");
+            }
+            else {
+                $('#tabla-retencion').append(retencion);
+                $('#modal-retencion-fuente').modal('toggle');
+            }
+        }
+
+        function cargar_retencion_iva(id, codigo, descripcion) {
+            var retencion =
+                    '<tr>' +
+                    '<td style="display:none;" name="retencion-id">' + id + '</td>' +
+                    '<td class="eliminar">' +
+                    '<a class="btn btn-danger remove-field-secuencia">' +
+                    '<i class="glyphicon glyphicon-trash icon-white"></i>' +
+                    '</a>' +
+                    '</td>' +
+                    '<td name="retencion-codigo">' + codigo + '</td>' +
+                    '<td name="retencion-descripcion" >' + descripcion + '</td>' +
+                    '<td>' +
+                    '<div class="input-group add-on">'+
+                    '<input type="hidden" name="plan-cuenta-id"/>'+
+                    '<input type="text"  name="plan-cuenta-descripcion" class="form-control" readonly required>' +
+                    '<div class="input-group-btn">' +
+                    '<a class="btn btn-inverse" data-toggle="modal" data-target="#modal-plan-cuenta">'+
+                    '<i class=" glyphicon glyphicon-search icon-white">' +
+                    '</i>'+
+                    '</a>'+
+                    '</div>'+
+                    '</div>'+
+                    '</td>' +
+                    '</tr>';
+            var resultado = validar_registro_tabla('tabla-retencion', id, 'retencion-id');
+            if (resultado) {
+                alert("Registro ya se encuentra en la tabla.");
+            }
+            else {
+                $('#tabla-retencion tbody').append(retencion);
+                $('#modal-retencion-iva').modal('toggle');
+            }
+        }
+
+         function cargar_plan_cuenta(id, nombre) {
+            $('input[name="plan-cuenta-id"]').val(id);
+            $('input[name="plan-cuenta-descripcion"]').val(nombre);
+            $('#modal-plan-cuenta').modal('toggle');
+        }
+
+        function get_array_retenciones() {
+            var retenciones = [];
+            $('#tabla-retencion tbody tr').each(function () {
+                var row = $(this).closest('tr');
+                var id = $('td[name="retencion-id"]', row).text();
+                var codigo = $('td[name="retencion-codigo"]', row).text();
+                var descripcion = $('td[name="retencion-descripcion"]', row).text();
+                var id_plancuenta = $('input[name="plan-cuenta-id"]', row).val();
+                var plancuenta_descripcion = $('input[name="plan-cuenta-descripcion"]', row).val();
+                var retencion = {
+                    "id": id,
+                    "codigo": codigo,
+                    "descripcion": descripcion,
+                    "id_plancuenta": id_plancuenta,
+                    "plancuenta_descripcion": plancuenta_descripcion
+                };
+                retenciones.push(retencion);
+            });
+            return retenciones;
+        }
+
+
+        $('#tabla-retencion').on('change', 'input', function () {
+            var row = $(this).closest('tr');
+            var base = 0;
+            var porcentaje = 0;
+            var valor_retenido = 0;
+            base = Number($('input', row).val());
+            porcentaje = parseFloat($('td[name="retencion-porcentaje"]', row).text()).toFixed(2) / 100;
+            valor_retenido = base * porcentaje;
+            $('.retencion-valor-retenido', row).text(parseFloat(valor_retenido).toFixed(2));
+            actualizar_tabla_retencion();
+        });
+
+        function actualizar_tabla_retencion() {
+            var valor_retenido = parseFloat(0).toFixed(2);
+            var subtotal_retenido = parseFloat(0).toFixed(2);
+            $('#tabla-retencion tbody tr').each(function () {
+                var row = $(this).closest('tr');
+                valor_retenido = parseFloat($('.retencion-valor-retenido', row).text()).toFixed(2);
+                subtotal_retenido = +subtotal_retenido + +valor_retenido;
+            });
+            $('input[name="retencion_total_retenido"]').val(parseFloat(subtotal_retenido).toFixed(2));
+        }
+
+        function validar_registro_tabla(nombre_tabla, id, name) {
+            var resultado = false;
+            $("#" + nombre_tabla + " tbody tr").each(function () {
+                var row = $(this).closest('tr');
+                var value = $('td[name="' + name + '"]', row).text();
+                if (value.localeCompare(id) == 0) {
+                    resultado = true;
+                }
+            });
+            return resultado;
+        }
+
+        $(document).on("click", ".eliminar", function () {
+            var parent = $(this).parent();
+            $(parent).remove();
+            actualizar_tabla_retencion();
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends "base-detail.html" %}
+{% load extra_filters %}
+
+{% block breadcrumbs %}
+    {{ block.super }} » <a href="{% url "user-list" %}">{{verbose_name}}</a> » Detalle
+{% endblock %}
+
+{% block title %}{{ object.nombres }} {{ object.apellidos }}{% endblock %}
+
+{% block back-list %}
+{% url "user-list" %}
+{% endblock %}
+
+{% block detail-url-edit %}
+{% url "user-update" object.id %}
+{% endblock %}
+
+{% block detail-field %}
+    <div class="panel-body">
+        <div class="form-group">
+            <label class="control-label">
+                {{ object|getTitleFieldDetail:"imagen" }}
+            </label>
+            <div class="controls">
+                {% if object.imagen %}
+                <span class="form-control">
+                    <img class="perfil-pic" src="{{ object.imagen.url }}" />
+                </span>
+                {% else %}
+                <span class="form-control">
+                    <img class="perfil-pic" src="/media/images/perfil/profile.png" />
+                </span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">
+                {{ object|getTitleFieldDetail:"nombres" }}
+            </label>
+            <div class="controls">
+                <span class="form-control">{{ object.nombres }}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">
+                {{ object|getTitleFieldDetail:"apellidos" }}
+            </label>
+            <div class="controls">
+                <span class="form-control">{{ object.apellidos }}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">
+                {{ object|getTitleFieldDetail:"telefono" }}
+            </label>
+            <div class="controls">
+                <span class="form-control">{{ object.telefono }}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">
+                {{ object|getTitleFieldDetail:"movil" }}
+            </label>
+            <div class="controls">
+                <span class="form-control">{{ object.movil }}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">
+                {{ object|getTitleFieldDetail:"email_principal" }}
+            </label>
+            <div class="controls">
+                <span class="form-control">{{ object.email_principal }}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">
+                {{ object|getTitleFieldDetail:"fecha_nacimiento" }}
+            </label>
+            <div class="controls">
+                <span class="form-control">{{ object.fecha_nacimiento }}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">
+                {{ object|getTitleFieldDetail:"direccion" }}
+            </label>
+            <div class="controls">
+                <span class="form-control">{{ object.direccion }}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">
+                {{ object|getTitleFieldDetail:"ciudad" }}
+            </label>
+            <div class="controls">
+                <span class="form-control">{{ object.ciudad }}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">
+                {{ object|getTitleFieldDetail:"provincia" }}
+            </label>
+            <div class="controls">
+                <span class="form-control">{{ object.provincia }}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">
+                {{ object|getTitleFieldDetail:"pais" }}
+            </label>
+            <div class="controls">
+                <span class="form-control">{{ object.pais }}</span>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+{% load staticfiles %}
+
+{% block css %}
+{{ block.super }}
+{% endblock %}
+
+{% block section_title %}Reportes Nuevos de Inventario{% endblock %}
+{% block section_subtitle %}
+<br />
+ <div class="email-btn-row hidden-xs">
+                    </div>
+
+                    {% endblock %}
+
+{% block content %}
+				<!-- begin col-12 -->
+				<div class="col-md-12">
+					<!-- begin panel -->
+					<div class="panel panel-inverse">
+						<div class="panel-heading">
+							<div class="panel-heading-btn">
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+							</div>
+							<h4 class="panel-title"></h4>
+						</div>
+						<div class="panel-body">
+							<div class="table-responsive">
+
+                                                      <a href="{% url 'reporte-inventario-nuevo' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Inventario</button>
+													</a>
+
+								<br /><br />
+
+								<a href="{% url 'reporte-inventario-existente' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Consultar Inventario Inicial</button>
+													</a>
+
+								<br /><br />
+                           <a href="{% url 'reporte-orden-compra-nuevo' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Ordenes de Compra</button>
+													</a>	<br /><br />
+													 <a href="{% url 'reporte-compras-locales-nuevo' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Compras Locales</button>
+													</a>   	<br /><br />
+
+                                                      <a href="{% url 'reporte-orden-ingreso' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Ingresos</button>
+													</a>
+
+							<br /><br />
+                                                      <a href="{% url 'reporte-orden-egreso-nuevo' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Egresos</button>
+													</a>
+                                	<br /><br />
+                                                      <a href="{% url 'reporte-egreso-orden-egreso-nuevo' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Egresos por Orden de Egreso</button>
+													</a><br /><br />
+                                 <a href="{% url 'reporte-kardex-nuevo' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Kardex</button>
+													</a>
+
+								<br /><br />
+
+							</div>
+
+
+						</div>
+					</div>
+
+				</div>
+				<!-- end col-12 -->
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+
+   	<script type="text/javascript">
+
+
+	function consultar(){
+		var cliente=$("#cliente").val();
+		var fechainicial=$("#fechainicial").val();
+		var fechafin=$("#fechafin").val();
+
+          $.ajax({
+                url: "/reporte/obtenerGlobal/", // the endpoint
+                type : "POST", // http method
+                data : { cliente : cliente,fechainicial : fechainicial,fechafin : fechafin,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+                $("#detalle tbody tr").remove();
+                  $("#detalle").append(data);
+                },
+                error: function(){
+
+                },
+              });
+    }
+	</script>
+	<!-- ================== END PAGE LEVEL JS ================== -->
+	{% if form.errors or form_mode == "update" %}
+	<script type="text/javascript">
+		$( document ).ready(function() {
+		    $(".modal").modal('toggle');
+		});
+
+	</script>
+	{% endif %}
+{% endblock %}
+

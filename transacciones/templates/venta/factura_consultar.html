@@ -1,0 +1,487 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block css %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+<link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css' %}" rel="stylesheet"/>
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
+<link href="{% static 'color_admin/assets/plugins/bootstrap-tokenfield/css/bootstrap-tokenfield.css' %}"
+      rel="stylesheet"/>
+<!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+{% block section_title %} Registro de Factura (Cliente) {% endblock %}
+{% block content %}
+<style>
+    .panel-border {
+        border: 1px solid #ddd !important;
+    }
+
+    .form-group {
+        margin-bottom: 0px !important;
+    }
+
+    .panel-border {
+        border: 1px solid #ddd !important
+    }
+
+    .highlighter {
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .no-border-input{
+        border: none !important;
+        background-color: #fff !important;
+        border-bottom: 1px solid #eee !important;
+    }
+</style>
+<div class="row">
+    <!-- begin col-6 -->
+    <div class="col-md-12">
+        <form id="formulario" class="form-horizontal" method="post">
+            {% csrf_token %}
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                           data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                            <i class="fa fa-plus-circle pull-right"></i>
+                            Datos generales de la factura
+                        </a>
+                    </h3>
+                </div>
+                <div id="collapseOne" aria-expanded="true" id="collapseOne" class="panel-collapse collapse in">
+                    <div class="panel-body panel-border">
+
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Fecha de emisión</label>
+                                    <div class="col-sm-3">
+                                        <input id="fecha_emision" class="form-control" type="text"
+                                               name="fecha_emision"  value="{{ factura.fecha_emision | date:'Y-m-d'  }}" readonly>
+                                    </div>
+                                    <label class="col-sm-3 control-label">Fecha de vencimiento</label>
+                                    <div class="col-sm-3">
+                                        <input id="fecha_vencimiento" class="form-control" type="text"
+                                               name="fecha_vencimiento"value="{{ factura.fecha_emision | date:'Y-m-d'  }}"  readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Cliente</label>
+                                    <div class="col-sm-9">
+
+                                        <input type="text" class="form-control" name="cliente" value="{{ factura.cliente }}" readonly/>
+                                       
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Vendedor</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="vendedor" value="{{ factura.vendedor  }}" readonly/>
+                                       
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Puntos de venta</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="punto_venta" value="{{ factura.puntos_venta  }}" readonly/>
+                                        
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Número de documento</label>
+                                    <div class="col-sm-3">
+                                        <input class="form-control highlighter" type="text" placeholder="000"
+                                               name="establecimiento" value="{{ factura.establecimiento  }}" readonly>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input class="form-control highlighter" type="text" placeholder="000"
+                                               name="punto_emision" value="{{ factura.punto_emision }}" readonly>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input class="form-control highlighter" type="text" placeholder="000"
+                                               name="secuencial" value="{{ factura.secuencial }}" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">N° Autorización</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control highlighter" name="autorizacion" type="text" value="{{ factura.autorizacion }}" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Descripción</label>
+                                    <div class="col-sm-9">
+                                        <textarea class="form-control" name="descripcion" rows="5" readonly>{{ factura.descripcion }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <fieldset>
+                                    <legend class="text-info text-center">Datos Cliente</legend>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control" name="razon_social" value="{{ factura.razon_social | default_if_none:''  }}" readonly />
+                                           
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">RUC</label>
+                                        <div class="col-sm-9">
+                                            
+                                            <input type="text" name="cliente_ruc" class="form-control no-border-input highlighter" value="{{ factura.ruc | default_if_none:''  }}"  readonly/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Domicilio</label>
+                                        <div class="col-sm-9"><input type="text" name="cliente_direccion" class="form-control no-border-input" value="{{ factura.direccion | default_if_none:''  }}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Teléfono</label>
+                                        <div class="col-sm-9"><input type="text" name="cliente_telefono" class="form-control no-border-input" value="{{ factura.telefono | default_if_none:''  }}" readonly />
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset>
+                                    <legend class="text-info text-center" >Datos Proforma</legend>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control"  name="cliente_proforma" value="{{ factura.proforma.abreviatura_codigo | default_if_none:''  }}-{{ factura.proforma.codigo | default_if_none:''  }} | {{ factura.proforma.fecha   | date:'Y-m-d' }} | ${{ factura.proforma.total | default_if_none:''  }}" readonly/>
+                                            
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                            </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <br>
+                                <fieldset>
+                                <legend>Detalle Factura</legend>
+                                
+
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="tabla-detalle">
+                                        <thead style="background-color: #ccd0d4">
+                                        <tr>
+                                            <th></th>
+                                            <th>Cantidad</th>
+                                            <th width="350">Descripción</th>
+                                            <th>Valor unitario</th>
+                                            <th>Valor Total</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                             {% if facturas %}
+                                                    {% for f  in facturas %}
+                                <tr>
+                                
+                        <td name="factura-id"></td>
+                        <td name="factura-fecha-emision">{{ f.cantidad }}</td>
+                        <td name="factura-establecimiento">{{ f.descripcion  }}</td>
+                        <td align="right" name="factura-subtotal">{{ f.base_iva }}</td>
+                        <td align="right" name="factura-iva">{{ f.subtotal }}</td>
+                       </tr>
+                                {% endfor %}
+                                {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <input type="hidden" name="columnas_detalle" id="columnas_detalle" value="0"/>
+                                <input type="hidden" name="id_fila_detalle" id="id_fila_detalle" value=""/>
+                                </fieldset>
+                            </div>
+                        </div>
+                            <div class="col-md-9">
+                                <div class="form-group">
+                                   
+                                </div>
+                                <br><br><br><br><br><br><br><br><br>
+                                <div class="form-group">
+                                    <input type="text" class="form-control highlighter no-border-input" name="total_en_letras" value="{{ factura.total_en_letras }}" readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">SubTotal</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control mask_float text-right highlighter"
+                                                   name="subtotal" value="{{ factura.subtotal }}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Descuento</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control mask_float text-right highlighter"
+                                                   onkeyup="calcular_totales_detalle()" name="descuento" value="{{ factura.descuento }}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">IVA 0%</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control mask_float text-right highlighter"
+                                                   name="valor_iva_0" value="{{ factura.valor_iva_0 }}" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">IVA {{  factura.porcentaje_iva }}%</label>
+                                        <div class="col-sm-8">
+                                            
+                                            <input type="text" class="form-control mask_float text-right highlighter"
+                                                   name="valor_iva" value="{{  factura.valor_iva }}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Total</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control mask_float text-right highlighter"
+                                                   name="total" style="font-size: 18px;font-weight: 600;"
+                                                   value="{{  factura.total }}" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                    </div>
+                </div>
+            </div>
+            <div>
+
+                    <!-- begin nav-tabs -->
+                    <ul class="nav nav-tabs nav-tabs-inverse">
+                        <li class="active"><a href="#nav-tab-2" data-toggle="tab">Asiento</a></li>
+                        <!--<li class=""><a href="#nav-tab-3" data-toggle="tab">Retención</a></li>-->
+                       <!-- <li class=""><a href="#nav-tab-1" data-toggle="tab">Productos</a></li>-->
+                    </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade" id="nav-tab-1">
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="tabla-productos">
+                                <thead style="background-color: #ccd0d4">
+                                <tr>
+                                    <th>Acción</th>
+                                    <th style="display:none;">Id</th>
+                                    <th>Cantidad</th>
+                                    <th>Producto</th>
+                                    <th>Precio unitario</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="col-sm-9 control-label">Subtotal {{ porcentaje_iva }}%</label>
+                                <div class="col-sm-2">
+                                    <input type="number" class="form-control" name="base_iva_proforma" value="0"
+                                           readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-9 control-label">Subtotal 0%</label>
+                                <div class="col-sm-2">
+                                    <input type="hidden" name="valor_iva_0" value="0">
+                                    <input type="number" class="form-control" name="base_iva_0_proforma"
+                                           value="0" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-9 control-label">Descuento</label>
+                                <div class="col-sm-2">
+                                    <input type="number" class="form-control" name="descuento_proforma"
+                                           value="0" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-9 control-label">IVA {{ porcentaje_iva }}%</label>
+                                <div class="col-sm-2">
+                                    <input type="hidden" name="porcentaje_iva_proforma" value={{ porcentaje_iva }}>
+                                    <input type="number" class="form-control" name="valor_iva_proforma" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-9 control-label">Total</label>
+                                <div class="col-sm-2">
+                                    <input type="number" class="form-control" name="total_proforma"
+                                           value="0" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade active in" id="nav-tab-2">
+                       
+                        <table class="table table-striped table-bordered" id="tabla-asiento">
+                            <thead style="background-color: #ccd0d4">
+                            <tr>
+                                <th style="display:none;">ID</th>
+                                <th style="text-align:center;"></th>
+                                <th style="text-align: center;min-width: 180px;">Cuenta</th>
+                                <th style="text-align: center">Debe</th>
+                                <th style="text-align: center">Haber</th>
+                                <th style="text-align: center">Centro de Costo</th>
+                                <th style="text-align: center">Concepto</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% if detalle_asientos %}
+                                                    {% for de  in detalle_asientos %}
+                                <tr class="asiento-row" >
+                                    <td name="asiento-plan-cuenta-id" style="display:none;">{{ de.cuenta_id}}</td>
+
+                        <td name="asiento-codigo">{{ asientos.codigo_asiento}}</td>
+                        <td><div class="input-group add-on" style="width:100%"><input class="form-control" type="text" name="asiento-plan-cuenta-descripcion" value="{{ de.cuenta.nombre_plan}}"   readonly>
+                        </div>
+                        </td>
+                        <td>
+                            <input style="text-align: right;" class="form-control" type="hidden"  name="detalle_id" value="{{ de.detalle_id}}" >
+
+
+                            <input style="text-align: right;" class="form-control" type="number" step="0.01" name="asiento-debe" value="{{ de.debe}}" readonly>
+                        </td>
+                        <td align="right" >
+                            <input style="text-align: right;" class="form-control" type="number" step="0.01" name="asiento-haber" value="{{ de.haber}}" readonly >
+                        </td>
+                         <td>
+                            {{ de.centro_costo | default_if_none:""}}</td>
+                        <td>
+                            <textarea style="text-align: right;" class="form-control"  name="concepto-asiento" readonly  >{{ de.concepto}}</textarea></td>
+                    </tr>
+                                {% endfor %}
+                                {% endif %}
+                            </tbody>
+                             <tfoot>
+                                <tr>
+                                    <td></td>
+                                    <td><strong>TOTAL:</strong></td>
+                                    <td align="right" name="asiento-total-debe"><strong>{{ total_asientos_debe}}</strong></td>
+                                    <td align="right" name="asiento-total-haber"><strong>{{ total_asientos_haber}}</strong></td>
+                                </tr>
+                                </tfoot>
+                        </table>
+
+                        <input type="hidden" name="columnas_receta" id="columnas_receta" value="0"/>
+                        <input type="hidden" name="id_fila_cambiar" id="id_fila_cambiar" value=""/>
+                    </div>
+                    <div class="tab-pane fade" id="nav-tab-3">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Fecha de emisión</label>
+                            <div class="col-sm-3">
+                                <input class="form-control" type="text" name="retencion-fecha-emision">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Número de documento</label>
+                            <div class="col-sm-2">
+                                <input class="form-control" type="text" placeholder="Establecimiento"
+                                       name="retencion-establecimiento" maxlength="3">
+                            </div>
+                            <div class="col-sm-2">
+                                <input class="form-control" type="text" placeholder="Punto de emisión"
+                                       name="retencion-punto" maxlength="3">
+                            </div>
+                            <div class="col-sm-3">
+                                <input class="form-control" type="text" placeholder="Secuencial"
+                                       name="retencion-secuencial">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Autorización</label>
+                            <div class="col-sm-3">
+                                <input class="form-control" type="text" name="retencion-autorizacion">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Descripción</label>
+                            <div class="col-sm-5">
+                                <textarea class="form-control" name="retencion-descripcion" rows="5"></textarea>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="tabla-retencion">
+                                <thead style="background-color: #ccd0d4">
+                                <tr>
+                                    <th style="display:none;">Id</th>
+                                    <th>Acción</th>
+                                    <th>Código</th>
+                                    <th>Concepto</th>
+                                    <th>Base imponible</th>
+                                    <th>% retención</th>
+                                    <th>Valor retenido</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td style="display:none;"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><strong>TOTAL RETENIDO:</strong></td>
+                                    <td><input type="number" class="form-control mask_float"
+                                               name="retencion_total_retenido"
+                                               placeholder="0.00" required readonly></td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <button style="margin-left: 1%;" type="button" class="btn btn-inverse" data-toggle="modal"
+                                data-target="#modal-retencion-fuente">
+                            <i class="fa fa-plus-circle"></i>
+                            Retención fuente
+                        </button>
+                        <button style="margin-left: 1%;" type="button" class="btn btn-inverse" data-toggle="modal"
+                                data-target="#modal-retencion-iva">
+                            <i class="fa fa-plus-circle"></i>
+                            Retención IVA
+                        </button>
+                    </div>
+                </div>
+            </div>
+                          <a class="default btn btn-link" href="/transacciones/documento/venta"><button type="button" class="btn btn-inverse">  Regresar</button></a>
+
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-tokenfield/js/bootstrap-tokenfield.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/masked-input/NumeroALetras.js' %}"></script>
+
+<script>
+    
+    $(".mask_float").maskMoney({thousands: '', decimal: '.', allowZero: true});
+   ;
+    //$('input[name="retencion-secuencial"]').mask('000999999');
+    $("#columnas_receta").val("0");
+    $("#columnas_detalle").val("0");
+    var cuenta_contable_venta_id = 0;
+    var cuenta_contable_cobrar_id = 0;
+    var cuenta_contable_iva=0;
+    var valor_retencion_fuente = 0;
+    var valor_retenvion_iva = 0;
+
+</script>
+
+{% endblock %}
+

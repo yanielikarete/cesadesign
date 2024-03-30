@@ -1,0 +1,259 @@
+# -*- encoding: utf-8 -*-
+
+from django.conf.urls import patterns, include, url
+from django.views.defaults import *
+from .views import *
+from .forms import *
+
+urlpatterns = patterns('',
+
+#=================Empleado===========================#
+	url(
+		r'^empleado/$',
+		'empleados.views.EmpleadoListView',
+		name='empleado-list',
+	),
+	url(
+		r'^empleado/nuevo$',
+		'empleados.views.EmpleadoCreateView',
+		name='empleado-create',
+	),
+	url(
+		r'^empleado/(?P<pk>\d+)/editar/$',
+		EmpleadoUpdateView.as_view(),
+		name='empleado-update',
+	),
+	url(
+		r'^empleado/(?P<pk>\d+)/detalle/$',
+		EmpleadoDetailView.as_view(),
+		name='empleado-detail',
+	),
+	url(
+		r'^empleado/eliminar/$',
+		'empleados.views.empleadoEliminarView',
+		name='empleado-delete',
+	),
+	url(
+		r'^empleado/(?P<pk>\d+)/eliminar/$',
+		'empleados.views.empleadoEliminarByPkView',
+		name='empleado-delete-pk',
+	),
+
+	
+#=================TipoEmpleado===========================#
+	url(
+		r'^tipoempleado/$',
+		'empleados.views.TipoEmpleadoListView',
+		name='tipoempleado-list',
+	),
+	url(
+		r'^tipoempleado/nuevo$',
+		'empleados.views.TipoEmpleadoCreateView',
+		name='tipoempleado-create',
+	),
+	url(
+		r'^tipoempleado/(?P<pk>\d+)/editar/$',
+		TipoEmpleadoUpdateView.as_view(),
+		name='tipoempleado-update',
+	),
+	url(
+		r'^tipoempleado/(?P<pk>\d+)/detalle/$',
+		TipoEmpleadoDetailView.as_view(),
+		name='tipoempleado-detail',
+	),
+	url(
+		r'^tipoempleado/eliminar/$',
+		'empleados.views.tipoEmpleadoEliminarView',
+		name='tipoempleado-delete',
+	),
+	url(
+		r'^tipoempleado/(?P<pk>\d+)/eliminar/$',
+		'empleados.views.tipoEmpleadoEliminarByPkView',
+		name='tipoempleado-delete-pk',
+	),
+
+#=================Vendedor===========================#
+	url(
+		r'^vendedor/$',
+		'empleados.views.VendedorListView',
+		name='vendedor-list',
+	),
+	url(
+		r'^vendedor/nuevo$',
+		VendedorCreateView.as_view(),
+		name='vendedor-create',
+	),
+	url(
+		r'^vendedor/(?P<pk>\d+)/editar/$',
+		VendedorUpdateView.as_view(),
+		name='vendedor-update',
+	),
+	url(
+		r'^vendedor/(?P<pk>\d+)/detalle/$',
+		VendedorDetailView.as_view(),
+		name='vendedor-detail',
+	),
+	url(
+		r'^vendedor/eliminar/$',
+		'empleados.views.vendedorEliminarView',
+		name='vendedor-delete',
+	),
+	url(
+		r'^vendedor/(?P<pk>\d+)/eliminar/$',
+		'empleados.views.vendedorEliminarByPkView',
+		name='vendedor-delete-pk',
+	),
+
+#=================Chofer===========================#
+	url(
+		r'^chofer/$',
+		ChoferListView.as_view(),
+		name='chofer-list',
+	),
+	url(
+		r'^chofer/nuevo$',
+		ChoferCreateView.as_view(),
+		name='chofer-create',
+	),
+	url(
+		r'^chofer/(?P<pk>\d+)/editar/$',
+		ChoferUpdateView.as_view(),
+		name='chofer-update',
+	),
+	url(
+		r'^chofer/(?P<pk>\d+)/detalle/$',
+		ChoferDetailView.as_view(),
+		name='chofer-detail',
+	),
+	url(
+		r'^chofer/eliminar/$',
+		'empleados.views.choferEliminarView',
+		name='chofer-delete',
+	),
+	url(
+		r'^chofer/(?P<pk>\d+)/eliminar/$',
+		'empleados.views.choferEliminarByPkView',
+		name='chofer-delete-pk',
+	),
+
+#=================Vehiculo===========================#
+	url(
+		r'^vehiculo/$',
+		VehiculoListView.as_view(),
+		name='vehiculo-list',
+	),
+	url(
+		r'^vehiculo/nuevo$',
+		VehiculoCreateView.as_view(),
+		name='vehiculo-create',
+	),
+	url(
+		r'^vehiculo/(?P<pk>\d+)/editar/$',
+		VehiculoUpdateView.as_view(),
+		name='vehiculo-update',
+	),
+	url(
+		r'^vehiculo/(?P<pk>\d+)/detalle/$',
+		VehiculoDetailView.as_view(),
+		name='vehiculo-detail',
+	),
+	url(
+		r'^vehiculo/eliminar/$',
+		'empleados.views.vehiculoEliminarView',
+		name='vehiculo-delete',
+	),
+	url(
+		r'^vehiculo/(?P<pk>\d+)/eliminar/$',
+		'empleados.views.vehiculoEliminarByPkView',
+		name='vehiculo-delete-pk',
+	),
+	
+#---DEPARTAMENTO--#
+	url(
+		r'^departamento/$',
+		'empleados.views.DepartamentoListView',
+		name='departamento-list',
+	),
+	url(
+		r'^departamento/nuevo$',
+		DepartamentoCreateView.as_view(),
+		name='departamento-create',
+	),
+	url(
+		r'^departamento/(?P<pk>\d+)/editar/$',
+		DepartamentoUpdateView.as_view(),
+		name='departamento-update',
+	),
+	url(
+		r'^departamento/(?P<pk>\d+)/detalle/$',
+		DepartamentoDetailView.as_view(),
+		name='departamento-detail',
+	),
+	url(
+		r'^departamento/eliminar/$',
+		'empleados.views.departamentoEliminarView',
+		name='departamento-delete',
+	),
+	url(
+		r'^departamento/(?P<pk>\d+)/eliminar/$',
+		'empleados.views.departamentoEliminarByPkView',
+		name='departamento-delete-pk',
+	),
+	url(
+		r'^eliminarIngresos/$',
+		'empleados.views.eliminarIngresosView',
+		name='eliminar-ingresos',
+	),
+	url(
+		r'^eliminarEgresos/$',
+		'empleados.views.eliminarEgresosView',
+		name='eliminar-egresos',
+	),
+
+url(
+    r'^tipo_contrato/$',
+                           'empleados.views.TipoContratoListView',
+                           name='tipo-contrato-list',
+                       ),
+
+                       url(
+                           r'^tipo_contrato/nuevo$',
+                           TipoContratoCreateView.as_view(),
+
+                           name='tipo-contrato-create',
+                       ),
+                       url(
+                           r'^tipo_contrato/(?P<pk>\d+)/editar/$',
+                           TipoContratoUpdateView.as_view(),
+                           name='tipo-contrato-update',
+                       ),
+
+
+url(
+    r'^grupo_pago/$',
+                           'empleados.views.GrupoPagoListView',
+                           name='grupo-pago-list',
+                       ),
+
+                       url(
+                           r'^grupo_pago/nuevo$',
+						   GrupoPagoCreateView.as_view(),
+
+                           name='grupo-pago-create',
+                       ),
+                       url(
+                           r'^grupo_pago/(?P<pk>\d+)/editar/$',
+						   GrupoPagoUpdateView.as_view(),
+                           name='grupo-pago-update',
+                       ),
+url(
+    r'^consultar_empleado/$',
+                           'empleados.views.ConsultarEmpleadosView',
+                           name='consultar-empleado',
+                       ),
+url(
+    r'^obtenerEmpleadosConsulta/$',
+                           'empleados.views.obtenerEmpleadosConsulta',
+                           name='obtener-empleado-consulta',
+                       ),
+)

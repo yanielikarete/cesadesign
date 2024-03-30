@@ -1,0 +1,27 @@
+{% extends "login/base-create.html" %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+{% endblock %}
+
+{% block form-actions %}
+<div id="form-actions" class="clearfix">
+	<div class="form-actions pull-left ">
+		<button type="submit" class="default btn btn-success">
+			<i class="fa fa-floppy-o"></i> Guardar
+		</button>
+		<!--<input type="submit" class="default btn btn-info" name="_addanother" value="Grabar y añadir otro">-->
+		<a class="default btn btn-link" href="{{ url_cancel }}">
+			<i class="fa fa-times"></i> Regresar
+		</a>
+	</div>
+</div>
+{% endblock %}
+{% block javascript %}
+{{ block.super }}
+<script>
+    $(document).ready(function() {
+     
+    });
+</script>
+{% endblock %}                                                                                                                                                

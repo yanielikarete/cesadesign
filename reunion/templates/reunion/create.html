@@ -1,0 +1,264 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css'%}" rel="stylesheet" />
+  <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css'%}" rel="stylesheet" />
+ 
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Reunion{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+
+            <!-- begin row -->
+           <style>
+       .panel-border{border: 1px solid #ddd !important}
+       .form-ajust .form-group{margin-bottom: 0px !important}
+      input[type="text"],select,input[type="number"]
+      {
+
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    box-shadow: none;
+    font-size: 12px;
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+       }
+
+    
+
+    </style>
+
+  <div class="row">
+                <!-- begin col-6 -->
+      <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                         <form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+
+                        <h3 class="panel-title">Reunion</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <div>
+
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                  <li role="presentation" class="active"><a href="#principales" aria-controls="principales" role="tab" data-toggle="tab">Principales</a></li>
+                                     </ul>
+                              
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade in active" id="principales">
+                                        <div class="row">
+                                            
+                                            <div class="panel panel-default panel-border">
+                                                <div class="panel-heading">Id del Registro</div>
+                                                <div class="panel-body">
+                                                 
+                                                    <div class="col-md-12">
+                                                      <label for="exampleInputName2">C&oacute;digo</label>
+                                                    {% bootstrap_field form.codigo show_label=False %}
+
+                                                   </div>
+                                                    <div class="col-md-4">
+                                                      <label for="exampleInputEmail2">Fecha </label>
+                                                 {% bootstrap_field form.fecha show_label=False %}
+
+                                                    </div>
+                                                  
+                                                    
+                                                   <div class="col-md-8">
+                                                      <label for="exampleInputName2">Nombre del Cliente</label>
+                                                    {% bootstrap_field form.cliente show_label=False %}
+
+                                                   </div>
+                                                   <div class="col-md-8">
+                                                      <label for="exampleInputName2">Direccion</label>
+                                                    {% bootstrap_field form.direccion show_label=False %}
+
+                                                   </div>
+                                                    <div class="col-md-8">
+                                                      <label for="exampleInputEmail2">Motivo</label>
+                                                    {% bootstrap_field form.motivo show_label=False %}
+                                                    </div>
+                                                     <div class="col-md-8">
+                                                      <label for="exampleInputName2">Vendedor</label>
+                                                    {% bootstrap_field form.vendedor show_label=False %}
+                                                   </div>
+<div class="col-md-8">
+                                                      <label for="exampleInputName2">Cotizacion Bodega</label>
+                                                    {% bootstrap_field form.bodega show_label=False %}
+                                                   </div>
+                                                 
+                                                  
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="inputEmail3" >Observaci&oacute;n</label>
+                                                    <div>
+                                                    {% bootstrap_field form.observacion show_label=False %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                              <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="inputEmail3" >Tiempo de Respuesta</label>
+                                                    <div>
+                                                    {% bootstrap_field form.tiempo_respuesta show_label=False %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="inputEmail3" >Observacion Tiempo de Respuesta</label>
+                                                    <div>
+                                                    {% bootstrap_field form.observacion_tiempo_respuesta show_label=False %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="inputEmail3" >Usuario y Fecha de Edici&oacute;n</label>
+                                                <table class="table table-bordered">
+                                                    <tr>
+                                                        <th>Creaci&oacute;n</th>
+                                                     <td>{% bootstrap_field form.created_by show_label=False %}</td>
+
+                                                        <td> {% bootstrap_field form.created_at show_label=False %}
+  </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Actualizado</th>
+                                                        <td>{% bootstrap_field form.updated_by show_label=False %}</td>
+
+                                                        <td> {% bootstrap_field form.updated_at show_label=False %}
+  </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        
+                                      
+                                   
+                                
+                                    </div>
+                                    
+                                    
+                                </div>
+                              
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+     <p class="text-center">
+
+                                    <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+                                            <a class="default btn btn-link" href="/reunion/reunion"><button type="button" class="btn btn-primary btn-lg">  Regresar</button></a>
+                                        </p>
+                                        
+
+
+<!--  <p class="text-right m-b-0">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-cog"></i> Guardar</button>
+                                </p>
+                                <a class="default btn btn-link" href="/inventario/producto">
+      <i class="fa fa-times"></i> Regresar
+    </a> -->
+                            </form>
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script>
+    $(document).ready(function() {
+      $('#id_codigo').each(function(){
+  $(this).attr('readonly','readonly');
+});
+             $('#id_created_by').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_updated_by').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_created_at').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_updated_at').each(function(){
+  $(this).attr('readonly','readonly');
+});
+
+      var codigo=$("#id_codigo").val().length ;
+      if(codigo < 1){
+             $.ajax({
+                url: "/config/obtenerSecuencial/", // the endpoint
+                type : "POST", // http method
+                data : { id : 'reunion','csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+                success:function(data){
+                 $('#id_codigo').val('00'+data);
+                  
+                },
+                error: function(){
+                 
+                },
+              });
+      var fecha=new Date().toJSON().slice(0,10);
+      $('#id_fecha').val(fecha);
+      }else{
+               // alert(codigo);
+
+      }
+
+
+       $(document).ready(function(){
+      $('#id_fecha').datepicker({todayHighlight:true,autoclose:true});
+            $('#id_fecha').datepicker('option', {dateFormat: 'dd/mm/yy'});
+       $("#id_cliente").change(function(){
+        codigo_reunion=$("#id_cliente").val();
+               $.ajax({
+                url: "/config/obtenerCliente/", // the endpoint
+                type : "POST", // http method
+                data : { id : codigo_reunion,'csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+                success:function(data){
+                       
+  $("#id_direccion").val(data['cliente']);
+                  
+                },
+                error: function(){
+                 
+                },
+              });
+         });
+      
+    });
+         });
+</script>
+{% endblock %}                                                                                                                                                

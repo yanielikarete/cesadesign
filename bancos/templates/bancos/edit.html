@@ -1,0 +1,333 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block css %}
+    {{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+{% block section_title %} Banco {% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+    <style>
+        .panel-border {
+            border: 1px solid #ddd !important;
+        }
+
+        .form-group {
+            margin-bottom: 0px !important;
+        }
+    </style>
+    <div class="row">
+        <!-- begin col-6 -->
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <form id="formulario" class="form-horizontal" method="post" data-validate="parsley">
+                    {% csrf_token %}
+                    <ul class="nav nav-tabs nav-tabs-inverse">
+                        <li class="active">
+                            <a data-toggle="tab" href="#datos-generales" aria-controls="datos-generales" role="tab">Datos generales</a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#secuencia-cheques" aria-controls="secuencia-cheques" role="tab">Secuencia de cheques</a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#anulacion-cheques" aria-controls="anulacion-cheques" role="tab">Anulación de cheques</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" id="datos-generales" class="tab-pane fade in active">
+                            <div class="panel-heading">
+                                <div class="panel panel-inverse">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">
+                                            <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                                               data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                                <i class="fa fa-plus-circle pull-right"></i>
+                                                Datos generales
+                                            </a>
+                                        </h3>
+                                    </div>
+                                    <div id="collapseOne" aria-expanded="true" id="collapseOne"
+                                         class="panel-collapse collapse in">
+                                        <div class="panel-body panel-border">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label"
+                                                       for="estado">Estado</label>
+                                                <div class="col-sm-4">
+                                                    <select class="form-control" name="estado" required>
+                                                        <option value="" selected>Seleccione un estado</option>
+                                                        <option value="1">Activo</option>
+                                                        <option value="0"> Inactivo</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label" for="tipo_cuenta">Tipo de
+                                                    cuenta</label>
+                                                <div class="col-sm-4">
+                                                    <select class="form-control" name="tipo_cuenta" required>
+                                                        <option value="" selected>Seleccione un tipo de cuenta</option>
+                                                        {% for tipo_cuenta in tipos_cuentas %}
+                                                            <option value="{{ tipo_cuenta.id }}">{{ tipo_cuenta.nombre }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label"
+                                                       for="nombre">Nombre</label>
+                                                <div class="col-sm-4">
+                                                    <input class="form-control" type="text" name="nombre" value="{{ banco.nombre }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label" for="numero_cuenta">Número de
+                                                    Cuenta</label>
+                                                <div class="col-sm-4">
+                                                    <input class="form-control" type="text" name="numero_cuenta" value="{{ banco.numero_cuenta | default_if_none:'' }}"
+                                                           required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label" for="cuenta_contable">Cuenta
+                                                    contable</label>
+                                                <div class="col-sm-4">
+                                                    <select class="form-control" name="cuenta_contable" required>
+                                                        <option value="" selected>Seleccione una cuenta contable
+                                                        </option>
+                                                        {% for cuenta_contable in cuentas_contables %}
+                                                            <option value="{{ cuenta_contable.plan_id }}">{{ cuenta_contable.codigo_plan }} {{ cuenta_contable.nombre_plan }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label"
+                                                       for="ciudad">Ciudad</label>
+                                                <div class="col-sm-4">
+                                                    <select class="form-control" name="ciudad" required>
+                                                        <option value="" selected>Seleccione una ciudad</option>
+                                                        {% for ciudad in ciudades %}
+                                                            <option value="{{ ciudad.id }}">{{ ciudad.nombre }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label" for="formato_cheque">Formato
+                                                    de
+                                                    cheque</label>
+                                                <div class="col-sm-4">
+                                                    <select class="form-control" name="formato_cheque" required>
+                                                        <option value="" selected>Seleccione un formato de cheque
+                                                        </option>
+                                                        {% for formato_cheque in formatos_cheques %}
+                                                            <option value="{{ formato_cheque.id }}">{{ formato_cheque.descripcion }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-inverse">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">
+                                            <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                                               data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                                <i class="fa fa-plus-circle pull-right"></i>
+                                                Datos iniciales
+                                            </a>
+                                        </h3>
+                                    </div>
+                                    <div id="collapseTwo" aria-expanded="true" id="collapseOne"
+                                         class="panel-collapse collapse in">
+                                        <div class="panel-body panel-border">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label" for="saldo_inicial">Saldo
+                                                    inicial</label>
+                                                <div class="col-sm-4">
+                                                    <input class="form-control" type="number" name="saldo_inicial" step="0.01"
+                                                           required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4">Fecha de corte</label>
+                                                <div class="col-md-4">
+                                                    <input type="date" class="form-control" name="fecha_corte" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" id="secuencia-cheques" class="tab-pane fade">
+                            <div class="row">
+                                <table class="table2 table table-striped table-bordered dataTable no-footer dtr-inline" id="tabla-secuencia-cheques">
+                                    <thead>
+                                    <tr>
+                                        <th style="display:none;">Id</th>
+                                        <th>Acción</th>
+                                        <th>Secuencia inicio</th>
+                                        <th>Secuencia fin</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                     {% if secuencia_cheques %}
+                                        {% for secuencia  in secuencia_cheques %}
+                                            <tr>
+                                                <td style="display:none;" ><input type="text" name="secuencia-id" value="{{ secuencia.id }}"></td>
+                                                <td class="eliminar">
+                                                    <a class="btn btn-danger remove-field-secuencia">
+                                                        <i class="glyphicon glyphicon-trash icon-white"></i>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control" value="{{ secuencia.secuencia_inicio }}" name="secuencia-inicio">
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control" value="{{ secuencia.secuencia_fin }}" name="secuencia-fin">
+                                                </td>
+                                                <td>
+                                                    <select id="secuencia{{ secuencia.id }}" class="form-control" name="secuencia-estado" value="1">
+                                                        <option value="" selected>Seleccione un estado</option>
+                                                        <option value="1">Activo</option>
+                                                        <option value="0">Inactivo</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button type="button" class="btn btn-inverse" id="agregar-secuencia">
+                                <i class="glyphicon glyphicon-plus"></i>
+                                Agregar secuencia
+                            </button>
+                        </div>
+                        <div role="tabpanel" id="anulacion-cheques" class="tab-pane fade">
+                            <div class="row">
+                                <table class="table2 table table-striped table-bordered dataTable no-footer dtr-inline" id="tabla-anulacion-cheques">
+                                    <thead>
+                                    <tr>
+                                        <th><input type="checkbox"></th>
+                                        <th>Cheques Disponibles</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-inverse"><i class="fa fa-save"></i> Guardar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'color_admin/assets/plugins/parsley/src/parsley.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('#agregar-secuencia').click(function(){
+                $('#tabla-secuencia-cheques tbody').append(
+                        '<tr>' +
+                            '<td style="display:none;" ><input type="text" name="secuencia-id"></td>' +
+                            '<td class="eliminar">' +
+                                '<a class="btn btn-danger remove-field-secuencia">' +
+                                    '<i class="glyphicon glyphicon-trash icon-white"></i>' +
+                                '</a>' +
+                            '</td>' +
+                            '<td><input type="text" class="form-control" name="secuencia-inicio"></td>' +
+                            '<td><input type="text" class="form-control" name="secuencia-fin"></td>' +
+                            '<td>' +
+                                '<select class="form-control" name="secuencia-estado">' +
+                                    '<option value="" selected>Seleccione un estado</option>' +
+                                    '<option value="1">Activo</option>' +
+                                    '<option value="0">Inactivo</option>' +
+                                '</select>' +
+                            '</td>' +
+                        '</tr>');
+                $('.remove-field-secuencia').click(function() {
+                    $(this).closest('tr').remove();
+                });
+            });
+
+            $("select[name='tipo_cuenta']").val("{{ banco.tipo_cuenta_id }}");
+            if ("{{ banco.estado }}" == "True")
+                $("select[name='estado']").val("1");
+            else
+                $("input[name='estado']").val("0");
+
+            $("select[name='cuenta_contable']").val("{{ banco.cuenta_contable_id }}");
+            $("select[name='ciudad']").val("{{ banco.ciudad_id }}");
+            $("select[name='formato_cheque']").val("{{ banco.formato_cheque_id }}");
+
+
+            $("input[name='saldo_inicial']").val("{{ banco.saldo_inicial }}".replace(",", "."));
+            $("input[name='fecha_corte']").val("{{ banco.fecha_corte.year }}-" + pad("{{ banco.fecha_corte.month }}",2) + "-{{ banco.fecha_corte.day }}");
+            function pad (str, max) {
+                str = str.toString();
+                return str.length < max ? pad("0" + str, max) : str;
+            }
+
+            {% for secuencia  in secuencia_cheques %}
+                if ("{{ secuencia.estado }}" == "True")
+                    $("#secuencia{{ secuencia.id }}").val("1");
+                else
+                    $("#secuencia{{ secuencia.id }}").val("0");
+            {% endfor %}
+
+
+        });
+
+        function get_array_secuencias() {
+            var secuencias = [];
+            $('#tabla-secuencia-cheques tbody tr').each(function () {
+                var row = $(this).closest('tr');
+                var secuencia_id = $('input[name="secuencia-id"]', row).val();
+                var secuencia_inicio = $('input[name="secuencia-inicio"]', row).val();
+                var secuencia_fin = $('input[name="secuencia-fin"]', row).val();
+                var secuencia_estado = $('select[name="secuencia-estado"]', row).val();
+                var secuencia = {
+                    "secuencia_id": secuencia_id,
+                    "secuencia_inicio": secuencia_inicio,
+                    "secuencia_fin": secuencia_fin,
+                    "secuencia_estado": secuencia_estado
+                };
+                secuencias.push(secuencia);
+            });
+            return secuencias;
+        }
+
+        $('#formulario').submit(function (event) {
+            var secuencias = JSON.stringify(get_array_secuencias());
+            var data = $(this).serialize() +
+                    '&arreglo_secuencias=' +secuencias;
+            alert("submitt form");
+            event.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'bancos-update' banco.id %}",
+                data: data
+            });
+        });
+
+
+
+    </script>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+{% load staticfiles %}
+
+{% block css %}
+{{ block.super }}
+{% endblock %}
+
+{% block section_title %}Seguimiento de Reuniones{% endblock %}
+{% block section_subtitle %}
+<br />
+ <div class="email-btn-row hidden-xs">
+                    </div>
+
+                    {% endblock %}
+
+{% block content %}
+				<!-- begin col-12 -->
+				<div class="col-md-12">
+					<!-- begin panel -->
+					<div class="panel panel-inverse">
+						<div class="panel-heading">
+							<div class="panel-heading-btn">
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+							</div>
+							<h4 class="panel-title">Reporte:</h4>
+						</div>
+						<div class="panel-body">
+							<div class="table-responsive">
+								<table id="data-table" class="table table-striped table-bordered">
+									<thead>
+										<tr>
+											<th>Nro Reunion</th>
+											<th>Motivo</th>
+											<th>Fecha</th>
+											<th>Tiempo Respuesta</th>
+											<th>Nro. Proforma</th>
+											<th>Fecha de Proforma</th>
+											<th>Accion</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for r in row %}
+											<tr>
+												<td>{{ r.0 }}</td>
+												<td>{{ r.1}}</td>
+												<td>{{ r.2 }}</td>
+												<td>{{ r.3 }}</td>
+												{% if r.4 %}
+													<td>{{ r.4 }}</td>
+												
+												{% else %}
+													<td></td>
+												{% endif %}
+												{% if r.5 %}
+													<td>{{ r.5 }}</td>
+												
+												{% else %}
+													<td></td>
+												{% endif %}
+											
+												</td>
+												<td>
+												
+											</tr >
+											
+										{% endfor %} 
+									</tbody>
+								</table>
+							</div>
+
+
+
+
+						</div>
+					</div>
+					<!-- end panel -->
+
+					<!-- #modal-dialog -->
+					<div class="modal fade" id="modal-dialog">
+						<div class="modal-dialog">
+							<div class="modal-content">
+							{% if form_mode == "update" %}
+							<form method="post" action="{% url 'ordenescompra-update' ordenescompra.pk %}" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> 
+							{% else %}
+							<form method="post" action="{% url 'ordenescompra-create' %}" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> 
+							{% endif %}
+									{% csrf_token %}
+									<div class="modal-header">
+										<h4 class="modal-title">Nueva Orden de Compra</h4>
+									</div>
+									<div class="modal-body">
+									</div>
+									<div class="modal-footer">
+										<a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Close</a>
+										<button type="submit" class="btn btn-sm btn-success">Guardar</button>
+									</div>
+								</form>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- end col-12 -->	
+			
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+
+    
+	<script type="text/javascript">
+		
+
+	function detalledeCompra(id){
+      alert('entro');
+          $.ajax({
+                url: "/config/obtenerDetalleCompra/", // the endpoint
+                type : "POST", // http method
+                data : { id : id,'csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+                success:function(data){
+                  $("#detalle").append(data);
+                },
+                error: function(){
+                 
+                },
+              });
+    }
+	</script>
+	<!-- ================== END PAGE LEVEL JS ================== -->
+	{% if form.errors or form_mode == "update" %}
+	<script type="text/javascript">
+		$( document ).ready(function() {
+		    $(".modal").modal('toggle');
+		});
+	
+	</script>
+	{% endif %}
+{% endblock %}

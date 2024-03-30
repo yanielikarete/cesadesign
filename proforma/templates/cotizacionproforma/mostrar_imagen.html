@@ -1,0 +1,77 @@
+
+  <form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+   {{ form.title.errors }}
+      <div class="row">
+                                            
+                                            <div class="panel panel-default panel-border">
+                                            <br />
+                                                <table border="0" class=" " width="100%">
+            <tr>
+                <th>Cliente:</th><td colspan="3"> {{ prof.cliente }}</td><th>Vendedor:</th><td colspan="3"> {{ prof.vendedor }}</td>
+            </tr>
+             <tr>
+              <th>Fecha:</th><td colspan="3"> {{ prof.fecha }}</td><th>Fecha Entrega:</th><td colspan="3"> {{ prof.fechapedido }}</td>
+
+            </tr>
+        </table>
+        <br/>
+        <h5>Cotizacion Proforma: {{ prof.codigo }}</h5>
+        <table border="0" class="" width="100%">
+            <tr>
+               
+              <th>Producto:</th>
+              <td colspan="2">{{ detailprof.nombre }}</td>
+              <th>Medida:</th> <td colspan="2">{{ detailprof.medida }}</td>
+            </tr>
+            <tr>
+              <th>Detalle:</th> <td colspan="5">{{ detailprof.detalle }}</td>
+            
+              
+            </tr>
+        </table>
+                                              
+                                            </div>
+                                            
+                                        </div>
+            <div id="options" class="m-b-10">
+                <span class="gallery-option-set" id="filter" data-option-key="filter">
+                    <a href="#show-all" class="btn btn-default btn-xs active" data-option-value="*">
+                        Todos
+                    </a>
+                    
+                </span>
+            </div>
+            <div id="gallery" class="gallery">
+             {% if detalle %}
+                {% for orden in detalle %}
+                <div class="image gallery-group-1" style=" display: inline-table;">
+                    <div class="image-inner">
+                        <a href="{{ orden.imagen.url }}" data-lightbox="gallery-group-1" target="_blank">
+                            {% if orden.imagen %}
+                                <img src={{ orden.imagen.url }} alt=""/>
+                            {% else %}
+                                <img src="{{ MEDIA_URL }}imagenes/producto/imagen_no_disponible.jpg" alt=""/>
+                            {% endif %}
+                        </a>
+                        <p class="image-caption">
+                            {{ orden.descripcion }}
+                        </p>
+                    </div>
+                    <div class="image-info">
+                        <h5 class="title">
+                           {{ orden.descripcion }}
+
+                        </h5>
+                        <div class="pull-right">
+                            &nbsp;
+                        </div>
+                        <div class="desc">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+              {% endif %}
+
+               
+            </div>
+              </form>

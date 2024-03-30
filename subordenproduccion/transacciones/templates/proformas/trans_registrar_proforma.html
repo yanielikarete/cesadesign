@@ -1,0 +1,877 @@
+{% extends "login/base-list.html" %}
+{% load staticfiles %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block css %}
+	{{ block.super }}
+	<!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+	<link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
+	<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css' %}" rel="stylesheet"/>
+	<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
+	<!-- ================== ENDiadGE LEVEL STYLE ================== -->
+{% endblock %}
+{% block section_title %} Registrar Proforma {% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+	<style>
+		.input-group input {
+			border-right: 0px solid transparent;
+		}
+
+		.input-group .input-group-addon {
+			background-color: transparent;
+			border-left: 0px solid transparent;
+		}
+
+		.panel-border {
+			border: 1px solid #ddd !important;
+		}
+
+		.form-group {
+			margin-bottom: 0px !important;
+		}
+	</style>
+
+	<div class="row">
+		<!-- begin col-6 -->
+		<div class="col-md-12">
+			<form id="formregistrarProforma"  name="formregistrarProforma" role="form" action="{% url 'transacciones-register-proforma' %}" method="post"  name="form-wizard" class="form-horizontal">
+				{% csrf_token %} 
+				{{ form.non_field_errors }}
+				<div class="panel panel-inverse">
+					<div class="panel-heading">
+						<div class="panel-heading-btn">
+							<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+							<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+						</div>
+						<h4 class="panel-title">Registrar</h4>
+					</div>
+					
+    					<div class="panel-body">
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="fecha_hoy1">Fecha de emisión:</label>
+							<div class="col-sm-3">
+								<input id="fecha_hoy" type="text" class="form-control" name="fecha_hoy" readonly="readonly">
+							</div>
+							<div class="col-sm-3">
+								{{ proforma_register_form.anulada}}
+								Anulado
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="inputTipoDocumento">Tipo de Documento:</label>
+							<div class="col-sm-3">
+								{{ proforma_register_form.tipo_registro_documento}}
+							</div>
+							<div class="col-sm-3">
+								{{ proforma_register_form.tipo_documento}}
+							</div>
+						</div>
+
+						<div class="form-group" id= "numero_documento">
+							<label class="col-sm-2 control-label" for="numero_documento">Número de Documento:*</label>
+							<div class="col-sm-3">
+								{{ proforma_register_form.numero_documento}}
+							</div>
+							<div class="erroresFields col-sm-3">{{ proforma_register_form.numero_documento.errors.as_text }}</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="persona">Persona:*</label>
+
+							<div class="col-sm-3">
+								<div class="input-group add-on">
+									<input required="required" class="form-control" placeholder="..." id="persona" name="persona" type="text" onclick="mostrarPersona()">
+									<input type="hidden" value="" id="persona_id" name="cliente" />
+									<div class="input-group-btn">
+										<a class="btn btn-inverse" data-toggle="modal" data-target="#myModal_Persona" onclick="mostrarPersona()">
+											<i class=" glyphicon glyphicon-search icon-white"></i>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="erroresFields col-sm-3">{{ proforma_register_form.referencia.errors.as_text }}</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="referencia">Referencia:</label>
+							<div class="col-sm-3">
+								{{ proforma_register_form.referencia}}
+							</div>
+							<div class="erroresFields col-sm-3">{{ proforma_register_form.referencia.errors.as_text }}</div>
+						</div>
+
+						<div class="form-group" id= "vendedor">
+							<label class="col-sm-2 control-label" for="vendedor">Vendedor:</label>
+							<div class="col-sm-3">
+								{{ proforma_register_form.vendedor}}
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="vencimientoSS">Vencimiento:</label>
+							<div class="col-sm-3">
+								<div class="input-group input-daterange">
+									{{ proforma_register_form.vencimiento}}
+									<span class="input-group-addon">dias</span>
+								</div>
+							</div>
+						</div>
+
+						<br><br>
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="proyecto">Proyecto:</label>
+							<div class="col-sm-3">
+								{{ proforma_register_form.proyecto}}
+							</div>
+
+							<label class="col-sm-2 control-label" for="forma_pago">Forma de pago:</label>
+							<div class="col-sm-3">
+								{{ proforma_register_form.forma_de_pago}}
+							</div>
+							<!--
+							<select class="form-control" name="tipo_anticipo">
+									<option value="" selected>Seleccione una opción</option>
+									{% for forma_pago in formas_pago %}
+										<option value="{{ tipo_anticipo.id }}">{{ forma_pago.descripcion }}</option>
+									{% endfor %}
+								</select>
+							-->
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="atencion">Atención:</label>
+							<div class="col-sm-3">
+								{{ proforma_register_form.atencion}}
+							</div>
+
+							<label class="col-sm-2 control-label" for="garantia">Garantía:</label>
+							<div class="col-sm-3">
+								{{ proforma_register_form.garantia}}
+							</div>
+						</div>
+
+						<div class="form-group" id= "id_fecha_entrega">
+							<label class="col-sm-2 control-label" for="fecha_entrega">Fecha de entrega:</label>
+							<div class="col-sm-3">
+								<input id="fecha_entrega" type="text" class="form-control" name="fecha_entrega" >
+							</div>
+							
+						</div>
+					</div>
+				</div>
+
+				<!-- begin panel -->
+				<div class="panel panel-inverse">
+					<div class="panel-heading">
+						<div class="panel-heading-btn">
+							<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+							<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+						</div>
+						<h4 class="panel-title"></h4>
+					</div>
+
+					<div class="panel-body">
+					 <!-- Nav tabs -->
+
+						<ul class="nav nav-tabs" role="tablist" id="tabList">
+							<li role="presentation" class="active">
+								<a data-id="1" href="#productos" aria-controls="productos" role="tab" data-toggle="tab">Productos</a>
+							</li>
+						</ul>
+
+						<input type="hidden" value="Productos" id="id_tabs" name="tabs_menu" />
+
+						<!-- Tab panes -->
+						<div class="panel-body">
+							<div class="tab-content">
+								<div role="tabpanel" class="tab-pane fade in active" id="productos">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="panel panel-default panel-border">
+												<!-- Default panel contents -->
+												<div class="panel-body">
+													<div class="form-group">
+														<label class="col-sm-2 control-label" for="bodega">Bodega:</label>
+
+														<div class="col-sm-5">
+															<div class="input-group add-on">
+																<input required="required" class="form-control" placeholder="..." id="bodega" name="bodega" type="text" onclick="mostrarBodega()" >
+																<input type="hidden" value="1" id="bodega_id" name="bodega_cesa" />
+																<div class="input-group-btn">
+																	<a class="btn btn-inverse" data-toggle="modal" data-target="#myModal_Bodega" onclick="mostrarBodega()">
+																		<i class=" glyphicon glyphicon-search icon-white"></i>
+																	</a>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<!-- Table -->
+												<table class="table2 table-striped table-bordered" id="tabla_1" >
+													<tr>
+														<th></th>
+														<th>
+															<div class="input-group">
+																<span class="input-group-addon">Cant.</span>
+															</div>
+														</th>
+														<th>
+															<div class="input-group">
+																<span class="input-group-addon">Producto</span>
+															</div>
+														</th>
+														<!--
+														<th >
+															<div class="input-group">
+																<span class="input-group-addon">Centro Costo</span>
+																<span class="input-group-addon"><span class="glyphicon glyphicon-search"></span>
+															</div>
+														</th>
+														-->
+														<th>
+															<div class="input-group">
+																<span class="input-group-addon">Unidad</span>
+															</div>
+														</th>
+														<th>
+															<div class="input-group">
+																<span class="input-group-addon">Precio U.</span>
+															</div>
+														</th>
+														<th>
+															<div class="input-group">
+																<span class="input-group-addon">%Desc.</span>
+															</div>
+														</th>
+														<th>
+															<div class="input-group">
+																<span class="input-group-addon">Desc.</span>
+															</div>
+														</th>
+														<th>
+															<div class="input-group">
+																<span class="input-group-addon">Subtotal</span>
+															</div>
+														</th>
+													</tr>
+													<tr>
+														<td class="eliminar">
+															<a class="btn btn-danger remove_fields">
+																<i class=" glyphicon glyphicon-trash icon-white"></i>
+															</a>
+														</td>
+														<td>
+															<input type="number" class="form-control" id="cantidad_producto0" name="cantidad_producto0" max="500" min="0" value="1" onkeyup="change_number(this.value,0)" onchange="change_number(this.value,0)">
+														</td>
+														<td>
+															<div class="input-group add-on">
+																<input class="form-control" placeholder="..." id="producto0" name="producto0" type="text" required="required" onclick="mostrarProductos(0)">
+																<input type="hidden" value="" id="producto_hidden0" name="producto_hidden0" />
+																<div class="input-group-btn">
+																	<a class="btn btn-default" data-toggle="modal" data-target="#myModal_Producto" onclick="mostrarProductos(0)">
+																		<i class=" glyphicon glyphicon-search icon-white"></i>
+																	</a>
+																</div>
+															</div>
+														</td>
+														<!--
+														<td>
+															<div class="input-group add-on">
+																<input class="form-control" placeholder="..." id="centro_costo_producto0" name="centro_costo_producto0" type="text" required="required" onclick="mostrarCentroCostoProducto(0)">
+																<input type="hidden" value="" id="centro_costo_producto_hidden0" name="centro_costo_producto_hidden0" />
+																<div class="input-group-btn">
+																	<a class="btn btn-default" data-toggle="modal" data-target="#myModal_Centro_Costo" onclick="mostrarCentroCostoProducto(0)" >
+																		<i class=" glyphicon glyphicon-search icon-white"></i>
+																	</a>
+																</div>
+															</div>
+														</td>
+														-->
+														<td>
+															<input type="number" class="form-control" id="unidad_producto0" name="unidad_producto0" readonly="True" value="1">
+														</td> 
+														<td>
+
+															<input class="form-control" placeholder="..." id="precio_unitario_producto0" name="precio_unitario_producto0" type="number" readonly="True">
+														</td> 
+														<td>
+															<input class="form-control" id="porc_descuento_producto0" name="porc_descuento_producto0" type="number" max="100.0" min="0.0"  value="0.0" onkeyup="change_descuento(this.value,0)" onchange="change_descuento(this.value,0)">
+														</td>
+														<td>
+															<div class="input-group input-daterange">
+																<span class="input-group-addon">$</span>
+																<input class="form-control" id="descuento_producto0" name="descuento_producto0" type="number" readonly="True" value="0.0"  >
+															</div>
+														</td>
+														<td>
+															<div class="input-group input-daterange">
+																<span class="input-group-addon">$</span>
+																<input class="form-control" id="subtotal_producto0" name="subtotal_producto0" type="number" readonly="True" value="0.0" >
+																<input type="hidden" class="form-control" id="id_subtotal_producto0" name="id_subtotal_producto0"/>
+																<input type="hidden" class="form-control" id="acepta_iva_producto0" name="acepta_iva_producto0"/>
+															</div>
+														</td>                   
+													</tr>
+												</table>
+
+												<p class="text-center">
+													</br>
+													<button type="button" class=" btn btn-primary btn-lg" id="add_tabla_1"><span class="glyphicon glyphicon-plus-sign"></span> Agregar detalle</button>
+												</p>
+											</div>
+
+											<div class="panel panel-default panel-border">
+												<div class="panel-body">
+													<div class="row">
+														<div class="col-sm-8">
+															<div class="form-group">
+																<label class="sr-only control-label" for="id_descripcion">Descripci&oacute;n *</label>
+																<textarea contenteditable class="form-control" cols="100" id="id_descripcion" name="descripcion" placeholder="Descripci&oacute;n" style="resize:none" rows="8" title="" ></textarea>
+															</div>
+														</div>
+
+														<div class="col-sm-4">
+															<div class="form-group col-sm-12">
+																<label class="col-sm-5 control-label" for="id_subtotal_14_producto">Subtotal 14%:</label>
+																<div class="col-sm-7">
+																	<div class="input-group input-daterange">
+																		<span class="input-group-addon">$</span>
+																		<input type="number" class="form-control" name="subtotal_14_producto" readonly="True" id="subtotal_14" value="0.0">
+																	</div>
+																</div>
+															</div>
+
+															<div class="form-group col-sm-12">
+																<label class="col-sm-5 control-label" for="subtotal_0_producto">Subtotal 0%:</label>
+																<div class="col-sm-7">
+																	<div class="input-group input-daterange">
+																		<span class="input-group-addon">$</span>
+																		<input type="number" class="form-control" name="subtotal_0_producto" readonly="True" id="subtotal_0" value="0.0">
+																	</div>
+																</div>
+															</div>
+
+															<div class="form-group col-sm-12">
+																<label class="col-sm-5 control-label" for="descuento_final_producto">Descuento:</label>
+																<div class="col-sm-7">
+																	<div class="input-group input-daterange">
+																		<span class="input-group-addon">$</span>
+																		<input type="number" class="form-control" name="descuento_final_producto" readonly="True" id="descuento_final_producto"  value="0.0">
+																	</div>
+																</div>
+															</div>
+															<div class="form-group col-sm-12">
+																<label class="col-sm-5 control-label" for="iva_final_producto">IVA:</label>
+																<div class="col-sm-7">
+																	<div class="input-group input-daterange">
+																		<span class="input-group-addon">$</span>
+																		<input type="number" class="form-control" name="iva_final_producto" readonly="True" id="iva"  value="0.0">
+																	</div>
+																</div>
+															</div>
+															<div class="form-group col-sm-12">
+																<label class="col-sm-5 control-label" for="ice_final_producto">ICE:</label>
+																<div class="col-sm-7">
+																	<div class="input-group input-daterange">
+																		<span class="input-group-addon">$</span>
+																		<input type="number" class="form-control" name="ice_final_producto" readonly="True" id="ice"  value="0.0">
+																	</div>
+																</div>
+															</div>
+															<div class="form-group col-sm-12">
+																<label class="col-sm-5 control-label" for="total_final_producto">Total:</label>
+																<div class="col-sm-7">
+																	<div class="input-group input-daterange">
+																		<span class="input-group-addon">$</span>
+																		<input type="number" class="form-control" name="total_final_producto" readonly="True" id="total_final_producto" value="0.0">
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<input type="hidden" name="columnas_productos" id="columnas_productos" value="0">
+									<input type="hidden" name="id_fila_cambiar_productos" id="id_fila_cambiar_productos" value="" />
+									<!--
+									<input type="hidden" name="id_fila_cambiar_centro_costo" id="id_fila_cambiar_centro_costo" value="" />
+									-->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- end panel -->
+				<!-- INICIO Contenedor de los Botones GUARDAR y REGRESAR -->
+				<div class="panel panel-inverse">
+					<p class="text-center">
+							
+							<button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+							<a class="default btn btn-link" href="{% url 'proforma-factura-list' %}">
+							<button type="button" class="btn btn-primary btn-lg">  Regresar</button></a>
+						</p>
+				</div>
+				<!-- FIN Contenedor de los Botones GUARDAR y REGRESAR -->
+				<div class="clearfix"></div>
+				</br>
+			</form>
+
+		</div>
+	</div>
+
+	<!-- Modal Persona-->
+	<div class="modal fade persona_modal" id="modal-dialog">
+		<div class="modal-dialog  modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Personas</h4>
+				</div>
+				<div class="panel-body">
+					<div class="table-responsive">
+						<table class="table2 table-striped" width="100%" id="tabla_persona">
+							<thead>
+							<tr>
+								<th>Código</th>
+								<th>Nombre</th>
+								<th>Ruc</th>
+								<th>Agregar</th>
+							</tr>
+							</thead>
+							<tbody>
+							{% for cliente  in clientes %}
+								<tr>
+									<td>{{ cliente.codigo_cliente }}</td>
+									<td>{{ cliente.nombre_cliente }}</td>
+									<td>{{ cliente.ruc }}</td>
+									<td onclick="cargar_persona('{{ cliente.id_cliente }}','{{ cliente.nombre_cliente }}')">
+										<a class="btn btn-inverse remove_fields">
+											<i class=" glyphicon glyphicon-plus icon-white"></i>
+										</a>
+									</td>
+								</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Final Modal Persona -->
+
+	<!-- Modal Bodegas-->
+	<div class="modal fade bodega_modal" id="modal-dialog">
+		<div class="modal-dialog  modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Bodegas</h4>
+				</div>
+				<div class="panel-body">
+					<div class="table-responsive">
+						<table class="table2 table-striped" width="100%" id="tabla_Bodega">
+							<thead>
+							<tr>
+								<th>Código</th>
+								<th>Nombre</th>
+								<th>Telefono</th>
+								<th>Agregar</th>
+							</tr>
+							</thead>
+							<tbody>
+							{% for bodega  in bodegas %}
+								<tr>
+									<td>{{ bodega.codigo_bodega }}</td>
+									<td>{{ bodega.nombre }}</td>
+									<td>{{ bodega.telefono }}</td>
+									<td onclick="cargar_bodega('{{ bodega.id }}','{{ bodega.nombre }}')">
+										<a class="btn btn-inverse remove_fields">
+											<i class=" glyphicon glyphicon-plus icon-white"></i>
+										</a>
+									</td>
+								</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Final Modal Bodegas -->
+
+	<!-- Modal Producto -->
+	<div class="modal fade producto_modal" id="modal-dialog">
+		<div class="modal-dialog  modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Producto</h4>
+				</div>
+				<div class="panel-body">
+					<div class="table-responsive">
+						<table class="table2 table-striped" width="100%" id="tabla_producto">
+							<thead>
+							<tr>
+								<th>Código</th>
+								<th>Descripci&oacute;n</th>
+								<th>Costo</th>
+								<th>Agregar</th>
+							</tr>
+							</thead>
+							<tbody>
+							{% for producto  in productos %}
+								<tr>
+									<td>{{ producto.codigo_producto }}</td>
+									<td>{{ producto.descripcion_producto }}</td>
+									<td>{{ producto.precio1 }}</td>
+									<td onclick="cargar_producto('{{ producto.producto_id }}','{{ producto.codigo_producto }}','{{ producto.descripcion_producto }}','{{ producto.medida }}', '{{ producto.precio1 }}','{{ producto.acepta_iva }}')">
+										<a class="btn btn-inverse remove_fields">
+											<i class=" glyphicon glyphicon-plus icon-white"></i>
+										</a>
+									</td>
+								</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-inverse" onclick="cerrar_productos()">Cerrar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Final Modal Producto -->
+
+	<!-- Modal Centro Costo -->
+	<div class="modal fade centro_costo_modal" id="modal-dialog">
+		<div class="modal-dialog  modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Centro Costo</h4>
+				</div>
+				<div class="panel-body">
+					<div class="table-responsive">
+						<table class="table2 table-striped" width="100%" id="tabla_centro_costo">
+							<thead>
+							<tr>
+								<th>Código</th>
+								<th>Nombre</th>
+								<th>Agregar</th>
+							</tr>
+							</thead>
+							<tbody>
+							{% for centro_costo  in centro_costos %}
+								<tr>
+									<td>{{ centro_costo.centro_id }}</td>
+									<td>{{ centro_costo.nombre_centro }}</td>
+									<td onclick="cargar_centro_costo('{{ centro_costo.centro_id }}','{{ centro_costo.nombre_centro }}')">
+										<a class="btn btn-inverse remove_fields">
+											<i class=" glyphicon glyphicon-plus icon-white"></i>
+										</a>
+									</td>
+								</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-inverse" onclick="cerrar_centro_costo()">Cerrar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Final Modal Centro Costo -->
+
+{% endblock %}
+
+{% block javascript %}
+	{{ block.super }}
+	<script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+	<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+	<script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+	<script>
+
+		var id_producto = 9;
+		$(document).ready(function () {
+			$('#fecha_hoy').datepicker({todayHighlight: true, autoclose: true});
+			$('#fecha_hoy').val(getFechaHoy());
+			$('#fecha_entrega').datepicker({todayHighlight: true, autoclose: true});
+			$('#fecha_entrega').val(getFechaHoy());
+			$('#tabla_persona').DataTable();
+			$('#tabla_Bodega').DataTable();
+			$('#tabla_producto').DataTable();
+			$('#tabla_centro_costo').DataTable();
+
+			$("#numero_documento").show();
+			$("#vendedor").hide();
+			$("#id_fecha_entrega").hide();
+			
+			$('#id_tipo_registro_documento').on('change', function() {
+				if(this.value == '2'){//Proveedor
+					$("#numero_documento").show();
+					$("#vendedor").hide();
+					$("#id_fecha_entrega").hide();
+					//$("#id_numero_documento").attr("required", "true");
+					$('#id_numero_documento').prop('required',true);
+				}else if(this.value == '1'){//Cliente
+					$("#vendedor").show();
+					$("#numero_documento").hide();
+					$("#id_fecha_entrega").show();
+					$('#id_numero_documento').prop('required',false);
+
+				}
+			});
+		});
+
+		function getFechaHoy() {
+			var today = new Date();
+			var dd = today.getDate();
+			var mm = today.getMonth() + 1; //January is 0!
+			var yyyy = today.getFullYear();
+
+			if (dd < 10) {
+				dd = '0' + dd
+			}
+			if (mm < 10) {
+				mm = '0' + mm
+			}
+			today = dd + '/' + mm + '/' + yyyy;
+			return today;
+		}
+
+		function mostrarPersona(){
+			$(".persona_modal").modal('toggle');
+		}
+
+		function mostrarBodega(){
+			$(".bodega_modal").modal('toggle');
+		}
+
+		/******************************   Productos   ******************************/
+		/**************************************************************************/
+		function mostrarProductos(data){
+			$('#id_fila_cambiar_productos').val(data);
+			$(".producto_modal").modal('toggle');
+		}
+
+		function cargar_producto(id, codigo, descripcion, medida, costo, acepta_iva) {
+			var fila=$('#id_fila_cambiar_productos').val();
+			var redondear = 3;
+			$('#producto_hidden'+fila).val(id);
+			
+			// Obtener preco 1 del producto
+			var cantidad = $('#cantidad_producto'+fila).val();
+			var value_costo = parseFloat(costo.replace(",", "."));
+
+			//Setear el precio Unitario
+			$('#precio_unitario_producto'+fila).val(value_costo);
+
+			// Obtener valor del descuento del producto
+			var precio_total_producto = parseFloat( cantidad * value_costo );
+			var porcentaje_desc=$('#porc_descuento_producto'+fila).val();
+			var valor_desc = parseFloat( parseFloat( porcentaje_desc * parseFloat(precio_total_producto) ) / 100 );
+			$('#descuento_producto'+fila).val(valor_desc.toFixed(redondear));
+
+			//Obtener valor subtotal del producto
+			var subtotal_producto = precio_total_producto - valor_desc;
+			$('#subtotal_producto'+fila).val(subtotal_producto.toFixed(redondear));
+
+			var subtotal_14 = 0, subtotal_0 = 0, valor_iva = 0, total = 0;
+			if (acepta_iva == "True") {
+				subtotal_14 = parseFloat( $('#subtotal_14').val() );
+				subtotal_producto_14 = subtotal_14 + subtotal_producto
+				$('#subtotal_14').val(subtotal_producto_14);
+			}else if (acepta_iva == "False"){
+				subtotal_0 = parseFloat( $('#subtotal_0').val() );
+				subtotal_producto_0 = subtotal_0 + subtotal_producto
+				$('#subtotal_0').val(subtotal_producto_0);
+			}
+			
+			//Obtener  total descuento de todos los producto
+			var descuento = parseFloat($('#descuento_final_producto').val() );
+			var descuento_total_producto = parseFloat($('#descuento_producto'+fila).val() );
+			var total_descuento = descuento + descuento_total_producto;
+			$('#descuento_final_producto').val(total_descuento);	
+			$('#producto_id').val(id);
+			$('#producto'+fila).val(descripcion);
+
+			//Setear a un input si lleva iva
+			$('#acepta_iva_producto'+fila).val(acepta_iva);
+
+			//IVA
+			var iva = 14;
+			valor_iva =parseFloat(subtotal_producto_14 * iva) / 100;
+			$('#iva').val(valor_iva);
+
+			//Total
+			subtotal_14 = parseFloat( $('#subtotal_14').val() );
+			subtotal_0 = parseFloat( $('#subtotal_0').val() );
+			valor_iva = parseFloat($('#iva').val());
+			total = subtotal_14 + subtotal_0 + valor_iva;
+			$('#total_final_producto').val(total);
+			cerrar_productos();
+		}
+
+		function cerrar_productos(){
+			$(".producto_modal").modal('toggle');
+		}
+
+		/***********************   Centro Costo Productos   ***********************/
+		/**************************************************************************/
+		/*
+		function mostrarCentroCostoProducto(data){
+			$('#id_fila_cambiar_centro_costo').val(data);
+			$(".centro_costo_modal").modal('toggle');
+		}
+
+		function cargar_centro_costo(id, nombre) {
+			var fila=$('#id_fila_cambiar_centro_costo').val();
+			$('#centro_costo_producto_hidden'+fila).val(id);
+			$('#centro_costo_producto'+fila).val(nombre);
+			cerrar_centro_costo();
+		}
+
+		function cerrar_centro_costo(){
+			$(".centro_costo_modal").modal('toggle');
+		}
+		*/
+
+		function cargar_persona(id, nombre) {
+			$('#persona_id').val(id);
+			$('#persona').val(nombre);
+			$(".persona_modal").modal('toggle');
+		}
+
+		function cargar_bodega(id, nombre) {
+			$('#bodega_id').val(id);
+			$('#bodega').val(nombre);
+			$(".bodega_modal").modal('toggle');
+		}
+
+		function actualizarTotal(){
+
+			var fila=$('#id_fila_cambiar_productos').val();
+			var i, redondear = 3;
+			var subtotal_0 = 0.0, subtotal_14 = 0.0, descuento_productos = 0.0, valor_iva = 0.0, total = 0.0;
+			
+			for (i = 0; i <= fila; i++) {
+
+				var subtotal = $('#subtotal_producto'+i).val();
+				var iva = $('#acepta_iva_producto'+i).val();
+				var descuento_producto = $('#descuento_producto'+i).val();
+
+				if (iva == "True") {
+					descuento_productos = descuento_productos + parseFloat(descuento_producto);
+					subtotal_14 = subtotal_14 + parseFloat(subtotal);
+				}else if (iva == "False"){
+					descuento_productos = descuento_productos + parseFloat(descuento_producto);
+					subtotal_0 = subtotal_0 + parseFloat(subtotal);
+				}
+			}
+
+			$('#subtotal_14').val(subtotal_14.toFixed(redondear));
+			$('#subtotal_0').val(subtotal_0.toFixed(redondear));
+			$('#descuento_final_producto').val(descuento_productos.toFixed(redondear));
+
+			//IVA
+			var iva 	= 14;
+			valor_iva 	= subtotal_14 * parseFloat(iva) / 100;
+			$('#iva').val(valor_iva.toFixed(redondear));
+
+			//Total
+			var ice 		= parseFloat( $('#ice').val() );
+			total 			= subtotal_14 + subtotal_0 + valor_iva + ice;
+			$('#total_final_producto').val(total.toFixed(redondear));
+		}
+
+		function change_number(cantidad_producto,fila){
+
+			var precio_unitario_producto = parseFloat( $('#precio_unitario_producto'+fila).val() );
+			var porc_descuento_producto = parseFloat( $('#porc_descuento_producto'+fila).val() );
+
+			var total_producto = parseFloat( cantidad_producto * parseFloat(precio_unitario_producto) );
+			var valor_descuento = parseFloat( parseFloat( porc_descuento_producto * parseFloat(total_producto) ) / 100 );
+			var subtotal_producto = parseFloat(total_producto - valor_descuento);
+			
+			$('#descuento_producto'+fila).val(valor_descuento);
+			$('#subtotal_producto'+fila).val(subtotal_producto);
+			actualizarTotal();
+		}
+
+		function change_descuento(porc_descuento_producto,fila){
+
+			var precio_unitario_producto = parseFloat( $('#precio_unitario_producto'+fila).val() );
+			var cantidad_producto = parseFloat( $('#cantidad_producto'+fila).val() );
+
+			var total_producto = parseFloat( cantidad_producto * parseFloat(precio_unitario_producto) );
+			var valor_descuento = parseFloat( parseFloat( porc_descuento_producto * parseFloat(total_producto) ) / 100 );
+			var subtotal_producto = parseFloat(total_producto) - valor_descuento;
+
+			$('#descuento_producto'+fila).val(valor_descuento);
+			$('#subtotal_producto'+fila).val(subtotal_producto);
+			actualizarTotal();
+		}
+
+		$("#add_tabla_1").click(function(){
+			// Obtenemos el numero de filas (td) que tiene la primera columna
+			var num_recetas=$('#columnas_productos').val();
+			num_recetas=parseInt(num_recetas) + 1;
+
+			var tds=$("#tablatabla_1 tr:first td").length;
+			// Obtenemos el total de columnas (tr) del id "tabla"
+			var trs=$("#tabla_1 tr").length;
+			var nuevaFila='<tr><td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+				nuevaFila+='<td><input type="number" class="form-control" id="cantidad_producto'+num_recetas+'" name="cantidad_producto'+num_recetas+'" max="120" min="0" value="1" onkeyup="change_number(this.value,'+num_recetas+')" onchange="change_number(this.value,'+num_recetas+')"></td> ';
+				
+				nuevaFila+='<td> <div class="input-group add-on"> <input class="form-control" placeholder="..." id="producto'+num_recetas+'" name="producto'+num_recetas+'"type="text" required="required" onclick="mostrarProductos('+num_recetas+')" > <input type="hidden" value="" id="producto_hidden'+num_recetas+'" name="producto_hidden'+num_recetas+'" /><div class="input-group-btn"> <a class="btn btn-default" data-toggle="modal" data-target="#myModal_Producto" onclick="mostrarProductos('+num_recetas+')"> <i class=" glyphicon glyphicon-search icon-white"></i></a></div></div></td>';
+
+				//nuevaFila+='<td> <div class="input-group add-on"> <input class="form-control" placeholder="..." id="centro_costo_producto'+num_recetas+'" name="centro_costo_producto'+num_recetas+'"type="text" required="required" onclick="mostrarCentroCostoProducto('+num_recetas+')" > <input type="hidden" value="" id="centro_costo_producto_hidden'+num_recetas+'" name="centro_costo_producto_hidden'+num_recetas+'" /><div class="input-group-btn"> <a class="btn btn-default" data-toggle="modal" data-target="#myModal_Centro_Costo" onclick="mostrarCentroCostoProducto('+num_recetas+')"> <i class=" glyphicon glyphicon-search icon-white"></i></a></div></div></td>';
+
+				nuevaFila+='<td><input type="number" class="form-control" id="unidad_producto'+num_recetas+'" name="unidad_producto'+num_recetas+'" readonly="True" value="1"></td>';
+
+				nuevaFila+='<td><input class="form-control" placeholder="..." id="precio_unitario_producto'+num_recetas+'" name="precio_unitario_producto'+num_recetas+'" type="number" readonly="True"></td>';
+
+				nuevaFila+='<td><input class="form-control" id="porc_descuento_producto'+num_recetas+'" name="porc_descuento_producto'+num_recetas+'" type="number" max="100.0" min="0.0" value="0.0" onkeyup="change_descuento(this.value,'+num_recetas+')" onchange="change_descuento(this.value,'+num_recetas+')"></td>'
+
+				nuevaFila+='<td><div class="input-group input-daterange"><span class="input-group-addon">$</span><input class="form-control" id="descuento_producto'+num_recetas+'" name="descuento_producto'+num_recetas+'" type="number" readonly="True" value="0.0"></div></td>'
+
+				nuevaFila+='<td><div class="input-group input-daterange"><span class="input-group-addon">$</span><input class="form-control" id="subtotal_producto'+num_recetas+'" name="subtotal_producto'+num_recetas+'" type="number" readonly="True" value="0.0"><input type="hidden" class="form-control" id="id_subtotal_producto'+num_recetas+'" name="id_subtotal_producto'+num_recetas+'"/><input type="hidden" class="form-control" id="acepta_iva_producto'+num_recetas+'" name="acepta_iva_producto'+num_recetas+'"/></div></td>'
+				nuevaFila+='</tr>';
+
+			  $('#columnas_productos').val(num_recetas);
+			$("#tabla_1").append(nuevaFila);
+		});
+		
+		// $("#del").click(function(){
+		// 	// Obtenemos el total de columnas (tr) del id "tabla"
+		// 	var trs=$("#tabla tr").length;
+		// 	if(trs>1)
+		// 	{
+		// 		// Eliminamos la ultima columna
+		// 		$("#tabla tr:last").remove();
+		// 	}
+		// 	 actualizarTotal();
+		// });
+		$(document).on("click",".eliminar",function(){
+			var parent = $(this).parent();
+			$(parent).remove();
+			actualizarTotal();
+		});
+	</script>
+{% endblock %}

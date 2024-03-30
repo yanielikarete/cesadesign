@@ -1,0 +1,843 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+        <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css'%}" rel="stylesheet" />
+  <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css'%}" rel="stylesheet" />
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block breadcrumb %}Sucursal {{ sucursal.nombre }}{% endblock %}
+{% block section_title %}Reactivacion de Orden de Produccion{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+
+            <!-- begin row -->
+           <style>
+       .panel-border{border: 1px solid #ddd !important}
+       .form-ajust .form-group{margin-bottom: 0px !important}
+      input[type="text"],select,input[type="number"]
+      {
+
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    box-shadow: none;
+    font-size: 12px;
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+       }
+
+ .table2 {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+      display:table}
+
+.table2>tbody>tr>td, .table2>tbody>tr>th, .table2>tfoot>tr>td, .table2>tfoot>tr>th, .table2>thead>tr>td, .table2>thead>tr>th {
+    border-color: #e2e7eb;
+    padding: 10px 15px;
+}
+    
+
+    </style>
+
+  <div class="row">
+                <!-- begin col-6 -->
+      <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                         <form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+
+                        <h3 class="panel-title">Ordenes de Produccion</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <div>
+
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                  <li role="presentation" class="active"><a href="#principales" aria-controls="principales" role="tab" data-toggle="tab">Principales</a></li>
+
+                            <li role="presentation"><a href="#foto" aria-controls="foto" role="tab" data-toggle="tab">Foto</a></li>
+                                </ul>
+                              
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade in active" id="principales">
+                                        <div class="row">
+                                            
+                                              <div class="panel panel-default panel-border">
+                                                  <div class="panel-heading">Id del Registro</div>
+                                                  <div class="panel-body">
+                                                       <div class="col-md-2">
+                                                            <label for="exampleInputName2">Tipo</label>
+                                                            {% bootstrap_field ordenproduccion_form.tipo show_label=False %}
+
+                                                         </div>
+                                                          <div class="col-md-2">
+                                                            <label for="exampleInputName2">C&oacute;digo</label>
+                                                            {% bootstrap_field ordenproduccion_form.codigo show_label=False %}
+
+                                                         </div>
+                                                          <div class="col-md-3">
+                                                            <label for="exampleInputEmail2">Tipo Mueble </label>
+                                                              {% bootstrap_field ordenproduccion_form.tipo_mueb show_label=False %}
+
+                                                          </div>
+                                                          <div class="col-md-2">
+                                                            <label for="exampleInputEmail2">Fecha </label>
+                                                              {% bootstrap_field ordenproduccion_form.fecha show_label=False %}
+
+                                                          </div>
+                                                          <div class="col-md-2">
+                                                            <label for="exampleInputName2">Fecha Entrega</label>
+                                                            {% bootstrap_field ordenproduccion_form.fechapedido show_label=False %}
+
+
+                                                         </div>
+                                                          <div class="col-md-3">
+                                                            <label for="exampleInputName2">Nombre del Cliente</label>
+                                                              {% bootstrap_field ordenproduccion_form.cliente show_label=False %}
+
+                                                         </div>
+                                                         
+                                                          <div class="col-md-3">
+                                                            <label for="exampleInputName2">#OP</label>
+                                                                    {% bootstrap_field ordenproduccion_form.codigo_orden_produccion show_label=False %}
+
+
+                                                         </div>
+                                                          <div class="col-md-4">
+                                                            <label for="exampleInputEmail2">Descripcion </label>
+                                                           {% bootstrap_field ordenproduccion_form.descripcion show_label=False %}
+                                                          </div>
+                                                          <div class="col-md-3">
+                                                            <label for="exampleInputEmail2">Cantidad</label>
+                                                           {% bootstrap_field ordenproduccion_form.cantidad show_label=False %}
+                                                          </div>
+                                                            <div class="col-md-2">
+                                                            <label for="exampleInputEmail2">&nbsp;</label>
+                                                           {% bootstrap_field ordenproduccion_form.venta_local show_label=False %}
+                                                          </div>
+                                                            <div class="col-md-1">
+                                                            <label for="exampleInputEmail2">&nbsp;</label>
+                                                           {% bootstrap_field ordenproduccion_form.exportacion show_label=False %}
+                                                          </div>
+                                                          <div class="col-md-10">
+                                                            <label for="exampleInputEmail2">Detalle</label>
+                                                           {% bootstrap_field ordenproduccion_form.detalle show_label=False %}
+                                                          </div>
+                                                          
+                                                            <div class="col-md-2 ui-sortable">
+                                                                <label for="exampleInputEmail2"></label>
+                                                               <div class="form-group"><label class="sr-only control-label" for="id_cantidad">
+                                                                 
+                                                               </label>
+                                                               <button type="button" onclick="cerrar()" class="btn btn-danger btn-block">Orden de Produccion <i class=" glyphicon glyphicon-add icon-white"></i></button>
+                                                               </div>
+                                                              </div>
+                                                              <div class="col-md-2">
+                                                              
+                                                            </div>
+                                          </div>
+                                          <div class="row">
+                                                                <div class="col-md-2">
+                                                                <label for="exampleInputName2">Largo </label>
+                                                                {% bootstrap_field ordenproduccion_form.largo show_label=False %}
+
+                                                             </div>
+                                                               <div class="col-md-2">
+                                                                <label for="exampleInputName2">Fondo </label>
+                                                                {% bootstrap_field ordenproduccion_form.fondo show_label=False %}
+
+                                                             </div>
+                                                              <div class="col-md-2">
+                                                                <label for="exampleInputName2">Alto</label>
+                                                                {% bootstrap_field ordenproduccion_form.alto show_label=False %}
+
+                                                             </div>
+                                                         
+                                                        
+                                                               <div class="col-md-1">
+                                                                  <label for="exampleInputName2">Tope en </label>
+                                                                  {% bootstrap_field ordenproduccion_form.madera show_label=False %}
+                                                                  {% bootstrap_field ordenproduccion_form.hierro show_label=False %}
+                                                                  
+
+                                                               </div>
+                                                                <div class="col-md-2">
+                                                                  <label for="exampleInputName2"> :</label>
+                                                                  
+                                                                  {% bootstrap_field ordenproduccion_form.vidrio show_label=False %}
+                                                                  {% bootstrap_field ordenproduccion_form.marmol show_label=False %}
+
+
+                                                               </div>
+                                                               <div class="col-md-6">
+                                                                  <label for="exampleInputName2"> </label>
+                                                                  {% bootstrap_field ordenproduccion_form.enchape show_label=False %}
+
+                                                               </div>
+                                                               <div class="col-md-3">
+                                                                  <label for="exampleInputName2"></label>
+                                                                  {% bootstrap_field ordenproduccion_form.enchape_detalle show_label=False %}
+
+                                                               </div>
+                                                          <div class="col-md-8">
+                                                            <label for="exampleInputName2">Tono </label>
+                                                            {% bootstrap_field ordenproduccion_form.tono show_label=False %}
+
+                                                         </div>
+                                                         <div class="col-md-4">
+                                                            <label for="exampleInputName2">Tipo Metal </label>
+                                                            {% bootstrap_field ordenproduccion_form.hierro show_label=False %}
+                                                            <div id="hierro" style="display:none">
+                                                              {% bootstrap_field ordenproduccion_form.patina_color show_label=False %}
+
+                                                            </div>
+                                                            {% bootstrap_field ordenproduccion_form.acero show_label=False %}
+                                                            <div id="acero" style="display:none;nargin-left:5px">
+                                                               {% bootstrap_field ordenproduccion_form.satinado show_label=False %}
+                                                            {% bootstrap_field ordenproduccion_form.brillante show_label=False %}
+                                                            
+
+                                                            </div>
+                                                            {% bootstrap_field ordenproduccion_form.aluminio show_label=False %}
+
+                                                            <div id="aluminio" style="display:none">
+                                                            {% bootstrap_field ordenproduccion_form.abrillantado show_label=False %}
+                                                            {% bootstrap_field ordenproduccion_form.patina_color show_label=False %}
+                                                            
+
+                                                            </div>
+                                                           
+                                                         </div>
+                                                           <div class="col-md-2">
+                                                              <label for="exampleInputName2">Acabado </label>
+                                                              {% bootstrap_field ordenproduccion_form.mate show_label=False %}
+                                                              {% bootstrap_field ordenproduccion_form.semimate show_label=False %}
+                                                              {% bootstrap_field ordenproduccion_form.brillante show_label=False %}
+                                                           </div>
+                                                            <div class="col-md-2">
+                                                              <label for="exampleInputName2">:</label>
+                                                              {% bootstrap_field ordenproduccion_form.pulido show_label=False %}
+                                                              {% bootstrap_field ordenproduccion_form.poroabierto show_label=False %}
+                                                            <div class="form-group"><div class="checkbox"><label for="id_poroabierto"></label></div></div>                                                   </div>
+                                                           
+                                                         
+                                                           <div class="col-md-3">
+                                                              <label for="exampleInputName2">Herrajes Especiales </label>
+                                                              {% bootstrap_field ordenproduccion_form.retractil show_label=False %}
+                                                              {% bootstrap_field ordenproduccion_form.corredizo show_label=False %}
+                                                            <div class="form-group"><div class="checkbox"><label for="id_poroabierto"></label></div></div>
+                                                           </div>
+                                                             
+                                                             
+                                                          
+                                                           <div class="col-md-2">
+                                                              <label for="exampleInputName2">Topes de  </label>
+                                                              {% bootstrap_field ordenproduccion_form.engrampe show_label=False %}
+                                                              {% bootstrap_field ordenproduccion_form.impulso show_label=False %}
+                                                              <div class="form-group"><div class="checkbox"><label for="id_poroabierto"></label></div></div>
+
+                                                           </div>
+                                                           <div class="col-md-2">
+                                                              <label for="exampleInputName2">Detalles  </label>
+                                                              {% bootstrap_field ordenproduccion_form.pintado_mano show_label=False %}
+                                                              {% bootstrap_field ordenproduccion_form.conchaperla show_label=False %}
+                                                              <div class="form-group"><div class="checkbox"><label for="id_poroabierto"></label></div></div>
+                                                           </div>
+                                                          
+                                                             <div class="col-md-2">
+                                                              <label for="exampleInputName2">Telas </label>
+                                                              {% bootstrap_field ordenproduccion_form.tela_almacen show_label=False %}
+                                                              {% bootstrap_field ordenproduccion_form.tela_cliente show_label=False %}
+                                                              
+                                                           </div>
+                                                           <div class="col-md-4">
+                                                              <label for="exampleInputName2">Cueros </label>
+                                                              {% bootstrap_field ordenproduccion_form.cuero_almacen show_label=False %}
+                                                              {% bootstrap_field ordenproduccion_form.cuero_cliente show_label=False %}
+                                                              
+                                                           </div>
+                                                           <div class="col-md-6">
+                                                              <label for="exampleInputName2">Fecha Inicio</label>
+                                                              {% bootstrap_field ordenproduccion_form.fechainicio show_label=False %}
+                                                              
+                                                           </div>
+                                                            <div class="col-md-6">
+                                                              <label for="exampleInputName2">Fecha Tope de Entrega </label>
+                                                              {% bootstrap_field ordenproduccion_form.fechaentrega show_label=False %}
+                                                              
+                                                           </div>
+                                                  </div>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                        <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="inputEmail3" >Observaci&oacute;n</label>
+                                                        <div>
+                                                            {% bootstrap_field ordenproduccion_form.observacion show_label=False %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="inputEmail3" >Usuario y Fecha de Edici&oacute;n</label>
+                                                    <table class="table table-bordered">
+                                                        <tr>
+                                                            <th>Creaci&oacute;n</th>
+
+                                                            <td>
+                                                           
+                                                      </td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Actualizado</th>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                             
+                                        </div>
+                                        
+                                      
+                                   
+                                        
+                                    </div>
+                                    
+                                  
+                                  
+                                    <div role="tabpanel" class="tab-pane fade" id="foto">
+                                        <div class="row">
+                                            
+                                            <div class="panel panel-default panel-border">
+                                                <div class="panel-heading">Foto</div>
+                                                <div class="panel-body">
+                                                 
+                                                    <div class="col-md-4">
+                                                      <label for="exampleInputName2">Imagen</label>
+                                                    <input type="file" name="imagen" id="imagen" >
+                                                   </div>
+                                                    
+                                                  
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                              
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                  <a href="#" class="thumbnail">
+                                  {% if ordenproduccion_form.imagen.value != "" %}
+                                   <img src="/media/{{ form.imagen.value}}" alt="logo producto">
+                                    {% else %}
+                                    <img src="/media/imagenes/producto/logo-producto.svg" alt="logo producto">
+                                    {% endif %}
+                                  </a>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+     <p class="text-center">
+
+                                    <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+                                            <a class="default btn btn-link" href="/subordenproduccion/rop"><button type="button" class="btn btn-primary btn-lg">  Regresar</button></a>
+                                        </p>
+                                         {% if kits %}
+<input type="hidden" name="columnas_receta" id="columnas_receta" value="{{ kits|length }}" />
+{% else %}
+<input type="hidden" name="columnas_receta" id="columnas_receta" value="1" />
+
+{% endif %}
+<input type="hidden" name="id_fila_cambiar" id="id_fila_cambiar" value="" />
+<input type="hidden" name="product_id" id="product_id" value="{{ producto_form.producto_id.value}}" />
+<input type="hidden" name="deta" id="deta" value="" />
+<input type="hidden" name="pedido" id="pedido" value="" />
+
+
+
+<!--  <p class="text-right m-b-0">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-cog"></i> Guardar</button>
+                                </p>
+                                <a class="default btn btn-link" href="/inventario/producto">
+      <i class="fa fa-times"></i> Regresar
+    </a> -->
+                            </form>
+                                <div class="modal fade" id="modal-dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                             <div class="panel-body">
+                                <div class="table-responsive">
+                                                    <table class="table table-striped table-bordered" id="tabla3">
+                                                        <thead>
+                                                            <tr>
+                                                            <td></td>
+                                                              <th>Tipo </th>
+                                                                <th>Codigo </th>
+                                                                <th>Nombre</th>
+                                                                <th>Cantidad</th>
+                                                                <th>Cliente</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for r  in row %}
+                                                            <tr>
+<td  onclick="cargarPedido('{{ r.0 }}','{{ r.1 }}','{{ r.2|date:"Y-m-d"}}','{{ r.3}}','{{ r.4 }}','{{ r.5}}','{{ r.6}}','{{ r.7}}','{{ r.8}}','{{ r.9}}','{{r.10}}','{{ r.11}}','{{ r.12}}','{{ r.13}}','{{ r.14}}','{{ r.15}}','{{ r.16}}','{{ r.17}}','{{ r.18}}','{{ r.19}}','{{r.20}}','{{ r.21}}','{{ r.22}}','{{ r.23}}','{{ r.24}}','{{ r.25}}','{{ r.26}}','{{ r.27}}','{{ r.28|date:"Y-m-d"}}','{{ r.29}}','{{r.30}}','{{ r.31}}','{{ r.32}}','{{ r.33}}','{{ r.34}}','{{ r.35}}','{{ r.36}}','{{ r.37}}','{{ r.38}}','{{ r.39}}','{{r.40}}','{{ r.41}}','{{ r.42}}','{{ r.43}}','{{ r.44}}','{{ r.45}}','{{ r.46}}','{{ r.47}}','{{ r.48}}','{{ r.49}}','{{r.50}}','{{ r.51}}','{{ r.52}}','{{ r.53}}','{{ r.54}}','{{ r.55|date:"Y-m-d"}}','{{ r.56|date:"Y-m-d"}}','{{ r.57}}','{{ r.58}}','{{ r.59}}');">
+<a class="btn btn-danger remove_fields"><i class=" glyphicon glyphicon-plus icon-white"></i>
+
+                                                      </a></td><td>{{ r.29 }}</td>
+                                                                <td>{{ r.1 }}</td>
+                                                                <td>{{ r.6 }}</td>
+                                                                 <td>{{ r.58 }}</td>
+                                                      <td>{{ r.13 }}</td>
+
+                                                            </tr >
+                                                        {% endfor %} 
+                                                        
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <button type="button" onclick="cerrar()" class="btn btn-danger btn-block">Cerrar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+                                            
+
+                            </div>
+                        </div>
+                    </div>
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+<script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<!-- <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+ --><script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/data-table.js' %}"></script>
+<!-- ================== END PAGE LEVEL JS ================== -->
+<script>
+  $(document).ready(function() {
+    // App.init();
+    $('#tabla3').DataTable();
+  });
+</script>
+
+
+<script>
+    $(document).ready(function() {
+      $('#id_codigo').each(function(){
+  $(this).attr('readonly','readonly');
+});
+             $('#id_created_by').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_updated_by').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_created_at').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_updated_at').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_fechainicio').datepicker({todayHighlight:true,autoclose:true});
+        $('#id_fechainicio').datepicker('option', {dateFormat: 'yy/mm/dd'});
+  $('#id_fechaentrega').datepicker({todayHighlight:true,autoclose:true});
+        $('#id_fechaentrega').datepicker('option', {dateFormat: 'yy/mm/dd'});
+      var codigo=$("#id_codigo").val().length ;
+      if(codigo < 1){
+             $.ajax({
+                url: "/config/obtenerSecuencial/", // the endpoint
+                type : "POST", // http method
+                data : { id : 'rop','csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+                success:function(data){
+                 $('#id_codigo').val('00'+data);
+                  
+                },
+                error: function(){
+                 
+                },
+              });
+      var fecha=new Date().toJSON().slice(0,10);
+      $('#id_fecha').val(fecha);
+      }else{
+               // alert(codigo);
+
+      }
+
+
+       
+      $('#id_fecha').datepicker({todayHighlight:true,autoclose:true});
+            $('#id_fecha').datepicker('option', {dateFormat: 'yy/mm/dd'});
+       $('#id_fechapedido').datepicker({todayHighlight:true,autoclose:true});
+            $('#id_fechapedido').datepicker('option', {dateFormat: 'yy/mm/dd'});
+           var codigo_reunion=$("#id_reunion_codigo").val();
+
+   $("#id_reunion_codigo").focusout(function(){
+        codigo_reunion=$("#id_reunion_codigo").val();
+               $.ajax({
+                url: "/config/obtenerReunion/", // the endpoint
+                type : "POST", // http method
+                data : { id : codigo_reunion,'csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+                success:function(data){
+                       $('#id_cliente option[value='+data['cliente']+']').attr('selected','selected');
+
+                       $('#id_vendedor option[value='+data['vendedor']+']').attr('selected','selected');
+
+                  
+                },
+                error: function(){
+                 
+                },
+              });
+         });
+   });
+</script>
+<script>
+    function mostrarProductos(data){
+       $('#id_fila_cambiar').val(data);
+       $(".modal").modal('toggle');
+    }
+    function cerrar(){
+       $(".modal").modal('toggle');
+    }
+
+    function cargarPedido(id,codigo_op,fecha,cliente_id,descripcion,detalle,cantidad,largo,fondo,madera,vidrio,  hierro,marmol,enchape,enchape_detalle,tallado,tallado_detalle,tono,retractil,panorama,corredizo,oleo, conchaperla,tela_almacen,tela_cliente,agarraderas,imagen,adicional,fechapedido,tipo,tipo_mueb_id,mate,  semimate,brillante,pulido,aluminio,acero,abrillantado,pintado,satinado,fechacotizacion,engrampe,impulso, poroabierto,vendedor_id,tiempo_respuesta,fuera_ciudad,observacion,codigo_item,profundidad,ancho, patina_color,pintado_mano,cuero_cliente,cuero_almacen,fechainicio,fechaentrega,metal_hierro,nombre_cliente,alto
+){
+      ///alert(cantidad);
+cant = cantidad.toString().replace(/\,/g,'.'); 
+        $('#id_codigo_orden_produccion').val(codigo_op);
+                $('#id_tipo').val(tipo);
+
+        $('#id_descripcion').val(descripcion);
+   $('#id_fechapedido').val(fecha);
+          $('#id_fechaentrega').val(fechaentrega);
+                    $('#id_fechainicio').val(fechainicio);
+
+                    $('#id_observacion').val(observacion);
+
+         $('#id_cliente option[value='+cliente_id+']').attr('selected','selected');
+         $('#id_tipo_mueb option[value='+tipo_mueb_id+']').attr('selected','selected');
+
+        $('#id_cantidad').val(cant);
+   $('#deta').val(id);
+      $('#id_detalle').val(detalle);
+      $('#id_largo').val(largo);
+      $('#id_fondo').val(fondo);
+      $('#id_alto').val(alto);
+          if(madera=='True'){
+             $("#id_madera").prop('checked', true);
+
+          }else{
+            $("#id_madera").prop('checked',false);
+
+          }
+          if(vidrio=='True'){
+              $("#id_vidrio").prop('checked', true);
+
+          }else{
+            $("#id_vidrio").prop('checked',false);
+
+          }
+
+        if(hierro=='True'){
+          $("#id_hierro").prop('checked', true);
+
+        }else{
+            $("#id_hierro").prop('checked',false);
+
+          }
+
+        if(marmol=='True'){
+            $("#id_marmol").prop('checked', true);
+
+        }else{
+            $("#id_marmol").prop('checked',false);
+
+        }
+
+        if(enchape=='True'){
+          $("#id_enchape").prop('checked', true);
+
+        }else{
+                $("#id_enchape").prop('checked',false);
+
+       }
+      $('#id_enchape_detalle').val(enchape_detalle);
+      $('#id_tono').val(tono);
+      if(metal_hierro=='True'){
+          $("#id_metal_hierro").prop('checked', true);
+
+        }else{
+                $("#id_metal_hierro").prop('checked',false);
+
+       }
+      if(acero=='True'){
+          $("#id_acero").prop('checked', true);
+
+        }else{
+                $("#id_acero").prop('checked',false);
+
+       }
+if(aluminio=='True'){
+          $("#id_aluminio").prop('checked', true);
+
+        }else{
+                $("#id_aluminio").prop('checked',false);
+
+       }
+
+
+if(mate=='True'){
+          $("#id_mate").prop('checked', true);
+
+        }else{
+                $("#id_mate").prop('checked',false);
+
+       }
+
+if(semimate=='True'){
+          $("#id_semimate").prop('checked', true);
+
+        }else{
+                $("#id_semimate").prop('checked',false);
+
+       }
+
+if(brillante=='True'){
+          $("#id_brillante").prop('checked', true);
+
+        }else{
+                $("#id_brillante").prop('checked',false);
+
+       }
+
+
+if(pulido=='True'){
+          $("#id_pulido").prop('checked', true);
+
+        }else{
+                $("#id_pulido").prop('checked',false);
+
+       }
+      if(poroabierto=='True'){
+                $("#id_poroabierto").prop('checked', true);
+
+        }else{
+                $("#id_poroabierto").prop('checked',false);
+
+       }
+       if(retractil=='True'){
+          $("#id_retractil").prop('checked', true);
+
+        }else{
+                $("#id_retractil").prop('checked',false);
+
+       }
+
+      
+
+       if(corredizo=='True'){
+          $("#id_corredizo").prop('checked', true);
+
+        }else{
+          $("#id_corredizo").prop('checked',false);
+
+       }
+       if(engrampe=='True'){
+          $("#id_engrampe").prop('checked', true);
+
+        }else{
+          $("#id_engrampe").prop('checked',false);
+
+       }
+       if(impulso=='True'){
+          $("#id_impulso").prop('checked', true);
+
+        }else{
+          $("#id_impulso").prop('checked',false);
+
+       }
+       if(pintado_mano=='True'){
+          $("#id_pintado_mano").prop('checked', true);
+
+        }else{
+          $("#id_pintado_mano").prop('checked',false);
+
+       }
+      
+
+       if(conchaperla=='True'){
+          $("#id_conchaperla").prop('checked', true);
+
+        }else{
+          $("#id_conchaperla").prop('checked',false);
+
+       }
+
+        if(tela_almacen=='True'){
+          $("#id_tela_almacen").prop('checked', true);
+
+        }else{
+          $("#id_tela_almacen").prop('checked',false);
+
+       }
+
+       if(tela_cliente=='True'){
+          $("#id_tela_cliente").prop('checked', true);
+
+        }else{
+          $("#id_tela_cliente").prop('checked',false);
+
+       }
+
+        if(cuero_almacen=='True'){
+          $("#id_cuero_almacen").prop('checked', true);
+
+        }else{
+          $("#id_cuero_almacen").prop('checked',false);
+
+       }
+
+       if(cuero_cliente=='True'){
+          $("#id_cuero_cliente").prop('checked', true);
+
+        }else{
+          $("#id_cuero_cliente").prop('checked',false);
+
+       }
+
+
+//$('#pedido').val(pedidoid);
+          cerrar();
+
+    }
+  
+</script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        /**
+         * Funcion para añadir una nueva columna en la tabla
+         */
+        $("#add").click(function(){
+            // Obtenemos el numero de filas (td) que tiene la primera columna
+            // (tr) del id "tabla"
+            var num_recetas=$('#columnas_receta').val();
+            num_recetas=parseInt(num_recetas)+1;
+
+            var tds=$("#tabla tr:first td").length;
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla tr").length;
+            var nuevaFila='<tr><td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+                nuevaFila+='<td><input type="hidden" class="form-control" id="id_kits'+num_recetas+'" name="id_kits'+num_recetas+'"> ';
+                nuevaFila+='<input type="text" required="required" class="form-control" id="codigo_kits'+num_recetas+'" name="codigo_kits'+num_recetas+'" onfocus="mostrarProductos('+num_recetas+')" readonly="readonly"></td>';
+                 nuevaFila+='<td><input type="text"  id="nombre_kits'+num_recetas+'" name="nombre_kits'+num_recetas+'" ></td>';
+                nuevaFila+='<td><input type="text" class="form-control" required="required" id="cantidad_kits'+num_recetas+'" name="cantidad_kits'+num_recetas+'" onkeyup="actualizarCosto('+num_recetas+')"></td>';
+                nuevaFila+='<td><input type="text" class="form-control" id="medida_kits'+num_recetas+'" name="medida_kits'+num_recetas+'" ></td>';
+                nuevaFila+='<td><input type="text" class="form-control" id="costo_kits'+num_recetas+'" name="costo_kits'+num_recetas+'" onkeyup="actualizarCosto('+num_recetas+')"></td>';
+                nuevaFila+='<td><input type="text" class="form-control" id="total_kits'+num_recetas+'" name="total_kits'+num_recetas+'" readonly="readonly"></td>';
+                nuevaFila+='<td><input type="text" class="form-control" id="imagen_kits'+num_recetas+'" name="imagen_kits'+num_recetas+'" ></td>';
+                nuevaFila+='<td><input type="text" class="form-control" id="observacion_kits'+num_recetas+'" name="observacion_kits'+num_recetas+'" ></td>';
+                nuevaFila+='</tr>';
+
+              $('#columnas_receta').val(num_recetas);
+            // for(var i=0;i<tds;i++){
+            //     // añadimos las columnas
+            //     nuevaFila+="<td>columna "+(i+1)+" Añadida con jquery</td>";
+            // }
+            // // Añadimos una columna con el numero total de columnas.
+            // // Añadimos uno al total, ya que cuando cargamos los valores para la
+            // // columna, todavia no esta añadida
+            // nuevaFila+="<td>"+(trs+1)+" columnas";
+            // nuevaFila+="</tr>";
+            $("#tabla").append(nuevaFila);
+        });
+ 
+        /**
+         * Funcion para eliminar la ultima columna de la tabla.
+         * Si unicamente queda una columna, esta no sera eliminada
+         */
+        $("#del").click(function(){
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla tr").length;
+            if(trs>1)
+            {
+                // Eliminamos la ultima columna
+                $("#tabla tr:last").remove();
+            }
+             actualizarTotal();
+        });
+
+
+        $(document).on("click",".eliminar",function(){
+            var parent = $(this).parent();
+  $(parent).remove();
+   actualizarTotal();
+          });
+
+
+    $('input[type="checkbox"][name="hierro"]').change(function() {
+     if(this.checked) {
+         // do something when checked
+         $('#hierro').css('display','block')
+     }else{
+      $('#hierro').css('display','none')
+     }
+ });
+
+
+    $('input[type="checkbox"][name="acero"]').change(function() {
+     if(this.checked) {
+         // do something when checked
+         $('#acero').css('display','block')
+     }else{
+      $('#acero').css('display','none')
+     }
+ });
+
+
+    $('input[type="checkbox"][name="aluminio"]').change(function() {
+     if(this.checked) {
+         // do something when checked
+         $('#aluminio').css('display','block')
+     }else{
+      $('#aluminio').css('display','none')
+     }
+ });
+
+    });
+    </script>
+{% endblock %}                                                                                                                                                                                                                                                                

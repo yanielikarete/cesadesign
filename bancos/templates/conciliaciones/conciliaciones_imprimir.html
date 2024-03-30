@@ -1,0 +1,739 @@
+<!doctype html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>CONCILIACIÓN - MUEDIRSA</title>
+</head>
+<style>
+
+    .head {
+        width: 100%;
+        text-align: left;
+        font-size: 7pt;
+        /*font-weight: bold;*/
+
+    }
+
+    #detail {
+        width: 100%;
+        font-size: 7pt;
+        font-weight: bold;
+    }
+
+    .contenido {
+        width: 100%;
+        font-size: 7pt;
+        font-weight: bold;
+    }
+
+    .contenido td {
+        text-align: right;
+        font-size: 7pt;
+    }
+
+    .foot {
+        text-align: center;
+        font-size: 7pt;
+    }
+
+    @page {
+        size: a4 ;
+        /*size: a5 landscape;*/
+        margin: 1cm;
+        margin-top: 0.93cm;
+    }
+
+    @font-face {
+        font-family: Monospaced;
+        font-weight: bold;
+    }
+    table thead tr td{
+        font-weight: bold;
+    }
+    .resultado{
+         font-weight: bold;
+    }
+
+
+</style>
+<script src="{% static 'color_admin/assets/plugins/jquery-1.8.2/jquery-1.8.2.min.js' %}"></script>
+<body>
+                   <div class="panel panel-inverse" style="display: none">
+                                    <div class="panel-heading">Movimientos</div>
+                                    <div class="panel-body panel-border">
+                                        
+             <div class="col-md-12">
+                            <div>
+
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                  <li role="presentation" class="active"><a href="#principales" aria-controls="principales" role="tab" data-toggle="tab">Movimientos</a></li>
+                                 
+                                  <li role="presentation"><a href="#cheques" aria-controls="cheques" role="tab" data-toggle="tab">Cheques</a></li>
+                                <li role="presentation"><a href="#depositos" aria-controls="depositos" role="tab" data-toggle="tab">Depositos</a></li>
+                                  <li role="presentation"><a href="#nc" aria-controls="foto" role="tab" data-toggle="tab">Notas de Credito</a></li>
+                                  <li role="presentation"><a href="#nd" aria-controls="foto" role="tab" data-toggle="tab">Notas de Debito</a></li>
+                                </ul>
+                              
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade in active" id="principales">
+                                                   <table class="table2 table table-striped table-bordered dataTable no-footer dtr-inline"
+                                               id="tabla-movimientos">
+                                            <thead>
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Documento</th>
+                                                <th>No.Comprobante</th>
+                                                <th>Documento</th>
+                                                <th  width="130px">Detalle</th>
+                                                <th>No. Cheque</th>
+                                                <th>Monto</th>
+                                             <th style="width:30px !important">Conciliar</th>
+
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% if detalle_conciliaciones %}
+                                                     {% for kit  in detalle_conciliaciones %}
+                        <td name="fecha">{{ kit.4 }}</td>
+                        <td name="documento">{{ kit.2 }}</td>
+                        <td name="paguese">{{ kit.5 }}</td>
+                        <td name="numentero_comprob">{{ kit.8 }}</td>
+                        <td align="right" name="descripion">{{ kit.7 }}</td>
+                        <td align="right" name="numero_cheque">{{ kit.9 }}</td>
+                        <td align="right" name="monto">
+                               {% if kit.12 == 1 %}
+                               {{ kit.11 }}
+                                {% elif kit.12 ==  2 %}
+                                            {% if kit.17 %}
+                                                       {{ kit.10 }}
+                                                   {% else %}
+                                                          {{ kit.16 }}
+                                                   {% endif %}
+                                     {% elif kit.12 == 4  %}
+                                     {{ kit.15 }}
+                                      {% elif kit.12 == 3  %}
+                                     {{ kit.15 }}
+                                        {% else %}
+                                             {{ kit.10 }}
+
+                                 {% endif %}</td>
+                        <td> <input type="hidden" value="{{kit.0 }}" name="id">
+                         {% if kit.13  %}
+                                        {% if kit.13 == conciliacion_id|add:0 %}
+                                        <input value="{{id }}" type="checkbox" id="checkbox-movimiento{{ kit.0 }}" onclick="seleccionar({{kit.0}},0)"
+
+                                                          checked="checked"/>
+                                                          
+                                         {% endif %}
+                                         
+                             {% else %}
+                              <input value="{{id }}" type="checkbox" id="checkbox-movimiento{{ kit.0 }}" onclick="seleccionar({{kit.0}},0)"/>
+                        {% endif %}
+                        </td>
+                        </tr>
+                                                 {% endfor  %}
+                                                  {% endif %}
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                     <th></th>
+                                                <th></th>
+                                                <th><th>
+                                                <th></th>
+                                                
+                                                <th>Total</th>
+                                             <th colspan="2"><input type="text" name="total" id="total"/></th>
+
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                               
+                        
+                                    
+                                   
+                                    <div role="tabpanel" class="tab-pane fade" id="cheques">
+                                   <table class="table2 table table-striped table-bordered dataTable no-footer dtr-inline"
+                                               id="tabla-cheques">
+                                      <thead>
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Documento</th>
+                                                <th>No.Comprobante</th>
+                                                <th>Documento</th>
+                                                <th  width="130px">Detalle</th>
+                                                <th>No. Cheque</th>
+                                                <th>Monto</th>
+                                             <th style="width:30px !important">Conciliar</th>
+
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% if detalle_conciliaciones %}
+                                                     {% for kit  in detalle_conciliaciones %}
+                                                {% if kit.12 == 1 %}
+                                                            <tr>
+                                                               <td name="fecha">{{ kit.4 }}</td>
+                                                               <td name="documento">{{ kit.2 }}</td>
+                                                               <td name="paguese">{{ kit.5 }}</td>
+                                                               <td name="numentero_comprob">{{ kit.8 }}</td>
+                                                               <td align="right" name="descripion">{{ kit.7 }}</td>
+                                                               <td align="right" name="numero_cheque">{{ kit.9 }}</td>
+                                                               <td align="right" name="monto">{{ kit.11 }}</td>
+                                                               <td> <input type="hidden" value="{{kit.0 }}" name="id"><input value="{{id }}" type="checkbox" id="checkbox-cheque{{ kit.0 }}" onclick="seleccionar({{kit.0}},{{ kit.12}})"
+                                                               {% if kit.13 == conciliacion_id|add:0 %}
+                                                                                 checked="checked"
+                                                                                 
+                                                                {% endif %}
+                                                                />
+                                                               </td>
+                                                            </tr>
+                                                        {% endif %}
+                                                 {% endfor  %}
+                                                  {% endif %}
+                                            </tbody>
+                                           
+                                        
+                                            <tfoot>
+                                                <tr>
+                                                     <th></th>
+                                                <th></th>
+                                                <th><th>
+                                                <th></th>
+                                                <th>Total</th>
+                                             <th  colspan="2"><input type="text" name="total_cheques" id="total_cheques"/></th>
+
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                 
+                                    </div>
+                                
+                              
+                                 
+                                 
+                                 
+                                  <div role="tabpanel" class="tab-pane fade" id="depositos">
+                                   <table class="table2 table table-striped table-bordered dataTable no-footer dtr-inline"
+                                               id="tabla-depositos">
+                                            <thead>
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Documento</th>
+                                                <th>No.Comprobante</th>
+                                                <th>Documento</th>
+                                                <th>Detalle</th>
+                                                <th>Monto</th>
+                                             <th style="width:30px !important">Conciliar</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                 {% if detalle_conciliaciones %}
+                                                     {% for kit  in detalle_conciliaciones %}
+                                                {% if kit.12 == 4 %}
+                                                            <tr>
+                                                               <td name="fecha">{{ kit.4 }}</td>
+                                                               <td name="documento">{{ kit.2 }}</td>
+                                                               <td name="paguese">{{ kit.5 }}</td>
+                                                               <td name="numentero_comprob">{{ kit.8 }}</td>
+                                                               <td align="right" name="descripion">{{ kit.7 }}</td>
+                                                               <td align="right" name="monto">{{ kit.15 }}</td>
+                                                               <td> <input type="hidden" value="{{kit.0 }}" name="id"><input value="{{id }}" type="checkbox" id="checkbox-deposito{{ kit.0 }}" onclick="seleccionar({{kit.0}},{{ kit.12}});" 
+                                                               {% if kit.13 == conciliacion_id|add:0 %}
+                                                                                 checked="checked"
+                                                                                 
+                                                                {% endif %}
+                                                                />
+                                                               </td>
+                                                            </tr>
+                                                        {% endif %}
+                                                 {% endfor  %}
+                                                  {% endif %}
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                <th></th>
+                                                <th><th>
+                                                <th></th>
+                                                <th>Total</th>
+                                             <th  colspan="2"><input type="text" name="total_depositos" id="total_depositos"/></th>
+
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                 
+                                    </div>
+                                
+                              
+                            
+                                 <div role="tabpanel" class="tab-pane fade" id="nc">
+                                              <table class="table2 table table-striped table-bordered dataTable no-footer dtr-inline"
+                                               id="tabla-nc">
+                                            <thead>
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Documento</th>
+                                                <th>No.Comprobante</th>
+                                                <th>Documento</th>
+                                                <th>Detalle</th>
+                                                
+                                                <th>Monto</th>
+                                             <th style="width:30px !important">Conciliar</th>
+
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                 {% if detalle_conciliaciones %}
+                                                     {% for kit  in detalle_conciliaciones %}
+                                                {% if kit.12 == 3 %}
+                                                            <tr>
+                                                               <td name="fecha">{{ kit.4 }}</td>
+                                                               <td name="documento">{{ kit.2 }}</td>
+                                                               <td name="paguese">{{ kit.5 }}</td>
+                                                               <td name="numentero_comprob">{{ kit.8 }}</td>
+                                                               <td align="right" name="descripion">{{ kit.7 }}</td>
+                                                               <td align="right" name="monto">{{ kit.15 }}</td>
+                                                               <td> <input type="hidden" value="{{kit.0 }}" name="id"><input value="{{id }}" type="checkbox" id="checkbox-nc{{ kit.0 }}" onclick="seleccionar({{kit.0}},{{ kit.12}})"
+                                                               {% if kit.13 == conciliacion_id|add:0 %}
+                                                                                 checked="checked"
+                                                                                 
+                                                                {% endif %}
+                                                                />
+                                                               </td>
+                                                            </tr>
+                                                        {% endif %}
+                                                 {% endfor  %}
+                                                  {% endif %}
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                     <th></th>
+                                                <th></th>
+                                                
+                                                <th></th>
+                                                <th>Total</th>
+                                             <th  colspan="2"><input type="text" name="total_nc" id="total_nc"/></th>
+
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                 
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="nd">
+                                              <table class="table2 table table-striped table-bordered dataTable no-footer dtr-inline"
+                                               id="tabla-nd">
+                                            <thead>
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Documento</th>
+                                                <th>No.Comprobante</th>
+                                                <th>Documento</th>
+                                                <th>Detalle</th>
+                                                <th>Monto</th>
+                                             <th style="width:30px !important">Conciliar</th>
+
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                 {% if detalle_conciliaciones %}
+                                                     {% for kit  in detalle_conciliaciones %}
+                                                {% if kit.12 == 2 %}
+                                                            <tr>
+                                                               <td name="fecha">{{ kit.4 }}</td>
+                                                               <td name="documento">{{ kit.2 }}</td>
+                                                               <td name="paguese">{{ kit.5 }}</td>
+                                                               <td name="numentero_comprob">{{ kit.8 }}</td>
+                                                               <td align="right" name="descripion">{{ kit.7 }}</td>
+                                                               <td align="right" name="monto">
+                                      
+                                                               
+                                                                {% if kit.17 %}
+                                                {{ kit.10 }}
+                                            {% else %}
+                                                   {{ kit.16 }}
+                                            {% endif %}
+                                                               </td>
+                                                               <td> <input type="hidden" value="{{kit.0 }}" name="id"><input value="{{id }}" type="checkbox" id="checkbox-nd{{ kit.0 }}" onclick="seleccionar({{kit.0}},{{ kit.12}})"
+                                                               {% if kit.13 == conciliacion_id|add:0 %}
+                                                                                 checked="checked"
+                                                                                 
+                                                                {% endif %}
+                                                                />
+                                                               </td>
+                                                            </tr>
+                                                        {% endif %}
+                                                 {% endfor  %}
+                                                  {% endif %}
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                     <th></th>
+                                                <th></th>
+                                                <th><th>
+                                                <th>Total</th>
+                                             <th  colspan="2"><input type="text" name="total_nd" id="total_nd"/></th>
+
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                 
+                                    </div>
+                                
+                              
+                               
+                                    </div>
+                                
+                                
+                                
+                                
+                                </div>
+                              
+                            </div>
+                        </div>
+                   <div class="form-group" style="display: none">
+                                    <table class="table2 table table-striped table-bordered dataTable no-footer dtr-inline">
+                                        <thead>
+                                        <th></th>
+                                       
+                                    <th>Cheques</th>
+                                    <th>Depositos</th>
+                                    <th>Nota de Credito</th>
+                                    <th>Nota de Debito</th>
+                                     <th>Total</th>
+                                    </thead>
+                                        <tbody>
+                                           
+                                            <tr>
+                                            <td>Monto .Conciliados</td>
+                                            <td><input type="text" name="montoc_c" id="montoc_c" readonly="readonly"></td>
+                                            <td><input type="text" name="montoc_d" id="montoc_d" readonly="readonly"></td>
+                                            <td><input type="text" name="montoc_nc" id="montoc_nc" readonly="readonly"></td>
+                                            <td><input type="text" name="montoc_nd" id="montoc_nd" readonly="readonly"></td>
+                                            <td><input type="text" name="montoc_m" id="montoc_m" readonly="readonly"></td>
+                                            
+                                            </tr>
+                                             <tr>
+                                            <td>Cant.Conciliados</td>
+                                            <td><input type="text" name="totalc_c" id="totalc_c" readonly="readonly"></td>
+                                            <td><input type="text" name="totalc_d" id="totalc_d" readonly="readonly"></td>
+                                            <td><input type="text" name="totalc_nc" id="totalc_nc" readonly="readonly"></td>
+                                            <td><input type="text" name="totalc_nd" id="totalc_nd" readonly="readonly"></td>
+                                            <td><input type="text" name="totalc_m" id="totalc_m" readonly="readonly"></td>
+                                            
+                                            </tr>
+                                            
+                                            <tr>
+                                            <td>Monto No Conciliados</td>
+                                            <td><input type="text" name="montonc_c" id="montonc_c" readonly="readonly"></td>
+                                            <td><input type="text" name="montonc_d" id="montonc_d" readonly="readonly"></td>
+                                            <td><input type="text" name="montonc_nc" id="montonc_nc" readonly="readonly"></td>
+                                            <td><input type="text" name="montonc_nd" id="montonc_nd" readonly="readonly"></td>
+                                            <td><input type="text" name="montonc_m" id="montonc_m" readonly="readonly"></td>
+                                            
+                                            </tr>
+                                            <tr>
+                                            <td>Cant.No Conciliados</td>
+                                            <td><input type="text" name="totalnc_c" id="totalnc_c" readonly="readonly"></td>
+                                            <td><input type="text" name="totalnc_d" id="totalnc_d" readonly="readonly"></td>
+                                            <td><input type="text" name="totalnc_nc" id="totalnc_nc" readonly="readonly"></td>
+                                            <td><input type="text" name="totalnc_nd" id="totalnc_nd" readonly="readonly"></td>
+                                            <td><input type="text" name="totalnc_m" id="totalnc_m" readonly="readonly"></td>
+                                            
+                                            </tr>
+                                            
+                                          <!--  <tr>
+                                            <td>Monto Total</td>
+                                            <td><input type="text" name="monto_c" id="monto_c"></td>
+                                            <td><input type="text" name="monto_d" id="monto_d"></td>
+                                            <td><input type="text" name="monto_nc" id="monto_nc"></td>
+                                            <td><input type="text" name="monto_nd" id="monto_nd"></td>
+                                            <td><input type="text" name="monto_m" id="monto_m"></td>
+                                            
+                                            </tr>
+                                            <tr>
+                                            <td>Cant. Total</td>
+                                            <td><input type="text" name="total_c" id="total_c"></td>
+                                            <td><input type="text" name="total_d" id="total_d"></td>
+                                            <td><input type="text" name="total_nc" id="total_nc"></td>
+                                            <td><input type="text" name="total_nd" id="total_nd"></td>
+                                            <td><input type="text" name="total_m" id="total_m"></td>
+                                            
+                                            </tr>-->
+                                        </tbody>
+                                    </table>
+                    
+                    </div>
+</div>
+                   </div>
+                   </div>
+<div class="head">
+     <h3 style="width:100%;text-align: center">{{ conciliacion.cuenta_banco}} <br> AL {{ conciliacion.fecha_corte| date:'d/m/Y'  }}</h3>
+     <p>USUARIO: {{ user }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FECHA: {{ fecha }}</p>
+     <hr>
+
+    <table width="100%">
+         <tr>
+            <td style="text-align: left;width:800px">SALDO SEGUN EL ESTADO DE CUENTAS:</td>
+            <td style="text-align: right;width:500px" id="saldo"></td>
+            <td style="text-align: right;width:100px" ></td>
+
+        </tr>
+        <tr>
+            <td style="text-align: left">(+)Dep&oacute;sito no conciliados en el estado de cuentas del banco:</td>
+            <td style="text-align: right" id="deposito_no_conciliado"></td>
+            <td></td>
+
+        </tr>
+         <tr>
+ <td style="text-align: left">(+)Notas de Cr&eacute;dito no incluidas en el estado de cuents del banco:</td>
+            <td style="text-align: right" id="nc_no_conciliado"></td>   <td>&nbsp;&nbsp;&nbsp</td>     </tr>
+          <tr>
+ <td style="text-align: right">SUBTOTAL:</td>
+            <td style="text-align: right" id="deposito_nc_no_conciliado"></td><td>&nbsp;&nbsp;&nbsp</td>
+          </tr>
+    </table>
+     <table width="100%" >
+        <tr>
+            <td style="text-align: left;width: 800px">(-)Cheques emitidos en SAI y no incluidos en el estado de cuentas del banco:</td>
+            <td style="text-align: right;width:500px" id="ch_SAI_no_conciliado"></td>
+            <td style="text-align: right;width:100px">&nbsp;&nbsp;&nbsp</td>
+
+        </tr>
+         <tr>
+ <td style="text-align: left">(-)Cheques no incluidos en el estado de cuentas del banco:</td>
+            <td style="text-align: right" id="ch_no_conciliado">&nbsp;&nbsp;&nbsp</td> <td>&nbsp;&nbsp;&nbsp</td>       </tr>
+             <tr>
+ <td style="text-align: left">(-)Notas de D&eacute;bito no incluidas en el estado de cuentas del banco:</td>
+            <td style="text-align: right" id="ch_nd_no_conciliado"></td> <td>&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp</td>  </tr>
+          <tr>
+ <td style="text-align: right">SUBTOTAL:</td>
+            <td style="text-align: right" id="ch_nd_no_conciliado"></td><td>&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp</td>
+          </tr>
+    </table>
+    <hr>
+    <table width="100%">
+        <tr>
+            <td style="width: 800px" >SALDO CONCILIADO SEGUN MODULO DE BANCOS:</td>
+            <td style="text-align: right;width:500px" id="saldo_final"></td><td style="width:100px">&nbsp;&nbsp;&nbsp</td>
+        </tr>
+       
+      
+    </table>
+      <a class="btn btn-default buttons-copy buttons-html5" tabindex="0" aria-controls="tabla" download="movimientos_conciliados.xls" href="#" onclick="return ExcellentExport.excel(this, 'movimientos_conciliados', 'Sheet Name Here');"><span>Movimientos conciliados</span></a>  
+ <a class="btn btn-default buttons-copy buttons-html5" tabindex="0" aria-controls="tabla" download="movimientos_no_conciliados.xls" href="#" onclick="return ExcellentExport.excel(this, 'movimientos_no_conciliados', 'Sheet Name Here');"><span>Movimientos NO conciliados</span></a>  
+
+   {{ html_ch |safe }}
+    
+   
+</div>
+
+</body>
+<script>
+      $(document).ready(function () {
+        actualizar_monto_movimiento();
+     window.print();
+    });
+       function actualizar_monto_movimiento(){
+        var total=0;
+        var total_cheques=0;
+        var total_depositos=0;
+        var total_nd=0;
+        var total_nc=0;
+        var id_total=0;
+        var id_cheque=0;
+        var total_m_nc=0;
+        var total_c_nc=0;
+        var total_d_nc=0;
+        var total_nd_nc=0;
+        var total_nc_nc=0;
+        
+         var cont_m_nc=0;
+        var cont_c_nc=0;
+        var cont_d_nc=0;
+        var cont_nd_nc=0;
+        var cont_nc_nc=0;
+        
+         var cont_m=0;
+        var cont_c=0;
+        var cont_d=0;
+        var cont_nd=0;
+        var cont_nc=0;
+        
+              $('#tabla-movimientos tbody tr').each(function () {
+                    var row = $(this).closest('tr');
+                    var id = $('input[name="id"]', row).val();
+                    var monto=$('td[name="monto"]', row).text();
+                  
+                    if( $('#checkbox-movimiento'+id).is(':checked') ) {
+                       // alert(id);
+                       
+                        id_total=id;
+                         total=parseFloat(total)+parseFloat(monto);
+                         cont_m=parseFloat(cont_m)+1;
+                        }else{
+                            cont_m_nc=parseFloat(cont_m_nc)+1;
+                            total_m_nc=parseFloat(total_m_nc)+parseFloat(monto);
+                        }
+
+             
+              
+
+            });
+               
+                            $('#tabla-cheques tbody tr').each(function () {
+                    var row = $(this).closest('tr');
+                    var id = $('input[name="id"]', row).val();
+                    var monto=$('td[name="monto"]', row).text();
+                    //var check= $('input[name="checkbox-movimiento"]', row).val();
+                   
+                    
+                    //alert("hola"+id);
+                    if( $('#checkbox-cheque'+id).is(':checked') ) {
+                        //alert(id);
+                         total_cheques=parseFloat(total_cheques)+parseFloat(monto);
+                          cont_c=parseFloat(cont_c)+1;
+                        }else{
+                         cont_c_nc=parseFloat(cont_c_nc)+1;
+                            total_c_nc=parseFloat(total_c_nc)+parseFloat(monto);
+                        }
+
+            // alert(total_cheques);
+              
+
+            });
+            $('#tabla-depositos tbody tr').each(function () {
+                    var row = $(this).closest('tr');
+                    var id = $('input[name="id"]', row).val();
+                    var monto=$('td[name="monto"]', row).text();
+                    //var check= $('input[name="checkbox-movimiento"]', row).val();
+                    
+                   // alert(id);
+                    if( $('#checkbox-deposito'+id).is(':checked') ) {
+                        //alert("selecionado");
+                         total_depositos=parseFloat(total_depositos)+parseFloat(monto);
+                          cont_d=parseFloat(cont_d)+1;
+                        }else{
+                                cont_d_nc=parseFloat(cont_d_nc)+1;
+                            total_d_nc=parseFloat(total_d_nc)+parseFloat(monto);
+                      
+                            
+                        }
+
+             
+              
+
+            });
+                          $('#tabla-nd tbody tr').each(function () {
+                    var row = $(this).closest('tr');
+                    var id = $('input[name="id"]', row).val();
+                    var monto=$('td[name="monto"]', row).text();
+                    //var check= $('input[name="checkbox-movimiento"]', row).val();
+                    
+                   // alert(id);
+                    if( $('#checkbox-nd'+id).is(':checked') ) {
+                        //alert("selecionado");
+                         total_nd=parseFloat(total_nd)+parseFloat(monto);
+                         cont_nd=parseFloat(cont_nd)+1;
+                        }else{
+                               cont_nd_nc=parseFloat(cont_nd_nc)+1;
+                            total_nd_nc=parseFloat(total_nd_nc)+parseFloat(monto);
+                      
+                            
+                        }
+
+             
+              
+
+            });
+               $('#tabla-nc tbody tr').each(function () {
+                    var row = $(this).closest('tr');
+                    var id = $('input[name="id"]', row).val();
+                    var monto=$('td[name="monto"]', row).text();
+                    //var check= $('input[name="checkbox-movimiento"]', row).val();
+                    
+                   // alert(id);
+                    if( $('#checkbox-nc'+id).is(':checked') ) {
+                        //alert("selecionado");
+                         total_nc=parseFloat(total_nc)+parseFloat(monto);
+                         cont_nc=parseFloat(cont_nc)+1;
+                        }else{
+                              cont_nc_nc=parseFloat(cont_nc_nc)+1;
+                            total_nc_nc=parseFloat(total_nc_nc)+parseFloat(monto);
+                      
+                            
+                        }
+
+
+             
+              
+
+            });
+              
+            $('#total').val(total.toFixed(2));
+            $('#total_cheques').val(total_cheques.toFixed(2));
+            $('#total_depositos').val(total_depositos.toFixed(2));
+            $('#total_nc').val(total_nc.toFixed(2));
+            $('#total_nd').val(total_nd.toFixed(2));
+            
+             $('#montoc_c').val(total_cheques.toFixed(2));
+            $('#montoc_d').val(total_depositos.toFixed(2));
+            $('#montoc_nc').val(total_nc.toFixed(2));
+            $('#montoc_nd').val(total_nd.toFixed(2));
+            $('#montoc_m').val(total.toFixed(2));
+            
+             $('#totalc_c').val(cont_c);
+            $('#totalc_d').val(cont_d);
+            $('#totalc_nc').val(cont_nc);
+            $('#totalc_nd').val(cont_nd);
+            $('#totalc_m').val(cont_m);
+            
+            
+            
+             $('#montonc_c').val(total_c_nc.toFixed(2));
+             
+            $('#montonc_d').val(total_d_nc.toFixed(2));
+            $('#montonc_nc').val(total_nc_nc.toFixed(2));
+            $('#montonc_nd').val(total_nd_nc.toFixed(2));
+            $('#montonc_m').val(total_m_nc.toFixed(2));
+            
+           // $('#deposito_no_conciliado').html(total_d_nc.toFixed(2));
+            //$('#nc_no_conciliado').html(total_nc_nc.toFixed(2));
+             var concicliacion_saldo={{ conciliacion.saldo_estado_cuenta}};
+$('#saldo').html(concicliacion_saldo.toFixed(2));
+
+
+            total1=concicliacion_saldo.toFixed(2);
+            total_dep_nc=0;
+            //if (total_d_nc){
+            //    total_dep_nc=total_dep_nc+total_d_nc;
+            //}
+            //if (total_nc_nc){
+            //    total_dep_nc=total_dep_nc+total_nc_nc;
+            //}
+            total1=total1-total_dep_nc;
+            
+            $('#deposito_nc_no_conciliado').html(total1.toFixed(2));
+            //$('#nd_no_conciliado').html(total_nd_nc.toFixed(2));
+            //
+            $('#ch_no_conciliado').html(total_c_nc.toFixed(2));
+            total_conciliado=concicliacion_saldo-total_c_nc;
+            $('#saldo_final').html(total_conciliado.toFixed(2));
+            //$('#ch_nd_no_conciliado').html(total.toFixed(2));
+            
+             $('#totalnc_c').val(cont_c_nc);
+            $('#totalnc_d').val(cont_d_nc);
+            $('#totalnc_nc').val(cont_nc_nc);
+            $('#totalnc_nd').val(cont_nd_nc);
+            $('#totalnc_m').val(cont_m_nc);
+            
+
+//$('td[name="facturas-total"]').text(total.toFixed(2));
+        }
+        
+      
+</script>
+</html>
+

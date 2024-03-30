@@ -1,0 +1,402 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block css %}
+    {{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+{% block section_title %} Retenciones en venta {% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+    <style>
+        .panel-border {
+            border: 1px solid #ddd !important;
+        }
+
+        .form-group {
+            margin-bottom: 0px !important;
+        }
+
+        .panel-border {
+            border: 1px solid #ddd !important
+        }
+    </style>
+    <div class="row">
+        <!-- begin col-6 -->
+        <div class="col-md-12">
+            <form id="formulario" class="form-horizontal" method="post">
+                {% csrf_token %}
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                               data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                <i class="fa fa-plus-circle pull-right"></i>
+                                Datos generales
+                            </a>
+                        </h3>
+                    </div>
+                    <div id="collapseOne" aria-expanded="true" id="collapseOne" class="panel-collapse collapse in">
+                        <div class="panel-body panel-border">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Fecha de emisión</label>
+                                <div class="col-sm-3">
+                                    <input class="form-control" type="text" name="" value="{{retencion.fecha_emision|date:'Y-m-d' }}" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Cliente</label>
+                                <div class="col-sm-6">
+                                        <input class="form-control" value="{{retencion.documento_venta.cliente.nombre_cliente}}" name="cliente-descripcion" type="text" readonly>
+                                      
+                                </div>
+                            </div>|date:"M d, Y"
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Factura</label>
+                                <div class="col-sm-4">
+                                    <div class="input-group add-on">
+                                        <input type="hidden" name="documento_venta"/>
+                                        <input class="form-control" value="{{ retencion.documento_venta.establecimiento}}-{{ retencion.documento_venta.punto_emision}}-{{ retencion.documento_venta.secuencial}}" name="factura-descripcion"
+                                               type="text" readonly>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Número de documento</label>
+                                <div class="col-sm-2">
+                                    <input class="form-control" type="text"
+                                           name="establecimiento" value="{{ retencion.establecimiento}}" readonly>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input class="form-control" type="text" value="{{ retencion.punto_emision}}"
+                                           name="punto_emision" readonly>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input class="form-control" type="text" value="{{ retencion.secuencial}}"
+                                           name="secuencial" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"  >Base IVA 0%</label>
+                                <div class="col-sm-2">
+                                    <input class="form-control" type="text" name="base_cero" value="{{retencion.documento_venta.base_iva_0}}" readonly>
+                                </div>
+                                <label class="col-sm-2 control-label">Autorización</label>
+                                <div class="col-sm-3">
+                                    <input class="form-control" type="text" name="autorizacion" value="{{retencion.autorizacion}}" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" name="label-base-iva" >Base IVA %</label>
+                                <div class="col-sm-2">
+                                    <input class="form-control" type="text" name="base_iva" value="{{retencion.documento_venta.base_iva | default_if_none:'0'}}" readonly>
+                                </div>
+                                <label class="col-sm-2 control-label" name="label-base-porcentaje-iva">Valor IVA %</label>
+                                <div class="col-sm-2">
+                                    <input class="form-control" type="text" name="valor_iva" value="{{retencion.documento_venta.porcentaje_iva | default_if_none:'0'}}" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Descripción</label>
+                                <div class="col-sm-5">
+                                    <textarea class="form-control" name="descripcion" rows="5" readonly>{{retencion.descripcion}}</textarea>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="panel panel-inverse panel-with-tabs">
+                                <div class="panel-heading p-0">
+                                    <!-- begin nav-tabs -->
+                                    <ul class="nav nav-tabs nav-tabs-inverse">
+                                        <li class="active"><a href="#nav-tab-1" data-toggle="tab">Retención</a></li>
+                                        <li class=""><a href="#nav-tab-2" data-toggle="tab">Asiento</a></li>
+                                    </ul>
+                                </div>
+                                <div class="tab-content">
+                                    <div class="tab-pane fade active in" id="nav-tab-1">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped" id="tabla-retencion">
+                                                <thead style="background-color: #ccd0d4">
+                                                <tr>
+                                                    
+                                                    <th>Código</th>
+                                                    <th>Concepto</th>
+                                                    <th>Base imponible</th>
+                                                    <th>% retención</th>
+                                                    <th>Valor retenido</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% if detalle %}
+        {% for r in detalle %}
+           
+           <tr>
+
+            <td>{{ r.retencion_detalle.codigo }}</td>
+            <td style="text-align: left">&nbsp;{{r.retencion_detalle.descripcion }}</td>
+            <td>{{ r.base_imponible | default_if_none:"0"}}</td>
+            <td>{{ r.retencion_detalle.porcentaje }}</td>
+            <td name="retencion-valor-retenido" class="retencion-valor-retenido" >{{ r.valor_retenido | default_if_none:"0" }}</td>
+
+        </tr>
+        
+
+        {% endfor %}
+        {% else %}
+        {% endif %}
+                                                </tbody>
+                                                <tfoot>
+                                                <tr>
+                                                    
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td><strong>TOTAL RETENIDO:</strong></td>
+                                                    <td><input type="number" class="form-control" name="retencion_total_retenido"
+                                                               placeholder="0.00" required readonly></td>
+                                                </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                     
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-tab-2">
+                                        <table class="table table-bordered" id="tabla-asiento">
+                                            <thead style="background-color: #ccd0d4">
+                                            <tr>
+                                                
+                                                <th style="text-align: center">Código</th>
+                                                <th style="text-align: center">Cuenta</th>
+                                                <th style="text-align: center; width: 15%;">Debe</th>
+                                                <th style="text-align: center; width: 15%;">Haber</th>
+                                                <th style="text-align: center">Centro de Costo</th>
+                                                <th style="text-align: center">Concepto</th>
+
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                 {% if asientos %}
+                  {% for kit in asientos %}
+
+                  <tr>
+                    <td  >{{kit.cuenta.codigo_plan}}</td>
+                    <td>
+                      <input type="hidden" class="form-control" id="id_detalle{{forloop.counter}}" name="id_detalle{{forloop.counter}}" value="{{kit.detalle_id}}" readonly="readonly"/>
+                    	<input type="hidden" class="form-control" id="id_cuenta_kits{{forloop.counter}}" name="id_cuenta_kits{{forloop.counter}}" value="{{kit.cuenta.plan_id}}" readonly="readonly"/>
+                    	{{kit.cuenta.nombre_plan}}
+                   </td>
+                    <td><div class="input-group"><span class="input-group-addon">$</span><input type="text" class="form-control mask_float" required="required" name="asiento-debe" value="{{kit.debe}}" title="Debe" readonly="readonly"/></div></td>
+                    <td><div class="input-group"><span class="input-group-addon">$</span><input type="text" class="form-control mask_float" required="required" name="asiento-haber" value="{{kit.haber}}" title="Haber"  readonly="readonly"/></div></td>
+                    <td>
+                            {{ de.centro_costo | default_if_none:""}}</td>
+                        
+                     <td>
+
+                    	{{kit.concepto | default_if_none:""}}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                  {% endif %}
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td></td>
+                                                <td align="right"><strong>TOTAL:</strong></td>
+                                                <td align="right" name="asiento-total-debe"><strong>0.00</strong></td>
+                                                <td align="right" name="asiento-total-haber"><strong>0.00</strong></td>
+                                                <td></td> <td></td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                      
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+<p class="text-center">
+
+                    <a class="default btn btn-link" href="/transacciones/documento/venta/retencion"><button type="button" class="btn btn-primary btn-lg">  Regresar</button></a>
+                  </p>            </form>
+        </div>
+    </div>
+   {% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+
+    <script>
+        $('input[name="fecha_emision"]').datepicker({todayHighlight: true, autoclose: true, format: 'yyyy-mm-dd'});
+  //  $('input[name="fecha_emision"]').val(getFechaHoy());
+    
+        var row_clicked_asiento;
+ function getFechaHoy() {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+        var yyyy = today.getFullYear();
+
+        if (dd < 10) {
+            dd = '0' + dd
+        }
+        if (mm < 10) {
+            mm = '0' + mm
+        }
+        today = yyyy + '-' + mm + '-' + dd;
+        return today;
+    }
+        
+        
+        function cargar_persona(id, nombre, cuenta_por_cobrar) {
+            $('input[name="cliente-id"]').val(id);
+            $('input[name="cliente-descripcion"]').val(nombre);
+            $('#modal-cliente').modal('toggle');
+            $('input[name="factura-descripcion"]').val("");
+            $("#tabla-factura tbody tr").remove();
+            $.ajax({
+                type: "POST",
+                url: "{% url "documento-venta-consultar-facturas" %}",
+                data: {'id': id, csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()},
+                success: function (response) {
+                    var factura = '';
+                    var facturas = '';
+                    for (var i = 0; i < response.length; i++) {
+                        var nun_fac = response[i][2] + '-' + response[i][3] + '-' + response[i][4];
+                        var porcentaje_iva = response[i][5];
+                        var base_iva = response[i][6];
+                        var base_iva_cero = response[i][7];
+                        var valor_iva = response[i][8];
+                        //var total = base_iva + valor_iva;
+                        var total =response[i][9];
+                        factura = '<tr>' +
+                                    '<td>' + response[i][1] + '</td>' +
+                                    '<td>' + nun_fac + '</td>' +
+                                    '<td>' + parseFloat(total).toFixed(2) + '</td>' +
+                                    '<td onclick="cargar_factura(' + response[i][0] + ',' + nun_fac + ' ,' + porcentaje_iva + ' ,' + base_iva + ' ,' + base_iva_cero + ' ,' + valor_iva + ',' + response[i][2] + ','+response[i][3]+','+response[i][4]+')">' +
+                                        '<a class="btn btn-inverse remove_fields">' +
+                                            '<i class=" glyphicon glyphicon-plus icon-white"></i>' +
+                                        '</a>' +
+                                    '</td>' +
+                                '</tr>';
+                        facturas = facturas + factura;
+                    }
+                    if(response.length == 0){
+                        alert("Proveedor no tiene facturas asociadas");
+                    }else {
+                        $('#tabla-factura tbody').append(facturas);
+                    }
+                },
+                error: function (response) {
+                    alert(response);
+                }
+            });
+            cuenta_contable(cuenta_por_cobrar);
+        }
+
+        function cargar_factura(id, descripcion, porcentaje_iva, base_iva, base_iva_cero, valor_iva,f1,f2,f3) {
+            $('input[name="documento_venta"]').val(id);
+            num='00'+f1+'-00'+f2+'-'+f3;
+            //alert(descripcion);
+            $('input[name="factura-descripcion"]').val(num);
+            $('label[name="label-base-iva"]').text("Base IVA " + porcentaje_iva + "%");
+            $('label[name="label-base-porcentaje-iva"]').text("Valor IVA " + porcentaje_iva + "%");
+            $('input[name="base_iva"]').val(parseFloat(base_iva).toFixed(2));
+            $('input[name="base_cero"]').val(parseFloat(base_iva_cero).toFixed(2));
+            $('input[name="valor_iva"]').val(parseFloat(valor_iva).toFixed(2));
+            $("#modal-factura").modal('toggle');
+            //$("#tabla-retencion tbody tr").remove();
+        }
+
+        $(document).ready(function () {
+            actualizar_tabla_retencion();
+            
+            calcular_totales_asiento();
+      });
+
+
+
+      
+
+        function calcular_totales_asiento() {
+            var suma_debe = 0;
+            var suma_haber = 0;
+            $('#tabla-asiento tbody tr').each(function () {
+                var row = $(this).closest('tr');
+                var debe = $('input[name="asiento-debe"]', row).val();
+                var haber = $('input[name="asiento-haber"]', row).val();
+                suma_debe = +suma_debe + +debe;
+                suma_haber = +suma_haber + +haber;
+            });
+            $('td[name="asiento-total-debe"]').text(parseFloat(suma_debe).toFixed(2));
+            $('td[name="asiento-total-haber"]').text(parseFloat(suma_haber).toFixed(2));
+        }
+
+        function actualizar_tabla_retencion() {
+            var valor_retenido = parseFloat(0).toFixed(2);
+            var subtotal_retenido = parseFloat(0).toFixed(2);
+            $('#tabla-retencion tbody tr').each(function () {
+                var row = $(this).closest('tr');
+                valor_retenido = parseFloat($('.retencion-valor-retenido', row).text()).toFixed(2);
+                subtotal_retenido = +subtotal_retenido + +valor_retenido;
+            });
+            $('input[name="retencion_total_retenido"]').val(parseFloat(subtotal_retenido).toFixed(2));
+           
+        }
+
+function actualizar_asiento_retenciones(){
+     //var num_recetas = $('#columnas_receta').val();
+     
+        var t=0
+        var total=0;
+        var total_r=0
+        var total_retenido= $('input[name="retencion_total_retenido"]').val();
+        //var total_factura= $('input[name="total_factura"]').val();
+            //alert(num_recetas);
+            var cont=0;
+            
+           // alert("enro");
+            var total_ret_iva=0;
+            var total_ret_fuente=0;
+             $('#tabla-retencion tbody tr').each(function () {
+                var row = $(this).closest('tr');
+                var id = $('td[name="cuenta-id"]', row).text();
+                var ret_iva = $('input[name="retencion-base-iva"]', row).val();
+                var ret_fue = $('input[name="retencion-base"]', row).val();
+                
+                porcentaje = parseFloat($('td[name="retencion-porcentaje"]', row).text()).toFixed(2) / 100;
+                valor_retenido = parseFloat($('input', row).val()).toFixed(2) * porcentaje;
+                if(ret_fue){
+                    total_ret_fuente=total_ret_fuente+valor_retenido;
+                }
+                if(ret_iva){
+                    total_ret_iva=total_ret_iva+valor_retenido;
+                }
+        });
+             
+             
+           
+         //    alert(total_ret_fuente);
+           //  alert(total_ret_iva);
+            
+        
+        
+    
+}
+
+
+    </script>
+
+{% endblock %}
+

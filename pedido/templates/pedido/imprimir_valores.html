@@ -1,0 +1,118 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>PEDIDO - MUEDIRSA</title>
+</head>
+<style>
+    
+    .head{
+        width: 100%;
+        text-align: center;
+        
+    }
+    
+    .details{
+        width: 100%;
+        padding: 2px 0;
+        
+    }
+    .contenido{
+        width: 100%;
+        padding: 2px 0;
+        
+    }
+    
+    td{
+        text-align: left;
+        padding: 3px 5px;
+    }
+    th{
+        text-align: center;
+        padding: 3px 5px;
+        background-color: #EEEEEE;
+    }
+    
+    .foot{
+        text-align: center;
+    }
+    
+      
+    @page {
+        /*size: a4 landscape;*/
+        margin: 1cm;
+        
+    }
+    
+    
+</style>
+<body>
+    <div class="head">
+
+    </div>
+    <div class="details">
+         <table><tr>
+             <td style="text-align: center">  <img src="{{media_root}}imagenes/general/cesa_logo.jpg" alt="logo producto" width="300px" height="100px"></td>
+         <td style="text-align: center"><h1>MUEDIRSA</h1>
+        <h3>PEDIDO</h3></td><td></td></tr></table>
+        <br />
+        <table border="1">
+            <tr>
+                <th>Cliente</th><td colspan="3"> {{pedido.cliente}} </td><th colspan="2">PEDIDO</th>
+            </tr>
+            <tr>
+                <th>Vendedor</th><td colspan="3"> {{pedido.vendedor}}</td><th>N&uacute;mero</th><td>{{pedido.codigo}}</td>
+            </tr>
+             <tr>
+                <th>Fecha entrega</th><td>{{pedido.fechaentrega}}</td><th>Proforma</th><td>{{pedido.abreviatura_codigo}}-{{pedido.proforma_codigo}}</td><th>Fecha</th><td>{{pedido.fecha}}</td>
+            </tr>
+        </table>
+        <br>
+    </div>
+    <div class="contenido">
+        
+        <table border="1">
+            <tr>
+                <th>CANTIDAD</th><th colspan="2">DESCRIPCION</th><th colspan="2">DETALLE</th><th>Valor Unit</th><th>Total</th>
+            </tr>
+             {% for a  in ambiente %}
+             <tr >
+                <td colspan="7"><b>AMBIENTE: {{ a.1 }}</b></td>
+            </tr>
+
+                         {% for r  in row %}
+                             {% if a.0 == r.0 %}
+                                <tr>
+
+                                    <td>{{ r.2 | floatformat:2 }}</td><td colspan="2">{{ r.1 }}</td><td colspan="2">{{ r.6 }}</td><td style="text-align:right">${{ r.3 | floatformat:2 }}</td><td style="text-align:right">${{ r.4 | floatformat:2 }}</td>
+                                </tr>
+                                {% endif %} 
+                           {% endfor %} 
+             
+             {% endfor %} 
+              <tr>
+
+                <td colspan="5"></td><th>Descuento {{ pedido.porcentaje_descuento | floatformat:2 }}%</th><td style="text-align:right">${{ pedido.descuento | floatformat:2 }}</td>
+                                </tr>
+              <tr>
+
+                <td colspan="5"></td><th>Subtotal</th><td style="text-align:right">${{ pedido.subtotal | floatformat:2 }}</td>
+                                </tr>
+                               
+            <tr>
+
+                <td colspan="5"></td><th>IVA {{ pedido.porcentaje_iva|floatformat:0  }}%</th><td style="text-align:right">${{ pedido.iva  | floatformat:2}}</td>
+                                </tr>
+                                <tr>
+
+                <td colspan="5"></td><th>Total</th><td style="text-align:right">${{ pedido.total | floatformat:2 }}</td>
+                                </tr>
+        
+        </table>
+        
+    </div>
+    
+   
+</body>
+</html>

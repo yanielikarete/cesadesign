@@ -1,0 +1,142 @@
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+{% load staticfiles %}
+
+{% block css %}
+{{ block.super }}
+{% endblock %}
+
+{% block section_title %}Reportes de Produccion{% endblock %}
+{% block section_subtitle %}
+<br />
+ <div class="email-btn-row hidden-xs">
+                    </div>
+
+                    {% endblock %}
+
+{% block content %}
+				<!-- begin col-12 -->
+				<div class="col-md-12">
+					<!-- begin panel -->
+					<div class="panel panel-inverse">
+						<div class="panel-heading">
+							<div class="panel-heading-btn">
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+							</div>
+							<h4 class="panel-title"></h4>
+						</div>
+						<div class="panel-body">
+							<div class="table-responsive">
+						
+                                                      <a href="{% url 'reporte-reporteglobal' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Global</button>								
+													</a> 
+                                               
+								<br /><br />
+                           <a href="{% url 'reporte-pedido' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Pedido</button>								
+													</a>  
+														<br />
+                                                      <a href="{% url 'reporte-reportepedidoporfacturar' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Pedidos por facturar</button>								
+													</a> 
+                                               
+							<br /><br />
+                                                      <a href="{% url 'reporte-ordenproduccion' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Orden de Produccion</button>								
+													</a> 
+                                               
+								<br /><br />
+                                                      <a href="{% url 'reporte-ordenproduccion-estado' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Orden de Produccion por Estado</button>								
+													</a> 
+                                               
+								<br /><br />
+		                <a href="{% url 'reporte-guiaremision' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Guia Remision</button>								
+													</a> 
+								<br /><br />
+                                                      <a href="{% url 'reporte-liquidacion-comisiones' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Liquidacion de Comisiones</button>								
+													</a> 
+								<br /><br />
+                                                      <a href="{% url 'reporte-liquidacion-total' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Liquidacion Total</button>								
+													</a> 
+									<br /><br />
+								  <a href="{% url 'reporte-ventas' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> REPORTE DE Ventas</button>
+													</a>
+								<br /><br />
+								<br /><br />
+								  <a href="{% url 'reporte-diario-ventas-actual' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Diario Ventas</button>								
+													</a> 
+								<br /><br />
+								 <a href="{% url 'reporte-diario-ventas' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Diario Ventas por Vendedor</button>								
+													</a> 
+								<br /><br />
+								<a href="{% url 'reporte-diario-ventas-mensual' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Diario Ventas Mensual</button>								
+													</a> 
+								<br /><br />
+								<a href="{% url 'reporte-diario-ventas-anual' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Diario Ventas Anual</button>								
+													</a> 
+								<br /><br />
+								<a href="{% url 'reporte-cuentas-cobrar' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Reporte de Cuentas por Cobrar</button>								
+													</a> 
+								<br /><br />
+                                      <a href="{% url 'reporte-guias-general' %}">
+														<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Diario Guias</button>								
+													</a>          
+							</div>
+
+
+						</div>
+					</div>
+					
+				</div>
+				<!-- end col-12 -->	
+			
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+
+   	<script type="text/javascript">
+		
+
+	function consultar(){
+		var cliente=$("#cliente").val();
+		var fechainicial=$("#fechainicial").val();
+		var fechafin=$("#fechafin").val();
+
+          $.ajax({
+                url: "/reporte/obtenerGlobal/", // the endpoint
+                type : "POST", // http method
+                data : { cliente : cliente,fechainicial : fechainicial,fechafin : fechafin,'csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+                success:function(data){
+                $("#detalle tbody tr").remove();
+                  $("#detalle").append(data);
+                },
+                error: function(){
+                 
+                },
+              });
+    }
+	</script>
+	<!-- ================== END PAGE LEVEL JS ================== -->
+	{% if form.errors or form_mode == "update" %}
+	<script type="text/javascript">
+		$( document ).ready(function() {
+		    $(".modal").modal('toggle');
+		});
+	
+	</script>
+	{% endif %}
+{% endblock %}

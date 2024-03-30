@@ -1,0 +1,410 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+        <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css'%}" rel="stylesheet" />
+  <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css'%}" rel="stylesheet" />
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Plantillas{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+
+            <!-- begin row -->
+           <style>
+       .panel-border{border: 1px solid #ddd !important}
+       .form-ajust .form-group{margin-bottom: 0px !important}
+      input[type="text"],select,input[type="number"]
+      {
+
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    box-shadow: none;
+    font-size: 12px;
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+       }
+
+ .table2 {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+      display:table}
+
+.table2>tbody>tr>td, .table2>tbody>tr>th, .table2>tfoot>tr>td, .table2>tfoot>tr>th {
+    border-color: #e2e7eb;
+    padding: 1px 0px;
+}
+    
+ .table2>thead>tr>td, .table2>thead>tr>th {
+    border-color: #e2e7eb;
+    padding: 10px 5px;
+}
+#id_abreviatura_codigo{
+    width:50px;
+  }
+  #id_codigo{
+    width:120px;
+  }
+    </style>
+  <form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+   {{ form.title.errors }}
+  <div class="row">
+                <!-- begin col-6 -->
+      <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                       
+                        <h3 class="panel-title">Plantillas</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <div>
+
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                  <li role="presentation" class="active"><a href="#principales" aria-controls="principales" role="tab" data-toggle="tab">Principales</a></li>
+<!--                                     <li role="presentation"><a href="#costo" aria-controls="costo" role="tab" data-toggle="tab">Costos y Precios</a></li>
+ -->                                  
+                                </ul>
+                              
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade in active" id="principales">
+                            <div class="row">
+                                            
+                                            <div class="panel panel-default panel-border">
+                                                <div class="panel-heading">Id del Registro</div>
+                                                <div class="panel-body">
+                                                 
+                                                    <div class="col-md-4">
+                                                      <label for="exampleInputName2">C&oacute;digo</label>
+                                                     {% bootstrap_field form.codigo show_label=False %}
+
+                                                   </div>
+                                                    <div class="col-md-4">
+                                                      <label for="exampleInputName2">Abreviatura</label>
+                                                     {% bootstrap_field form.abreviatura show_label=False %}
+
+                                                   </div>
+                                                    <div class="col-md-8">
+                                                      <label for="exampleInputEmail2">Nombre</label>
+                                                     {% bootstrap_field form.nombre show_label=False %}
+                                                    </div>
+                                                     
+                                                    <div class="col-md-8">
+                                                      <label for="exampleInputEmail2">Observaciones</label>
+                                                     {% bootstrap_field form.observaciones show_label=False %}
+                                                    </div>
+                                                  
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                          
+                                        
+                                        <div class="row" style="">
+                                            <div class="panel panel-default panel-border">
+                                                <!-- Default panel contents -->
+                                                <div class="panel-heading"></div>
+                                                <div class="panel-body">
+                                                  
+                                                </div>
+                                              
+                                                <!-- Table -->
+                                                <table class="table2 table-striped table-bordered"  id="tabla">
+                                                <thead>
+                                                  <tr>
+                                                    <th></th>
+                                                  
+                                                    <th width="200px">Componente</th>
+                                                    <th >Nombre</th>
+                                                    <th >Concepto</th>
+                                                    <th >Valor</th>
+                                                   
+                                                  </tr>
+                                                </thead>
+                                                  <tbody>
+                                                    
+                                                
+                          <tr>
+                                                    <td class="eliminar"><a class="btn btn-danger remove_fields">
+                                                        <i class=" glyphicon glyphicon-trash icon-white"></i>
+                                                      </a>
+                                                    </td>
+
+                                                    <td> 
+                                                    <input type="hidden" class="form-control" id="id_kits1" name="id_kits1"/>
+                                                    <input type="text" class="form-control" id="codigo_kits1" name="codigo_kits1" onfocus="mostrarProductos(1)"></td>
+
+                                                    <td><textarea class="form-control" id="nombre_kits1" name="nombre_kits1"></textarea></td>
+                                                     <td ><select name="tipos_kits1" id="tipos_kits1">
+                                                         {% for am  in tipos %}
+                                                           <option value="{{ am.id }}"> {{ am.nombre }}</option>
+                                                        {% endfor %} 
+                                                     </select>
+                                                    </td>
+                                                    <td><input  type="text" class="form-control" id="valor_kits1" name="valor_kits1"></td>
+                                                  </tr>
+
+                                                   </tbody>
+                                                  <tfoot>
+                                                    
+                                                   
+                                                  </tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        
+                                        <p class="text-center">
+                                             <button type="button" class="btn btn-primary btn-lg" id="add">Agregar</button>
+
+                                                                                    
+                                        </p>
+                                        
+
+
+
+
+                                    </div>
+                                    
+                                     
+                                </div>
+                              
+                            </div>
+                        </div>
+                      
+
+                                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+     <p class="text-center">
+
+                                    <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+                                            <a class="default btn btn-link" href="/recursos_humanos/plantilla_rrhh/"><button type="button" class="btn btn-primary btn-lg">  Regresar</button></a>
+                                        </p>
+                                         {% if kits %}
+<input type="hidden" name="columnas_receta" id="columnas_receta" value="{{ kits|length }}" />
+{% else %}
+<input type="hidden" name="columnas_receta" id="columnas_receta" value="1" />
+
+{% endif %}
+
+    <input type="hidden" name="id_fila_cambiar" id="id_fila_cambiar" value="" />
+
+
+  </form>
+                               <div class="modal fade bs-example-modal-sm" id="modal-dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                             <div class="panel-body">
+                                <div class="table-responsive">
+                                                    <table class="table table-striped table-bordered" id="tabla2">
+                                                        <thead>
+                                                            <tr>
+                                                            <th></th>
+                                                                <th>Codigo</th>
+                                                                <th>Nombre</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for r  in empleados %}
+                                                            <tr>
+                                                                <td  onclick="cargarCodigoProducto('{{ r.empleado_id }}','{{ r.codigo_empleado }}','{{ r.nombre_empleado }}')"><a class="btn btn-danger remove_fields">
+                                                        <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                                      </a></td><td>{{ r.cedula_empleado }}</td>
+                                                                <td>{{ r.nombre_empleado }}</td>
+
+                                                            </tr >
+                                                        {% endfor %} 
+                                                        
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <button type="button" onclick="cerrar()" class="btn btn-danger btn-block">Cerrar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+                                            
+
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+  
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/data-table.js' %}"></script> 
+
+<script>
+  $(document).ready(function() {
+    // App.init();
+    $('#tabla2').DataTable();
+    $('#tabla3').DataTable();
+
+    FormWizardValidation.init();
+    $(".parsley-errors-list").css('display','none');
+$('#id_fecha_nacimiento').datepicker({todayHighlight:true,autoclose:true});
+      $('#id_fechapedido').datepicker({todayHighlight:true,autoclose:true});
+  });
+</script>
+<script>
+    $(document).ready(function() {
+      $('#id_codigo').each(function(){
+  $(this).attr('readonly','readonly');
+});
+       $('#id_abreviatura_codigo').each(function(){
+  $(this).attr('readonly','readonly');
+});
+             $('#id_created_by').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_updated_by').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_created_at').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_updated_at').each(function(){
+  $(this).attr('readonly','readonly');
+});
+
+ 
+
+
+
+   });
+      $(document).ready(
+    function(){
+      var codigo=$("#id_codigo_cliente").val();
+    //alert(codigo);
+      $.ajax({
+        url:'/config/obtenerSecuencial/',
+        type: "POST",
+        data: {id:'plantillas'},
+        success: function(data){
+          $("#id_codigo").val('000'+data);
+        }
+      });
+    }
+    );
+</script>
+<script>
+
+    function mostrarProductos(data){
+       $('#id_fila_cambiar').val(data);
+       $(".bs-example-modal-sm").modal('toggle');
+    }
+    function cerrar(){
+       $(".bs-example-modal-sm").modal('toggle');
+    }
+
+
+    function cargarCodigoProducto(id,codigo,descripcion){
+      var fila=$('#id_fila_cambiar').val();
+         $('#id_kits'+fila).val(id);
+       
+
+        $('#codigo_kits'+fila).val(codigo);
+         $('#nombre_kits'+fila).val(descripcion);
+          // $('#medida_kits'+fila).val(medida);
+         
+          cerrar();
+
+    }
+
+
+</script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        /**
+         * Funcion para añadir una nueva columna en la tabla
+         */
+        $("#add").click(function(){
+            // Obtenemos el numero de filas (td) que tiene la primera columna
+            // (tr) del id "tabla"
+            var num_recetas=$('#columnas_receta').val();
+            num_recetas=parseInt(num_recetas)+1;
+
+            var tds=$("#tabla tr:first td").length;
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla tr").length;
+            var nuevaFila='<tr><td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+          nuevaFila+='<td><input type="hidden" class="form-control" id="id_kits'+num_recetas+'" name="id_kits'+num_recetas+'"> ';
+                
+                nuevaFila+='<input type="text" required="required" class="form-control" id="codigo_kits'+num_recetas+'" name="codigo_kits'+num_recetas+'" onfocus="mostrarProductos('+num_recetas+')" readonly="readonly"></td>';
+                 nuevaFila+='<td><textarea  id="nombre_kits'+num_recetas+'" name="nombre_kits'+num_recetas+'" ></textarea></td>';
+                    nuevaFila+='<td><select class="form-control" id="tipos_kits'+num_recetas+'" name="tipos_kits'+num_recetas+'" > ';
+                                    {% for am  in tipos %}
+                      nuevaFila+='<option value="{{ am.id }}"> {{ am.nombre }}</option>';
+                 
+                                  {% endfor %} 
+              nuevaFila+='</select></td>';
+               nuevaFila+='<td><input type="text" class="form-control" required="required" id="valor_kits'+num_recetas+'" name="valor_kits'+num_recetas+'"></td>';
+
+                nuevaFila+='</tr>';
+
+              $('#columnas_receta').val(num_recetas);
+            // for(var i=0;i<tds;i++){
+            //     // añadimos las columnas
+            //     nuevaFila+="<td>columna "+(i+1)+" Añadida con jquery</td>";
+            // }
+            // // Añadimos una columna con el numero total de columnas.
+            // // Añadimos uno al total, ya que cuando cargamos los valores para la
+            // // columna, todavia no esta añadida
+            // nuevaFila+="<td>"+(trs+1)+" columnas";
+            // nuevaFila+="</tr>";
+            $("#tabla").append(nuevaFila);
+        });
+ 
+        /**
+         * Funcion para eliminar la ultima columna de la tabla.
+         * Si unicamente queda una columna, esta no sera eliminada
+         */
+        $("#del").click(function(){
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla tr").length;
+            if(trs>1)
+            {
+                // Eliminamos la ultima columna
+                $("#tabla tr:last").remove();
+            }
+        });
+
+
+        $(document).on("click",".eliminar",function(){
+            var parent = $(this).parent();
+  $(parent).remove();
+          });
+
+    });
+    </script>
+{% endblock %}                                                                                                                                                                                                                                                                

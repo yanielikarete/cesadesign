@@ -1,0 +1,38 @@
+{% extends "base-list.html" %}
+{% load static from staticfiles %}
+{% load extra_filters %}
+
+{% block breadcrumbs %}
+    {{ block.super }} » Usuarios
+{% endblock %}
+
+
+{% block list-add %}
+    <a href="{% url "nuevo_usuario_ventas" %}" class="btn btn-primary pull-right">
+    	<i class="fa fa-plus"></i>
+        Agregar Usuario
+    </a>
+{% endblock %}
+
+{% block list-title %}Usuarios{% endblock %}
+
+{% block list-field %}
+    <td class="print-no">
+        <a onclick="if(confirm('Confirmar Eliminaciones')){eliminarFila(this)};return false;" href="{% url "user-delete-pk" entity.id %}" title="Eliminar" data-id="{{entity.id}}" class="pull-right print-no">
+            <i class="fa fa-trash-o"></i>
+        </a>
+
+        <a href="{% url "user-update" entity.id %}" title="Editar" class="pull-right print-no">
+            <i class="fa fa-pencil-square-o"></i>
+        </a>
+
+        <a id="activar-user" onclick="if(confirm('Confirmar Activar')){activarDesactivarFila(this,true);};return false;" href="{% url "user-activar-pk" entity.id %}" title="Activar" data-id="{{entity.id}}" class="pull-right print-no {% if entity.user.is_active == 1 %}hidden{% endif %}">
+            <i class="fa fa-unlock"></i>
+        </a>
+
+        <a id="desactivar-user" onclick="if(confirm('Confirmar Desactivar')){activarDesactivarFila(this,false);};return false;" href="{% url "user-desactivar-pk" entity.id %}" title="Desactivar" data-id="{{entity.id}}" class="pull-right print-no {% if entity.user.is_active == 0 %}hidden{% endif %}">
+            <i class="fa fa-lock"></i>
+        </a>
+    </td>
+
+{% endblock %}

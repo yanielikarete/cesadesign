@@ -1,0 +1,258 @@
+
+<form class="form-horizontal" action="#" name="egresosForm" method="POST" id="registrar_eg">
+
+	<div class="alert alert-danger hide" id="msj_error_ingresos"></div>
+
+
+	<div class="panel panel-default-grey">
+	    <div class="panel-heading">
+	        <h3 class="panel-title">Productos </h3>
+	    </div>
+	    <div class="panel-body">
+	        <div class="ingresos">
+				<table style="background-color: white" class="table table-bordered" id="tabla_otros_ingresos">
+					<thead>
+						<tr>
+							<th></th>
+
+							<th><b>Producto</b></th>
+							<th><b>Cantidad</b></th>
+
+						</tr>
+					</thead>
+					<tbody id="tdetalle_ingreso">
+
+                                                  {% if row %}
+                                                    {% for kit  in row %}
+
+                                                  <tr>
+                                                    <td><a class="btn btn-danger remove_fields"  onclick="agregarProducto('{{ kit.1 }}','{{ kit.2 }}','{{ kit.3 }}','{{ kit.4 }}','{{ kit.0}}','{{ kit.6}}','{{ kit.7}}')">
+                                                        <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                                      </a>
+                                                    </td>
+													  <td>{{ kit.2}}</td>
+                                                     <td>{{ kit.3}}</td>
+
+                                                  </tr>
+                                                        {% endfor %}
+
+
+                                                   {% endif %}
+
+
+					</tbody>
+				</table>
+				<br>
+
+<input type="hidden" name="fila" id="fila" value="{{ fila }}" />
+
+
+
+			</div>
+	    </div>
+	</div>
+
+<!-- 	<div style="border-color:#F5F7F7; background-color:#F5F7F7" class="text-right panel-footer">
+		<a href="javascript:void(0);" id="btn_guardar_ingresos" class="btn btn-success btn-sm">
+			<span class="glyphicon glyphicon-floppy-disk"></span>
+			Guardar
+		</a>
+	</div> -->
+</form>
+				 </div>
+							                </div>
+							            </div>
+							        </div>
+							    </div>
+
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+    	$('.table').DataTable();
+        /**
+         * Funcion parnueva columna en la tabla
+         */
+        $("#add_egreso").click(function(){
+            // Obtenemos el numero de filas (td) que tiene la primera columna
+            // (tr) del id "tabla"
+            var num_recetas=$('#columnas_receta_otros_egresos').val();
+            num_recetas=parseInt(num_recetas)+1;
+            //alert(num_recetas);
+
+            var tds=$("#tabla_otros_egresos tr:first td").length;
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla_otros_egresos tr").length;
+            var nuevaFila='<tr><td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+             nuevaFila+='<td><select class="form-control" id="tipos_kits'+num_recetas+'" name="tipos_kits'+num_recetas+'"> ';
+                                    {% for am  in tipos %}
+                      nuevaFila+='<option value="{{ am.id }}"> {{ am.nombre }}</option>';
+
+                                  {% endfor %}
+              nuevaFila+='</select></td>';
+
+                nuevaFila+='<td><input type="text"  class="form-control" id="nombre_kits'+num_recetas+'" name="nombre_kits'+num_recetas+'" ></td>';
+                nuevaFila+='<td><input type="text"  class="form-control" id="valor_kits_egresos'+num_recetas+'" name="valor_kits_egresos'+num_recetas+'" ></td>';
+                  nuevaFila+='<td><input type="checkbox" id="memo_kits'+num_recetas+'" name="memo_kits'+num_recetas+'" ></td>';
+
+                nuevaFila+='</tr>';
+
+              $('#columnas_receta_otros_egresos').val(num_recetas);
+            // for(var i=0;i<tds;i++){
+
+            //     nuevaFila+="<td>columna "+(i+1)+" on jquery</td>";
+            // }
+            // //
+            // nuevaFila+="<td>"+(trs+1)+" columnas";
+            // nuevaFila+="</tr>";
+            $("#tabla_otros_egresos").append(nuevaFila);
+        });
+
+        /**
+         * Funcion para eliminar la ultima columna de la tabla.
+         * Si unicamente queda una columna, esta no sera eliminada
+         */
+        $("#del").click(function(){
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla_otros_egresos tr").length;
+            if(trs>1)
+            {
+                // Eliminamos la ultima columna
+                $("#tabla_otros_egresos tr:last").remove();
+            }
+        });
+
+
+        $(document).on("click",".eliminar",function(){
+            var parent = $(this).parent();
+  $(parent).remove();
+          });
+
+    });
+    </script>
+    <script>
+            $(function() {
+                $("#registrar_eg").on("submit", function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                        url: $(this).attr("action"),
+                        type: 'POST',
+                        data: $(this).serialize(),
+                        beforeSend: function() {
+                            $("#message").html("sending...");
+                        },
+                        success: function(data) {
+                            $("#message").hide();
+                            $("#response").html(data);
+
+                              actualizarOtrosEgresos();
+                              $("#dlgEgreso").modal('toggle');
+                        }
+                    });
+                });
+            });
+  function actualizarOtrosEgresos(){
+      var num_recetas=$('#columnas_receta_otros_egresos').val();
+      var fila=$('#fila').val();
+      var total=0;
+      var cantidad=0;
+      var descuento=0;
+      var porcentaje_descuento=0;
+      var totalidad=0;
+      var i;
+
+      for (i = 1; i <= num_recetas; i++) {
+            if ($('#valor_kits_egresos'+i).val()){
+           cantidad=$('#valor_kits_egresos'+i).val();
+            total=parseFloat(total)+parseFloat(cantidad);
+                //alert(cantidad);
+
+          }
+
+
+      }
+//alert(num_recetas);
+      //alert(total);
+      $('#id_pago_'+fila+'_total_egresos').val((total).toFixed(2));
+actualizarTotal();
+
+    }
+
+        function eliminar(id){
+                var fila=id
+
+
+
+            var parametros = {
+                'id':fila,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+
+            }
+
+            $.ajax({
+                    url: "/recursos_humanos/eliminarDetallesEgreso/",
+                    type: "POST",
+                    async: true,
+                    data: parametros,
+                    success: function(data){
+                        alert('Se elimino satisfactoriamente');
+
+                        actualizarOtrosEgresos();
+                    },
+                    complete: function(){
+                    }
+                });
+    }
+    function agregarProducto(id,descripcion,cantidad,bodega,documento,valor,codigo) {
+		var num_recetas=$('#columnas_receta').val();
+		var producto_tabla;
+		var bodega_tabla;
+		var cont=0;
+				 for (i = 1; i <= num_recetas; i++) {
+					 producto_tabla = $('#id_kits' + i).val();
+					  bodega_tabla = $('#bodega_kits' + i).val();
+					 //alert(producto_tabla);
+					 //alert(bodega_tabla);
+					 //alert(id);
+					 //alert(bodega);
+
+					 if (producto_tabla==id && bodega_tabla==bodega){
+					 	cont++;
+
+					 }
+				 }
+		 if (cont==0) {
+			 num_recetas = parseInt(num_recetas) + 1;
+
+			 var tds = $("#tabla tr:first td").length;
+			 // Obtenemos el total de columnas (tr) del id "tabla"
+			 var trs = $("#tabla tr").length;
+			 var nuevaFila = '<tr><td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+			 nuevaFila += '<td><input type="hidden" class="form-control" id="id_kits' + num_recetas + '" name="id_kits' + num_recetas + '" value="' + id + '"><input type="hidden" class="form-control" id="bodega_kits' + num_recetas + '" name="bodega_kits' + num_recetas + '" value="' + bodega + '"> <input type="hidden" class="form-control" id="documento_kits' + num_recetas + '" name="documento_kits' + num_recetas + '" value="' + documento + '">';
+			 nuevaFila += '<span  id="nombre_kits' + num_recetas + '" name="nombre_kits' + num_recetas + '" >' + descripcion + '</span></td>';
+			 var total=0;
+			 total=cantidad*valor;
+			 nuevaFila += '<td><input type="text"  id="descripcion_kits' + num_recetas + '" name="descripcion_kits' + num_recetas + '" value="' + descripcion + '"/><input type="hidden"  id="valor_kits' + num_recetas + '" name="valor_kits' + num_recetas + '" value="' + valor + '"/><input type="hidden"  id="total_kits' + num_recetas + '" name="total_kits' + num_recetas + '" value="' + total + '"/></td>';
+			 nuevaFila += '<td><input type="text" class="form-control" required="required" id="cantidad_kits' + num_recetas + '" name="cantidad_kits' + num_recetas + '" value="' + cantidad + '" onkeyup="actualizarCosto('+num_recetas+')"></td>';
+
+			 nuevaFila += '</tr>';
+			 $('#columnas_receta').val(num_recetas);
+			 // for(var i=0;i<tds;i++){
+			 //     // añadimos las columnas
+			 //     nuevaFila+="<td>columna "+(i+1)+" Añadida con jquery</td>";
+			 // }
+			 // // Añadimos una columna con el numero total de columnas.
+			 // // Añadimos uno al total, ya que cuando cargamos los valores para la
+			 // // columna, todavia no esta añadida
+			 // nuevaFila+="<td>"+(trs+1)+" columnas";
+			 // nuevaFila+="</tr>";
+			 $("#tabla").append(nuevaFila);
+		 }else{
+		 	alert('Ya ingreso en el detalle ese item');
+		 }
+		 
+		  actualizarTotal();
+	}
+        </script>

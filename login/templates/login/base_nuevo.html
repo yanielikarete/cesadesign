@@ -1,0 +1,72 @@
+{% load staticfiles %}
+{% load humanize %}
+
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+	<meta charset="utf-8" />
+	<title>CENSEA | Sistema de Gestión Institucional Pública</title>
+	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+	
+	{% block css %}
+	{% include "login/includes/css.html" %}
+	{% endblock %}
+	
+</head>
+<body>
+	<!-- begin #page-loader -->
+	<div id="page-loader" class="fade in"><span class="spinner"></span></div>
+	<!-- end #page-loader -->
+	
+	
+	<!-- begin #page-container -->
+	<div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
+		
+		<!-- begin #header -->
+		{% include "login/includes/header.html" %}
+		<!-- end #header -->
+		
+		<!-- begin #sidebar -->
+        {% block sidebar %}
+		{% include "login/includes/sidebar.html" %}
+        {% endblock %}
+		<!-- end #sidebar -->
+		
+		<!-- begin #content -->
+		<div id="content" class="content">
+
+			<!-- begin breadcrumb -->
+            <ol class="breadcrumb pull-right">
+                <li class="active"><h2><strong>{% block breadcrumb %} {% endblock %}</strong></h2></li>
+            </ol>
+            <!-- end breadcrumb -->
+			
+			<!-- begin page-header -->
+			<h1 class="page-header">{% block section_title %}{% endblock %}
+			<br>
+			<small> {% block section_subtitle %}{% endblock %}</small></h1>
+			<!-- end page-header -->
+			
+			{% block content %}
+			{% endblock %}
+        </div>
+		<!-- end #content -->
+		
+	
+		<!-- begin scroll to top btn -->
+		<a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+		<!-- end scroll to top btn -->
+	</div>
+	<!-- end page container -->
+	{% block javascript %}
+	{% include "login/includes/javascript.html" %}
+	{% endblock %}
+
+</body>
+</html>
+

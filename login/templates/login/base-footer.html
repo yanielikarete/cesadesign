@@ -1,0 +1,29 @@
+{% load static from staticfiles %}
+<!-- Grab Google CDN's jQuery, fall back to local if offline -->
+<!-- 2.0 for modern browsers, 1.10 for .oldie -->
+<script>
+    var oldieCheck = Boolean(document.getElementsByTagName('html')[0].className.match(/\soldie\s/g));
+    if(!oldieCheck) {
+    document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js" type="text/javascript"><\/script>');
+    } else {
+    document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js" type="text/javascript"><\/script>');
+    }
+</script>
+
+<!-- main bootstrap js -->
+<script src="{% static 'login/bootstrap/js/bootstrap.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'login/lib/chosen/chosen.jquery.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'login/lib/multi-select/js/jquery.multi-select.js' %}" type="text/javascript"></script>
+<script src="{% static 'login/lib/datetimepicker/js/moment.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'login/lib/datetimepicker/js/bootstrap-datetimepicker.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'login/lib/datetimepicker/locales/bootstrap-datetimepicker.es.js' %}" type="text/javascript"></script>
+<script src="{% static 'login/lib/maskedinput/jquery.maskedinput.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'login/js/tools.js' %}" type="text/javascript"></script>
+<script src="{% static 'login/js/main.js' %}" type="text/javascript"></script>
+
+<!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
+   chromium.org/developers/how-tos/chrome-frame-getting-started -->
+<!--[if lt IE 7 ]>
+    <!--<script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+    <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>-->
+<![endif]-->

@@ -1,0 +1,131 @@
+{% spaceless %}
+{% load django_tables2 %}
+{% load i18n %}
+{% load extra_filters %}
+{% if table.page %}
+<div id="data-table">
+{% endif %}
+{% block table %}
+<div class="num_items">
+    <span class="label label-info">
+        {{ page_obj.paginator.count }} {{verbose_name_plural}}
+    </span>
+</div>
+<form id="form-list" action="" method="post" role="form">{% csrf_token %}
+<input type="hidden" name="model_type" value="{{verbose_name}}" />
+<table class="table table-bordered table-hover table-striped">
+    {% nospaceless %}
+    {% block table.thead %}
+    <thead>
+        <tr>
+            <th>#</th>
+        {% for column in table.columns %}
+            {% if column.orderable %}
+            <th {{ column.attrs.th.as_html }}>
+                <div class="dropdown pull-left">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        {{ column.header }}
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="{% querystring "sort"=column.name %}">
+                                <i class="fa fa-sort-alpha-asc"></i>
+                                Ordenar de A a Z
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% querystring "sort"="-"|add:column.name %}">
+                                <i class="fa fa-sort-alpha-desc"></i>
+                                Ordenar de Z a A
+                             </a>
+                        </li>
+                        {% if 1 %}
+                        <li>
+                            <a href="?" class="active">
+                                <i class="glyphicon glyphicon-remove"></i>
+                                Cancelar
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <span class="icon-sort pull-right">
+                    {% if column.attrs.th.as_html|containsValue:"desc" %}
+                        <i class="fa fa-caret-down"></i>
+                    {% elif column.attrs.th.as_html|containsValue:"asc" %}
+                        <i class="fa fa-caret-up"></i>
+                    {% endif %}
+                </span>
+            </th>
+            {% else %}
+            <th {{ column.attrs.th.as_html }}>{{ column.header }}</th>
+            {% endif %}
+        {% endfor %}
+        </tr>
+    </thead>
+    {% endblock table.thead %}
+    {% block table.tbody %}
+    <tbody>
+        {% for row in table.page.object_list|default:table.rows %} {# support pagination #}
+        {% block table.tbody.row %}
+        <tr id="row-{{row.0}}" class="{{ forloop.counter|divisibleby:2|yesno:"even,odd" }}"> {# avoid cycle for Django 1.2-1.6 compatibility #}
+            <td>{{forloop.counter}}</td>
+            {% for column, cell in row.items %}
+                <td {{ column.attrs.td.as_html }}>{% if column.localize == None %}{{ cell }}{% else %}{% if column.localize %}{{ cell|localize }}{% else %}{{ cell|unlocalize }}{% endif %}{% endif %}</td>
+            {% endfor %}
+        </tr>
+        {% endblock table.tbody.row %}
+        {% empty %}
+        {% if table.empty_text %}
+        {% block table.tbody.empty_text %}
+        <tr><td colspan="{{ table.columns|length }}">{{ table.empty_text }}</td></tr>
+        {% endblock table.tbody.empty_text %}
+        {% endif %}
+        {% endfor %}
+    </tbody>
+    {% endblock table.tbody %}
+    {% block table.tfoot %}
+    <tfoot></tfoot>
+    {% endblock table.tfoot %}
+    {% endnospaceless %}
+</table>
+</form>
+{% endblock table %}
+
+{% if table.page %}
+{% with table.page.paginator.count as total %}
+{% with table.page.object_list|length as count %}
+{% block pagination %}
+{% nospaceless %}{% block pagination.cardinality %}
+<div class="num_items">
+    <span class="label label-info">
+        {{ page_obj.paginator.count }} {{verbose_name_plural}}
+    </span>
+</div>
+{% endblock pagination.cardinality %}{% endnospaceless %}
+{% if is_paginated %}
+<div class="pagination">
+    {% if table.page.has_previous or table.page.has_next %}
+    {% nospaceless %}{% block pagination.current %}
+    <span class="page-current">
+        {% blocktrans with table.page.number as current and table.paginator.num_pages as total %}Page {{ current }} of {{ total }}{% endblocktrans %}
+    </span>
+    {% endblock pagination.current %}{% endnospaceless %}
+    {% endif %}
+    <ul class="pager">
+        {% if table.page.has_previous %}
+        {% nospaceless %}{% block pagination.previous %}<li class="previous"><a href="{% querystring table.prefixed_page_field=table.page.previous_page_number %}">&larr; {% trans "Previous" %}</a></li>{% endblock pagination.previous %}{% endnospaceless %}
+        {% endif %}
+
+        {% if table.page.has_next %}
+        {% nospaceless %}{% block pagination.next %}<li class="next"><a href="{% querystring table.prefixed_page_field=table.page.next_page_number %}">{% trans "Next" %}  &rarr;</a></li>{% endblock pagination.next %}{% endnospaceless %}
+        {% endif %}
+    </ul>
+</div>
+{% endif %}
+{% endblock pagination %}
+{% endwith %}
+{% endwith %}
+</div>
+{% endif %}
+{% endspaceless %}

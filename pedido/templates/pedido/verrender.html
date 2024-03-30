@@ -1,0 +1,168 @@
+    <style>
+
+    .head{
+        width: 100%;
+        text-align: center;
+
+    }
+
+    .details{
+        width: 100%;
+        padding: 2px 0;
+      /* background-color: #fff;*/
+
+    }
+    .contenido{
+        width: 100%;
+        padding: 2px 0;
+
+    }
+
+    td{
+        text-align: left;
+        padding: 3px 5px;
+        border:0;
+    }
+    th{
+        text-align: center;
+        padding: 3px 5px;
+        border:0;
+        /* background-color: #EEEEEE;*/
+    }
+
+    .foot{
+        text-align: center;
+    }
+
+
+    @page {
+        /*size: a4 landscape;*/
+        margin: 1cm;
+
+    }
+
+
+</style>
+
+  <form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+   {{ form.title.errors }}
+      <div class="row">
+
+                                            <div class="panel panel-default panel-border">
+                                            <br />
+                                                <table border="0" class=" ">
+            <tr>
+                <th>Cliente:</th><td colspan="3"> {{ prof.cliente }}</td><th>Vendedor:</th><td colspan="3"> {{ prof.vendedor }}</td>
+            </tr>
+             <tr>
+              <th>Fecha:</th><td colspan="3"> {{ prof.fecha }}</td><th>Fecha Entrega:</th><td colspan="3"> {{ prof.fechapedido }}</td>
+
+            </tr>
+                                                     <tr>
+                <th>Pedido:</th>
+
+                <td colspan="3"> <b>{{ prof.codigo }}</b></td>
+            </tr>
+        </table>
+        <br/>
+                                                </div>
+
+                                        </div>
+        {% for detailprof in detailprofs %}
+        <table border="0" class="table table-bordered">
+
+             <tr>
+              <th>Producto:</th><td colspan="5">{{ detailprof.nombre }}</td>
+            </tr>
+            <tr>
+              <th>Detalle:</th> <td colspan="5">{{ detailprof.detalle }}</td>
+            </tr>
+            <tr>
+              <th>Medida:</th> <td colspan="5">{{ detailprof.medida }}</td>
+            </tr>
+        </table>
+
+            <div id="options" class="m-b-10">
+                <span class="gallery-option-set" id="filter" data-option-key="filter">
+                    <a href="#show-all" class="btn btn-default btn-xs active" data-option-value="*">
+                        Todos
+                    </a>
+
+                </span>
+            </div>
+            <div id="gallery" class="gallery">
+             {% if detalle %}
+                {% for orden in detalle %}
+                {% if orden.2 == detailprof.id %}
+                <div class="image gallery-group-1">
+                    <div class="image-inner">
+                        <a href="/media/{{ orden.3 }}" data-lightbox="gallery-group-1">
+                            {% if orden.3 %}
+                                <img src="/media/{{ orden.3 }}" alt=""/>
+                            {% else %}
+                                <img src="/media/imagenes/producto/imagen_no_disponible.jpg" alt=""/>
+                            {% endif %}
+                        </a>
+                        <p class="image-caption">
+                            {{ orden.1 }}
+                        </p>
+                    </div>
+                    <div class="image-info">
+                        <h5 class="title">
+                           {{ orden.1 }}
+
+                        </h5>
+                        <div class="pull-right">
+                            &nbsp;
+                        </div>
+                        <a class="desc">
+                        <a href="#" onclick="ingresos_ad({{ orden.0}})" ></a>
+
+                        </div>
+                    </div>
+                </div>
+
+                {% endif %}
+                {% endfor %}
+              {% endif %}
+
+
+            </div>
+              {% endfor %}
+
+  </form>
+
+ <script>
+
+   function ingresos_ad(prefix){
+
+            var fila=prefix
+
+
+
+            var parametros = {
+                'id':fila,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+
+            }
+
+            $.ajax({
+                    url: "/proforma/eliminar_imagen/",
+                    type: "POST",
+                    async: true,
+                    data: parametros,
+                    success: function(data){
+                        alert('Se elimino la imagen satisfactoriamente');
+                        location.reload();
+
+                    },
+                    complete: function(){
+                    }
+                });
+        }
+        $(document).ready(function() {
+            Gallery.init();
+        });
+    </script>
+
+

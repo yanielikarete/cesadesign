@@ -1,0 +1,264 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block css %}
+    {{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+{% block section_title %} Registrar anticipo {% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+    <style>
+        .panel-border {
+            border: 1px solid #ddd !important;
+        }
+
+        .form-group {
+            margin-bottom: 0px !important;
+        }
+
+        .panel-border {
+            border: 1px solid #ddd !important
+        }
+    </style>
+
+
+    <div class="row">
+        <!-- begin col-6 -->
+        <div class="col-md-12">
+            <form class="form-horizontal" method="post" action="{% url "deposito-crear" %}">
+                {% csrf_token %}
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                               data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                <i class="fa fa-plus-circle pull-right"></i>
+                                Información del depósito
+                            </a>
+                        </h3>
+                    </div>
+                    <div id="collapseOne" aria-expanded="true" id="collapseOne"
+                         class="panel-collapse collapse in">
+                        <div class="panel-body panel-border">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="exampleInputEmail2">Fecha de corte</label>
+                                <div class="col-sm-4">
+                                    <input id="fecha_corte" class="form-control" type="text"
+                                           name="fecha_corte" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="exampleInputEmail2">Fecha</label>
+                                <div class="col-sm-4">
+                                    <input id="fecha" class="form-control" type="text"
+                                           name="fecha" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label"
+                                       for="exampleInputName2">Cuenta bancaria</label>
+                                <div class="col-sm-4">
+                                    <div class="input-group add-on">
+                                        <input class="form-control" placeholder="..." id="cuenta_bancaria"
+                                               name="nombre_cuenta_bancaria" type="text">
+                                        <input type="hidden" value="" id="cuenta_bancaria_id" name="banco" required/>
+                                        <div class="input-group-btn">
+                                            <a class="btn btn-inverse" data-toggle="modal"
+                                               data-target=".bd-example-modal-lg">
+                                                <i class=" glyphicon glyphicon-search icon-white"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label"
+                                       for="exampleInputEmail2">Número de comprobante</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" name="numero_comprobante" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="saldo_inicial">Total</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="number" name="total" step="0.01"
+                                           value="0.00"
+                                           required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="exampleInputEmail2">Drescripción</label>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control" name="descripcion" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                               data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                <i class="fa fa-plus-circle pull-right"></i>
+                                Cuentas
+                            </a>
+                        </h3>
+                    </div>
+                    <div id="collapseTwo" aria-expanded="true" id="collapseOne"
+                         class="panel-collapse collapse in">
+                        <table class="table2  table table-striped table-bordered dataTable no-footer dtr-inline"
+                               id="tabla">
+                            <thead>
+                            <tr>
+                                <th>Cuenta</th>
+                                <th>Monto</th>
+                                <th>Centro de costo</th>
+                                <th>Proyecto</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <div class="input-group">
+                                        <input class="form-control" placeholder="..." name=""
+                                               type="text">
+                                        <div class="input-group-btn">
+                                            <a class="btn btn-inverse">
+                                                <i class=" glyphicon glyphicon-search icon-white"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><input type="text" class="form-control"></td>
+                                <td>
+                                    <div class="input-group">
+                                        <input class="form-control" placeholder="..." name=""
+                                               type="text">
+                                        <div class="input-group-btn">
+                                            <a class="btn btn-inverse">
+                                                <i class=" glyphicon glyphicon-search icon-white"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input class="form-control" placeholder="..." name=""
+                                               type="text">
+                                        <div class="input-group-btn">
+                                            <a class="btn btn-inverse">
+                                                <i class=" glyphicon glyphicon-search icon-white"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-inverse"><i class="fa fa-save"></i> Guardar
+                </button>
+            </form>
+        </div>
+    </div>
+    <!-- Modal Banco -->
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cuenta bancaria</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped " width="100%" id="tabla_cuenta">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Cuenta</th>
+                                <th>Estado</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for banco  in bancos %}
+                                <tr>
+                                    <td>{{ banco.codigo }}</td>
+                                    <td>{{ banco.nombre }}</td>
+                                    {% if banco.estado == True %}
+                                        <td>Activo</td>
+                                    {% else %}
+                                        <td>Inactivo</td>
+                                    {% endif %}
+                                    <td onclick="cargar_banco('{{ banco.id }}','{{ banco.nombre }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+
+    <script>
+        $('#fecha_corte').datepicker({todayHighlight: true, autoclose: true});
+        $('#fecha_corte').val(getFechaHoy());
+        $('#fecha').datepicker({todayHighlight: true, autoclose: true});
+        $('#fecha').val(getFechaHoy());
+
+        function getFechaHoy() {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear();
+
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+            today = dd + '/' + mm + '/' + yyyy;
+            return today;
+        }
+
+        $(document).ready(function () {
+            $('#tabla_cuenta').DataTable();
+        });
+
+        function cargar_banco(id, nombre) {
+            $('#cuenta_bancaria_id').val(id);
+            $('#cuenta_bancaria').val(nombre);
+            $(".bd-example-modal-lg").modal('toggle');
+        }
+    </script>
+
+{% endblock %}

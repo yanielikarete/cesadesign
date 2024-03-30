@@ -1,0 +1,10 @@
+{% load django_tables2 %}
+<button type="button" class="btn btn-info" data-toggle="collapse" href="#form-filtro" title="Buscar Alumnos">
+    <i class="fa fa-search"></i>
+    Buscar {% if filter_num > 0 %}<span class="badge badge-info"> {{ filter_num }}</span>{% endif %}
+</button>
+<a target="_blank" href="{% querystring "export_data"="pdf" %}" class="btn btn-info" data-toggle="tooltip" title="Imprimir lista en PDF" >
+    <i class="fa fa-file-pdf-o"></i>
+    Imprimir en PDF
+</a>
+</div>

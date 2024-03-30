@@ -1,0 +1,1133 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block css %}
+    {{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+{% block section_title %} Cancelar Anticipo a  Proveedor{% endblock %}
+{% block content %}
+<style>
+    .panel-border {
+        border: 1px solid #ddd !important;
+    }
+
+    .form-group {
+        margin-bottom: 0px !important;
+    }
+
+    .input-group input {
+        border-right: 0px solid transparent;
+    }
+
+    .input-group .input-group-addon {
+        background-color: transparent;
+        border-left: 0px solid transparent;
+    }
+
+    .panel-border {
+        border: 1px solid #ddd !important
+    }
+
+    .highlighter {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .no-border-input {
+        border: none !important;
+        background-color: #fff !important;
+        border-bottom: 1px solid #eee !important;
+    }
+</style>
+    <div class="row">
+        <!-- begin col-6 -->
+        <div class="col-md-12">
+            <form id="formulario" class="form-horizontal" method="post">
+                {% csrf_token %}
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                               data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                <i class="fa fa-plus-circle pull-right"></i>
+                                Datos generales
+                            </a>
+                        </h3>
+                    </div>
+                    <div id="collapseOne" aria-expanded="true" id="collapseOne"
+                         class="panel-collapse collapse in">
+                        <div class="panel-body panel-border">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Tipo</label>
+                                <div class="col-sm-8">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <select class="form-control" name="tipo_anticipo" id="tipo_anticipo">
+                                                <option value="" selected>Seleccione una opción</option>
+                                                {% for tipo_anticipo in tipo_anticipos %}
+                                                    <option value="{{ tipo_anticipo.id }}">{{ tipo_anticipo.descripcion }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <select class="form-control" name="tipo_documento">
+                                                <option value="" selected>Seleccione una opción</option>
+                                                {% for tipo_documento in tipo_documentos %}
+                                                    <option value="{{ tipo_documento.id }}">{{ tipo_documento.descripcion }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Fecha de emisión</label>
+                                <div class="col-sm-4">
+                                    <input id="fecha_emision" class="form-control" type="text" name="fecha_emision">
+                                </div>
+                            </div>
+
+                            
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Proveedor</label>
+                                <input type="hidden" name="proveedor"/>
+                                <div class="col-sm-4">
+                                    <div class="input-group add-on">
+                                        <input type="hidden" name="persona_id"  id="persona_id"/>
+                                        <input class="form-control" name="persona" type="text" readonly>
+                                        <div class="input-group-btn">
+                                            <a id="persona_modal" class="btn btn-inverse" data-toggle="modal" >
+                                                <i class="glyphicon glyphicon-search icon-white"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mostrar-cheque" style="display:none">
+                                <label class="col-sm-4 control-label">Páguese a la orden
+                                    de</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" name="paguese_a" readonly>
+                                </div>
+                            </div>
+                           
+            
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Descripción</label>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control" name="descripcion" id="descripcion" rows="3" onkeyup="actualizar_descripcion()"></textarea>
+                                </div>
+                            </div>
+                                                      <br />  
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Facturas</label>
+                                <div class="col-sm-6">
+                                     <select class="form-control" name="factura" id="factura">
+                                                <option value="" selected>Seleccione una opción</option>
+                                               
+                                            </select>
+                                </div>
+                            </div>
+ <br />  
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label"> <b> $ {{form.monto.value}} </b></label>
+                                <div class="col-sm-4">
+
+                                    <input type="text" class="form-control mask_float highlighter no-border-input" id="id_monto" name="monto" value="{{form.monto.value}}" onkeyup="actualizar_monto_cheque()"/>
+
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-inverse panel-with-tabs">
+                    <div class="panel-heading p-0">
+                        <!-- begin nav-tabs -->
+                        <ul class="nav nav-tabs nav-tabs-inverse">
+                            <li class="active"><a href="#nav-tab-1" data-toggle="tab">Asientos</a></li>
+                        </ul>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade active in" id="nav-tab-1">
+                      
+                            <table class="table table-bordered" id="tabla-asiento">
+                                <thead style="background-color: #ccd0d4">
+                                <tr>
+                                    <th style="display:none;">Id</th>
+                                    <th style="text-align: center; width: 5%;">Acción</th>
+                                    <th style="text-align: center">Código</th>
+                                    <th style="text-align: center">Cuenta</th>
+                                    <th style="text-align: center; width: 15%;">Debe</th>
+                                    <th style="text-align: center; width: 15%;">Haber</th>
+                                    <th style="text-align: center">Concepto</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td><input type="hidden" id="total-debe-asiento" name="total-debe-asiento"  /><input type="hidden" id="total-haber-asiento" name="total-haber-asiento" /></td>
+                                    <td></td>
+                                    
+                                    <td><strong>TOTAL:</strong></td>
+                                    <td align="right" name="asiento-total-debe"><strong>0.00</strong></td>
+                                    <td align="right" name="asiento-total-haber"><strong>0.00</strong></td><td></td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                            <button id="agregar-asiento" style="margin-left: 1%;" type="button" class="btn btn-inverse">
+                                    <i class="fa fa-plus-circle"></i>Agregar
+                            </button>
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-inverse"><i class="fa fa-save"></i> Guardar
+                </button>
+            </form>
+        </div>
+    </div>
+    <!-- Modal Cliente-->
+    <div class="modal fade bs-example-modal-lg" id="modal-cliente">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cliente</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-cliente">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Ruc</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for cliente  in clientes %}
+                                <tr>
+                                    <td>{{ cliente.codigo_cliente }}</td>
+                                    <td>{{ cliente.nombre_cliente }}</td>
+                                    <td>{{ cliente.ruc }}</td>
+                                    <td onclick="cargar_cliente('{{ cliente.id_cliente }}','{{ cliente.nombre_cliente }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Proveedor-->
+    <div class="modal fade bs-example-modal-lg" id="modal-proveedor">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Proveedor</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-proveedor">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Ruc</th>
+                                <th>Acción</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for proveedor  in proveedores %}
+                                <tr>
+                                    <td>{{ proveedor.codigo_proveedor }}</td>
+                                    <td>{{ proveedor.nombre_proveedor }}</td>
+                                    <td>{{ proveedor.ruc }}</td>
+                                    <td onclick="cargar_proveedor('{{ proveedor.proveedor_id }}', '{{ proveedor.nombre_proveedor }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Banco -->
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cuenta bancaria</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped " width="100%" id="tabla_cuenta">
+                            <thead>
+                            <tr>
+
+                                <th>Banco</th>
+                                <th>Tipo</th>
+                                <th>Número cuenta</th>
+                                <th>Estado</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for banco  in bancos %}
+                                <tr>
+
+                                    <td>{{ banco.nombre }}</td>
+                                    <td>{{ banco.tipo_cuenta }}</td>
+                                    <td>{{ banco.numero_cuenta }}</td>
+                                    {% if banco.estado == True %}
+                                        <td>Activo</td>
+                                    {% else %}
+                                        <td>Inactivo</td>
+                                    {% endif %}
+                                    <td onclick="cargar_banco('{{ banco.id }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Plan Cuenta-->
+    <div class="modal fade bs-example-modal-lg" id="modal-plan-cuenta">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Plan de cuenta</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-plan-cuenta">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>Código</th>
+                                <th>Descripción</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for cuenta  in cuentas %}
+                                <tr>
+                                    <td onclick="cargar_plan_cuenta('{{ cuenta.plan_id }}','{{ cuenta.codigo_plan }}','{{ cuenta.nombre_plan }}')">
+                                        <a class="btn btn-inverse btn-sm remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                    <td>{{ cuenta.codigo_plan }}</td>
+                                    <td>{{ cuenta.nombre_plan }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+
+    <script>
+             $("select[name='factura']").change(function () {
+                       var selected = $(this).find('option:selected');
+            if (selected.val() != "") {
+
+                var id = selected.data('id');
+                var asiento = selected.data('asiento');
+                var total = selected.data('total');
+                var proveed = selected.data('cuenta');
+                var iva1=total*0.14;
+                var iva2=total*0.12;
+                $("#id_monto").val(total);
+                 $.ajax({
+                    type: "POST",
+                    url: "{% url 'consultar-documento-asiento' %}",
+                    data: {
+                        'id': asiento,
+                        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                    },
+                    success: function(response) {
+                        for (var i = 0; i < response.length; i++) {
+                            //console.log(response[i]);
+                            if (response[i][3]>0){
+                                var cadena=response[i][9];
+                                //alert(cadena);
+                                if (response[i][3]==iva1 || response[i][3]==iva2 || cadena.indexOf("IVA ") > -1){
+                                    cargarasiento(response[i][2],response[i][10],response[i][9], response[i][4], response[i][3],"haber","iva");
+
+                                }else{
+                                   cargarasiento(response[i][2],response[i][10],response[i][9], response[i][4], response[i][3],"haber","");
+
+                                }
+
+                            }
+                        }
+                        
+                        var pro=  $('input[name="persona_id"]').val();
+                        cargar_cuenta_contable(proveed);
+                        cargarasientobase(total);
+                        calcular_totales_asiento();
+                    },
+                    error: function(response) {
+                        alert("El proveedor no tiene retención de IVA asociada.");
+
+                    }
+                });
+   
+
+
+            }
+
+     
+           
+            });
+        
+function cargar_factura(id) {
+
+        /*CONSULTAMOS LAS RAZONES SOCIALES QUE TENGA EL CLIENTE*/
+        $.ajax({
+                type: "POST",
+                url: "{% url 'consultar_factura_pagadas_proveedor' %}",
+                data: {
+                    'id': id,
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: function (response) {
+                    $('input[name="factura"]').val("");
+                    $('select[name="factura"]').find('option').remove().end();
+                    $('select[name="factura"]').append('<option value="">SELECCIONE FACTURAS</option>');
+                    if(response.length > 0) {
+                        for (var i = 0; i < response.length; i++) {
+                            $('select[name="factura"]').append('<option value="' + response[i][0] + '" data-id="' + response[i][0] + '"  data-total="' + response[i][6] + '"  data-asiento="' + response[i][9] + '" data-cuenta="' + response[i][10] + '">' + response[i][1] + '-'+ response[i][2] +'-'+ response[i][3] +'|'+response[i][5]+'</option>');
+                        }
+                    }else{
+                        alert("El proveedor no tiene razón facturas asociada.");
+                    }
+                    $('select[name="fatura"]').select2();
+                },
+                error: function (response) {
+                    alert("El cliente no tiene razón social asociada.");
+                }
+            });
+    }
+
+  
+        $('#fecha_emision').datepicker({todayHighlight: true, autoclose: true,format: 'yyyy-mm-dd'});
+        $('#fecha_emision').val(getFechaHoy());
+        $('#fecha_cheque').datepicker({todayHighlight: true, autoclose: true ,format: 'yyyy-mm-dd'});
+        $('#fecha_cheque').val(getFechaHoy());
+        $(".mask_float").maskMoney({thousands: '', decimal: '.', allowZero: true});
+        cargar_banco('2');
+        $(".bd-example-modal-lg").modal('toggle');
+
+        var tabla_facturas = $('#tabla-facturas');
+
+        function getFechaHoy() {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear();
+
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+            today = yyyy + '-' + mm + '-' + dd;
+            return today;
+        }
+
+        $(document).ready(function () {
+            //$('#formulario').trigger("reset");
+            $('#tabla-cliente').DataTable();
+            $('#tabla-plan-cuenta').DataTable();
+            $('#tabla_cuenta').DataTable({ordering:false});
+            $('#tabla-proveedor').DataTable();
+            $('.formato_numero').maskMoney({thousands:'', decimal:'.', allowZero: true});
+            $("select[name='tipo_documento']").change(function () {
+                if ($(this).val() != "1") {//Transf
+                    $('.mostrar-cheque').attr('style', 'display: none;');
+                    $('.mostrar-transf').removeAttr('style')
+                }
+                if ($(this).val() == "1") {//Cheque
+                    $('.mostrar-transf').attr('style', 'display: none;');
+                    $('.mostrar-cheque').removeAttr('style')
+                }
+            });
+            $("select[name='tipo_anticipo']").change(function () {
+                if ($(this).val() == "1") {
+                    $('#persona_modal').removeAttr('data-target');
+                    $('#persona_modal').attr('data-target', '#modal-proveedor');
+                }
+                if ($(this).val() == "2") {
+                    $('#persona_modal').removeAttr('data-target');
+                    $('#persona_modal').attr('data-target', '#modal-cliente');
+                }
+            });
+
+            tabla_facturas.DataTable( {
+                columnDefs: [ {
+                    orderable: false,
+                    className: 'select-checkbox',
+                    targets:   0
+                } ],
+                select: {
+                    style:    'os',
+                    selector: 'td:first-child'
+                },
+                order: [[ 1, 'asc' ]]
+            } );
+
+            $("select[name='tipo_anticipo']").change(function () {
+                var selected = $(this).find('option:selected');
+                if(selected.val() == 1){
+                    $("select[name='tipo_documento'] option[value='1']").hide();
+                }else{
+                    $("select[name='tipo_documento'] option[value='2']").hide();
+                }
+
+            });
+
+        });
+
+        function cargar_banco(id) {
+            $('#cuenta_bancaria_id').val(id);
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'consultar-secuencia-cheque' %}",
+                data: {'id': id, csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val() },
+                success: function (response) {
+                    $('input[name="numero_cheque"]').val(response[0][1]);
+                    $('#cuenta_bancaria').val(response[0][2]);
+                    //alert(response[0][2]);
+                    /*
+                    for (var i = 0; i < response.length; i++) {
+                        $('input[name="numero_cheque"]').val(response[i][1]);
+                    }*/
+                }
+            });
+            $(".bd-example-modal-lg").modal('toggle');
+            agregar_asiento();
+        }
+
+        function cargar_proveedor(id, descripcion) {
+            $('input[name="persona_id"]').val(id);
+            $('input[name="persona"]').val(descripcion);
+            $('input[name="paguese_a"]').val(descripcion);
+            $("#modal-proveedor").modal('toggle');
+            cargar_factura(id) ;
+           //$.ajax({
+           //     type: "POST",
+           //     url: "{% url 'consultar-facturas' %}",
+           //     data: {
+           //         'id': id,
+           //         'tipo': "proveedor",
+           //         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+           //     },
+           //     success: function (response) {
+           //         
+           //         $('#tabla-facturas tbody').html("");
+           //         for (var i = 0; i < response.length; i++) {
+           //             cargarfacturas(response[i][0], response[i][1], response[i][2],response[i][3], response[i][4], response[i][5], response[i][6], response[i][7], response[i][8]);
+           //         }
+           //         seleccionar_check();
+           //     },
+           //     error: function (response) {
+           //         alert("El proveedor no tiene facturas.");
+           //         console.log(response);
+           //     }
+           // });
+           //
+           // 
+           // 
+            
+            agregar_asiento();
+        }
+
+        function cargar_cliente(id, nombre) {
+            $('input[name="persona_id"]').val(id);
+            $('input[name="persona"]').val(nombre);
+            $('input[name="paguese_a"]').val(nombre);
+            $("#modal-cliente").modal('toggle');
+            $.ajax({
+                type: "POST",
+                url: "{% url 'consultar-facturas' %}",
+                data: {
+                    'id': id,
+                    'tipo': "cliente",
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: function (response) {
+                    $('#tabla-facturas tbody').html("");
+                    for (var i = 0; i < response.length; i++) {
+                        cargarfacturas(response[i][0], response[i][1], response[i][2],response[i][3], response[i][4], response[i][5], response[i][6], response[i][7], response[i][8]);
+                    }
+                    seleccionar_check();
+                },
+                error: function (response) {
+                    alert("El cliente no tiene facturas.");
+                    console.log(response);
+                }
+            });
+
+        agregar_asiento();
+        }
+
+        $(document).on("click", ".eliminar", function () {
+            var parent = $(this).parent();
+            $(parent).remove();
+            calcular_totales_asiento();
+        });
+
+        /*---------------- Asiento ---------------------------*/
+
+        var row_clicked_asiento;
+        function agregar_asiento(){
+            var banco=$('#cuenta_bancaria_id').val();
+            var persona=$('#persona_id').val();
+            var tipo=$('#tipo_anticipo').val();
+           ////alert (tipo);
+            $('#tabla-asiento tbody').html("");
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'consultar_plan_cuentas_personas_bancos' %}",
+                data: {
+                    'banco': banco,
+                    'tipo': tipo,
+                    'persona': persona,
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: function (response) {
+                    for (var i = 0; i < response.length; i++) {
+                        cargarasiento(response[i][0], response[i][1], response[i][2],response[i][3], response[i][4],'proveedor');
+
+
+                    }
+                },
+                error: function (response) {
+                    alert("Se generaron los asientos.");
+                    console.log(response);
+                }
+            });
+
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'consultar_plan_cuentas_personas_bancos' %}",
+                data: {
+                    'banco': banco,
+                    'tipo': 0,
+                    'persona': persona,
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: function (response) {
+                    for (var i = 0; i < response.length; i++) {
+                        cargarasiento(response[i][0], response[i][1], response[i][2],response[i][3], response[i][4], response[i][5],'banco');
+                    }
+                },
+                error: function (response) {
+                    alert("Se generaron los asientos.");
+                    console.log(response);
+                }
+            });
+//verificar si se cargan las facturas
+//var facturas = JSON.stringify(get_array_facturas());
+//          alert(facturas);
+        }
+
+        function cuenta_contable(id_cuenta) {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'consultar-cuenta-contable' %}",
+                data: {'id': id_cuenta, csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val() },
+                success: function (response) {
+                    for (var i = 0; i < response.length; i++) {
+                        var plan_id = response[i][0];
+                        var codigo_plan = response[i][1];
+                        var nombre_plan = response[i][2];
+                        var deber = 0;
+                        var haber = 0;
+                        var tipo='proveedor'
+                        cargarasiento(plan_id, codigo_plan, nombre_plan, deber, haber,tipo);
+                    }
+                },
+                error: function (response) {
+                    //alert(response);
+                }
+            });
+        }
+
+        $(document).ready(function(){
+            $("#tabla-asiento").delegate("tr.asiento-row", "click", function(){
+                row_clicked_asiento = $(this).closest('tr');
+            });
+        });
+
+        function cargar_plan_cuenta(id, codigo_plan, nombre) {
+            $('td[name="asiento-plan-cuenta-id"]', row_clicked_asiento).text(id);
+            $('input[name="asiento-plan-cuenta-descripcion"]', row_clicked_asiento).val(nombre);
+            $('td[name="asiento-codigo"]', row_clicked_asiento).text(codigo_plan)
+            $('#modal-plan-cuenta').modal('toggle');
+        }
+function seleccionar_check(){
+    $('input[type=checkbox]').click(function() {
+                var id =$(this).val();
+                var valor=$('#fact_restante_'+id).val();
+                if($(this).is(':checked')) {
+                    //alert(valor);
+                    actualizar_monto_movimiento('sum',valor);
+                    $("#abono_"+id).removeAttr('readonly');
+                    $("#abono_"+id).val(valor);
+                        actualizar_monto();
+                } else {
+                    $("#abono"+id).prop("readonly",true);
+                    actualizar_monto_movimiento('sub',valor);
+                }
+            });
+}
+        function cargarfacturas(id, fecha_emision, establecimiento, subtotal, iva, total,abonada,punto_emision,secuencial) {
+
+          if (abonada=='' || abonada=='null' || abonada<=0 || abonada==' '){
+              abonada=0;
+              //alert('entro');
+            }
+            var restante=parseFloat(total) - parseFloat(abonada);
+            //alert(restante);
+            if (restante>0) {
+                var factura =
+                        '<tr>' +
+                        '<td><input value="' + id + '" type="checkbox" id="checkbox-factura' + id + '"><input type="hidden" id="fact_total_' + id + '" value="' + total + '"><input type="hidden" id="fact_restante_' + id + '" value="' + (restante.toFixed(2)) + '"></td>' +
+                        '<td name="factura-id">' + id + '</td>' +
+                        '<td name="factura-fecha-emision">' + fecha_emision + '</td>' +
+                        '<td name="factura-establecimiento">' + establecimiento +'-'+punto_emision+ '-'+secuencial+ '</td>' +
+                        '<td align="right" name="factura-subtotal">' + subtotal + '</td>' +
+                        '<td align="right" name="factura-iva">' + iva + '</td>' +
+                        '<td align="right" name="factura-total">' + total + '</td>' +
+                        '<td align="right" name="factura-cantidad-abonada">' + (abonada.toFixed(2)) + '</td>' +
+                        '<td align="right" name="factura-cantidad-restante">' + (restante.toFixed(2)) + '</td>' +
+                        '<td align="right"><input type="text" name="abono_' + id + '" id="abono_' + id + '" readonly  onkeyup="actualizar_monto()" value="0" class="formato_numero"/></td>' +
+
+                        '</tr>';
+
+                $('#tabla-facturas tbody').append(factura);
+            }
+
+            //numero_asiento++;
+        }
+
+        function actualizar_monto_movimiento(operation,value){
+
+            var total = $('td[name="facturas-total"]').text();
+            
+
+            if(operation == "sum"){
+                // se suma al valor del monto total del movimiento
+                total = parseFloat(total) + parseFloat(value);
+
+            }else if(operation == "sub"){
+                // se resta al valor del monto total del movimiento
+                total = parseFloat(total) - parseFloat(value);
+            }
+            //$('td[name="facturas-total"]').text(total.toFixed(2));
+        }
+
+        function actualizar_monto(){
+            var suma=0;
+            var id=0;
+         $('#tabla-facturas tbody tr').each(function () {
+                var row = $(this).closest('tr');
+              var id = $('td[name="factura-id"]', row).text();
+                var abono = $('#abono_'+id).val();
+             var total = $('td[name="factura-cantidad-restante"]', row).text();
+
+             if (parseFloat(abono)>parseFloat(total)){
+                 alert("El abono no puede ser mayor al total de la factura");
+                 $('#abono_'+id).val(total);
+                 var abono = $('#abono_'+id).val();
+             }
+                suma= parseFloat(suma)  +parseFloat(abono);
+            });
+
+            $('td[name="facturas-abono"]').text(suma.toFixed(2));
+            $('#id_monto').val(suma.toFixed(2));
+
+            $('#tabla-asiento tbody tr').each(function () {
+                    var row = $(this).closest('tr');
+                    var id = $('input[name="tipo"]', row).val();
+ var tipo=$('#tipo_anticipo').val();
+                         if (tipo==2){
+                                if (id=="proveedor"){
+                                                 $('input[name="asiento-haber"]', row).val(suma.toFixed(2));
+                                             }else{
+                                                     $('input[name="asiento-debe"]', row).val(suma.toFixed(2));
+                          }
+
+                     }else{
+                             if (id=="proveedor"){
+                         $('input[name="asiento-debe"]', row).val(suma.toFixed(2));
+                     }else{
+                             $('input[name="asiento-haber"]', row).val(suma.toFixed(2));
+                     }
+                     }
+
+
+            });
+            actualizar_monto_asiento();
+        }
+
+
+
+         function actualizar_monto_asiento(){
+            var suma_debe=0;
+              var suma_haber=0;
+            var id=0;
+         $('#tabla-asiento tbody tr').each(function () {
+                var row = $(this).closest('tr');
+              var id = $('td[name="factura-id"]', row).text();
+                var debe = $('input[name="asiento-debe"]', row).val();
+              var haber = $('input[name="asiento-haber"]', row).val();
+
+                suma_debe= parseFloat(suma_debe)  +parseFloat(debe);
+             suma_haber= parseFloat(suma_haber)  +parseFloat(haber);
+            });
+
+
+            $('td[name="asiento-total-debe"]').text(suma_debe.toFixed(2));
+             $('td[name="asiento-total-haber"]').text(suma_haber.toFixed(2));
+             $('input[name="total-debe-asiento"]').val(suma_debe.toFixed(2));
+             $('input[name="total-haber-asiento"]').val(suma_haber.toFixed(2));
+            var monto=$('#id_monto').val();
+
+
+        }
+
+        function actualizar_descripcion(){
+    var descrip = '';
+            descrip=$('#descripcion').val() ;
+    $('#tabla-asiento tbody tr').each(function () {
+                    var row = $(this).closest('tr');
+        var id = $('textarea[name="concepto-asiento"]', row).val();
+
+            $('textarea[name="concepto-asiento"]', row).val(descrip);
+
+
+ //var facturas = JSON.stringify(get_array_facturas());
+     //     alert(facturas);
+
+
+            });
+
+}
+        function cargarasiento(plan_id, codigo, descripcion, debe, haber,tipo,subtipo) {
+            var asiento = '';
+            var descrip = '';
+            descrip=$('#descripcion').val() ;
+            asiento =
+                    '<tr class="asiento-row" >' +
+                        '<td name="asiento-plan-cuenta-id" class="asiento-id" style="display:none;">' + plan_id + '</td>' +
+                        '<td class="eliminar">' +
+                            '<a class="btn btn-danger remove-field-secuencia">' +
+                                '<i class="glyphicon glyphicon-trash icon-white"></i>' +
+                            '</a><input type="hidden" value="'+tipo+'" name="tipo" id="tipo"/><input type="hidden" value="'+subtipo+'" name="subtipo" id="subtipo"/>' +
+                        '</td>' +
+                        '<td name="asiento-codigo">' + codigo + '</td>' +
+                        '<td>' +
+                            '<div class="input-group add-on">' +
+                                '<input class="form-control" type="text" name="asiento-plan-cuenta-descripcion" value="'+descripcion+'"   readonly>' +
+                                '<div class="input-group-btn">' +
+                                    '<a class="btn btn-inverse" data-toggle="modal" data-target="#modal-plan-cuenta">' +
+                                        '<i class="glyphicon glyphicon-search icon-white"></i>' +
+                                    '</a>' +
+                                '</div>' +
+                            '</div>' +
+                        '</td>' +
+                        '<td>' +
+                            '<input style="text-align: right;" class="form-control" type="number" step="0.01" name="asiento-debe" value="'+debe+'" onkeyup="actualizar_monto_asiento()">' +
+                        '</td>' +
+                        '<td align="right" >' +
+                            '<input style="text-align: right;" class="form-control" type="number" step="0.01" name="asiento-haber" value="'+haber+'" onkeyup="actualizar_monto_asiento()">' +
+                        '</td>' +
+                            '<td><textarea style="text-align: right;" class="form-control"  name="concepto-asiento"  >'+descrip+'</textarea>' +
+                        '</td>' +
+                    '</tr>';
+            $('#tabla-asiento tbody').append(asiento);
+            actualizar_monto_asiento();
+            //numero_asiento++;
+        }
+
+        $('#agregar-asiento').click(function () {
+            cargarasiento('','','',0,0);
+        });
+
+        $('#tabla-asiento').on('change', 'input', function () {
+            calcular_totales_asiento();
+        });
+
+        function calcular_totales_asiento() {
+            var suma_debe = 0;
+            var suma_haber = 0;
+            $('#tabla-asiento tbody tr').each(function () {
+                var row = $(this).closest('tr');
+                var debe = $('input[name="asiento-debe"]', row).val();
+                var haber = $('input[name="asiento-haber"]', row).val();
+                suma_debe = +suma_debe + +debe;
+                suma_haber = +suma_haber + +haber;
+            });
+            $('td[name="asiento-total-debe"]').text(parseFloat(suma_debe).toFixed(2));
+            $('td[name="asiento-total-haber"]').text(parseFloat(suma_haber).toFixed(2));
+             $('input[name="total-debe-asiento"]').val(suma_debe.toFixed(2));
+             $('input[name="total-haber-asiento"]').val(suma_haber.toFixed(2));
+        }
+
+  
+
+        function get_array_facturas() {
+            var facturas = [];
+            $('#tabla-facturas tbody tr').each(function () {
+
+                var row = $(this).closest('tr');
+
+                var id = $('td[name="factura-id"]', row).text();
+                var abono = $('#abono_'+id).val();
+                 var anterior = $('td[name="factura-cantidad-abonada"]', row).text();
+                 var diferencia = $('td[name="factura-cantidad-restante"]', row).text();
+                 var check =false;
+                if( $('#checkbox-factura'+id).attr('checked') ) {
+                        check=true;
+                }
+
+
+                var factura = {"check": check, "id": id, "abono": abono,"anterior": anterior,"diferencia": diferencia};
+                facturas.push(factura);
+            });
+            return facturas;
+        }
+        /*-------------------------------------------*/
+
+  
+
+function add_div() {
+            var div_externo = $('<div id="div-consultando" style="width: 100%; height: 100%; background-color: #191a1b; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1050; opacity: 0.8">');
+            var div_interno = $('<div class="progress progress-striped active" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, 50%); width: 50%">');
+            var progress = $('<div class="progress-bar progress-bar-inverse" style="width: 100%">Guardando...</div>');
+
+            div_interno.append(progress);
+            div_externo.append(div_interno);
+
+            div_externo.appendTo($('body'));
+
+        }
+function actualizar_monto_cheque(){
+    var suma=$('#id_monto').val();
+    suma=parseFloat(suma);
+    var iva=0;
+    var subtotal=0;
+
+    $('#tabla-asiento tbody tr').each(function () {
+                    var row = $(this).closest('tr');
+                    var id = $('input[name="tipo"]', row).val();
+                    var subid = $('input[name="subtipo"]', row).val();
+
+                     if (id=="debe"){
+                         $('input[name="asiento-debe"]', row).val(suma.toFixed(2));
+                     }else{
+                            iva=parseFloat(suma*0.14);
+                            subtotal=suma-iva;
+                           if (subid=='iva'){
+                             $('input[name="asiento-haber"]', row).val(iva.toFixed(2));
+                           }else{
+                              $('input[name="asiento-haber"]', row).val(subtotal.toFixed(2));
+
+                           }
+                     }
+
+            });
+            actualizar_monto_asiento();
+}
+
+    $(function () {
+        $('select[name=""]').change(function () {
+            var selected = $(this).find('option:selected');
+            if (selected.val() != "") {
+
+                var id = selected.data('id');
+                var nombre = selected.data('nombre');
+                var ruc = selected.data('ruc');
+                var direccion = selected.data('direccion');
+                var telefono = selected.data('telefono');
+                var cuenta_venta_id = selected.data('cuenta-contable-venta');
+                var retencion_iva = selected.data('retencion-iva');
+                var retencion_fuente = selected.data('retencion-fuente');
+
+                cargar_cliente(id, nombre, ruc,direccion,telefono, cuenta_venta_id,retencion_iva, retencion_fuente);
+
+            }
+
+        });
+    });
+       function cargar_cuenta_contable(id) {
+        
+        var mont=$("#id_monto").val();
+        $.ajax({
+            type: "POST",
+            url: "{% url 'consultar-cuenta-compra' %}",
+            data: {
+                'id': id,
+                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+            },
+            success: function (response) {
+                for (var i = 0; i < response.length; i++) {
+                    cargarasiento(response[i][0], response[i][1], response[i][2],mont, 0,"debe","");
+                }
+            },
+            error: function (response) {
+                alert("El proveedor no tiene cuenta contable asociada.");
+                console.log(response);
+            }
+        });
+    }
+
+  
+    function cargarasientobase(total){
+        asiento =
+                    '<tr class="asiento-row" >' +
+                        '<td name="asiento-plan-cuenta-id" style="display:none;">' + plan_id + '</td>' +
+                        '<td class="eliminar">' +
+                            '<a class="btn btn-danger remove-field-secuencia">' +
+                                '<i class="glyphicon glyphicon-trash icon-white"></i>' +
+                            '</a><input type="hidden" value="'+tipo+'" name="tipo" id="tipo"/>' +
+                        '</td>' +
+                        '<td name="asiento-codigo">' + codigo + '</td>' +
+                        '<td>' +
+                            '<div class="input-group add-on">' +
+                                '<input class="form-control" type="text" name="asiento-plan-cuenta-descripcion" value="'+descripcion+'"   readonly>' +
+                                '<div class="input-group-btn">' +
+                                    '<a class="btn btn-inverse" data-toggle="modal" data-target="#modal-plan-cuenta">' +
+                                        '<i class="glyphicon glyphicon-search icon-white"></i>' +
+                                    '</a>' +
+                                '</div>' +
+                            '</div>' +
+                        '</td>' +
+                        '<td>' +
+                            '<input style="text-align: right;" class="form-control" type="number" step="0.01" name="asiento-debe" value="'+debe+'" onkeyup="actualizar_monto_asiento()">' +
+                        '</td>' +
+                        '<td align="right" >' +
+                            '<input style="text-align: right;" class="form-control" type="number" step="0.01" name="asiento-haber" value="'+haber+'" onkeyup="actualizar_monto_asiento()">' +
+                        '</td>' +
+                            '<td><textarea style="text-align: right;" class="form-control"  name="concepto-asiento"  >'+descrip+'</textarea>' +
+                        '</td>' +
+                    '</tr>';
+            $('#tabla-asiento tbody').append(asiento);
+            actualizar_monto_asiento();
+    }
+   
+
+
+
+ function get_array_asientos() {
+            var asientos = [];
+            $('#tabla-asiento tbody tr').each(function () {
+                var row = $(this).closest('tr');
+                var id = $('td[name="asiento-plan-cuenta-id"]', row).text();
+                var codigo = $('td[name="asiento-codigo"]', row).text();
+                var cuenta = $('input[name="asiento-plan-cuenta-descripcion"]', row).val();
+                var debe = $('input[name="asiento-debe"]', row).val();
+                var haber = $('input[name="asiento-haber"]', row).val();
+                var concepto = $('textarea[name="concepto-asiento"]', row).val();
+                var asiento = {"id_plancuenta": id, "codigo": codigo, "cuenta": cuenta, "debe": debe, "haber": haber, "concepto": concepto};
+                asientos.push(asiento);
+            });
+            return asientos;
+        }
+     $('#formulario').submit(function (event) {
+        //var retenciones = JSON.stringify(get_array_retenciones());
+        var asientos = JSON.stringify(get_array_asientos());
+      //  var detalle = JSON.stringify(get_array_detalle());
+      //alert(asientos);
+        //console.log(data);
+        event.preventDefault();
+        var total_debe = $('input[name="asiento-total-debe"]').val();
+        var total_haber = $('input[name="asiento-total-haber"]').val();
+        var data = $(this).serialize() +'&arreglo_asientos=' + asientos+'&total_debe=' + total_debe+'&total_haber=' + total_haber;
+
+
+        if(total_debe==total_haber){
+            $.ajax({
+                type: "POST",
+                url: "{% url 'movimiento_proveedor_nota_credito_view' %}",
+                data: data,
+                success: function (response) {
+
+                    console.log(response);
+                    alert("NOTA DE CREDITO INGRESADA");
+                document.location.href = '/bancos/movimiento/proveedor/nota_credito';
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });
+        }else{
+            alert("El total debe tiene que ser igual al total haber en el registro de asiento");
+        }
+
+    });
+
+    </script>
+
+{% endblock %}

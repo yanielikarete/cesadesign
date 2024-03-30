@@ -1,0 +1,40 @@
+{% extends 'login/base.html' %}
+{% load static from staticfiles %}
+{% load extra_filters %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static 'calificacion/lib/handsontable/handsontable.full.css' %}" />
+{% endblock %}
+
+{% block content %}
+    <h1>Agregar </h1>
+    <div class="row">
+        <div class="alert alert-info alert-dismissable">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-1">
+            <div id="lotes"></div>
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 25px;">
+        <div class="col-md-8 col-md-offset-2">
+        </div>
+    </div>
+    <div class="row">
+        <button class="btn btn-primary btn-lg pull-right bnt-guardar">Guardar listado</button>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'calificacion/lib/handsontable/handsontable.full.js' %}"></script>
+<script src="{% static 'calificacion/js/alumnos.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        var lista_productos = ProductoCtr.crearHandsontable();
+        $('.bnt-guardar').click(function () {
+            ProductoCtr.guardarDatos(lista_productos.getData(),"{% url "configuracion-producto-guardar" %}");
+        });
+    });
+</script>
+{% endblock %}

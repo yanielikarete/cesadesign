@@ -1,0 +1,357 @@
+{% load staticfiles %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+</head>
+<style>
+    body{
+        font-family: "Courier New", Courier, monospace;
+    }
+     .head{
+        width: 100%;
+        text-align: center;
+
+    }
+
+    #detail{
+        width: 100%;
+     font-size: 9pt;
+     letter-spacing: 2px
+    }
+
+    .contenido{
+        width: 100%;
+        padding: 1px 0;
+        font-size: 12pt;
+        letter-spacing: 2px;
+        position: absolute;
+        left:40px;
+
+    }
+
+    .contenido td{
+        padding: 0.5px 0px;
+                text-align: center;
+        letter-spacing: 2px;
+        font-size: 8pt;
+    }
+    .foot table td{
+        letter-spacing: 2px;
+        font-size: 12pt;
+    }
+    .valores{
+        text-align: right;
+        padding: 0px 5px;
+       font-size: 12pt;
+        margin: 0;
+    }
+
+    .foot{
+        text-align: center;
+        letter-spacing: 2px;
+    }
+    h1{
+        line-height: 1px;
+        width: 700px;
+        text-align: center;
+        font-size: 12pt;
+        letter-spacing: 2px;
+    }
+    h3{
+        line-height: 2px;
+        letter-spacing: 2px;
+    }
+
+    .foot{
+        text-align: left;
+        letter-spacing: 2px;
+        width: 100%;
+        font-size: 7pt;
+    }
+
+</style>
+<script src="{% static 'color_admin/assets/plugins/jquery-1.8.2/jquery-1.8.2.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/masked-input/NumeroALetras.js' %}"></script>
+<body>
+
+    <div class="contenido">
+            <table border="0" style="font-size:12px; font-weight: bold; font-family: 'Lucida Console';top:13px;
+            position: relative;" cellpadding="0" cellspacing="0" width="100%" id="head_inf">
+            <tbody >
+                          <tr>
+                           <td >MUEDIRSA-REQUISICION - EGRESO POR CONSUMO DE PRODUCCI&Oacute;N NO.{{ordenegreso.codigo}}
+                           </td> 
+                          </tr>
+
+                           </tbody>
+
+        </table>
+            <br />
+        <table border="0" style="" cellpadding="0"
+               cellspacing="0" width="100%" id="detalle">
+            <thead><tr><td></td><td></td></tr></thead>
+            <tbody style="" >
+             <tr><td style="text-align: left"><b>ORDEN:</b></td><td style="text-align: left"> {{ordenegreso.codigo}}</td>
+             </tr>
+             <tr><td style="text-align: left"><b>FECHA:</b>
+             </td>
+             <td  style="text-align: left">{{ordenegreso.fecha |date:'d-m-Y H:i'}}</td></tr>
+              <tr><td  style="text-align: left"><b>CONCEPTO:</b> </td><td  style="text-align: left">{{ordenegreso.concepto_orden_egreso}}</td>
+
+                          </tr>
+               <tr>
+                            <td  style="text-align: left"><b>BOD INTERNA:</b>
+                            </td>
+                            <td  style="text-align: left">{{ordenegreso.bodega}}</td>
+
+                          </tr>
+
+            </tbody>
+
+        </table>
+        <br /> <br />
+        <table border="0" style="font-size:14px;font-weight: bold; font-family: 'Lucida Console'"
+               cellpadding="0" cellspacing="0" width="100%" id="detalle2">
+            <tbody style="padding-top: 10px; margin: 0px; letter-spacing: 2px " >
+
+                          <thead>
+                <tr>
+                   <th class="borde-tabla" style="width: 100px">AREAS</th>
+                   <th class="borde-tabla" style="width: 90px">OP</th>
+                   <th class="borde-tabla" style="width: 60px">ITEMS</th>
+                   <th class="borde-tabla"> DESCRIPCION</th>
+                   <th class="borde-tabla" style="width: 80px">UNID.</th>
+                   <th class="borde-tabla" style="width: 80px">COST.</th>
+                   <th class="borde-tabla" style="width: 80px">SUBT.</th>
+                </tr>
+            </thead>
+            <tbody>
+                 {% if detalle %}
+                                                    {% for kit  in detalle %}
+    <tr>
+         <td  style="text-align: left">  {{ kit.areas.descripcion }}</td>
+         <td  style="text-align: left">{% if kit.op %}
+         {{ kit.orden_produccion_receta.suborden_produccion.orden_produccion.tipo }} {{ kit.orden_produccion_receta.suborden_produccion.orden_produccion.codigo }}
+      {% endif %}</td>
+
+                                                    <td  style="text-align: left">  {{ kit.producto.codigo_producto }}</td>
+                                                    <td style=" text-align: left;">{{ kit.producto.descripcion_producto }}</td>
+                                                    <td class="valores">{{ kit.cantidad |floatformat:2  }} {{ kit.unidad_medida }}</td>
+                                                    <td class="valores">{{ kit.precio_compra |floatformat:2  }}</td>
+                                                    <td class="valores">{{ kit.total |floatformat:2  }}</td>
+
+                                                  </tr>
+
+                         {% endfor %}
+                         {% else %}
+                          {% endif %}<tr>
+                    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                    <td colspan="2"><b>TOTAL</b></td><td class="valores">{{ordenegreso.subtotal |floatformat:2 }}</td>
+                </tr>
+         
+                </tbody>
+    </table>
+        
+        <table border="0"  width="100%" id="table_footer">
+
+            <tr><td>ELABORADO POR </td>  <td>REVISADO POR </td> <td>RECIBIDO POR </td></tr>
+       <tr> <td>___________________ </td>  <td>___________________  </td>  <td>___________________  </td> </tr>
+     <tr><td>{{ordenegreso.created_by}}   </td>  <td>  </td>  <td> </td>  </tr>
+    </table>
+       
+       
+    </div>
+    
+    
+ </body>
+<script src="{% static 'color_admin/assets/js/script_autotable.js' %}"></script>
+<script>
+
+    $(document).ready(function () {
+
+      
+ var doc = new jsPDF('p', 'pt', 'a4')
+var specialElementHandlers = {
+    '#editor': function (element, renderer) {
+        return true;
+    }
+    
+};
+
+
+ var res = doc.autoTableHtmlToJson(document.getElementById("head_inf"));
+
+  doc.autoTable(res.columns, res.data, {
+    startY: 5,
+    startX: 0,
+      theme: "plain",
+      styles: {
+        fontStyle: 'bold',
+      font: "helvetica",
+    //    fontSize: 12,
+    //    // overflow: "linebreak",
+       rowHeight: 10.6,
+       halign: 'center',
+    //cellPadding: 2,
+    
+
+    //    halign: "left"
+     }
+      
+  });
+  
+  var res2 = doc.autoTableHtmlToJson(document.getElementById("detalle"));
+
+  doc.autoTable(res2.columns, res2.data, {
+    startY: 50,
+      theme: "plain",
+      
+      styles: {
+      
+       font: "helvetica",
+    rowHeight: 13.1,
+
+      
+     
+     },
+     columnStyles: {
+                0: {
+                    halign: 'left',
+                columnWidth:100 ,
+                // font: "times",
+                fontStyle: 'bold',
+                 font: "helvetica",
+                }, 
+                1: {
+                    columnWidth:250 ,
+                    halign: 'left',
+                     fontStyle: 'normal',
+                    font: "helvetica",
+                },
+             
+                
+            }
+     
+  });
+  
+  
+  var res3 = doc.autoTableHtmlToJson(document.getElementById("detalle2"));
+
+  doc.autoTable(res3.columns, res3.data, {
+    startY: 160.5,
+     startX: 0,
+      theme: "plain",
+      styles: {
+      //font: "times",
+       font: "helvetica",
+      fontSize: 10,
+    //    // overflow: "linebreak",
+    //    rowHeight: 8,
+    //cellPadding: 2,
+    rowHeight: 13.1,
+     halign: "center",
+
+    //    halign: "left"
+     },
+     columnStyles: {
+        0: {halign: 'left',
+               columnWidth:70,  
+                 //font: "times",
+                 font: "helvetica",
+                 
+                }, 
+                1: {
+                    halign: 'left',
+                font: "helvetica",
+                columnWidth:100,
+                
+                }, 
+                2: {
+                    columnWidth:50,
+                     halign: 'left',
+                     font: "helvetica",
+                },
+                3: {
+                  
+                     halign: 'left',
+                    font: "helvetica",
+                },
+                4: {
+                    columnWidth:60 ,
+                    halign: 'right',
+                    font: "helvetica",
+                },
+                5: {
+                    columnWidth:60 ,
+                    halign: 'right',
+                    font: "helvetica",
+                },
+            }
+  });
+  
+  
+   var res4 = doc.autoTableHtmlToJson(document.getElementById("table_footer"));
+
+  doc.autoTable(res4.columns, res4.data, {
+    startY: doc.autoTableEndPosY() + 30,
+      theme: "plain",
+      
+      styles: {
+      
+       font: "helvetica",
+    rowHeight: 13.1,
+
+      
+     
+     },
+     columnStyles: {
+                0: {
+                    halign: 'left',
+                columnWidth:150 ,
+                // font: "times",
+                
+                 font: "helvetica",
+                }, 
+                1: {
+                    columnWidth:150 ,
+                    halign: 'left',
+                     fontStyle: 'normal',
+                    font: "helvetica",
+                },
+                 1: {
+                    columnWidth:150 ,
+                    halign: 'left',
+                     fontStyle: 'normal',
+                    font: "helvetica",
+                },
+             
+                
+            }
+     
+  });
+  
+  
+  
+          var factura="{{ordenegreso.codigo}}";
+ 
+    
+      var nombre_cheque='orden_egreso'+factura+'.pdf';
+      doc.save(nombre_cheque); 
+  window.print();
+        
+        
+    });
+
+</script>
+<script>
+    
+
+
+
+</script>
+</html>
+
+
+

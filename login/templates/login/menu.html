@@ -1,0 +1,53 @@
+{% load extra_tags %}
+{% load static from staticfiles %}
+<!-- Menu -->
+
+<li>
+    <a href="/login/inicio">
+        <i class="fa fa-dashboard"></i>
+        <span>Panel de Control</span>
+    </a>
+
+</li>
+{% if user.is_authenticated %}
+    <li class="has-sub">
+        {% for r in menu %}
+            <a href="javascript:;">
+                <b class="caret pull-right"></b>
+                <span>{{ r.1 }}</span>
+            </a>
+            <ul class="sub-menu">
+                {% for s in submenu %}
+                    {% if s.0 == r.4 %}
+                        {% if s.5 > 0 %}
+                            <li class="has-sub">
+                                <a href="javascript:;">
+                                    <b class="caret pull-right"></b>
+                                    <span>{{ s.1 }} </span>
+                                </a>
+
+                                <ul class="sub-menu">
+                                    {% for y in submenu_sub %}
+                                        {% if y.0 == s.4 %}
+
+                                            <li><a href="/{{ y.2 }}">{{ y.1 }}</a></li>
+                                        {% else %}
+
+
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li><a href="/{{ s.2 }}">{{ s.1 }}</a></li>
+
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </li>
+{% endif %}
+
+    
+

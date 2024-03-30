@@ -1,0 +1,525 @@
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+{% load staticfiles %}
+
+{% block css %}
+{{ block.super }}
+{% endblock %}
+
+
+{% block section_title %}BALANCE GENERAL{% endblock %}
+{% block content %}
+
+    <!-- begin row -->
+
+    <style>
+        .panel-border {
+            border: 1px solid #ddd !important
+        }
+
+        .form-ajust .form-group {
+            margin-bottom: 0px !important
+        }
+
+        input[type="text"], select, input[type="number"] {
+            border: 1px solid #ccd0d4;
+            border-radius: 3px;
+            box-shadow: none;
+            font-size: 12px;
+            height: 34px;
+            padding: 6px 12px;
+            line-height: 1.42857143;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+        }
+
+        .table2 {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 20px;
+            display: table
+        }
+
+        .table2 > tbody > tr > td, .table2 > tbody > tr > th, .table2 > tfoot > tr > td, .table2 > tfoot > tr > th {
+            border-color: #e2e7eb;
+            padding: 1px 0px;
+        }
+
+        .table2 > thead > tr > td, .table2 > thead > tr > th {
+            border-color: #e2e7eb;
+            padding: 10px 5px;
+        }
+        @media print {
+  * {
+    display: none;
+  }
+  #valor {
+    display: block;
+  }
+}
+    </style>
+
+
+    <div id="busqueda_libro_diario">
+        <div class="panel-heading">
+            <form id="form_consulta_libro_diario" name='consulta_libro_diario' method="post"
+                  class="form-horizontal">
+                {% csrf_token %}
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                               data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                <i class="fa fa-plus-circle pull-right"></i>
+                                Busqueda
+                            </a>
+                        </h3>
+                    </div>
+                    <div id="collapseOne" aria-expanded="true" id="collapseOne" class="panel-collapse collapse in">
+                        <div class="panel-body panel-border">
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" for="inputCuenta">Cuenta:</label>
+
+                                <div class="col-sm-2" style="padding-right: 0px">
+                                    <input id="inputCuenta" type="text" class="form-control" name="inputCuenta"
+                                           value="Todas">
+                                </div>
+                                <div class="col-sm-1" style="padding-left: 0px; height: 34px">
+                                    <a href="#modal-dialog-cuenta" class="btn btn-sm btn-inverse" data-toggle="modal"
+                                       style="height: 34px">
+                                        <i class="fa fa-search"></i>
+                                    </a>
+                                </div>
+                                  <label class="col-sm-1 control-label" for="inputCentroCosto">Centro costo:</label>
+
+                                <div class="col-sm-2" style="padding-right: 0px">
+                                    <input id="inputCentroCosto" type="text" class="form-control"
+                                           name="inputCentroCosto" value="Todos">
+                                    <input id="idCentroCosto" type="hidden" class="form-control"
+                                           name="idCentroCosto" value="0">
+                                </div>
+                                <div class="col-sm-1" style="padding-left: 0px; height: 34px">
+                                    <a href="#modal-dialog-centro-costo" class="btn btn-sm btn-inverse"
+                                       data-toggle="modal"
+                                       style="height: 34px">
+                                        <i class="fa fa-search"></i>
+                                    </a>
+                                </div>
+                               
+                             
+
+                            
+                            
+                            <label class="col-sm-1 control-label" for="inputTipo">Tipo:</label>
+
+                                <div class="col-sm-2">
+                                    <select id="inputTipo" class="form-control" name="tipo_cuenta">
+                                        <option value="0" selected>Todos</option>
+                                        {% for tipo  in tipo_cuenta %}
+                                            <option value={{ tipo.tipo_id }}>{{ tipo.nombre_tipo }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                        </div>
+                            <div class="form-group">
+                                  
+                            <label class="col-sm-1 control-label" for="fecha_desde">Nivel:</label>
+
+                                <div class="col-sm-3">
+                                    
+                                    <select id="nivel" class="form-control" name="nivel">
+                                        <option value="" selected>Seleccione</option>
+                                        <option value="0" >0</option>
+                                         <option value="1" >1</option>
+                                          <option value="2" >2</option>
+                                           <option value="3" >3</option>
+                                           <option value="4" >4</option>
+                                        
+                                    </select>
+<!--                                    <input id="nivel" type="number" class="form-control" name="nivel">
+-->
+                                </div>
+                                
+                                    <label class="col-sm-1 control-label" for="fecha_desde">Desde:</label>
+
+                                <div class="col-sm-3">
+                                    <input id="fecha_desde" type="text" class="form-control" name="fecha_desde">
+                                </div>
+                           
+                               <label class="col-sm-1 control-label" for="fecha_hasta">Hasta:</label>
+
+                                <div class="col-sm-3">
+                                    <input id="fecha_hasta" type="text" class="form-control" name="fecha_hasta">
+                                </div>
+                            </div>
+
+                               
+                               
+                            <div class="col-sm-12" style="text-align: center">
+                             
+                                
+                                <a class="default btn btn-link"  onclick="consultar()"> <button type="button" class="btn btn-primary btn-lg">  Consultar</button> </a>
+                               <a class="btn btn-default buttons-copy buttons-html5" tabindex="0" aria-controls="tabla" download="balance_general.xls" href="#" onclick="return ExcellentExport.excel(this, 'tabla', 'Sheet Name Here');"><span>EXCEL</span></a>  
+                               
+                               
+                        <!--<a class="btn btn-default buttons-copy buttons-html5"  onclick="imprimir_pdf()">  PDF</a>
+                          <a class="btn btn-default buttons-copy buttons-html5"  onclick="imprimir_pdf2()">  PDF2</a>
+-->
+                            <a class="btn btn-default buttons-copy buttons-html5" onclick="printDiv()">
+    PDF
+ </a>
+
+
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                           data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                            <i class="fa fa-plus-circle pull-right"></i>
+                            Balance General
+                        </a>
+                    </h3>
+                </div>
+                <div id="collapseTwo" aria-expanded="true" id="collapseTwo" class="panel-collapse collapse in">
+                    <div id="body_panel_libro_diario" class="panel-body panel-border">
+                        <div class="table-responsive" id="valor">
+                            <table id="estado-table" class="table table-striped table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>CODIGO</th>
+                                    <th>NOMBRE</th>
+                                    <th>SALDO ANTERIOR</th>
+                                    <th>SALDO PERIODO</th>
+                                    <th>SALDO ACTUAL</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for r in cuentas %}
+                                <tr>
+                                    <td style="text-align: right">{{ r.codigo_plan }}</td>
+                                    {% if r.nivel < 4 %}
+                                        <td><b>{{ r.nombre_plan }}</b></td>
+                                    {% else %}
+                                        <td>{{ r.nombre_plan }}</td>
+                                    {% endif %}
+                                    <td>$0</td>
+                                    <td>$0</td>
+                                    <td>$0</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-dialog-cuenta">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Seleccionar cuenta</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body panel-border">
+                        <div class="form-group">
+                            <div class="table-responsive">
+                                <table id="data-table-cuentas" class="table table-striped table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Codigo</th>
+                                        <th>Cuenta</th>
+                                        <th>Grupo</th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <a>
+                                                <button type="button" class="bt-selec-plan btn btn-info btn-md"
+                                                        data-dismiss="modal"
+                                                        plan_id="0" nombre="Todas"><i class="fa fa-plus"></i>
+                                                </button>
+                                            </a>
+                                        </td>
+                                        <td></td>
+                                        <td>Todas</td>
+                                        <td></td>
+
+                                    </tr>
+                                    {% for cta  in cuentas %}
+                                        <tr>
+                                            <td>
+                                                <a>
+                                                    <button type="button" class="bt-selec-plan btn btn-info btn-md"
+                                                            data-dismiss="modal"
+                                                            plan_id="{{ cta.plan_id }}" nombre="{{ cta.nombre_plan }}">
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+                                                </a>
+                                            </td>
+                                            <td>{{ cta.codigo_plan }}</td>
+                                            <td>{{ cta.nombre_plan }}</td>
+                                            <td>{{ cta.tipocuenta.nombre_tipo }}</td>
+
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-dialog-centro-costo" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Seleccionar centro de costo</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body panel-border">
+                        <div class="form-group">
+                            <div class="table-responsive">
+                                <table id="data-table-centro-costo" class="table table-striped table-bordered" style="width:100%;">
+                                    <thead>
+                                    <tr>
+                                           <td></td>
+  								<th>Centro</th>
+                  <th>SubCentro</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                         <td>
+                                            <a>
+                                                <button type="button"
+                                                        class="bt-selec-centro-costo btn btn-info btn-xs"
+                                                        data-dismiss="modal"
+                                                        centro_id="0"
+                                                        nombre_centro="Todos">
+                                                     <i class="fa fa-plus"></i>
+                                                </button>
+                                            </a>
+                                        </td>
+                                        <td>Todos</td>
+                                        <td></td>
+                                       
+                                    </tr>
+                                    {% for centro  in centros %}
+                                        <tr>
+                                            <td>
+                                                <a>
+                                                    <button type="button"
+                                                            class="bt-selec-centro-costo btn btn-info btn-xs"
+                                                            data-dismiss="modal"
+                                                            centro_id="{{ centro.centro_id }}"
+                                                            nombre_centro="{{ centro.nombre_centro }}">
+                                                         <i class="fa fa-plus"></i>
+                                                    </button>
+                                                </a>
+                                            </td>
+                                             <td> {% if centro.padre %}
+									{{ centro.padre | default_if_none:"" }}
+									{% else %}
+										{{ centro.nombre_centro }}
+									{% endif %}</td>
+                                            <td> {% if centro.padre %}
+									{{ centro.nombre_centro }}
+									{% endif %}</td>
+                                           
+                                            
+                                        </tr>
+                                    {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
+
+
+
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src=" https://printjs-4de6.kxcdn.com/print.min.js"></script>
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+-->
+<!--  <script src="{% static 'color_admin/assets/js/exportFile.js' %}" type="text/javascript"></script>
+-->
+<script src="{% static 'color_admin/assets/js/script_autotable.js' %}"></script>
+
+<script src="{% static 'color_admin/assets/js/excellentexport.js' %}" type="text/javascript"></script>
+
+<script src="{% static 'color_admin/assets/js/tools.js' %}"></script>
+    <script>
+
+        	function consultar(){
+		
+		var inputCuenta=$("#inputCuenta").val();
+		var fecha_desde=$("#fecha_desde").val();
+		
+		var fecha_hasta=$("#fecha_hasta").val();
+		var inputCentroCosto=$("#idCentroCosto").val();
+		var inputTipo=$("#inputTipo").val();
+        var nivel=$("#nivel").val();
+add_div();
+          $.ajax({
+                url: "/contabilidad/consultarBalanceDiarioActual/", // the endpoint
+                type : "POST", // http method
+                data : { inputCuenta : inputCuenta,fecha_desde : fecha_desde,fecha_hasta : fecha_hasta,inputCentroCosto : inputCentroCosto,inputTipo : inputTipo,nivel : nivel,'csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+                success:function(data){
+                //$("#tabla tbody tr").remove();
+                 $("#div-consultando").remove();
+                  $("#valor").html(data);
+                  
+//				  
+                },
+                error: function(){
+                 
+                },
+              });
+    }
+
+        $(document).ready(function () {
+            $('#data-table-centro-costo').DataTable();
+            $('#data-table-cuentas').DataTable();
+            $('#data-table-libro-diario').DataTable();
+            $('#estado-table').DataTable({dom: 'Brt',buttons: ['excel','pdf', 'print'],ordering: false,iDisplayLength: -1});
+
+
+            $('#fecha_desde').datepicker({todayHighlight: true, autoclose: true,format: 'yyyy-mm-dd'});
+            $('#fecha_hasta').datepicker({todayHighlight: true, autoclose: true,format: 'yyyy-mm-dd'});
+            //$('#fecha_desde').val(getFechaHoy());
+            //$('#fecha_hasta').val(getFechaHoy());
+
+
+            $('#bt_consultar').on('click', function (event) {
+               // event.preventDefault();
+               //add_div();
+                var metodo = $('#form_consulta_libro_diario').attr('method');
+                var url = $('#form_consulta_libro_diario').attr('action');
+                var data = $('#form_consulta_libro_diario').serialize();
+                         $.ajax({
+                    url: "/contabilidad/consultaBalanceDiario/", // the endpoint
+                type : "POST", // http method
+data: data,
+success:function(data){
+                //$("#tabla tbody tr").remove();
+                  $("#valor").html(data);
+
+                },
+                error: function(){
+                 
+                },
+              });
+   
+                //return false;
+            });
+
+            $('.bt-selec-plan').click(function () {
+                var nombre = $(this).attr("nombre");
+                $('#inputCuenta').val(nombre);
+            });
+
+            $('.bt-selec-centro-costo').click(function () {
+                var nombre = $(this).attr("nombre_centro");
+                 var id = $(this).attr("centro_id");
+                $('#inputCentroCosto').val(nombre);
+                 $('#idCentroCosto').val(id);
+            });
+
+        });
+
+        function add_tabla(asientos) {
+            var debe = 0, haber = 0;
+            var asiento = asientos[0]
+            var divexterior = $('<div class="form-group">');
+            var table = $('<table class="table table-bordered table-asiento">');
+            var table_head = $('<thead style="background-color: #EEEEEE"><tr><th style="text-align: center"><b>Cuenta</b></th><th style="text-align: center"><b>Debe</b></th><th style="text-align: center"><b>Haber</b></th><th style="text-align: center"><b>Centro de costo</b></th><th style="text-align: center"><b>Proyecto</b></th></tr></thead>');
+            var tbody = $('<tbody>');
+            var filaFecha_codigo = $('<tr><td align="center"> - - ' + asiento[1] + ' - - <br/>' + asiento[0] + '</td><td></td><td></td><td></td><td></td></tr>');
+            tbody.append(filaFecha_codigo);
+            for (var i = 0; i < asientos.length; i++) {
+                var cuentas = asientos[i];
+                var ccostos = cuentas[9];
+                if(ccostos == null){
+                    ccostos="";
+                }
+                var fila = $('<tr><td>' + cuentas[7] + ' - ' + cuentas[6] + '</td><td align="right">$' + parseFloat(cuentas[3]).toFixed(2) + '</td><td align="right">$' +  parseFloat(cuentas[4]).toFixed(2) + '</td><td align="center">' + ccostos + '</td><td></td> </tr>');
+                debe = debe + parseFloat(cuentas[3]);
+                haber = haber + parseFloat(cuentas[4]);
+                tbody.append(fila);
+            }
+            var fila_glosa = $('<tr><td><b>Glosa:</b> ' + asiento[8] + '</td><td></td><td></td><td></td><td></td></tr>');
+            var filaTotal = $('<tr><td align="right"><b>TOTAL</b></td><td align="right">$' + parseFloat(debe).toFixed(2) + '</td><td align="right">$' + parseFloat(haber).toFixed(2) + '</td><td></td><td></td></tr>');
+            tbody.append(fila_glosa);
+            tbody.append(filaTotal);
+            table.append(table_head);
+            table.append(tbody);
+            divexterior.append(table);
+            divexterior.append($('<hr>'));
+            divexterior.appendTo($('#body_panel_libro_diario'));
+        }
+
+        function add_div() {
+            var div_externo = $('<div id="div-consultando" style="width: 100%; height: 100%; background-color: #191a1b; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1050; opacity: 0.8">');
+            var div_interno = $('<div class="progress progress-striped active" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, 50%); width: 50%">');
+            var progress = $('<div class="progress-bar progress-bar-inverse" style="width: 100%">Consultando...</div>');
+
+            div_interno.append(progress);
+            div_externo.append(div_interno);
+
+            div_externo.appendTo($('body'));
+
+        }
+
+        function getFechaHoy() {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear();
+
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+            today = dd + '/' + mm + '/' + yyyy;
+            return today;
+        }
+function printDiv() {
+         window.frames["print_frame"].document.body.innerHTML = document.getElementById("valor").innerHTML;
+         window.frames["print_frame"].window.focus();
+         window.frames["print_frame"].window.print();
+       }
+    </script>
+
+{% endblock %}

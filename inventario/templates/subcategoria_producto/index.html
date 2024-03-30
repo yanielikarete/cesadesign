@@ -1,0 +1,21 @@
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+{% block list-add %}
+    <a href="{% url 'subcategoria-producto-create' %}" class="btn btn-primary pull-right">
+    	<i class="fa fa-plus"></i>
+        Agregar {{verbose_name}}
+    </a>
+{% endblock %}
+
+
+
+
+{% block section_title %}Sub Categoria Producto{% endblock %}
+{% block section_subtitle %}
+<br />
+ <div class="email-btn-row hidden-xs">
+                        <a href="{% url 'subcategoria-producto-create' %}" class="btn btn-sm btn-success"><i class="fa fa-plus m-r-5"></i> Nuevo Sub Categoria</a>
+                    </div>
+
+                    {% endblock %}

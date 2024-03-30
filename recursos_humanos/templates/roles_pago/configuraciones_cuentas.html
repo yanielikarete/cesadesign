@@ -1,0 +1,859 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Rol de Pago-Configuraciones Cuentas{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+  <style>
+       .panel-border{border: 1px solid #ddd !important}
+       .form-ajust .form-group{margin-bottom: 0px !important}
+      input[type="text"],select,input[type="number"]
+      {
+
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    box-shadow: none;
+    font-size: 12px;
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+       }
+
+
+
+    </style>
+
+<div class="panel panel-inverse panel-border">
+			    <div class="panel-heading">
+			        <div class="panel-heading-btn">
+			            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+			            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+			            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+			        </div>
+			        <h4 class="panel-title">&nbsp;   </h4>
+			    </div>
+			    <div class="panel-body">
+					<div class="tab-border" >
+<ul class="nav nav-tabs" role="tablist">
+						<li role="presentation"><a href="{% url 'roles-pago-configuraciones-list' %}">Generales</a></li>
+						<li role="presentation" class="active"><a href="{% url 'roles-pago-configuraciones-cuentas-list' %}">Cuentas Contables</a></li>
+						<!--<li role="presentation"><a href="#departamentos" aria-controls="departamentos" role="tab" data-toggle="tab">Departamentos</a></li>-->
+						<!--<li role="presentation"><a href="#cargos" aria-controls="cargos" role="tab" data-toggle="tab">Cargos</a></li>-->
+
+					  </ul>
+					  <!-- Nav tabs -->
+
+
+					  <!-- Tab panes -->
+					  <div class="tab-content">
+
+
+						<form class="form-horizontal" id="formPagoRoles" action="{% url 'guardar-cuentas-contables-configuraciones' %}" method="POST" enctype="multipart/form-data" onsubmit="">{% csrf_token %}
+							<ul class="nav nav-tabs">
+								<li class="active"><a href="#tab_administrativo" data-toggle="tab" aria-expanded="true">Administrativo</a></li>
+								<li class=""><a href="#tab_ventas" data-toggle="tab" aria-expanded="true">Ventas</a></li>
+								<li class=""><a href="#tab_modirecta" data-toggle="tab" aria-expanded="true">Mano de Obra Directa</a></li>
+								<li class=""><a href="#tab_moindirecta" data-toggle="tab" aria-expanded="true">Mano de Obra Indirecta</a></li>
+								<li class=""><a href="#tab_costos" data-toggle="tab" aria-expanded="true">Otros Costos de Produccion</a></li>
+								<li class=""><a href="#tab_otros" data-toggle="tab" aria-expanded="true">Otros</a></li>
+
+							</ul>
+							<!--/ tab -->
+							<!-- tab content -->
+							<div class="tab-content panel">
+								<div class="tab-pane active" id="tab_administrativo">
+									<div class="row">
+										<div class="col-md-12">
+										<legend>Cuentas Contables Administrativas</legend>
+										<div class="alert alert-dismissable alert-info">
+											<strong><i class="ico-bullhorn"></i> Importante!</strong>
+											<p> - Todos los campos son requeridos para completar la configuración de cuentas contables Administrativas.</p>
+											<p> - Las letras al lado de cada campo indican el tipo de cuenta que se emplea:
+												<span class="number"><span class="label label-success">A</span>&nbsp;Activo</span>,&nbsp;
+												<span class="number"><span class="label label-danger">P</span>&nbsp;Pasivo</span>,&nbsp;
+												<span class="number"><span class="label label-primary">G</span>&nbsp;Costos y Gastos</span>
+											</p>
+										</div>
+
+										<div class="row">
+											{% for c  in clasificacion %}
+
+											<div class="col-md-12 ui-sortable" style="padding-bottom:15px">
+											<hr>
+														<h4><i>{{ c.nombre }}:</i></h4>
+														<p  style="font-size: 1em"> {{ c.descripcion }}</p>
+														<hr>
+											</div>
+
+												{% for k  in rol_cuentas %}
+												{% if k.grupo_pago_id == 1 and k.clasificacion_cuenta_id == c.id %}
+
+																	 <div class="col-md-6" style="padding-bottom:15px">
+							                                                      <label for="col-md-2 text-right">{{ k.rol_cuentacontable_items }} </label>
+							                                                       	<div class="input-group">
+
+																	<select class="select-input form-control input-sm text-right" id="id_cuentas" name="cuentas{{ k.id}}">
+																	<option value="" >Seleccione</option>
+																	{% for p  in plan %}
+																						<option value="{{p.plan_id}}"
+																							{% if p.plan_id == k.plandecuentas_id %}
+																	                         selected="selected"
+																	                         {% endif %}
+																	                        >
+																							{{ p.codigo_plan }}-{{ p.nombre_plan }}</option>
+																						{% endfor %}
+																				</select>
+																			<span class="input-group-addon object-button btn btn-default input-sm" style="cursor:pointer;" type="button"><i class="glyphicon glyphicon-search"></i></span>
+																			<span  style="font-size: 1em; float: left;padding:5px"><span class="label
+																			{% if k.tipo_cuenta.codigo == "G" %}
+																					label-primary
+																			{% endif %}
+																			{% if k.tipo_cuenta.codigo == "A" %}
+																					label-success
+																			{% endif %}
+																			{% if k.tipo_cuenta.codigo == "P" %}
+																					label-danger
+																			{% endif %}
+
+																			">{{ k.tipo_cuenta.codigo}}</span></span>
+																			</div>
+
+
+							                                                   </div>
+							                            {% endif %}
+							                            {% endfor %}
+
+												{% endfor %}
+
+											</div>
+
+
+
+										<br>
+										<br>
+
+
+										</div>
+									</div>
+								</div>
+								<!-- Tab Ventas -->
+								<div class="tab-pane" id="tab_ventas">
+									<div class="row">
+										<div class="col-md-12">
+											<legend>Cuentas Contables Ventas</legend>
+											<div class="alert alert-dismissable alert-info">
+												<strong><i class="ico-bullhorn"></i> Importante!</strong>
+												<p> - Todos los campos son requeridos para completar la configuración de cuentas de Ventas.</p>
+												<p> - Las letras al lado de cada campo indican el tipo de cuenta que se emplea:
+													<span class="number"><span class="label label-success">A</span>&nbsp;Activo</span>,&nbsp;
+													<span class="number"><span class="label label-danger">P</span>&nbsp;Pasivo</span>,&nbsp;
+													<span class="number"><span class="label label-primary">G</span>&nbsp;Costos y Gastos</span>
+												</p>
+											</div>
+
+											<div class="row">
+	{% for c  in clasificacion %}
+
+											<div class="col-md-12 ui-sortable" style="padding-bottom:15px">
+											<hr>
+														<h4><i>{{ c.nombre }}:</i></h4>
+														<p  style="font-size: 1em"> {{ c.descripcion }}</p>
+														<hr>
+											</div>
+
+												{% for k  in rol_cuentas %}
+												{% if k.grupo_pago_id == 2 and k.clasificacion_cuenta_id == c.id %}
+
+																	 <div class="col-md-6" style="padding-bottom:15px">
+							                                                      <label for="col-md-2 text-right">{{ k.rol_cuentacontable_items }} </label>
+							                                                       	<div class="input-group">
+
+																	<select class="select-input form-control input-sm text-right" id="id_cuentas" name="cuentas{{ k.id}}">
+																	<option value="" >Seleccione</option>
+																	{% for p  in plan %}
+																						<option value="{{p.plan_id}}"
+																							{% if p.plan_id == k.plandecuentas_id %}
+																	                         selected="selected"
+																	                         {% endif %}
+																	                        >
+																							{{ p.codigo_plan }}-{{ p.nombre_plan }}</option>
+																						{% endfor %}
+																				</select>
+																			<span class="input-group-addon object-button btn btn-default input-sm" style="cursor:pointer;" type="button"><i class="glyphicon glyphicon-search"></i></span>
+																			<span  style="font-size: 1em; float: left;padding:5px"><span class="label
+																			{% if k.tipo_cuenta.codigo == "G" %}
+																					label-primary
+																			{% endif %}
+																			{% if k.tipo_cuenta.codigo == "A" %}
+																					label-success
+																			{% endif %}
+																			{% if k.tipo_cuenta.codigo == "P" %}
+																					label-danger
+																			{% endif %}
+
+																			">{{ k.tipo_cuenta.codigo}}</span></span>
+																			</div>
+
+
+							                                                   </div>
+							                            {% endif %}
+							                            {% endfor %}
+
+												{% endfor %}
+
+											</div>
+										</div>
+									</div>
+								</div>
+
+
+								<div class="tab-pane" id="tab_modirecta">
+									<div class="row">
+										<div class="col-md-12">
+											<legend>Cuentas Contables de Mano Directa</legend>
+											<div class="alert alert-dismissable alert-info">
+												<strong><i class="ico-bullhorn"></i> Importante!</strong>
+												<p> - Todos los campos son requeridos para completar la configuración de cuentas de Costos.</p>
+												<p> - Las letras al lado de cada campo indican el tipo de cuenta que se emplea:
+													<span class="number"><span class="label label-success">A</span>&nbsp;Activo</span>,&nbsp;
+													<span class="number"><span class="label label-danger">P</span>&nbsp;Pasivo</span>,&nbsp;
+													<span class="number"><span class="label label-primary">G</span>&nbsp;Costos y Gastos.</span>
+												</p>
+											</div>
+
+												<div class="row">
+
+															{% for c  in clasificacion %}
+
+											<div class="col-md-12 ui-sortable" style="padding-bottom:15px">
+											<hr>
+														<h4><i>{{ c.nombre }}:</i></h4>
+														<p  style="font-size: 1em"> {{ c.descripcion }}</p>
+														<hr>
+											</div>
+
+												{% for k  in rol_cuentas %}
+												{% if k.grupo_pago_id == 5 and k.clasificacion_cuenta_id == c.id %}
+
+																	 <div class="col-md-6" style="padding-bottom:15px">
+							                                                      <label for="col-md-2 text-right">{{ k.rol_cuentacontable_items }} </label>
+							                                                       	<div class="input-group">
+
+																	<select class="select-input form-control input-sm text-right" id="id_cuentas" name="cuentas{{ k.id}}">
+																	<option value="" >Seleccione</option>
+																	{% for p  in plan %}
+																						<option value="{{p.plan_id}}"
+																							{% if p.plan_id == k.plandecuentas_id %}
+																	                         selected="selected"
+																	                         {% endif %}
+																	                        >
+																						{{ p.codigo_plan }}-	{{ p.nombre_plan }}</option>
+																						{% endfor %}
+																				</select>
+																			<span class="input-group-addon object-button btn btn-default input-sm" style="cursor:pointer;" type="button"><i class="glyphicon glyphicon-search"></i></span>
+																			<span  style="font-size: 1em; float: left;padding:5px"><span class="label
+																			{% if k.tipo_cuenta.codigo == "G" %}
+																					label-primary
+																			{% endif %}
+																			{% if k.tipo_cuenta.codigo == "A" %}
+																					label-success
+																			{% endif %}
+																			{% if k.tipo_cuenta.codigo == "P" %}
+																					label-danger
+																			{% endif %}
+
+																			">{{ k.tipo_cuenta.codigo}}</span></span>
+																			</div>
+
+
+							                                                   </div>
+							                            {% endif %}
+							                            {% endfor %}
+
+												{% endfor %}
+
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="tab-pane" id="tab_moindirecta">
+									<div class="row">
+										<div class="col-md-12">
+											<legend>Cuentas Contables Mano de Obra Indirecta</legend>
+											<div class="alert alert-dismissable alert-info">
+												<strong><i class="ico-bullhorn"></i> Importante!</strong>
+												<p> - Todos los campos son requeridos para completar la configuración de cuentas de Costos.</p>
+												<p> - Las letras al lado de cada campo indican el tipo de cuenta que se emplea:
+													<span class="number"><span class="label label-success">A</span>&nbsp;Activo</span>,&nbsp;
+													<span class="number"><span class="label label-danger">P</span>&nbsp;Pasivo</span>,&nbsp;
+													<span class="number"><span class="label label-primary">G</span>&nbsp;Costos y Gastos.</span>
+												</p>
+											</div>
+
+												<div class="row">
+
+															{% for c  in clasificacion %}
+
+											<div class="col-md-12 ui-sortable" style="padding-bottom:15px">
+											<hr>
+														<h4><i>{{ c.nombre }}:</i></h4>
+														<p  style="font-size: 1em"> {{ c.descripcion }}</p>
+														<hr>
+											</div>
+
+												{% for k  in rol_cuentas %}
+												{% if k.grupo_pago_id == 6 and k.clasificacion_cuenta_id == c.id %}
+
+																	 <div class="col-md-6" style="padding-bottom:15px">
+							                                                      <label for="col-md-2 text-right">{{ k.rol_cuentacontable_items }} </label>
+							                                                       	<div class="input-group">
+
+																	<select class="select-input form-control input-sm text-right" id="id_cuentas" name="cuentas{{ k.id}}">
+																	<option value="" >Seleccione</option>
+																	{% for p  in plan %}
+																						<option value="{{p.plan_id}}"
+																							{% if p.plan_id == k.plandecuentas_id %}
+																	                         selected="selected"
+																	                         {% endif %}
+																	                        >
+																							{{ p.codigo_plan }}-{{ p.nombre_plan }}</option>
+																						{% endfor %}
+																				</select>
+																			<span class="input-group-addon object-button btn btn-default input-sm" style="cursor:pointer;" type="button"><i class="glyphicon glyphicon-search"></i></span>
+																			<span  style="font-size: 1em; float: left;padding:5px"><span class="label
+																			{% if k.tipo_cuenta.codigo == "G" %}
+																					label-primary
+																			{% endif %}
+																			{% if k.tipo_cuenta.codigo == "A" %}
+																					label-success
+																			{% endif %}
+																			{% if k.tipo_cuenta.codigo == "P" %}
+																					label-danger
+																			{% endif %}
+
+																			">{{ k.tipo_cuenta.codigo}}</span></span>
+																			</div>
+
+
+							                                                   </div>
+							                            {% endif %}
+							                            {% endfor %}
+
+												{% endfor %}
+
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- Tabs Costos -->
+								<div class="tab-pane" id="tab_costos">
+									<div class="row">
+										<div class="col-md-12">
+											<legend>Cuentas Contables Costos</legend>
+											<div class="alert alert-dismissable alert-info">
+												<strong><i class="ico-bullhorn"></i> Importante!</strong>
+												<p> - Todos los campos son requeridos para completar la configuración de cuentas de Costos.</p>
+												<p> - Las letras al lado de cada campo indican el tipo de cuenta que se emplea:
+													<span class="number"><span class="label label-success">A</span>&nbsp;Activo</span>,&nbsp;
+													<span class="number"><span class="label label-danger">P</span>&nbsp;Pasivo</span>,&nbsp;
+													<span class="number"><span class="label label-primary">G</span>&nbsp;Costos y Gastos.</span>
+												</p>
+											</div>
+
+												<div class="row">
+
+															{% for c  in clasificacion %}
+
+											<div class="col-md-12 ui-sortable" style="padding-bottom:15px">
+											<hr>
+														<h4><i>{{ c.nombre }}:</i></h4>
+														<p  style="font-size: 1em"> {{ c.descripcion }}</p>
+														<hr>
+											</div>
+
+
+
+												{% endfor %}
+
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- Tab Otros -->
+								<div class="tab-pane" id="tab_otros">
+									<div class="row">
+										<div class="col-md-12">
+											<legend>Cuentas Contables Otros</legend>
+											<div class="alert alert-dismissable alert-info">
+												<strong><i class="ico-bullhorn"></i> Importante!</strong>
+												<p> - Todos los campos son requeridos para completar la configuración de otras cuentas.</p>
+												<p> - Las letras al lado de cada campo indican el tipo de cuenta que se emplea:
+													<span class="number"><span class="label label-success">A</span>&nbsp;Activo</span>,&nbsp;
+													<span class="number"><span class="label label-danger">P</span>&nbsp;Pasivo</span>,&nbsp;
+													<span class="number"><span class="label label-primary">G</span>&nbsp;Costos y Gastos.</span>
+												</p>
+											</div>
+
+
+												<div class="row">
+
+												{% for c  in clasificacion %}
+
+											<div class="col-md-12 ui-sortable" style="padding-bottom:15px">
+											<hr>
+														<h4><i>{{ c.nombre }}:</i></h4>
+														<p  style="font-size: 1em"> {{ c.descripcion }}</p>
+														<hr>
+											</div>
+
+
+												{% endfor %}
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="text-right panel-footer">
+								<button id="btn_guardar_ctascontables" class="btn btn-success">
+									<span class="glyphicon glyphicon-floppy-disk"></span>
+									Guardar
+								</button>
+							</div>
+							</form>
+
+						<!--<div class="tab-pane" id="departamentos">-->
+
+								<!--&lt;!&ndash; Dialogo para crear un hijo a un centro de costo o para modificarlo &ndash;&gt;-->
+								<!--<div id="dlgCentroDep" class="modal fade" style="display: none;">-->
+									<!--<div class="modal-dialog">-->
+										<!--<div class="modal-content">-->
+											<!--<div class="modal-header text-center">-->
+												<!--<button type="button" class="close" data-dismiss="modal">×</button>-->
+												<!--<h4 id="titulo_ventana_dep" class="modal-title">Agregar Departamento</h4>-->
+											<!--</div>-->
+											<!--<div class="modal-body">-->
+												<!--<form id="formDepartamento" method="POST" action="{% url 'guardar-departamento' %}" method="POST" enctype="multipart/form-data" onsubmit=""> {% csrf_token %}-->
+													<!--<input type="hidden" id="id_departamento" name="id_departamento" value="">-->
+														<!--<div class="row">-->
+															<!--<div class="col-md-3">-->
+																<!--<label class="control-label" id="labelCentro" for="nombre">-->
+																	<!--Departamento:-->
+																<!--</label>-->
+															<!--</div>-->
+															<!--<div class="col-md-4"><input class="form-control input-sm" id="nombre_departamento" maxlength="50" name="nombre_departamento" size="50" type="text"> </div>-->
+														<!--</div>-->
+
+											<!--</div>-->
+											<!--<div class="modal-footer">-->
+												<!--<button type="submit" id="btn_guardar_dep" class="btn btn-primary">Guardar</button>-->
+											<!--</div>-->
+											<!--</form>-->
+										<!--</div>&lt;!&ndash; /.modal-content &ndash;&gt;-->
+									<!--</div>&lt;!&ndash; /.modal-dialog &ndash;&gt;-->
+								<!--</div>-->
+
+								<!--<div class="table-responsive">-->
+								<!--<table class="table table-bordered table-hover">-->
+									<!--<thead>-->
+										<!--<tr>-->
+											<!--<th width="10px" style="text-align:center;">&nbsp;</th>-->
+											<!--<th style="text-align:left; font-size: 12px">Departamentos</th>-->
+										<!--</tr>-->
+									<!--</thead>-->
+									<!--<tbody id="dptos">-->
+
+										<!--<tr style="font-weight: bold;" class="odd">-->
+											<!--<td></td>-->
+											<!--<td style="padding-left:px;">-->
+												<!--<a style="color:black;" id="0" padre="" codigo="" href="javascript:;" desc="Todos los departamentos" data-toggle="modal" data-target="#dlgCentroDep">Todos los Departamentos:</a>-->
+											<!--</td>-->
+										<!--</tr>-->
+										<!--{% for d  in departamentos %}-->
+											<!--<tr name="hijos" >-->
+												<!--<td></td>-->
+												<!--<td>-->
+													<!--<a style="padding-left: 15px;color:black;" id="208"  href="javascript:;" desc="Gerencia">-->
+
+													<!--<a style="color:black;" id="0" padre="" codigo="" href="javascript:;" desc="Cargo" data-toggle="modal" data-target="#dlgCentroDep" onclick="cargarDepartamento('{{ d.id}}','{{ d.nombre}}')">-->
+													<!--{{d.nombre}}</a>-->
+												<!--</td>-->
+											<!--</tr>-->
+
+
+										<!--{% endfor %}-->
+
+
+									<!--</tbody>-->
+								<!--</table>-->
+								<!--</div>-->
+						<!--</div>-->
+						<!--<div class="tab-pane active" id="cargos">-->
+
+
+							<!--&lt;!&ndash; Dialogo para crear un cargo o para modificarlo &ndash;&gt;-->
+							<!--<div id="dlgCentroCargo" class="modal fade">-->
+								<!--<div class="modal-dialog">-->
+									<!--<div class="modal-content">-->
+										<!--<div class="modal-header text-center">-->
+											<!--<button type="button" class="close" data-dismiss="modal">×</button>-->
+											<!--<h4 class="modal-title" id="titulo_ventana_cargo"></h4>-->
+										<!--</div>-->
+										<!--<div class="modal-body">-->
+											<!--<form class="form-horizontal" id="formCargo" action="{% url 'guardar-cargo' %}" method="POST" enctype="multipart/form-data" onsubmit=""> {% csrf_token %}-->
+											 <!--<div class="form-group">-->
+												<!--<input type="hidden" id="padre_id_cargo" name="padre_id_cargo" value="">-->
+												<!--<input type="hidden" id="id_cargo" name="id_cargo" value="">-->
+												<!--<label id="labelCentroCargo" for="nombre" class="col-sm-4 control-label"><b>Cargo:</b></label>-->
+												<!--<div class="col-sm-6">-->
+													<!--<input type="text" name="nombre" id="nombreCargo" value="" class="form-control input-sm">-->
+												<!--</div>-->
+											 <!--</div>-->
+											 <!--<div class="form-group">-->
+												<!--<label id="labelSalarioMinimo" for="salario_min_sectorial" class="col-sm-4 control-label"><b>Salario Mín. Sectorial:</b></label>-->
+												<!--<div class="col-sm-3">-->
+													<!--<input type="text" name="salario_min_sectorial" id="salario_min_sectorial" value="0.00" class="form-control">-->
+												<!--</div>-->
+											 <!--</div>-->
+											 <!--<div class="modal-footer">-->
+											 <!--<button type="submit" id="btn_guardar_cargo" class="btn btn-primary">Guardar</button>-->
+											 <!--</div>-->
+											<!--</form>-->
+										<!--</div>-->
+
+									<!--</div>-->
+								<!--</div>-->
+							<!--</div>-->
+
+							<!--<div class="table-responsive">-->
+								<!--<table class="table table-bordered table-hover">-->
+									<!--<thead>-->
+										<!--<tr>-->
+											<!--<th width="10px" style="text-align:center;">&nbsp;</th>-->
+											<!--<th style="text-align:left; font-size: 12px" colspan="2">Cargos</th>-->
+										<!--</tr>-->
+									<!--</thead>-->
+									<!--<tbody id="dptos">-->
+
+										<!--<tr style="font-weight: bold;" class="odd">-->
+											<!--<td></td>-->
+											<!--<td style="padding-left:px;">-->
+												<!--<a style="color:black;" id="0" padre="" codigo="" href="javascript:;" desc="Todos los departamentos" data-toggle="modal" data-target="#dlgCentroDep" colspan="2">Todos los Cargos:</a>-->
+											<!--</td>-->
+										<!--</tr>-->
+										<!--{% for d  in departamentos %}-->
+										<!--<tr name="hijos" >-->
+												<!--<td colspan="3">-->
+													<!--{{d.nombre}}-->
+												<!--</td>-->
+
+											<!--</tr>-->
+										<!--{% for te  in tipoempleado %}-->
+										<!--{% if te.departamento_id == d.id %}-->
+											<!--<tr name="hijos" >-->
+												<!--<td></td>-->
+												<!--<td>-->
+													<!--<a style="padding-left: 15px;color:black;" id="208"  href="javascript:;" desc="Gerencia">-->
+
+													<!--<a style="color:black;" id="0" padre="" codigo="" href="javascript:;" desc="Cargo" data-toggle="modal" data-target="#dlgCentroCargo" onclick="cargarCargo('{{ te.id}}','{{ te.cargo_empleado}}','{{ te.sueldo}}'),'{{ d.id}}'">-->
+													<!--{{te.cargo_empleado}}</a>-->
+												<!--</td>-->
+												<!--<td>{{te.sueldo}}</td>-->
+											<!--</tr>-->
+
+<!--{% endif %}-->
+										<!--{% endfor %}-->
+
+										<!--{% endfor %}-->
+									<!--</tbody>-->
+								<!--</table>-->
+								<!--</div>-->
+
+
+						<!--</div>-->
+
+
+
+
+					  </div>
+
+					</div>
+
+			    </div>
+
+			</div>
+
+     <p class="text-center">
+
+                                   <!--  <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button> -->
+                                         <!--    <a class="default btn btn-link" href="/inventario/producto"><button type="button" class="btn btn-primary btn-lg">  Regresar</button></a> -->
+                                        </p>
+<!--  <p class="text-right m-b-0">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-cog"></i> Guardar</button>
+                                </p>
+                                <a class="default btn btn-link" href="/inventario/producto">
+      <i class="fa fa-times"></i> Regresar
+    </a> -->
+                            </form>
+
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script src="https://swisnl.github.io/jQuery-contextMenu/dist/jquery.contextMenu.js" type="text/javascript"></script>
+
+<script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+<!-- ================== END PAGE LEVEL JS ================== -->
+<script>
+ function guardarCargo(){
+       var id_cargo=$("#id_cargo").val();
+   	var nombre=$("#nombreCargo").val();
+   	var salario=$("#salario_min_sectorial").val();
+
+          $.ajax({
+                url: "/recursos_humanos/guardarCargo/", // the endpoint
+                type : "POST", // http method
+                data : { id_cargo : id_cargo,nombre : nombre,salario_min_sectorial : salario,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+                  alert("Se  agrego satisfactoriamente")
+                },
+                error: function(){
+
+                },
+              });
+    }
+
+    $(document).ready(function() {
+        cambiarFormato();
+      $('#id_codigo_producto').each(function(){
+  $(this).attr('readonly','readonly');
+
+
+
+		$.contextMenu({
+	        selector: '.centroCargo',
+	        trigger: 'left',
+	        callback: function(key, opt) {
+	            handleContextMenu(key, opt.$trigger);
+	        },
+	        items: {
+
+		            "modificarCargo": {name: "Modificar", icon: "edit"},
+
+
+		            "eliminarCargo": {name: "Eliminar", icon: "delete"},
+
+	        }
+	    });
+
+
+
+});
+      var codigo_producto=$('#id_codigo_producto').val();
+      //alert(codigo_producto);
+      if(codigo_producto==""){
+         $.ajax({
+                url: "/config/obtenerSecuencial/", // the endpoint
+                type : "POST", // http method
+                data : { id : 'producto','csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+                 $('#id_codigo_producto').val('000'+data);
+
+                },
+                error: function(){
+
+                },
+              });
+      }
+
+
+    });
+</script>
+
+<script type="text/javascript">
+  function handleContextMenu(action, el, pos)
+    {
+        $('#dlgCentroDep button').unbind();
+        $('#dlgCentroCargo button').unbind();
+        $('#formCargo')[0].reset();
+        $('#formDepartamento')[0].reset();
+        switch (action) {
+            case "agregarDep": {
+                $('#titulo_ventana_dep').html('Agregar Departamento');
+
+                $('#btn_guardar_dep').click(function(){
+                    agregarDepartamento();
+                    $("#dlgCentroDep").modal('hide');
+                    $('#formDepartamento')[0].reset();
+                });
+                $('#dlgCentroDep').modal();
+                $('#nombre').focus();
+
+                break;
+            }
+            case "modificarDep": {
+                $('#nombre').val(el.attr('desc'));
+                $('#titulo_ventana_dep').html('Modificar Departamento');
+                $('#btn_guardar_dep').click(function(){
+                    var nombre_mod = $('#nombre').val();
+                    modificarDepartamento(el.attr('id'), nombre_mod,el);
+                    $("#dlgCentroDep").modal('hide');
+                    $('#formDepartamento')[0].reset();
+                });
+
+                $('#dlgCentroDep').modal();
+                $('#nombre').focus();
+                break;
+            }
+            case "eliminarDep": {
+                var msg = '¿Esta seguro que desea eliminar el Departamento: ';
+                msg = msg + el.attr('desc') + '?<br /><br />';
+                showConfirm('Eliminar Departamento', msg, function() {
+                    eliminarDepartamento(el);
+                });
+                break;
+            }
+            case "agregarCargo": {
+                $('#titulo_ventana_cargo').html('Agregar Cargo');
+                $('#btn_guardar_cargo').click(function(){
+                    agregarCargo(el);
+                    $('#formCargo')[0].reset();
+                    $("#dlgCentroCargo").modal('hide');
+                });
+
+                $('#dlgCentroCargo').modal();
+                $('#nombre').focus();
+                break;
+            }
+            case "modificarCargo": {
+                $('#nombreCargo').val(el.attr('desc'));
+                $('#titulo_ventana_cargo').html('Modificar Cargo');
+                $('#salario_min_sectorial').val(el.attr('data-salario'));
+                $('#salario_mayorado').val(el.attr('data-mayorado'));
+                $('#btn_guardar_cargo').click(function(){
+                    var nombre_mod = $('#nombreCargo').val();
+                    var salario_min_sectorial = $('#salario_min_sectorial').val();
+                    var salario_mayorado = $('#salario_mayorado').val();
+                    modificarCargo(el.attr('id'), nombre_mod,salario_min_sectorial,salario_mayorado, el);
+                    $('#formCargo')[0].reset();
+                    $("#dlgCentroCargo").modal('hide');
+                });
+
+                $('#dlgCentroCargo').modal();
+                $('#nombreCargo').focus();
+                break;
+            }
+            case "eliminarCargo": {
+                var msg = '¿Esta seguro que desea eliminar el Cargo: ';
+                msg = msg + el.attr('desc') + '?<br /><br />';
+                showConfirm('Eliminar Cargo', msg, function() {
+                    eliminarCargo(el);
+                });
+                break;
+            }
+        }
+    }
+
+  $(document).ready(
+    function(){
+      var codigo=$("#id_codigo_cliente").val();
+    //alert(codigo);
+      $.ajax({
+        url:'/config/obtenerSecuencial/',
+        type: "POST",
+        data: {id:'cliente'},
+        success: function(data){
+          $("#id_codigo_cliente").val('000'+data);
+        }
+      });
+    }
+    );
+   $(function() {
+        $.contextMenu({
+            selector: '.centroCargo',
+            callback: function(key, options) {
+                var m = "clicked: " + key;
+                window.console && console.log(m) || alert(m);
+            },
+            items: {
+                "edit": {name: "Edit", icon: "edit"},
+                "cut": {name: "Cut", icon: "cut"},
+               copy: {name: "Copy", icon: "copy"},
+                "paste": {name: "Paste", icon: "paste"},
+                "delete": {name: "Delete", icon: "delete"},
+                "sep1": "---------",
+                "quit": {name: "Quit", icon: function(){
+                    return 'context-menu-icon context-menu-icon-quit';
+                }}
+            }
+        });
+
+        $('.centroCargo').on('click', function(e){
+            console.log('clicked', this);
+        })
+    });
+   function mostrarListaCargo(data){
+   	alert(data)
+   	$("#"+data).css("display", "block");
+   }
+   function cargarCargo(id,nombre,sueldo,padre){
+   	$("#id_cargo").val(id);
+   	$("#nombreCargo").val(nombre);
+   	$("#padre_id_cargo").val(padre);
+
+
+   	var sueldos = sueldo.toString().replace(/\,/g,'.');
+
+   	$("#salario_min_sectorial").val(sueldos);
+   }
+    function cargarDepartamento(id,nombre){
+   	$("#id_departamento").val(id);
+   	$("#nombre_departamento").val(nombre);
+
+   }
+    function cambiarFormato(){
+      var num_recetas=0;
+      var total=0;
+      var costo1=0;
+      var subt=0;
+      var i;
+        num_recetas= $('#id_porcentaje_quincena').val();
+        num_recetas = num_recetas.toString().replace(/\,/g,'.');
+        $('#id_porcentaje_quincena').val(num_recetas);
+        costo1=$('#id_porcentaje_ext_conyugal').val();
+        costo1 = costo1.toString().replace(/\,/g,'.');
+$('#id_porcentaje_ext_conyugal').val(costo1);
+      //alert(' BNUM RECETS'+num_recetas);
+
+
+    }
+
+
+</script>
+{% endblock %}

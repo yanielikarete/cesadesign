@@ -1,0 +1,194 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+{% block section_title %} Consultar movimientos bancarios {% endblock %}
+{% block content %}
+    <style>
+        .panel-border {
+            border: 1px solid #ddd !important;
+        }
+
+        .form-group {
+            margin-bottom: 0px !important;
+        }
+    </style>
+    <div class="row">
+        <!-- begin col-6 -->
+        <div class="col-md-12">
+            <div class="panel-heading">
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                               data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                <i class="fa fa-plus-circle pull-right"></i>
+                                Información de la conciliación
+                            </a>
+                        </h3>
+                    </div>
+                    <div id="collapseOne" aria-expanded="true" id="collapseOne"
+                         class="panel-collapse collapse in">
+                        <div class="panel-body panel-border">
+                            <form class="form-horizontal" method="post" action="{% url 'conciliaciones-crear' %}"
+                                  data-validate="parsley">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Cuenta bancaria</label>
+                                    <div class="col-sm-4">
+                                        <div class="input-group add-on">
+                                            <input class="form-control" placeholder="..." id="cuenta_bancaria"
+                                                   name="nombre_cuenta_bancaria" type="text" required>
+                                            <input type="hidden" value="" id="cuenta_bancaria_id" name="banco" required>
+                                            <div class="input-group-btn">
+                                                <a class="btn btn-inverse" data-toggle="modal"
+                                                   data-target=".bd-example-modal-lg">
+                                                    <i class=" glyphicon glyphicon-search icon-white"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <label class="col-sm-1 control-label">Desde </label>
+                                    <div class="col-sm-2">
+                                        <input id="fecha_desde" class="form-control" type="text"
+                                               name="fecha_desde" required>
+                                    </div>
+                                    <label class="col-sm-1 control-label">Hasta</label>
+                                    <div class="col-sm-2">
+                                        <input id="fecha_hasta" class="form-control" type="text"
+                                               name="fecha_hasta" required>
+                                    </div>
+                                </div>
+                                <hr>
+                                <button type="submit" class="btn btn-inverse"><i class="glyphicon glyphicon-search"></i> Consultar
+                                </button>
+                                <br>
+                                <br>
+                                <div class="panel panel-inverse">
+                                    <div class="panel-heading">Movimientos del</div>
+                                    <div class="panel-body panel-border">
+                                        <table class="table2 table table-striped table-bordered dataTable no-footer dtr-inline"
+                                               id="tabla-movimientos">
+                                            <thead>
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Detalle</th>
+                                                <th>Persona</th>
+                                                <th>Referencia</th>
+                                                <th>Tipo</th>
+                                                <th>Monto</th>
+                                                <th>Saldo</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Banco -->
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cuenta bancaria</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped " width="100%" id="tabla_cuenta">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Cuenta</th>
+                                <th>Estado</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for banco  in bancos %}
+                                <tr>
+                                    <td>{{ banco.codigo }}</td>
+                                    <td>{{ banco.nombre }}</td>
+                                    {% if banco.estado == True %}
+                                        <td>Activo</td>
+                                    {% else %}
+                                        <td>Inactivo</td>
+                                    {% endif %}
+                                    <td onclick="cargar_banco('{{ banco.id }}','{{ banco.nombre }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'color_admin/assets/plugins/parsley/src/parsley.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/data-table.js' %}"></script>
+    <script>
+        $('#fecha_desde').datepicker({todayHighlight: true, autoclose: true});
+
+        $('#fecha_desde').val(getFechaHoy());
+
+        $('#fecha_hasta').datepicker({todayHighlight: true, autoclose: true});
+
+        $('#fecha_hasta').val(getFechaHoy());
+
+        function getFechaHoy() {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear();
+
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+            today = dd + '/' + mm + '/' + yyyy;
+            return today;
+        }
+
+        $(document).ready(function () {
+            $('#tabla_cuenta').DataTable();
+        });
+
+        function cargar_banco(id, nombre) {
+            $('#cuenta_bancaria_id').val(id);
+            $('#cuenta_bancaria').val(nombre);
+            $(".bd-example-modal-lg").modal('toggle');
+        }
+    </script>
+{% endblock %}

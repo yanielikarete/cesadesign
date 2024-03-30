@@ -1,0 +1,180 @@
+<!doctype html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<style>
+
+    body{
+        font-size:11px; font-weight: bold; font-family: 'Lucida Console';
+        padding: 0 25px;
+    }
+    .head{
+        width: 100%;
+        text-align: left;
+        padding-top: 1px;
+
+    }
+
+    #detail{
+        width: 100%;
+    }
+
+    .contenido{
+        width: 100%;
+    }
+
+    .datos td{
+        height: 29px;
+    }
+    .foot table td{
+    }
+    .valores{
+       font-size: 11px;
+
+    }
+
+    .foot{
+        text-align: center;
+    }
+    h1{
+        line-height: 1px;
+        width: 700px;
+        text-align: center;
+        font-size: 11pt;
+        letter-spacing: 2px;
+    }
+    h3{
+        line-height: 2px;
+        letter-spacing: 2px;
+    }
+
+    .foot{
+        text-align: left;
+        letter-spacing: 2px;
+        width: 100%;
+        font-size: 7pt;
+    }
+    .ajustar{
+white-space: pre; /* CSS 2.0 */
+white-space: pre-wrap; /* CSS 2.1 */
+white-space: pre-line; /* CSS 3.0 */
+white-space: -pre-wrap; /* Opera 4-6 */
+white-space: -o-pre-wrap; /* Opera 7 */
+white-space: -moz-pre-wrap; /* Mozilla */
+white-space: -hp-pre-wrap; /* HP */
+word-wrap: break-word; /* IE 5+ */
+}
+
+</style>
+<script src="{% static 'color_admin/assets/plugins/jquery-1.8.2/jquery-1.8.2.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/masked-input/NumeroALetras.js' %}"></script>
+
+
+<body>
+
+<div class="head">
+    <br />
+    <br />
+    <br />
+<br />
+    <table>
+<tr>
+            <td style="width:57px">&nbsp;&nbsp;&nbsp;</td><td width="550" style="text-align: left;"></td>
+            <td></td><td></td>
+        </tr>
+        <tr>
+            <td style="width:57px">&nbsp;&nbsp;&nbsp;</td><td width="550" style="text-align: left;">{{documento.fecha_emision | date:'Y-m-d'}}</td>
+            <td></td><td></td>
+        </tr>
+        <tr>
+            {% if documento.razon_social %}
+            <td></td><td style="text-align: left;" >{{documento.razon_social.nombre}}</td>
+            {% else %}
+            <td></td><td style="text-align: left;">{{documento.cliente.nombre_cliente}}</td>
+            {% endif %}
+            <td></td><td style="text-align: left;">{{documento.ruc}}</td>
+        </tr><tr></tr>
+        <tr>
+            <td></td><td style="text-align: left;" >{{documento.direccion | default_if_none:''}}</td>
+            <td></td><td style="text-align: left;">{{documento.telefono | default_if_none:''}}</td>
+        </tr>
+
+
+    </table>
+
+
+
+</div>
+
+<br /><br /><br />
+<div class="contenido">
+    <table border="0" width="100%" class="datos">
+        <tbody>
+        {% if detalle %}
+        {% for kit in detalle %}
+        <tr>
+            <td style="text-align:center;width:45px" >{{ kit.cantidad | floatformat:2 }} </td>
+            <td  width="580" style="text-align:left"  class="ajustar">{{ kit.descripcion}}</td>
+            <td style="text-align:right" width="100"> {{ kit.base_iva | floatformat:2}}</td>
+            <td style="text-align:right" width="100"> {{ kit.subtotal | floatformat:2 }}</td>
+        </tr>
+
+        {% endfor %}
+        {% for i in rango %}
+        <tr><td colspan="4">&nbsp;</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <div style="">&nbsp;</div>
+    <table border="0" class="footer" width="100%">
+        <tbody>
+        
+        <tr>
+            <td style="text-align:center;" colspan="3"></td>
+            <td style="text-align:right">{{ documento.subtotal | floatformat:2 }}</td>
+
+        </tr>
+        <tr>
+            <td style="text-align:center" colspan="3"></td>
+            <td style="text-align:right">{{ documento.descuento | floatformat:2 }}</td>
+
+        </tr>
+         <tr>
+            <td style="text-align:left;width:775px !important" colspan="3" >&nbsp;{{ documento.total_en_letras | default_if_none:'' }}</td>
+            <td style="text-align:center"></td>
+
+        </tr>
+        <tr>
+            <td style="text-align:center" colspan="3"></td>
+            <td style="text-align:right">{{ documento.valor_iva | floatformat:2 }}</td>
+
+        </tr>
+        <tr>
+            <td style="text-align:center" colspan="3"></td>
+            <td style="text-align:right">{{ documento.total | floatformat:2 }}</td>
+
+        </tr>
+        {% else %}
+        {% endif %}
+        </tbody>
+
+    </table>
+
+</div>
+
+
+</body>
+<script>
+
+    $(document).ready(function () {
+
+        window.print();
+    });
+
+
+</script>
+</html>
+

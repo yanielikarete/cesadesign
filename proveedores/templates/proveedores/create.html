@@ -1,0 +1,496 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+    {{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/parsley/src/parsley.css' %}" rel="stylesheet"/>
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Nuevo Proveedores{% endblock %}
+{% block content %}
+
+    <!-- begin row -->
+    <style>
+        .panel-border {
+            border: 1px solid #ddd !important
+        }
+
+        .form-ajust .form-group {
+            margin-bottom: 0px !important
+        }
+
+        input[type="text"], select, input[type="number"] {
+
+            border: 1px solid #ccd0d4;
+            border-radius: 3px;
+            box-shadow: none;
+            font-size: 12px;
+            display: block;
+            width: 100%;
+            height: 34px;
+            padding: 6px 12px;
+            line-height: 1.42857143;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+        }
+
+        .table2 {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 20px;
+            display: table
+        }
+
+        .table2 > tbody > tr > td, .table2 > tbody > tr > th, .table2 > tfoot > tr > td, .table2 > tfoot > tr > th {
+            border-color: #e2e7eb;
+            padding: 1px 0px;
+        }
+
+        .table2 > thead > tr > td, .table2 > thead > tr > th {
+            border-color: #e2e7eb;
+            padding: 10px 5px;
+        }
+
+        #id_abreviatura_codigo {
+            width: 50px;
+        }
+
+        #id_codigo {
+            width: 120px;
+        }
+    </style>
+  <form method="post"  id="form-proveedor"> {% csrf_token %}
+    {{ form.title.errors }}
+    <div class="row">
+        <!-- begin col-6 -->
+        <div class="col-md-12">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+
+                    <h3 class="panel-title">NUEVO PROVEEDOR</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-10 col-md-offset-1">
+
+                        <div class="row">
+
+
+                            <div class="col-md-3">
+                                <label>C&oacute;digo</label>
+                                {% bootstrap_field form.codigo_proveedor show_label=False %}
+
+                            </div>
+                            <div class="col-md-7">
+                                <label>Nombre</label>
+                                {% bootstrap_field form.nombre_proveedor show_label=False %}
+                            </div>
+                             <div class="col-md-2">
+                                <label></label>
+                                {% bootstrap_field form.sin_datos show_label=False %}
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label>Tipo</label>
+                                {% bootstrap_field form.tipo_proveedor show_label=False %}
+
+                            </div>
+                            <div class="col-sm-4">
+                                <label>RUC</label>
+                                {% bootstrap_field form.ruc show_label=False %}
+
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Cédula</label>
+                                {% bootstrap_field form.cedula show_label=False %}
+
+                            </div>
+                        </div>
+                         <div class="row">
+                            <div class="col-sm-4">
+                                <label>Teléfono</label>
+                                {% bootstrap_field form.telefono1 show_label=False %}
+
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Dirección</label>
+                                {% bootstrap_field form.direccion1 show_label=False %}
+
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Correo electrónico</label>
+                                {% bootstrap_field form.e_mail1 show_label=False %}
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label>País</label>
+                                {% bootstrap_field form.pais show_label=False %}
+
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Provincia</label>
+                                {% bootstrap_field form.provincia show_label=False %}
+
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Ciudad</label>
+                                {% bootstrap_field form.ciudad show_label=False %}
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+
+                    <h3 class="panel-title">DATOS FACTURA</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-10 col-md-offset-1">
+
+                        <div class="row">
+
+
+                            <div class="col-md-4">
+                                <label>Autorización imprenta</label>
+                                {% bootstrap_field form.autorizacion_imprenta show_label=False %}
+                            </div>
+                            <div class="col-md-4">
+                                <label>Autorización SRI</label>
+                                {% bootstrap_field form.autorizacion_sri show_label=False %}
+                            </div>
+                            <div class="col-md-4">
+                                <label>Fecha Validez</label>
+                                {% bootstrap_field form.fecha_validez show_label=False %}
+                            </div>
+                        </div>
+                         <div class="row">
+                            <div class="col-sm-4">
+                                <label>Establecimiento</label>
+                                {% bootstrap_field form.establecimiento show_label=False %}
+
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Punto Emisión</label>
+                                {% bootstrap_field form.punto_emision show_label=False %}
+
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Secuencial</label>
+                                {% bootstrap_field form.secuencial show_label=False %}
+
+                            </div>
+                        </div>
+                        <div class="row">
+
+
+                            <div class="col-md-4">
+                                <label># Factura desde</label>
+                                {% bootstrap_field form.factura_desde show_label=False %}
+                            </div>
+                            <div class="col-md-4">
+                                <label># Factura hasta</label>
+                                {% bootstrap_field form.factura_hasta show_label=False %}
+                            </div>
+                            <div class="col-md-4">
+                                <label>Lleva contabilidad</label>
+                                {% bootstrap_field form.lleva_contabilidad show_label=False %}
+                            </div>
+                        </div>
+                        <div class="row">
+                             <div class="col-md-4">
+                                <label>Tipo Venta</label>
+                                {% bootstrap_field form.tipo_venta show_label=False %}
+                            </div>
+
+                             <div class="col-md-4">
+                                <label>Dias Credito</label>
+                                {% bootstrap_field form.dias_credito show_label=False %}
+                            </div>
+                            </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+
+                    <h3 class="panel-title">CUENTAS CONTABLES</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-10 col-md-offset-1">
+
+                        <div class="row">
+
+
+                            <div class="col-md-6">
+                                <label>Cuenta de Anticipo</label>
+                                {% bootstrap_field form.cuenta_anticipo show_label=False %}
+
+                            </div>
+                            <div class="col-md-6">
+                                <label>Cuenta por Pagar</label>
+                                {% bootstrap_field form.cuenta_contable_compra show_label=False %}
+                            </div>
+                            <div class="col-md-6">
+                                <label>Cuenta de Gasto</label>
+                                {% bootstrap_field form.cuenta_gasto show_label=False %}
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+
+                    <h3 class="panel-title">RETENCIONES</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-10 col-md-offset-1">
+
+                        <div class="row">
+
+
+                            <div class="col-md-6">
+                                <label>Retención IVA</label>
+                                {% bootstrap_field form.retencion_iva show_label=False %}
+
+                            </div>
+                            <div class="col-md-6">
+                                <label>Retención FUENTE</label>
+                                {% bootstrap_field form.retencion_fuente show_label=False %}
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+
+                    <h3 class="panel-title">SALDOS INICIALES</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-10 col-md-offset-1">
+
+                        <div class="row">
+
+
+                            <div class="col-md-6">
+                                <label style="width: 100%">Saldo Factura actual  <b> $ {{form.saldo_factura.value}} </b> </label>
+                                <div class="input-group"><span class="input-group-addon">$</span><input type="text" class="form-control" id="id_saldo_factura" name="saldo_factura" value="{{form.saldo_factura.value}}"/></div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <p class="text-center">
+ <button type="submit" class="btn btn-inverse"
+                    onclick="return confirm('¿Está seguro de guardar ?')"><i class="fa fa-save"></i> Guardar
+            </button>
+        <!--<button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+        <a class="default btn btn-link" href="/proveedores/proveedores">-->
+            <button type="button" class="btn btn-primary btn-lg"> Regresar</button>
+        </a>
+    </p>
+
+    <input type="hidden" name="id_fila_cambiar" id="id_fila_cambiar" value=""/>
+
+
+</form>
+
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'color_admin/assets/plugins/parsley/src/parsley.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/masked-input/NumeroALetras.js' %}"></script>
+
+    <script>
+        	{% if object  %}
+	
+   // alert({{object.proveedor_id}});
+                                        
+            $('#form-proveedor').submit(function (event) {
+              
+                var ruc = $('input[name="ruc"]').val();
+                var ruc2=parseInt(ruc);
+                var id={{object.proveedor_id}};
+               //  event.preventDefault();
+                if(ruc != ""){
+                                 $.ajax({
+                                    url: '/proveedores/proveedores/validarRuc/',
+                                    type: "POST",
+                                    data: {ruc: ruc,ruc2: ruc2,id: id},
+                                    dataType: "json",
+                                    async:false,
+                                   success: function (response) {
+                                            if (!$.trim(response)){   
+                                               
+                                            }
+                                            else{   
+                                                var mensaje="El ruc ya existe en el proveedor "+response[0][1];
+                                                  alert(mensaje);
+                                                event.preventDefault();
+                                                return false;
+                                            }
+                                            
+                                  
+                                    
+                                    },
+                            });
+                }
+                 
+            
+            });
+ 
+    
+    {% else %}
+
+            $('#form-proveedor').submit(function (event) {
+              
+                var ruc = $('input[name="ruc"]').val();
+                var ruc2=parseInt(ruc);
+                var id="0";
+               
+               //  event.preventDefault();
+                if(ruc != ""){
+                                 $.ajax({
+                                    url: '/proveedores/proveedores/validarRuc/',
+                                    type: "POST",
+                                    data: {ruc: ruc,ruc2: ruc2,id: id},
+                                    dataType: "json",
+                                    async:false,
+                                   success: function (response) {
+                                            
+                                            if (!$.trim(response)){   
+                                               
+                                            }
+                                            else{   
+                                                var mensaje="El ruc ya existe en el proveedor "+response[0][1];
+                                                  alert(mensaje);
+                                                event.preventDefault();
+                                                return false;
+                                            }
+                                            
+                                  
+                                    
+                                    },
+                            });
+                }
+                 
+            
+            });
+   {% endif %}        
+        $(document).ready(function () {
+            // App.init();
+            $('#tabla2').DataTable();
+            $('#tabla3').DataTable();
+$('#id_cuenta_anticipo').attr('required', true);
+            $('#id_cuenta_contable_compra').attr('required', true);
+            FormWizardValidation.init();
+            //$(".parsley-errors-list").css('display', 'none');
+            $('#id_fecha_validez').datepicker({todayHighlight: true, autoclose: true, format: 'yyyy-mm-dd'});
+            $('#id_fechapedido').datepicker({todayHighlight: true, autoclose: true});
+            $('#id_saldo_factura').maskMoney({thousands:'', decimal:'.', allowZero: true});
+            
+
+    $('input[type="checkbox"][name="sin_datos"]').change(function() {
+     if(this.checked) {
+    $('#id_cuenta_anticipo').attr('required', false);
+            $('#id_cuenta_contable_compra').attr('required', false);
+
+
+
+     }else{
+
+
+     }
+ });
+
+
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#id_codigo_proveedor').each(function () {
+                $(this).attr('readonly', 'readonly');
+            });
+            $('#id_fecha_validez').each(function () {
+                $(this).attr('readonly', 'readonly');
+            });
+
+        });
+        $(document).ready(
+                function () {
+                    var codigo = $("#id_codigo_proveedor").val();
+                    //alert(codigo);
+                    if(codigo == ""){
+                         $.ajax({
+                            url: '/config/obtenerSecuencial/',
+                            type: "POST",
+                            data: {id: 'proveedor'},
+                            success: function (data) {
+                                data = parseInt(data) +1;
+                                $("#id_codigo_proveedor").val('000' + data);
+                            }
+                        });
+                    }
+               // $('input[name="ruc"]').mask('9999999999999');
+                }
+                
+                 
+        );
+        
+        
+
+
+
+   
+    </script>
+
+
+{% endblock %}

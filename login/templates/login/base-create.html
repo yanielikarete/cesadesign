@@ -1,0 +1,45 @@
+{% extends "login/base_nuevo.html" %}
+{% load extra_filters %}
+{% block content-title %}
+    <div class="title clearfix">
+        <h1><i class="fa fa-pencil-square-o"></i> {{ action }} {{verbose_name}}</h1>
+    </div>
+{% endblock %}
+{% block content %}
+	<div class="body-content">
+		{% if form.errors %}
+		    <div class="alert alert-danger alert-dismissable">
+		    	<button type="button" class="close" data-dismiss="alert">×</button>
+		      	Por favor, corrija los siguientes errores.
+		    </div>
+		{% endif %}
+
+		{% for message in messages %}
+		    <div class="alert alert-{{message.tags}} alert-dismissable">
+		    	<button type="button" class="close" data-dismiss="alert">×</button>
+		      	{{message}}
+		    </div>
+		{% endfor %}
+
+		<form action="" method="post" enctype="multipart/form-data" class="form">{% csrf_token %}
+			<div class="form-content">
+			    {% block create-field %}
+			        {% for field in form %}
+					    <div class="form-group {% if field.errors %}has-error{% endif %}">
+					        {{ field|labelAddCss:'control-label' }}
+    					    <div class="controls">
+    					        {{ field|addCss:'text-field form-control' }}
+    					        <span class="help-block">
+    					            <strong>{{ field.errors }}</strong>
+    					        </span>
+    					    </div>
+				        </div>
+				    {% endfor %}
+				{% endblock %}
+			</div>
+			{% block form-actions %}
+			    {% include "login/form-actions.html" %}
+			{% endblock %}
+		</form>
+	</div>
+{% endblock %}

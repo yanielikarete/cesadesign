@@ -1,0 +1,329 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+        <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css'%}" rel="stylesheet" />
+  <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css'%}" rel="stylesheet" />
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Liquidacion de Comisiones{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+
+{% block content %}
+				<!-- begin col-12 -->
+ <form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+				<div class="col-md-12">
+					<!-- begin panel -->
+					<div class="panel panel-inverse">
+						<div class="panel-heading">
+							<div class="panel-heading-btn">
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+							</div>
+							<h4 class="panel-title">Reporte:</h4>
+						</div>
+						<div class="panel-body">
+							<div class="table-responsive">
+						
+					<div class="col-md-4">
+                                                      <label for="exampleInputName2">Vendedor</label>
+                                                      {% bootstrap_field form.vendedor show_label=False %}
+
+                                               
+              </div>
+							
+						<div class="col-md-4">
+                                        <label for="exampleInputName2">Fecha desde:</label>
+                                   {% bootstrap_field form.fecha_inicio show_label=False %}
+
+							</div>
+
+<div class="col-md-4">
+                                                      <label for="exampleInputName2">Fecha hasta:</label>
+                                                      {% bootstrap_field form.fecha_fin show_label=False %}
+
+                                               
+							</div>
+<a class="default btn btn-link"  onclick="consultar()"> <button type="button" class="btn btn-primary btn-lg">  Consultar</button> </a>
+<h2>Resultados</h2>
+<table id="detalle" class="table" border="1"   aria-describedby="data-table_info">
+<thead><tr><th>Fecha</th>
+<th>Vendedor</th>
+
+<th>Proforma No.</th>
+<th width="100px">Cliente&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th width="150px">Articulo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th>Subtotal</th>
+<th>iva</th>
+<th>Total</th>
+<th>Valor Cancelado</th>
+<th>Saldo</th>
+<th>Valor Cancelado sin Iva</th>
+<th>%de Comision</th>
+<th>Total de  Comision</th>
+
+</tr></thead>
+<tbody></tbody>
+<tfoot>
+<tr>
+	<th>	</th>
+	<th>	</th>
+		<th>	</th>
+
+	<th>	</th>
+
+	<th>	</th>
+	<th><input type="text" name="subtotal" id="subtotal" readonly="readonly" />	</th>
+	<th><input type="text" name="iva" id="iva" readonly="readonly" />	</th>
+	<th><input type="text" name="total" id="total" readonly="readonly" />	</th>
+	<th><input type="text" name="valor_cancelado" id="valor_cancelado" readonly="readonly" />	</th>
+	<th><input type="text" name="saldo" id="saldo" readonly="readonly" />	</th>
+<th><input type="text" name="valor_cancelado_sin_iva" id="valor_cancelado_sin_iva" readonly="readonly" />	</th>
+	<th>	</th>
+
+	<th><input type="text" name="total_comision" id="total_comision" readonly="readonly" /></th>
+</tr>
+<tr>
+		<th colspan="11">SUBTOTAL:</th>
+	<th>{% bootstrap_field form.subtotal show_label=False %}</th>
+
+	
+</tr>
+<tr>
+		<th colspan="11">14% IVA	</th>
+	<th>{% bootstrap_field form.iva show_label=False %}	</th>
+
+	
+</tr>
+<tr>
+		<th colspan="11">TOTAL	</th>
+	<th>{% bootstrap_field form.neto_pagar show_label=False %}</th>
+
+	
+</tr>
+<tr>
+		<th colspan="11">retencion fuente 8%:	</th>
+
+
+	<th>
+{% bootstrap_field form.retencion_fuente show_label=False %}</th>
+
+	
+</tr>
+<tr>
+		<th colspan="11">Retencion iva 100%	</th>
+	<th>{% bootstrap_field form.retencion_iva show_label=False %}	</th>
+
+	
+</tr>
+<tr>
+		<th colspan="11">Total:</th>
+	<th>
+	{% bootstrap_field form.total_retenciones show_label=False %}</th>
+
+	
+</tr>
+<tr>
+		<th colspan="11">Adelanto de Comision:</th>
+	<th>
+	<input type="text" name="adelanto" id="adelanto"  onkeyup="actualizarAdelanto()" value="0" />
+		</th>
+
+	
+</tr>
+<tr>
+		<th colspan="11">TOTAL:	</th>
+	<th>{% bootstrap_field form.total show_label=False %}</th>
+
+	
+</tr>
+</tfoot>
+
+
+
+	
+</table>
+
+						</div>
+					</div>
+					
+				</div>
+<input type="hidden" name="columnas_receta" id="columnas_receta" readonly="readonly" />
+   <p class="text-center">
+
+                                    <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+                                            <a class="default btn btn-link" href="/liquidacion_comisiones/liquidaciones/"><button type="button" class="btn btn-primary btn-lg">  Regresar</button></a>
+                                        </p>
+				</form>
+				<!-- end col-12 -->	
+			
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+
+    <!-- ================== BEGIN PAGE LEVEL JS TABLE ================== -->
+    <script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/data-table.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/inbox.demo.min.js' %}"></script>
+	<script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+	<script type="text/javascript">
+		  $( document ).ready(function() {
+         $('#id_fecha_inicio').datepicker({todayHighlight:true,autoclose:true,dateFormat: "yy-mm-dd"});
+      $('#id_fecha_fin').datepicker({todayHighlight:true,autoclose:true,dateFormat: "yy-mm-dd"});
+       /*$("#id_fecha_inicio").datepicker({ dateFormat: "yy-mm-dd" }).val();
+               $("#id_fecha_fin").datepicker({ dateFormat: "yy-mm-dd" }).val();*/
+    });
+
+	function consultar(){
+		var vendedor=$("#id_vendedor").val();
+		var fechainicial=$("#id_fecha_inicio").val();
+		var fechafin=$("#id_fecha_fin").val();
+    //alert(fechainicial);
+      //  alert(fechafin);
+
+
+          $.ajax({
+                url: "/liquidacion_comisiones/obtenerLiquidacionesComisiones/", // the endpoint
+                type : "POST", // http method
+                data : { vendedor : vendedor,fechainicial : fechainicial,fechafin : fechafin,'csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+                success:function(data){
+                $("#detalle tbody tr").remove();
+                  $("#detalle").append(data);
+                  actualizarTotal();
+                },
+                error: function(){
+                 
+                },
+              });
+    }
+
+    function actualizarComision(data){
+      var porcentaje=$('#porcentaje_comisiones'+data).val();
+      var total= $('#total'+data).val();
+
+
+
+       var valor=parseFloat(parseFloat(porcentaje)*parseFloat(total)/100).toFixed(2);
+
+      // alert(data);
+      // alert(costo);
+       //alert(valor);
+      $('#total_comision'+data).val(valor);
+      actualizarTotal();
+    }
+      function actualizarTotal(){
+
+      var num_recetas=document.getElementById("detalle").rows.length;
+      var total=0;
+      var cantidad=0;
+      var descuento=0;
+      var porcentaje_descuento=0;
+      var totalidad=0;
+      var valor_cancelado_sin_iva=0;
+      var valor_cancelado=0;
+	  var subtotal=0;
+	  var iva=0;
+	  var ctotalidad=0;
+      var cvalor_cancelado_sin_iva=0;
+      var cvalor_cancelado=0;
+	  var csubtotal=0;
+	  var civa=0;
+	  var saldo=0;
+	  var csaldo=0;
+
+      var i;
+      //alert(' BNUM RECETS'+num_recetas);
+      for (i = 1; i <= num_recetas; i++) {
+        if ($('#total_comision'+i).length){
+
+            cantidad=$('#total_comision'+i).val();
+            total=parseFloat(total)+parseFloat(cantidad);
+            ctotalidad=$('#total'+i).val();
+            totalidad=parseFloat(totalidad)+parseFloat(ctotalidad);
+             civa=$('#iva'+i).val();
+            iva=parseFloat(iva)+parseFloat(civa);
+            csubtotal=$('#subtotal'+i).val();
+            subtotal=parseFloat(subtotal)+parseFloat(csubtotal);
+            cvalor_cancelado_sin_iva=$('#valor_cancelado_sin_iva'+i).val();
+            valor_cancelado_sin_iva=parseFloat(valor_cancelado_sin_iva)+parseFloat(cvalor_cancelado_sin_iva);
+        	cvalor_cancelado=$('#valor_cancelado'+i).val();
+            valor_cancelado=parseFloat(valor_cancelado)+parseFloat(cvalor_cancelado);
+        csaldo=$('#saldo'+i).val();
+            saldo=parseFloat(saldo)+parseFloat(csaldo);
+        
+          }
+      }
+           $('#columnas_receta').val(num_recetas);
+
+      $('#total_comision').val((total).toFixed(2));
+      $('#total').val((totalidad).toFixed(2));
+      $('#iva').val((iva).toFixed(2));
+      $('#subtotal').val((subtotal).toFixed(2));
+ $('#saldo').val((saldo).toFixed(2));
+      $('#valor_cancelado_sin_iva').val((valor_cancelado_sin_iva).toFixed(2));
+      $('#valor_cancelado').val((valor_cancelado).toFixed(2));
+
+
+      $('#id_subtotal').val((total).toFixed(2));
+      var p_iva=0.12*(total);
+      $('#id_iva').val((p_iva).toFixed(2));
+		var total_iva= total + p_iva;
+      $('#id_neto_pagar').val((total_iva).toFixed(2));
+ 	var retencion_fuente=0.08*(total);
+      $('#id_retencion_fuente').val((retencion_fuente).toFixed(2));
+       	var retencion_iva=0.12*(total);
+      $('#id_retencion_iva').val((retencion_iva).toFixed(2));
+      var p_total=total_iva-retencion_fuente-retencion_iva;
+      $('#id_total_retenciones').val((p_total).toFixed(2));
+       var adelanto=$('#adelanto').val();
+       var sup_total=p_total-adelanto;
+      $('#id_total').val((sup_total).toFixed(2));
+    }
+
+    function actualizarAdelanto(){
+      var total_retenciones=$('#id_total_retenciones').val();
+      var adelanto= $('#adelanto').val();
+
+
+
+       var valor=parseFloat(parseFloat(total_retenciones)-parseFloat(adelanto)).toFixed(2);
+
+      // alert(data);
+      // alert(costo);
+       //alert(valor);
+      $('#id_total').val(valor);
+    }
+
+	</script>
+	<!-- ================== END PAGE LEVEL JS ================== -->
+	{% if form.errors or form_mode == "update" %}
+	<script type="text/javascript">
+		$( document ).ready(function() {
+		    $(".modal").modal('toggle');
+		});
+	
+	</script>
+ 
+	{% endif %}
+  <script type="text/javascript">
+  
+  
+  </script>
+{% endblock %}
+
+

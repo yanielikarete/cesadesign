@@ -1,0 +1,543 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+        <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css'%}" rel="stylesheet" />
+  <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css'%}" rel="stylesheet" />
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Receta{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+
+            <!-- begin row -->
+           <style>
+       .panel-border{border: 1px solid #ddd !important}
+       .form-ajust .form-group{margin-bottom: 0px !important}
+      input[type="text"],select,input[type="number"]
+      {
+
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    box-shadow: none;
+    font-size: 12px;
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+       }
+
+ .table2 {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+      display:table}
+
+.table2>tbody>tr>td, .table2>tbody>tr>th, .table2>tfoot>tr>td, .table2>tfoot>tr>th {
+    border-color: #e2e7eb;
+    padding: 1px 0px;
+}
+    
+ .table2>thead>tr>td, .table2>thead>tr>th {
+    border-color: #e2e7eb;
+    padding: 10px 5px;
+}
+
+    input[type="number"] {
+      width:100px !important;
+      }
+    </style>
+  <form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+   {{ form.title.errors }}
+  <div class="row">
+                <!-- begin col-6 -->
+      <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                       
+                        <h3 class="panel-title"><b>PRODUCTO:</b>&nbsp;{{ prod.codigo_producto }} {{ prod.descripcion_producto }}
+                        <br /><b>AREA:</b>&nbsp;{{ areas.descripcion }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <div>
+
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                  <li role="presentation" class="active"><a href="#principales" aria-controls="principales" role="tab" data-toggle="tab">Principales</a></li>
+<!--                                     <li role="presentation"><a href="#costo" aria-controls="costo" role="tab" data-toggle="tab">Costos y Precios</a></li>
+ -->                                  
+                                 
+                                </ul>
+                              
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade in active" id="principales">
+                                                                           
+                                    
+                                      
+                                   
+                                        
+                                        <div class="row">
+                                            <div class="panel panel-default panel-border">
+                                                <!-- Default panel contents -->
+                                                <div class="panel-heading"></div>
+                                                <div class="panel-body">
+                                                  
+                                                </div>
+                                              
+                                                <!-- Table -->
+                                                <table class="table2 table-striped table-bordered"  id="tabla">
+                                                <thead>
+                                                  <tr>
+                                                    <th width="100px"></th>
+                                                      <th width="50px">Otros Costos</th>
+                                                    <th width="200px">Materiales</th>
+                                                     <th width="100px">Cantidad</th>
+
+                                                    <th width="100px">Unidad medida</th>
+                                                    <th width="100px" >Costo</th>
+                                                    <th width="100px">Total</th>
+                                                  
+                                                  </tr>
+                                                </thead>
+                                                  <tbody>
+                                                    
+                                                  
+                                                  {% if suborden %}
+                                                    {% for kit  in suborden %}
+
+                                                  <tr>
+                                                    <td class="eliminar"><a class="btn btn-danger remove_fields" onclick="eliminar({{kit.id}})">
+                                                        <i class=" glyphicon glyphicon-trash icon-white"></i>
+                                                      </a>
+                                                    </td>
+                                                       <td>   <input type="checkbox" id="otros_costos_kits{{ forloop.counter }}" name="otros_costos_kits{{ forloop.counter }}" onclick="otros_costos({{ forloop.counter }})"
+                                                        {% if kit.otros_costos %}
+                                                            checked="checked"
+                                                          {% endif %}  /> </td>
+                                                    
+                                                    <td> 
+                                                    <input type="hidden" class="form-control" id="id_detalle_kits{{ forloop.counter }}" name="id_detalle_kits{{ forloop.counter }}" value="{{ kit.id }}"/>
+                                                   <input type="hidden" class="form-control" id="producto_kits{{ forloop.counter }}" name="producto_kits{{ forloop.counter }}" value="{{ kit.hijo.producto_id}}" />
+                                                    {% if kit.otros_costos %}
+                                                         <input type="text" class="form-control" id="material_kits{{ forloop.counter }}" name="material_kits{{ forloop.counter }}" value="{{ kit.nombre}}" onfocus="mostrarProductos({{ forloop.counter }})">
+                                                        {% else %}
+                                                         <input type="text" class="form-control" id="material_kits{{ forloop.counter }}" name="material_kits{{ forloop.counter }}" value="{{ kit.hijo.descripcion_producto}}" onfocus="mostrarProductos({{ forloop.counter }})">
+
+                                                          {% endif %}
+                                                      </td>
+                                                    <td><input type="text" class="form-control" id="cantidad_kits{{ forloop.counter }}" name="cantidad_kits{{ forloop.counter }}"  value="{{ kit.cantidad }}" onkeyup="actualizarCosto({{ forloop.counter }})"></td>
+
+                                                    <td><input type="text" class="form-control" id="medida_kits{{ forloop.counter }}" name="medida_kits{{ forloop.counter }}"  value="{{ kit.medida }}"></td>
+
+                                                    <td><input type="text" class="form-control" id="costo_kits{{ forloop.counter }}" name="costo_kits{{ forloop.counter }}" value="{{ kit.costo }}" onkeyup="actualizarCosto({{ forloop.counter }})"></td>
+                                               
+                                                    <td><input type="text" class="form-control" id="total_kits{{ forloop.counter }}" name="total_kits{{ forloop.counter }}" value="{{ kit.total }}" readonly="readonly"></td>
+                                                  </tr>
+                                                        {% endfor %} 
+                                                   {% else %}
+                          <tr>
+                                                    <td class="eliminar"><a class="btn btn-danger remove_fields">
+                                                        <i class=" glyphicon glyphicon-trash icon-white"></i>
+                                                      </a>
+                                                    </td>
+                                <td>
+ <input type="checkbox" id="otros_costos_kits1" name="otros_costos_kits1"  onclick="otros_costos(1)" />
+                                </td>
+                                                                     <td><input type="hidden" class="form-control" id="producto_kits1" name="producto_kits1" >
+                                                    <input type="text" class="form-control" id="material_kits1" name="material_kits1" onfocus="mostrarProductos(1)"></td>
+                                                    <td><input type="text" class="form-control" id="cantidad_kits1" name="cantidad_kits1" onkeyup="actualizarCosto(1)"></td>
+                                                     <td><input type="text" class="form-control" id="medida_kits1" name="medida_kits1"></td>
+                                                     <td><input type="text" class="form-control" id="costo_kits1" name="costo_kits1" onkeyup="actualizarCosto(1)"></td>
+                                                    <td><input type="text" class="form-control" id="total_kits1" name="total_kits1" readonly="readonly">
+                                                    </td>
+                                                    
+                                                  </tr>
+
+                                                   {% endif %}
+                                                   </tbody>
+                                                 <!--  <tfoot>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <th>Total:</th>
+                                                    <th> 
+                                                   
+                                                  </tfoot> -->
+                                                </table>
+                                            </div>
+                                        </div>
+                                        
+                                        <p class="text-center">
+                                             <button type="button" class="btn btn-primary btn-lg" id="add">Agregar</button>
+
+                                                                                    
+                                        </p>
+                                        
+
+
+
+
+                                    </div>
+                                    
+                                    <div role="tabpanel" class="tab-pane fade" id="costo">..
+                                     
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="codigo">...</div>
+                                    <div role="tabpanel" class="tab-pane fade" id="foto">
+                                        
+                                    </div>
+                                </div>
+                              
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                  
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+     <p class="text-center">
+
+                                    <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+                                            <a class="default btn btn-link" href="/inventario/producto_areas/{{ id_product }}/list/"><button type="button" class="btn btn-primary btn-lg">  Regresar</button></a>
+                                        </p>
+                                         {% if suborden %}
+<input type="hidden" name="columnas_receta" id="columnas_receta" value="{{ suborden|length }}" />
+{% else %}
+<input type="hidden" name="columnas_receta" id="columnas_receta" value="1" />
+
+{% endif %}
+<input type="hidden" name="areas_id" id="areas_id" value="{{ areas.id }}" />
+<input type="hidden" name="id_product" id="id_product" value="{{ id_product }}" />
+
+    <input type="hidden" name="id_fila_cambiar" id="id_fila_cambiar" value="" />
+
+    <input type="hidden" name="id_subop" id="id_subop" value="{{ id }}" />
+
+  </form>
+                       <div class="modal fade" id="modal-dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                             <div class="panel-body">
+                                <div class="table-responsive">
+                                                    <table class="table table-striped table-bordered" id="tabla2">
+                                                        <thead>
+                                                            <tr>
+                                                            <th></th>
+                                                                <th>Codigo</th>
+                                                                <th>Nombre</th>
+                                                                
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for producto  in productos %}
+                                                            <tr>
+                                                                <td  onclick="cargarCodigoProducto('{{ producto.producto_id }}','{{ producto.codigo_producto }}','{{ producto.descripcion_producto }}','{{ producto.unidad }}','{{ producto.costo }}')"><a class="btn btn-danger remove_fields">
+                                                        <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                                      </a></td><td>{{ producto.codigo_producto }}</td>
+                                                                <td>{{ producto.descripcion_producto }}</td>
+                                                            </tr >
+                                                        {% endfor %} 
+                                                        
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <button type="button" onclick="cerrar()" class="btn btn-danger btn-block">Cerrar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+                                            
+
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/data-table.js' %}"></script> 
+<script src="{% static 'color_admin/assets/js/bootstrap-datepicker.js' %}"></script>
+
+<script>
+  $(document).ready(function() {
+    // App.init();
+    $('#tabla2').DataTable();
+  });
+</script>
+<script>
+    $(document).ready(function() {
+      $('#id_codigo').each(function(){
+  $(this).attr('readonly','readonly');
+});
+             $('#id_created_by').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_updated_by').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_created_at').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_updated_at').each(function(){
+  $(this).attr('readonly','readonly');
+});
+
+
+
+       
+           
+
+  });
+</script>
+<script>
+  
+    function cerrar(){
+     //  $(".modal").modal('toggle');
+         $(".modal").modal('hide');
+    }
+
+    function cargarCodigoProducto(id,codigo,descripcion,medida,costo){
+      var fila=$('#id_fila_cambiar').val();
+         costo = costo.toString().replace(/\,/g,'.'); 
+         $('#producto_kits'+fila).val(id);
+
+         $('#material_kits'+fila).val(descripcion);
+           $('#medida_kits'+fila).val(medida);
+         $('#costo_kits'+fila).val(costo);
+   $('#total_kits'+fila).val('');
+          $('#cantidad_kits'+fila).val('');
+          cerrar();
+
+    }
+    function actualizarCosto(data){
+      var cantidad=$('#cantidad_kits'+data).val();
+      var costo= $('#costo_kits'+data).val();
+
+       var valor=parseFloat(parseFloat(cantidad)*parseFloat(costo)).toFixed(2);
+
+      //  alert(data);
+      // alert(costo);
+      // alert(valor);
+      $('#total_kits'+data).val(valor);
+      actualizarTotal();
+    }
+    function actualizarTotal(){
+      var num_recetas=$('#columnas_receta').val();
+      var total=0;
+      var cantidad=0;
+      var descuento=0;
+      var porcentaje_descuento=0;
+      var totalidad=0;
+      var costo=0;
+      var subt=0;
+      var i;
+      //alert(' BNUM RECETS'+num_recetas);
+      for (i = 1; i <= num_recetas; i++) {
+        costo= $('#costo_kits'+i).val();
+        costo = costo.toString().replace(/\,/g,'.'); 
+        //alert(costo);
+        $('#costo_kits'+i).val(costo);
+        subt = $('#cantidad_kits'+i).val();
+        subt = subt.toString().replace(/\,/g,'.'); 
+        $('#cantidad_kits'+i).val(subt);
+
+        if ($('#total_kits_'+i).length){
+            cantidad=$('#total_kits'+i).val();
+            total=parseFloat(total)+parseFloat(cantidad);
+          }
+        
+         
+      }
+       porcentaje_descuento= $('#porcentaje_descuento').val();
+       descuento=parseFloat(total*(porcentaje_descuento/100));
+       total=total-descuento;
+      // total=(total).toFixed(2);
+      $('#total').val((total).toFixed(2));
+     
+
+
+    }
+     function cambiarFormato(){
+      var num_recetas=$('#columnas_receta').val();
+      var total=0;
+      var costo1=0;
+      var subt=0;
+      var i;
+      //alert(' BNUM RECETS'+num_recetas);
+      for (i = 1; i <= num_recetas; i++) {
+        costo1= $('#costo_kits'+i).val();
+        costo1 = costo1.toString().replace(/\,/g,'.'); 
+        $('#costo_kits'+i).val(costo1);
+        subt = $('#cantidad_kits'+i).val();
+        subt = subt.toString().replace(/\,/g,'.'); 
+        $('#cantidad_kits'+i).val(subt);
+
+       total = $('#total_kits'+i).val();
+        total = total.toString().replace(/\,/g,'.'); 
+        $('#total_kits'+i).val(total);
+        
+         
+      }
+       
+
+
+    }
+     function mostrarProductos(data){
+          var select_finalizar=$("#otros_costos_kits"+data).prop('checked');
+
+
+
+        if (select_finalizar) {
+
+        }else{
+             $('#id_fila_cambiar').val(data);
+       //$(".modal").modal('toggle');
+             $(".modal").modal('show');
+        }
+
+    }
+    
+    function eliminar(id){
+                var fila=id
+            
+
+
+            var parametros = {
+                'id':fila,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+                
+            }
+
+            $.ajax({
+                    url: "/inventario/producto/RecetaEliminar/",
+                    type: "POST",
+                    async: true,
+                    data: parametros,
+                    success: function(data){
+                        alert('Se elimino la receta satisfactoriamente');
+                       
+                        
+                    },
+                    complete: function(){
+                    }
+                });
+    }
+        
+</script>
+<script type="text/javascript">
+$(function() {
+
+});
+    $(document).ready(function(){
+cambiarFormato();
+        /**
+         * Funcion par
+         */
+        $("#add").click(function(){
+            // Obtenemos el numero de filas (td) que tiene la primera columna
+            // (tr) del id "tabla"
+            var num_recetas=$('#columnas_receta').val();
+            num_recetas=parseInt(num_recetas)+1;
+
+            var tds=$("#tabla tr:first td").length;
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla tr").length;
+            var nuevaFila='<tr><td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+              nuevaFila+='<td>    <input type="checkbox" id="otros_costos_kits'+num_recetas+'" name="otros_costos_kits'+num_recetas+'"  onclick="otros_costos('+num_recetas+')" /></td>';
+
+                  nuevaFila+='<td><input type="hidden" class="form-control" id="producto_kits'+num_recetas+'" name="producto_kits'+num_recetas+'" ><input type="text" class="form-control" id="material_kits'+num_recetas+'" name="material_kits'+num_recetas+'" onfocus="mostrarProductos('+num_recetas+')"></td>';
+                  nuevaFila+='<td><input type="text" class="form-control" id="cantidad_kits'+num_recetas+'" name="cantidad_kits'+num_recetas+'" onkeyup="actualizarCosto('+num_recetas+')"></td>';
+                nuevaFila+='<td><input type="text" class="form-control" required="required" id="medida_kits'+num_recetas+'" name="medida_kits'+num_recetas+'" ></td>';
+                
+                nuevaFila+='<td><input type="text" class="form-control" id="costo_kits'+num_recetas+'" name="costo_kits'+num_recetas+'" onkeyup="actualizarCosto('+num_recetas+')"></td>';
+                nuevaFila+='<td><input type="text" class="form-control" id="total_kits'+num_recetas+'" name="total_kits'+num_recetas+'" readonly="readonly"></td>';
+               
+                nuevaFila+='</tr>';
+
+              $('#columnas_receta').val(num_recetas);
+            // for(var i=0;i<tds;i++){
+            //     //  las columnas
+            //     nuevaFila+="<td>columna "+(i+1)+"  con jquery</td>";
+            // }
+            // //  una columna con el numero total de columnas.
+            // //  uno al total, ya que cuando cargamos los valores para la
+            // // columna, todavia no esta 
+            // nuevaFila+="<td>"+(trs+1)+" columnas";
+            // nuevaFila+="</tr>";
+            $("#tabla").append(nuevaFila);
+        });
+ 
+        /**
+         * Funcion para eliminar la ultima columna de la tabla.
+         * Si unicamente queda una columna, esta no sera eliminada
+         */
+        $("#del").click(function(){
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla tr").length;
+            if(trs>1)
+            {
+                // Eliminamos la ultima columna
+                $("#tabla tr:last").remove();
+            }
+             actualizarTotal();
+        });
+
+
+        $(document).on("click",".eliminar",function(){
+            var parent = $(this).parent();
+  $(parent).remove();
+   actualizarTotal();
+          });
+
+    });
+
+     function otros_costos(data){
+        var select_finalizar=$("#otros_costos_kits"+data).prop('checked');
+
+
+
+        if (select_finalizar) {
+//alert("entro");
+            $("#producto_kits"+data).val("");
+        }else{
+
+
+        }
+    }
+    </script>
+{% endblock %}                                                                                                                                                                                                                                                                

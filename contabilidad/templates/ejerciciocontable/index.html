@@ -1,0 +1,17 @@
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+{% load staticfiles %}
+
+{% block css %}
+{{ block.super }}
+{% endblock %}
+
+{% block section_title %}Ejercicio Contable{% endblock %}
+{% block section_subtitle %}
+<br />
+ <div class="email-btn-row hidden-xs">
+                        <a href="{% url 'ejerciciocontable-create' %}" class="btn btn-sm btn-success"><i class="fa fa-plus m-r-5"></i> Nuevo Ejercicio Contable</a>
+                    </div>
+
+                    {% endblock %}

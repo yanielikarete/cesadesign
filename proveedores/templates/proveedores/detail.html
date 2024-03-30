@@ -1,0 +1,14 @@
+{% extends "login/base-detail.html" %}
+{% load extra_filters %}
+
+{% block breadcrumbs %}
+    {{ block.super }} » <a href="{% url "proveedor-list" %}">{{verbose_name}}</a> » Detalle
+{% endblock %}
+
+{% block back-list %}
+{% url "proveedor-list" %}
+{% endblock %}
+
+{% block detail-url-edit %}
+{% url "proveedor-update" object.id %}
+{% endblock %}

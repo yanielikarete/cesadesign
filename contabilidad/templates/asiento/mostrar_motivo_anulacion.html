@@ -1,0 +1,42 @@
+
+<br />
+<br />
+<br />
+<h5 style="text-align: center">Anulacion de Asiento</h5>
+<table border="0" >
+          
+						<tr>
+								<td style="padding-left: 10px;"><b>Codigo:</b></td>
+								<td >{{asiento.codigo_asiento}}</td>
+                               
+						</tr>
+            	<tr>
+								<td style="padding-left: 10px;"><b>Glosa:</b></td>
+								<td >{{asiento.glosa}}</td>
+                               
+						</tr>
+					
+			</table>			
+
+
+				<table class="table table-striped table-bordered " id="tabla2">
+          
+						<tr>
+								<td style="text-align: center">Ingrese el motivo de anulacion</td>
+								<td style="text-align: center"><textarea id="motivo" name="motivo"></textarea></td>
+                               
+						</tr>
+					
+
+
+					</tbody>
+				</table>
+				<br>
+
+<a href="#" onclick="Anulacion()" style="top: 2px; position: relative;">
+  <button type="button" class="btn btn-default btn-xs">Guardar</button>
+</a>
+<input type="hidden" name="id" id="id" value="{{ id }}" />
+
+
+

@@ -1,0 +1,46 @@
+{% extends 'main/base-login.html' %}
+{% load extra_filters %}
+
+	{% block content %}
+			<form action="" method="post" id="formulario">
+				<h3>Iniciar Sesión</h3>
+				{% if form.non_field_errors %}
+					<div class="alert alert-danger alert-dismissable">
+				    	<button type="button" class="close" data-dismiss="alert">×</button>
+				      	{% for err in form.non_field_errors %}
+					  		{{ err }}
+					  	{% endfor %}
+				    </div>
+				{% endif %}
+				{% csrf_token %}
+				{% for field in form %}
+					<div class="form-group {% if field.errors %}has-error{% endif %}">
+						<div class="controls">
+							<div class="input-group">
+								<span class="input-group-addon">
+									{% if field.auto_id == "id_username" %}
+									<i class="fa fa-user"></i>
+									{% else %}
+									<i class="fa fa-key"></i>
+									{% endif %}
+								</span>
+						    	{{ field|addCss:'text-field form-control' }}
+						    </div>
+						    <span class="help-block">
+						    	{{ field.help_text }}
+						        <strong>{{ field.errors }}</strong>
+						    </span>
+						</div>
+					</div>
+				{% endfor %}
+				<p></p>
+				<div class="form-group">
+					<div class="controls">
+						<input type="submit" value="Ingresar" class="btn btn-lg btn-primary btn-block" />
+					</div>
+				</div>
+			</form>
+			<div class="forget text-center fcg">
+				<a href="{% url 'password_reset' %}"><span>¿Olvidó su contraseña?</span></a>
+			</div>
+	{% endblock %}

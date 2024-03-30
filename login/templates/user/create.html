@@ -1,0 +1,184 @@
+{% extends "login/base-create.html" %}
+{% load extra_filters %}
+
+{% block content-title %}
+    <div class="title clearfix">
+        <h1>
+            <i class="fa fa-user"></i> Mis Datos
+            <a href="#" id="btn-editar" class="btn btn-primary pull-right">
+                <i class="fa fa-pencil-square-o"></i> Editar Datos
+            </a>
+        </h1>
+    </div>
+{% endblock %}
+
+{% block create-field %}
+<div class="row">
+    <div class="alert alert-info alert-dismissable">
+       Para realizar modificaciones sobre los nombres, apellidos y # de cédula escríbanos a soporte@edupegaso.com con la información que desea cambiar.
+    </div>
+</div>
+<div class="row">
+	<div class="col-md-2">
+	    <div class="row">
+	        <div class="">
+                <div class="form-group {% if form.foto.errors %}has-error{% endif %}">
+            		<label class="control-label">Foto:</label>
+					<div class="controls" style="overflow: hidden;overflow-wrap: break-word;">
+						{% if form.instance.foto %}
+							<img class="img-pic perfil-pic" src="{{ form.instance.foto.url }}" /><br>
+						{% endif %}
+						{{ form.foto|addCss:'btn btn-default file' }}
+						<span class="help-block">
+							<strong>{{ form.foto.errors }}</strong>
+						</span>
+					</div>
+            	</div>
+            </div>
+	    </div>
+	</div>
+	<div class="col-md-6">
+	    <div class="row">
+	        <div class="col-md-6">
+    			<div class="form-group">
+            		<label class="control-label">
+            			Nombres y apellidos:
+            		</label>
+            		<div class="controls">
+            		    {{ user.docente.nombres }} {{ user.docente.apellidos }}
+            		</div>
+            	</div>
+            </div>
+            <div class="col-md-6">
+    			<div class="form-group">
+            		<label class="control-label">
+            			Usuario:
+            		</label>
+            		<div class="controls">
+            		    {{ user }}
+            		</div>
+            	</div>
+            </div>
+        </div>
+        <div class="row">
+	        <div class="col-md-6">
+    			<div class="form-group {% if form.titulo.errors %}has-error{% endif %}">
+            		<label for="id_titulo" class="control-label">
+            			{{ form.titulo.label }} *
+            		</label>
+            		<div class="controls">
+            		    <div class="editar">{{ user.docente.titulo }}</div>
+            			<div class="editar-form hide">
+            				{{ form.titulo|addCss:'text-field form-control' }}
+            			</div>
+            			<span class="help-block">
+            				<strong>{{ form.titulo.errors }}</strong>
+            			</span>
+            		</div>
+            	</div>
+            </div>
+            <div class="col-md-6">
+    			<div class="form-group">
+            		<div class="controls">
+            		    <a href="{% url "password_change" %}" class="btn btn-info" style="margin-bottom:5px">
+                           <i class="fa fa-key"></i> Cambiar Contraseña
+                        </a>
+            		</div>
+            	</div>
+            </div>
+        </div>
+        <div class="row">
+	        <div class="col-md-6">
+    			<div class="form-group">
+            		<label class="control-label">
+            			Cédula
+            		</label>
+            		<div class="controls">
+            		    {{ user.docente.cedula }}
+            		</div>
+            	</div>
+            </div>
+            <div class="col-md-6">
+    			<div class="form-group {% if form.movil.errors %}has-error{% endif %}">
+            		<label for="id_movil" class="control-label">
+            			{{ form.movil.label }} *
+            		</label>
+            		<div class="controls">
+            			<div class="editar">{{ form.movil.value }}</div>
+            			<div class="input-group editar-form hide">
+            				{{ form.movil|addCss:'text-field form-control' }}
+            				<span class="input-group-addon">
+    							<i class="fa fa-phone"></i>
+            				</span>
+            			</div>
+            			<span class="help-block">
+            				<strong>{{ form.movil.errors }}</strong>
+            			</span>
+            		</div>
+            	</div>
+            </div>
+        </div>
+        <div class="row">
+    	    <div class="col-md-6">
+    			<div class="form-group {% if form.fecha_nacimiento.errors %}has-error{% endif %}">
+            		<label for="id_fecha_nacimiento" class="control-label">
+            			{{ form.fecha_nacimiento.label }} *
+            		</label>
+            		<div class="controls">
+            		    <div class="editar">{{ form.fecha_nacimiento.value }}</div>
+            			<div class="input-group editar-form hide">
+            				{{ form.fecha_nacimiento|addCss:'text-field form-control' }}
+            				<span class="input-group-addon">
+    							<i class="fa fa-calendar"></i>
+            				</span>
+            			</div>
+            			<span class="help-block">
+            				<strong>{{ form.fecha_nacimiento.errors }}</strong>
+            			</span>
+            		</div>
+            	</div>
+            </div>
+            <div class="col-md-6">
+    			<div class="form-group {% if form.telefono.errors %}has-error{% endif %}">
+            		<label for="id_telefono" class="control-label">
+            			{{ form.telefono.label }} *
+            		</label>
+            		<div class="controls">
+            			<div class="editar">{{ form.telefono.value }}</div>
+            			<div class="input-group editar-form hide">
+            				{{ form.telefono|addCss:'text-field form-control' }}
+            				<span class="input-group-addon">
+    							<i class="fa fa-phone"></i>
+            				</span>
+            			</div>
+            			<span class="help-block">
+            				<strong>{{ form.telefono.errors }}</strong>
+            			</span>
+            		</div>
+            	</div>
+            </div>
+        </div>
+    	<div class="row">
+            <div class="col-md-6">
+    			<div class="form-group {% if form.email.errors %}has-error{% endif %}">
+            		<label for="id_email" class="control-label">
+            			{{ form.email.label }} *
+            		</label>
+            		<div class="controls">
+            			<div class="editar">{{ form.email.value }}</div>
+            			<div class="input-group editar-form hide">
+            				 {{ form.email|addCss:'text-field form-control' }}
+            				<span class="input-group-addon">
+    							<i class="fa fa-envelope-o"></i>
+            				</span>
+            			</div>
+            			<span class="help-block">
+            				<strong>{{ form.email.errors }}</strong>
+            			</span>
+            		</div>
+            	</div>
+            </div>
+    	</div>
+    </div>
+</div>
+{% endblock %}

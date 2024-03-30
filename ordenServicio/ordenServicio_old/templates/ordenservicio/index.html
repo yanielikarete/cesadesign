@@ -1,0 +1,403 @@
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+{% load staticfiles %}
+
+{% block css %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL STYLE TABLE================== -->
+<link href="{% static 'color_admin/assets/plugins/DataTables-1.9.4/css/data-table.css' %}" rel="stylesheet"/>
+<!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Orden de Servicio{% endblock %}
+{% block section_subtitle %}
+<br/>
+<div class="email-btn-row hidden-xs">
+
+</div>
+
+{% endblock %}
+
+{% block content %}
+<!-- begin col-12 -->
+<form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+
+    <div class="col-md-12">
+        <!-- begin panel -->
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i
+                        class="fa fa-expand"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
+                       data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                </div>
+                <h4 class="panel-title">Ordenes de Servicio</h4>
+            </div>
+            <div class="panel-body">
+                <table>
+                    <thead>
+                    <tr>
+
+                        <th>Fecha</th>
+                        <th>Os</th>
+                        <th width="200px">Cliente</th>
+                        <th>Pedido</th>
+                        <th>OP</th>
+                        <th>Maestro responsable</th>
+                        <th>Trabajo a realizar</th>
+                        <th>Observaciones</th>
+                        <th>Objeto Orden</th>
+
+                    </tr>
+
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><input type="date" class="form-control" id="fecha" name="fecha">
+                        </td>
+                        <td><input type="number" class="form-control" id="ordenes" name="ordenes" readonly="readonly">
+                        </td>
+                        <td><select name="cliente" id="cliente" class="form-control">
+                            {% for am in clientes %}
+                            <option value="{{ am.id_cliente }}"> {{ am.nombre_cliente }}</option>
+                            {% endfor %}
+                        </select></td>
+                        <td><input type="text" class="form-control" id="pedido" name="pedido">
+                        </td>
+                        <td><input type="text" class="form-control" id="op" name="op">
+                        </td>
+                        <td><input type="text" class="form-control" id="maestro" name="maestro">
+                        </td>
+                        <td><input type="text" class="form-control" id="trabajo" name="trabajo">
+                        </td>
+                        <td><input type="text" class="form-control" id="observaciones" name="observaciones">
+                        </td>
+                        <td>
+                            <select name="obj" id="obj" class="form-control">
+                                <option value="Garantia"> Garantia</option>
+                                <option value="Reparacion"> Reparacion</option>
+                                <option value="Instalacion"> Instalacion</option>
+                                <option value="Implementos Seguridad"> Implementos Seguridad</option>
+                                <option value="Venta"> Venta</option>
+
+
+                            </select>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+
+                <div class="col-md-4">
+                    <a class="btn btn-danger remove_fields" onclick="agregar({{ id }})">
+                        <i class="glyphicon glyphicon-plus icon-white"></i>
+                        AGREGAR </a>
+                </div>
+                <br/><br/> <br/><br/>
+                <br/><br/>
+
+
+                <div class="table-responsive">
+                    <table id="data-table" class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+
+                            <th>Fecha</th>
+                            <th>Os</th>
+                            <th width="200px">Cliente</th>
+                            <th>Pedido</th>
+                            <th>OP</th>
+                            <th>Maestro responsable</th>
+                            <th>Trabajo a realizar</th>
+                            <th>Observaciones</th>
+                            <th>Objeto Orden</th>
+
+                            <th>Accion</th>
+                        </tr>
+
+                        </thead>
+                        <tbody>
+                        {% for orden in ordenes %}
+                        <tr>
+                            <td>
+                                {{ orden.fecha }}
+                            </td>
+                            <td>{{ orden.nro_orden }}</td>
+                            <td>{{ orden.cliente }}</td>
+                            <td>{{ orden.codigo_pedido }}</td>
+                            <td>{{ orden.codigo_orden_produccion }}</td>
+                            <td>{{ orden.maestro }}</td>
+                            <td>{{ orden.trabajos_realizar }}</td>
+                            <td>{{ orden.observaciones }}</td>
+                            <td>{{ orden.objeto_orden }}</td>
+
+                            <td>
+                                <a href="{% url 'ordenservicio-update' orden.orden_id %}">
+                                    <button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Editar
+                                    </button>
+                                </a>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% if subordenes %}
+        <input type="hidden" name="columnas_receta" id="columnas_receta" value="{{ subordenes|length }}"/>
+        {% else %}
+        <input type="hidden" name="columnas_receta" id="columnas_receta" value="1"/>
+
+        {% endif %}
+</form>
+
+<!-- end panel -->
+
+<!-- #modal-dialog -->
+<div class="modal fade" id="modal-dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            {% if form_mode == "update" %}
+            <form method="post" action="{% url 'ordenescompra-update' ordenescompra.pk %}" data-parsley-validate="true"
+                  name="form-wizard" enctype="multipart/form-data">
+                {% else %}
+                <form method="post" action="{% url 'ordenescompra-create' %}" data-parsley-validate="true"
+                      name="form-wizard" enctype="multipart/form-data">
+                    {% endif %}
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title">Nueva Orden de Compra</h4>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Close</a>
+                        <button type="submit" class="btn btn-sm btn-success">Guardar</button>
+                    </div>
+                </form>
+
+        </div>
+    </div>
+</div>
+</div>
+<!-- end col-12 -->
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+
+<!-- ================== BEGIN PAGE LEVEL JS TABLE ================== -->
+<script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/data-table.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/inbox.demo.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+<script type="text/javascript">
+
+
+    function detalledeCompra(id) {
+        $.ajax({
+            url: "/config/obtenerDetalleCompra/", // the endpoint
+            type: "POST", // http method
+            data: {id: id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            success: function (data) {
+                $("#detalle").append(data);
+            },
+            error: function () {
+
+            },
+        });
+    }
+    function agregar(id) {
+        var fecha = $("#fecha").val();
+        var os = $("#ordenes").val();
+        var cliente = $("#cliente").val();
+        var pedido = $("#pedido").val();
+        var op = $("#op").val();
+        var maestro = $("#maestro").val();
+        var trabajo = $("#trabajo").val();
+        var observaciones = $("#observaciones").val();
+        var obj = $("#obj").val();
+         event.preventDefault();
+                add_div();
+
+        $.ajax({
+            url: "/ordenServicio/agregarOrdenServicio/", // the endpoint
+            type: "POST", // http method
+            data: {
+                fecha: fecha,
+                os: os,
+                cliente: cliente,
+                pedido: pedido,
+                op: op,
+                maestro: maestro,
+                trabajo: trabajo,
+                observaciones: observaciones,
+                obj: obj,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function (data) {
+                 $('#div-consultando').remove();
+                $(parent).remove();
+                alert("Se  agrego satisfactoriamente")
+                window.location.href = "/ordenServicio/ordenservicio/";
+            },
+            error: function () {
+
+            },
+        });
+    }
+    function eliminar(id, pk) {
+
+        $.ajax({
+            url: "/subordenproduccion/eliminarSubordenproduccion/", // the endpoint
+            type: "POST", // http method
+            data: {id: id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            success: function (data) {
+                alert("Se elimino el item satisfactoriamente");
+                window.location.href = "/subordenproduccion/subordenproduccion/" + pk + "/list";
+
+            },
+            error: function () {
+
+            },
+        });
+    }
+
+    function enviarBodega(id) {
+
+        $.ajax({
+            url: "/subordenproduccion/subordenproduccion/enviarBodega/", // the endpoint
+            type: "POST", // http method
+            data: {id: id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            success: function (data) {
+                alert("Se  envio a bodega satisfactoriamente")
+            },
+            error: function () {
+                alert("Verifique si ha terminado todas las etapas y si ha creado el producto")
+
+            },
+        });
+    }
+    function enviarBodegaCrudo(id, subopid) {
+
+        $.ajax({
+            url: "/subordenproduccion/subordenproduccion/enviarBodegaCrudo/", // the endpoint
+            type: "POST", // http method
+            data: {id: id, subopid: subopid, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            success: function (data) {
+                alert("Se  envio a bodega de productos en crudo satisfactoriamente")
+            },
+            error: function () {
+                alert("Verifique si ha terminado todas las etapas y si ha creado el producto")
+
+            },
+        });
+    }
+    function finalizar(id) {
+        var num_recetas = $('#columnas_receta').val();
+        var total = 0;
+        var cantidad = 0;
+        var i;
+        //alert(' BNUM RECETS'+num_recetas);
+        for (i = 1; i <= num_recetas; i++) {
+            if ($('#finalizada' + i).prop('checked')) {
+                total++;
+            }
+
+
+        }
+
+        if (total == num_recetas) {
+            window.location.href = "/inventario/producto/" + id + "/nuevo_orden_produccion";
+
+        } else {
+            alert("Debe finalizar todas las etapas")
+        }
+    }
+</script>
+<!-- ================== END PAGE LEVEL JS ================== -->
+{% if form.errors or form_mode == "update" %}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".modal").modal('toggle');
+    });
+
+
+    $(document).ready(function () {
+
+        var codigo = $("#id_codigo").val().length;
+        if (codigo < 1) {
+            $.ajax({
+                url: "/config/obtenerSecuencial/", // the endpoint
+                type: "POST", // http method
+                data: {id: 'cotizacionproforma', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function (data) {
+                    $('#id_codigo').val('00' + data);
+
+                },
+                error: function () {
+
+                },
+            });
+            // var fecha=new Date().toJSON().slice(0,10);
+            // $('#id_fecha').val(fecha);
+        } else {
+            // alert(codigo);
+
+        }
+
+    });
+
+</script>
+
+{% endif %}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        var codigo = $("#ordenes").val().length;
+        if (codigo < 1) {
+            $.ajax({
+                url: "/config/obtenerSecuencial/", // the endpoint
+                type: "POST", // http method
+                data: {id: 'ordenServicio', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function (data) {
+                    $('#ordenes').val('0' + data);
+
+                },
+                error: function () {
+
+                },
+            });
+            // var fecha=new Date().toJSON().slice(0,10);
+            // $('#id_fecha').val(fecha);
+        } else {
+            // alert(codigo);
+
+        }
+
+    });
+    function add_div() {
+            var div_externo = $('<div id="div-consultando" style="width: 100%; height: 100%; background-color: #191a1b; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1050; opacity: 0.8">');
+            var div_interno = $('<div class="progress progress-striped active" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, 50%); width: 50%">');
+            var progress = $('<div class="progress-bar progress-bar-inverse" style="width: 100%">Guardando...</div>');
+
+            div_interno.append(progress);
+            div_externo.append(div_interno);
+
+            div_externo.appendTo($('body'));
+
+        }
+
+
+</script>
+{% endblock %}

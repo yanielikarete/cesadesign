@@ -1,0 +1,84 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Rol de Pago - MUEDIRSA</title>
+</head>
+<style>
+
+    .head{
+        width: 100%;
+        text-align: center;
+        font-size: 8pt;
+
+
+    }
+     .head img{
+        width: 100%;
+        float: left;
+        font-size: 9pt;
+
+
+    }
+    #detail{
+        width: 100%;
+       font-size: 9pt;
+
+
+    }
+
+    .contenido{
+        width: 100%;
+
+    }
+
+    .contenido td{
+        text-align: left;
+        padding-top: 1px;
+        padding-left:5px;
+        padding-right:5px;
+        padding-bottom: -1px;
+
+    }
+    .contenido th{
+        text-align: center;
+        padding-top: 1px;
+        padding-left:5px;
+        padding-right:5px;
+        background-color: #EEEEEE;
+    }
+
+
+    .foot{
+        text-align: center;
+        font-size: 9pt;
+    }
+    @page {
+        /*size: 21.5cm 12cm;*/
+        size: a4 ;
+        margin: 0.5cm;
+
+    }
+    td{
+
+        vertical-align:middle;
+    }
+
+
+</style>
+<body>
+
+    <div id="detail" >
+
+
+    </div>
+     <div class="contenido">
+
+
+   {{ html |safe }}
+</div>
+
+
+</body>
+</html>

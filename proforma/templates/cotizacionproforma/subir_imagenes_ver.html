@@ -1,0 +1,210 @@
+
+  
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+        <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css'%}" rel="stylesheet" />
+  <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css'%}" rel="stylesheet" />
+   <link href="{% static 'color_admin/assets/plugins/isotope/isotope.css' %}" rel="stylesheet" />
+    <link href="{% static 'color_admin/assets/plugins/lightbox/css/lightbox.css' %}" rel="stylesheet" />
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Cotizacion Proforma{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+
+            <!-- begin row -->
+           <style>
+       .panel-border{border: 1px solid #ddd !important}
+       .form-ajust .form-group{margin-bottom: 0px !important}
+      input[type="text"],select,input[type="number"]
+      {
+
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    box-shadow: none;
+    font-size: 12px;
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+       }
+
+ .table2 {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+      display:table}
+
+.table2>tbody>tr>td, .table2>tbody>tr>th, .table2>tfoot>tr>td, .table2>tfoot>tr>th {
+    border-color: #e2e7eb;
+    padding: 1px 0px;
+}
+    
+ .table2>thead>tr>td, .table2>thead>tr>th {
+    border-color: #e2e7eb;
+    padding: 10px 5px;
+}
+    </style>
+    <style>
+    
+    .head{
+        width: 100%;
+        text-align: center;
+        
+    }
+    
+    .details{
+        width: 100%;
+        padding: 2px 0;
+      /* background-color: #fff;*/
+        
+    }
+    .contenido{
+        width: 100%;
+        padding: 2px 0;
+        
+    }
+    
+    td{
+        text-align: left;
+        padding: 3px 5px;
+        border:0;
+    }
+    th{
+        text-align: center;
+        padding: 3px 5px;
+        border:0;
+        /* background-color: #EEEEEE;*/
+    }
+    
+    .foot{
+        text-align: center;
+    }
+    
+      
+    @page {
+        /*size: a4 landscape;*/
+        margin: 1cm;
+        
+    }
+    
+    
+</style>
+
+  <form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+   {{ form.title.errors }}
+      <div class="row">
+                                            
+                                            <div class="panel panel-default panel-border">
+                                            <br />
+                                                <table border="0" class=" ">
+            <tr>
+                <th>Cliente:</th><td colspan="3"> {{ prof.cliente }}</td><th>Vendedor:</th><td colspan="3"> {{ prof.vendedor }}</td>
+            </tr>
+             <tr>
+              <th>Fecha:</th><td colspan="3"> {{ prof.fecha }}</td><th>Fecha Entrega:</th><td colspan="3"> {{ prof.fechapedido }}</td>
+
+            </tr>
+        </table>
+        <br/>
+        <table border="0" class="table table-bordered">
+            <tr>
+                <th>Cotizacion Proforma:</th>
+            
+                <td colspan="3">{{ prof.codigo }}</td>
+            </tr>
+             <tr>
+              <th>Producto:</th><td colspan="5">{{ detailprof.nombre }}</td>
+            </tr>
+            <tr>
+              <th>Detalle:</th> <td colspan="5">{{ detailprof.detalle }}</td>
+            </tr>
+            <tr>
+              <th>Medida:</th> <td colspan="5">{{ detailprof.medida }}</td>
+            </tr>
+        </table>
+                                                
+                                            </div>
+                                           
+                                             <a class="default btn btn-link" href="{% url 'cotizacion-ver' prof.id %}" ><button type="button" class="btn btn-primary btn-lg">  Regresar</button></a>
+
+                                        </div>
+            <div id="options" class="m-b-10">
+                <span class="gallery-option-set" id="filter" data-option-key="filter">
+                    <a href="#show-all" class="btn btn-default btn-xs active" data-option-value="*">
+                        Todos
+                    </a>
+                    
+                </span>
+            </div>
+            <div id="gallery" class="gallery">
+             {% if detalle %}
+                {% for orden in detalle %}
+                <div class="image gallery-group-1">
+                    <div class="image-inner">
+                        <a href="{{ orden.imagen.url }}" data-lightbox="gallery-group-1">
+                            {% if orden.imagen %}
+                                <img src={{ orden.imagen.url }} alt=""/>
+                            {% else %}
+                                <img src="{{ MEDIA_URL }}imagenes/producto/imagen_no_disponible.jpg" alt=""/>
+                            {% endif %}
+                        </a>
+                        <p class="image-caption">
+                            {{ orden.descripcion }}
+                        </p>
+                    </div>
+                    <div class="image-info">
+                        <h5 class="title">
+                           {{ orden.descripcion }}
+
+                        </h5>
+                        <div class="pull-right">
+                            &nbsp;
+                        </div>
+                        <div class="desc">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+              {% endif %}
+
+               
+            </div>
+              </form>
+
+{% endblock %}
+{% block javascript %}
+{{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL JS ================== -->
+    <script src="{% static 'color_admin/assets/plugins/isotope/jquery.isotope.min.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/lightbox/js/lightbox-2.6.min.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/gallery.demo.min.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+    <!-- ================== END PAGE LEVEL JS ================== -->
+    <script>
+        $(document).ready(function() {
+            Gallery.init();
+        });
+    </script>
+
+{% endblock %}

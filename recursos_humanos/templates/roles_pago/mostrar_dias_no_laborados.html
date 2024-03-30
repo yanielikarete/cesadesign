@@ -1,0 +1,415 @@
+
+<form class="form-horizontal" action="/recursos_humanos/guardarDiasNoLaborados/" name="diasForm" method="POST" id="registrar_dia">
+    <input type="hidden" value="" name="tipo_guardar_ingreso" id="tipo_ingreso_id">
+    <input type="hidden" value="" name="quincena" id="quincena_id">
+    <input type="hidden" value="" name="mes" id="mes_id">
+    <input type="hidden" value="" name="anio" id="anio_id">
+    <input type="hidden" value="RPQ" name="tipo_rol" id="tipo_rol_id">
+    <input type="hidden" value="None" name="tipo_contrato_persona" id="tipo_contrato_persona">
+        <input type="hidden" value="{{ sueldo.valor_mensual }}" name="sueldo" id="sueldo">
+
+
+	<div class="alert alert-danger hide" id="msj_error_ingresos"></div>
+	
+	<div class="panel panel-default">
+	    <div class="panel-heading">
+	        <h3 class="panel-title"><i class="ico-user mr5"></i>Datos del Empleado</h3>
+	    </div>
+	    <div class="panel-body">
+	        <div class="row">
+				<strong class="col-md-2 col-sm-2"> Nombre: &nbsp;</strong>
+				<div class="col-md-10 col-sm-10">{{ empleados.nombre_empleado}}</div>
+			</div>
+			<div class="row">
+				<strong class="col-md-2 col-sm-2"> Cedula: </strong>
+				<div class="col-md-4 col-sm-4">{{ empleados.cedula_empleado}}</div>
+				<strong class="col-md-3 col-sm-3"> Fecha de Ingreso:</strong>
+				<div class="col-md-3 col-sm-3">{{ empleados.fecha_ini}}</div>
+			</div>
+       <div class="row">
+        <strong class="col-md-2 col-sm-2"> Sueldo: </strong>
+        <div class="col-md-4 col-sm-4">{{ sueldo.valor_mensual }}</div>
+        <strong class="col-md-3 col-sm-3"></strong>
+        <div class="col-md-3 col-sm-3"></div>
+      </div>
+	    </div>
+	</div>
+    
+	<div class="panel panel-default-grey">
+	    <div class="panel-heading">
+	        <h3 class="panel-title">Detalles Dias No Laborados</h3>
+	    </div>
+	    <div class="panel-body">
+	        <div class="ingresos">
+				<table style="background-color: white" class="table table-bordered" id="tabla_otros_dias">
+					<thead>
+						<tr>
+							<th width="25px"></th>
+							<th width="140px"><b>Tipo</b></th>
+							<th width="80px"><b>Dias/Horas</b></th>
+              <th width="80px"><b>Valor</b></th>
+              <th width="80px"><b>Cargar vacaciones</b></th>
+			  <th width="80px"><b>Motivo</b></th>
+						<!-- 	<th width="80px"><b>Fecha Salida</b></th> -->
+
+						</tr>
+					</thead>
+					<tbody id="tdetalle_ingreso">
+
+                                                  {% if detalle %}
+                                                    {% for kit  in detalle %}
+
+                                                  <tr>
+                                                    <td class="eliminar"><a class="btn btn-danger remove_fields" onclick="eliminar_dias({{kit.id}})">
+                                                        <i class=" glyphicon glyphicon-trash icon-white"></i>
+                                                      </a>
+                                                    </td>
+                                                     <td ><select name="tipos_kits{{ forloop.counter }}" id="tipos_dias_kits{{ forloop.counter }}" onchange="actualizarValorDias({{ forloop.counter }})">
+                                                         {% for am  in tipos %}
+                                                           <option value="{{ am.id }}"
+                                                           {% if kit.tipo_ausencia_id == am.id %}
+                                                           selected="selected"
+                                                           {% endif %}
+                                                           > {{ am.nombre }}</option>
+                                                        {% endfor %}
+                                                     </select>
+                                                    </td>
+                                                    <td>
+                                                    <input type="hidden" class="form-control" id="id_detalle{{ forloop.counter }}" name="id_detalle{{ forloop.counter }}" value="{{ kit.id }}"/>
+                                                    <input type="text" class="form-control" id="dias_kits{{ forloop.counter }}" name="dias_kits{{ forloop.counter }}" value="{{ kit.dias |floatformat:2 }}"  onkeyup="actualizarValorDias({{ forloop.counter }})"/>
+                                                 </td>
+                                                 <td>
+
+                                                    <input type="text" class="form-control" id="valor_dias_kits{{ forloop.counter }}" name="valor_kits{{ forloop.counter }}" value="{{ kit.valor |floatformat:2 }}"/>
+                                                 </td>
+                                                  <td>
+                                                   <input  class="form-control"  type="checkbox" id="vacaciones{{ forloop.counter }}" name="vacaciones{{ forloop.counter }}"
+                                                   {% if kit.cargar_vaciones%}
+                                                           checked="checked"
+                                                           {% endif %}
+
+
+                                                   />
+
+                                                 </td>
+												  
+												  
+												   <td>
+                                                   <textarea  class="form-control" id="motivo{{ forloop.counter }}" name="motivo{{ forloop.counter }}">
+                                                  {{ kit.motivo }}
+
+
+                                                  </textarea>
+
+                                                 </td>
+
+                                                  <!--   <td><input type="date" class="form-control" id="fecha_salida_kits{{ forloop.counter }}" name="fecha_salida_kits{{ forloop.counter }}" value="{{ kit.fecha_salida }}"/></td>
+                                                 -->
+
+                                                  </tr>
+                                                        {% endfor %}
+                                                   {% else %}
+                          <tr>
+                                                    <td class="eliminar"><a class="btn btn-danger remove_fields">
+                                                        <i class=" glyphicon glyphicon-trash icon-white"></i>
+                                                      </a>
+                                                    </td>
+
+                                                       <td ><select name="tipos_kits1" id="tipos_dias_kits1" onchange="actualizarValorDias(1)">
+                                                         {% for am  in tipos %}
+                                                           <option value="{{ am.id }}"> {{ am.nombre }}</option>
+                                                        {% endfor %}
+                                                     </select>
+                                                    </td>
+                                                  <td>
+
+                                                    <input type="text" class="form-control" id="dias_kits1" name="dias_kits1"  onkeyup="actualizarValorDias(1)"/>
+                                                 </td>
+                                                  <td>
+
+                                                    <input type="text" c id="valor_dias_kits1" name="valor_kits1" />
+                                                 </td>
+                                                 <td>
+
+                                                    <input type="checkbox" id="vacaciones1" name="vacaciones1" class="form-control"/>
+                                                 </td>
+                                                   <!--  <td><input type="date" class="form-control" id="fecha_salida_kits1" name="fecha_salida_kits1" /></td> -->
+<td>
+ <textarea  class="form-control" id="motivo1" name="motivo1"></textarea>
+                                                 </td>
+
+                                                  </tr>
+
+                                                   {% endif %}
+
+
+					</tbody>
+				</table>
+				<br>
+				 <p class="text-center">
+                                             <button type="button" class="btn btn-primary btn-lg" id="addD">Agregar Dias</button>
+
+
+                                        </p>
+<input type="hidden" name="empleado_otro_dia" id="empleado_otro_dia" value="{{ empleados.empleado_id}}" />
+<input type="hidden" name="fila" id="fila" value="{{ fila }}" />
+
+				 {% if detalle %}
+<input type="hidden" name="columnas_receta_dias" id="columnas_receta_dias" value="{{ detalle|length }}" />
+{% else %}
+<input type="hidden" name="columnas_receta_dias" id="columnas_receta_dias" value="1" />
+
+{% endif %}
+<input type="hidden" name="anio" id="anio" value="{{ anio }}" />
+<input type="hidden" name="mes" id="mes" value="{{ mes }}" />
+<input type="hidden" name="quincena" id="quincena" value="{{ quincena }}" />
+			</div>
+	    </div>
+	</div>
+                                    <button type="submit" class="btn btn-primary btn-lg" id="btn_guardar_eresos"><i class="fa fa-cog"></i> Guardar</button>
+
+
+</form>
+				 </div>
+							                </div>
+							            </div>
+							        </div>
+							    </div>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        
+        $("#addD").click(function(){
+	    //alert('entro');
+            
+            var num_recetas=$('#columnas_receta_dias').val();
+            num_recetas=parseInt(num_recetas)+1;
+            //alert(num_recetas);
+            var tds=$("#tabla_otros_dias tr:first td").length;
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla_otros_dias tr").length;
+            var nuevaFila='<tr><td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+             nuevaFila+='<td><select class="form-control" id="tipos_dias_kits'+num_recetas+'" name="tipos_kits'+num_recetas+'"> ';
+                                    {% for am  in tipos %}
+                      nuevaFila+='<option value="{{ am.id }}"> {{ am.nombre }}</option>';
+
+                                  {% endfor %}
+              nuevaFila+='</select></td>';
+
+                nuevaFila+='<td><input type="text"  class="form-control" id="dias_kits'+num_recetas+'" name="dias_kits'+num_recetas+'" onkeyup="actualizarValorDias('+num_recetas+')"></td>';
+                nuevaFila+='<td><input type="text"  class="form-control" id="valor_dias_kits'+num_recetas+'" name="valor_kits'+num_recetas+'" ></td>';
+                nuevaFila+='<td><input type="checkbox"  class="form-control" id="vacaciones'+num_recetas+'" name="vacaciones'+num_recetas+'" ></td>';
+				nuevaFila+='<td><textarea class="form-control" id="motivo'+num_recetas+'" name="motivo'+num_recetas+'" ></textarea></td>';
+
+                // nuevaFila+='<td><input type="date"  class="form-control" id="fecha_salida_kits'+num_recetas+'" name="fecha_salida_kits'+num_recetas+'" ></td>';
+
+                nuevaFila+='</tr>';
+
+              $('#columnas_receta_dias').val(num_recetas);
+        
+            $("#tabla_otros_dias").append(nuevaFila);
+        });
+
+        /**
+         * Funcion para eliminar la ultima columna de la tabla.
+         * Si unicamente queda una columna, esta no sera eliminada
+         */
+        $("#del").click(function(){
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla_otros_dias tr").length;
+            if(trs>1)
+            {
+                // Eliminamos la ultima columna
+                $("#tabla_otros_dias tr:last").remove();
+            }
+        });
+
+
+        $(document).on("click",".eliminar",function(){
+            var parent = $(this).parent();
+  $(parent).remove();
+          });
+
+    });
+    </script>
+    <script>
+            $(function() {
+                $("#registrar_dia").on("submit", function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                        url: $(this).attr("action"),
+                        type: 'POST',
+                        data: $(this).serialize(),
+                        beforeSend: function() {
+                            $("#message").html("sending...");
+                        },
+                        success: function(data) {
+                            $("#message").hide();
+                            $("#response").html(data);
+
+                              actualizarOtrosDias();
+                            $("#dlgDias").modal('toggle');
+                        }
+                    });
+                });
+            });
+  function actualizarOtrosDias(){
+      var num_recetas=$('#columnas_receta_dias').val();
+
+      var fila=$('#fila').val();
+      var total=0;
+      var cantidad=0;
+      var descuento=0;
+      var porcentaje_descuento=0;
+      var totalidad=0;
+      var valor=0;
+      var i;
+      var total_valor=0;
+      var vacaciones=0;
+      var faltas_justificadas=0;
+      var faltas_injustificadas=0;
+       var monto_faltas_justificadas=0;
+      var monto_faltas_injustificadas=0;
+      var monto_vacaciones=0;
+      var totalidad_injustificadas=0;
+      var tipo=0;
+
+      for (i = 1; i <= num_recetas; i++) {
+          if ($('#dias_kits'+i).val()){
+              cantidad=$('#dias_kits'+i).val();
+              valor=$('#valor_dias_kits'+i).val();
+              vacaciones=$('#vacaciones'+i).val();
+              tipo=$('#tipos_dias_kits'+i).val();
+
+              if($('#vacaciones'+i).is(':checked')){
+                  }else{
+                        if (tipo=='3'){
+                          faltas_injustificadas+=cantidad;
+                          monto_faltas_injustificadas+=valor;
+
+                        }else{
+                            if (tipo=='1'){
+                                      vacaciones+=cantidad;
+                                      monto_vacaciones+=valor;
+
+                                    }else{
+                                      faltas_justificadas+=cantidad;
+                                      monto_faltas_justificadas+=valor;
+
+                                    }
+
+                        }
+                  }
+
+                total=parseFloat(total)+parseFloat(cantidad);
+                total_valor=parseFloat(total_valor)+parseFloat(valor);
+
+          }
+
+
+
+      }
+      totalidad=(240-total)/8;
+      totalidad_injustificadas=(240-faltas_injustificadas)/8;
+
+      $('#id_pago_'+fila+'_dias').val(totalidad_injustificadas);
+$('#id_pago_'+fila+'_dias_valor').val(monto_faltas_injustificadas);
+$('#id_pago_'+fila+'_valor_total_dias').val(total_valor);
+      $('#id_pago_'+fila+'_valor_permisos').val(monto_faltas_justificadas);
+      $('#id_pago_'+fila+'_valor_vacaciones').val(monto_vacaciones);
+       ingreso=$('#id_pago_'+fila+'_ingreso').val();
+       egreso=$('#id_pago_'+fila+'egreso_neto').val();
+      // alert(monto_faltas_injustificadas);
+       if (monto_faltas_injustificadas>0){
+        ingreso=parseFloat(ingreso)-parseFloat(monto_faltas_injustificadas);
+        $('#id_pago_'+fila+'_total').val(ingreso.toFixed(2));
+
+       }
+
+
+       if (monto_faltas_justificadas>0){
+        egreso=parseFloat(egreso)+parseFloat(monto_faltas_justificadas);
+        $('#id_pago_'+fila+'_total_egresos').val(egreso.toFixed(2));
+	
+
+       }
+actualizarTotal();
+
+//add_div();
+      seleccionarEmpleados();
+	  
+    }
+    function actualizarValorDias(i){
+
+var tipos=$('#tipos_dias_kits'+i).val();
+var horas=parseFloat($('#dias_kits'+i).val());
+var sueldo=parseFloat($('#sueldo').val());
+var total=0;
+//alert("entro");
+//alert(tipos);
+           if (horas>0){
+               if (tipos==3){
+            total=(sueldo/240)*horas*2;
+
+            }
+             if (tipos==1  || tipos==2  ){
+          total=(sueldo/240)*horas;
+
+            }
+			if (tipos==7  ){
+          total=(sueldo/240)*horas;
+
+            }
+           // alert(total);
+            $("#valor_dias_kits"+i).val(total.toFixed(2));
+           }
+
+
+    }
+
+
+   function eliminar_dias(id){
+                var fila=id
+
+
+
+            var parametros = {
+                'id':fila,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+
+            }
+
+            $.ajax({
+                    url: "/recursos_humanos/eliminarDetalleDias/",
+                    type: "POST",
+                    async: true,
+                    data: parametros,
+                    success: function(data){
+						$("#dlgDias").modal('toggle');
+                        alert('Se elimino satisfactoriamente');
+
+                        actualizarTotal();
+						//add_div();
+						 
+      seleccionarEmpleados();
+                    },
+                    complete: function(){
+                    }
+                });
+    }
+       function add_div() {
+            var div_externo = $('<div id="div-consultando" style="width: 100%; height: 100%; background-color: #191a1b; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1050; opacity: 0.8">');
+            var div_interno = $('<div class="progress progress-striped active" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, 50%); width: 50%">');
+            var progress = $('<div class="progress-bar progress-bar-inverse" style="width: 100%">Guardando...</div>');
+
+            div_interno.append(progress);
+            div_externo.append(div_interno);
+
+            div_externo.appendTo($('body'));
+
+        }
+
+        </script>

@@ -1,0 +1,163 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>ORDEN DE EGRESO - MUEDIRSA</title>
+</head>
+<style>
+     .head{
+        width: 100%;
+        text-align: center;
+        font-size: 12pt;
+
+    }
+
+    #detail{
+        width: 100%;
+     font-size: 12pt;
+     letter-spacing: 2px
+    }
+
+    .contenido{
+        width: 100%;
+        padding: 2px 0;
+        font-size: 12pt;
+        letter-spacing: 2px;
+
+    }
+
+    .contenido td{
+        padding: 0px 0px;
+                text-align: center;
+        letter-spacing: 2px;
+        font-size: 12pt;
+    }
+    .foot table td{
+        letter-spacing: 2px;
+        font-size: 12pt;
+    }
+    .valores{
+            text-align: right !important;
+        padding: 0px 5px;
+       font-size: 12pt;
+        margin: 0;
+    }
+
+    .foot{
+        text-align: center;
+        letter-spacing: 2px;
+    }
+    h1{
+        line-height: 1px;
+        width: 700px;
+        text-align: center;
+        font-size: 12pt;
+        letter-spacing: 2px;
+    }
+    h3{
+        line-height: 2px;
+        letter-spacing: 2px;
+    }
+
+    .foot{
+        text-align: left;
+        letter-spacing: 2px;
+        width: 100%;
+        font-size: 7pt;
+    }
+   .borde-tabla{
+       border: 1px solid black;
+   }
+
+</style>
+
+<body>
+
+
+     <div class="head" style="width: 100%">
+        <b> MUEDIRSA-ORDEN DE EGRESO NO.{{egresopororden.codigo}} </b>
+    </div>
+    {% if egresopororden %}
+
+        <div id="detail" >
+   <b>ORDEN:</b>
+
+                    <span>{{egresopororden.codigo}}</span>
+                    <br>
+                    <b>FECHA:</b>
+
+                    <span>{{egresopororden.fecha |date:'d-m-Y H:i'}}</span>
+                    <br>
+        <b>CONCEPTO:</b>
+
+                    <span>{{ordenegreso.notas}}</span>
+                    <br>
+                    <b>REQUISICION:</b>
+
+                    <span>{{ordenegreso.codigo}}</span>
+         <br>
+                    <b>BOD INTERNA:</b>
+
+                    <span>{{ordenegreso.bodega}}</span>
+
+   </div>
+
+
+  <div class="contenido">
+                <table id="datatable" border="0" style="font-size:12px; margin-bottom: 8px;  font-family: 'Lucida Console'" cellpadding="0" cellspacing="0" width="100%">
+
+            <thead>
+                <tr>
+                    <th class="borde-tabla">ITEMS</th><th width="250px" class="borde-tabla"> DESCRIPCION</th><th class="borde-tabla">UNIDADES</th><th class="borde-tabla">COSTO</th><th class="borde-tabla">SUBTOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                 {% if detalle %}
+                                                    {% for kit  in detalle %}
+    <tr>
+
+                                                    <td>  {{ kit.producto.codigo_producto }}</td>
+                                                    <td style=" text-align: left;">{{ kit.producto.descripcion_producto }}</td>
+                                                    <td class="valores">{{ kit.cantidad |floatformat:2  }} {{ kit.unidad_medida }}</td>
+                                                    <td class="valores">{{ kit.precio_compra |floatformat:2  }}</td>
+                                                    <td class="valores">{{ kit.total |floatformat:2  }}</td>
+
+                                                  </tr>
+
+                         {% endfor %}
+                         {% else %}
+                          {% endif %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" ></td><td><b>TOTAL</b></td><td class="valores">{{ordenegreso.subtotal |floatformat:2 }}</td>
+                </tr>
+            </tfoot>
+        </table>
+
+    </div>
+
+       <div class="foot" style="font-size: 10pt;">
+        <br>
+        <pre>
+
+       <table border="0"  width="100%">
+
+            <tr><td>ELABORADO POR </td>  <td>REVISADO POR </td> <td>APROBADO POR  </td></tr>
+       <tr> <td>___________________ </td>  <td>___________________  </td>  <td>___________________  </td> </tr>
+     <tr><td>{{egresopororden.created_by}}   </td>  <td>Jefe de Produccion  </td>  <td>Gerente de Produccion </td>  </tr>
+    </table>
+        </pre>
+    </div>
+    {% else %}
+    <div>No tiene Orden de Egreso</div>
+   {% endif %}
+
+</body>
+<div class="noPrint">
+        <a download="egreso_orden_egreso.xls" href="#" onclick="return ExcellentExport.excel(this, 'detalle', 'Sheet Name Here');"><button type="button" class="btn btn-primary btn-lg">  Exportar</button></a>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,237 @@
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+{% load staticfiles %}
+
+{% block css %}
+{{ block.super }}
+{% endblock %}
+
+{% block section_title %}Rol Global {% endblock %}
+{% block section_subtitle %}
+<br />
+<style type="text/css">
+	table td{
+		padding: 2px;
+	}
+	table th{
+		padding: 2px;
+	}
+</style>
+ <div class="email-btn-row hidden-xs">
+                    </div>
+
+                    {% endblock %}
+
+{% block content %}
+				<!-- begin col-12 -->
+				<div class="col-md-12">
+					<!-- begin panel -->
+					<div class="panel panel-inverse">
+						<div class="panel-heading">
+							<div class="panel-heading-btn">
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+							</div>
+							<h4 class="panel-title">Reporte:</h4>
+						</div>
+						<div class="panel-body">
+							<div class="table-responsive">
+
+<a download="rol_pago_mensual.xls"  style="float: right;" href="#" onclick="return ExcellentExport.excel(this, 'detalle', 'Sheet Name Here');"><button type="button" class="btn btn-primary btn-lg">  Exportar</button></a>
+<h2>Resultados</h2>
+<table id="detalle" class="table" border="1"   aria-describedby="data-table_info">
+<thead>
+<tr><td colspan="36" style="text-align: center"><h3>MUEBLES Y DIVERSIDADES MUEDIRSA S.A.<br />
+RUC : 0992128372001<br />
+ROL DE PAGOS GENERAL<br />
+PERIODO : DEL 01 AL 31 DE
+
+    {%  if mes == 1%}
+          ENERO
+    {% endif %}
+    {%  if mes == 2%}
+          FEBRERO
+    {% endif %}
+      {%  if mes == 3%}
+          MARZO
+    {% endif %}
+    {%  if mes == 4%}
+          ABRIL
+    {% endif %}
+      {%  if mes == 5%}
+          MAYO
+    {% endif %}
+    {%  if mes == 6%}
+          JUNIO
+    {% endif %}
+
+    {%  if mes == 7%}
+          JULIO
+    {% endif %}
+    {%  if mes == 8%}
+          AGOSTO
+    {% endif %}
+      {%  if mes == 9%}
+          SEPTIEMBRE
+    {% endif %}
+    {%  if mes == 10%}
+          OCTUBRE
+    {% endif %}
+      {%  if mes == 11%}
+          NOVIEMBRE
+    {% endif %}
+    {%  if mes == 12%}
+          DICIEMBRE
+    {% endif %}
+
+  DE   &nbsp; {{ anio }}
+
+
+</h3>
+
+</td></tr>
+<tr>
+<th rowspan="3">No.</th>
+<th rowspan="3">TRABAJADOR</th>
+    <th  rowspan="3">N. DE CEDULA</th>
+    <th  rowspan="3">DEPARTAMENTO</th>
+    <th  rowspan="3">CARGO</th>
+     <th  rowspan="3">FECHA DE ENTRADA</th>
+    <th rowspan="3">FECHA DE <BR /> SALIDA</th>
+     <th  rowspan="3">ACUM. <BR />DECIMOS</th>
+     <th  rowspan="3">RECIBE F <BR />RESERVA</th>
+    <th  rowspan="3">ACUM. F <BR />RESERVA</th>
+    <th  rowspan="3">DIAS <BR />DEL <BR> MES</th>
+<th  rowspan="3">SUELDO <BR>BASICO</th>
+
+    <th  rowspan="3">DIAS <BR> LAB</th>
+    <th colspan="15" style="text-align: center">INGRESOS</th>
+<th  rowspan="3"  style="text-align: center">TOTAL<BR> INGRESOS</th>
+
+    <th colspan="15"  style="text-align: center" ROWSPAN="2">EGRESOS</th>
+<th  rowspan="3"  style="text-align: center">TOTAL<BR> EGRESOS</th>
+    <th  rowspan="3">LIQUIDO<BR> A RECIBIR</th>
+<th  rowspan="3">FORMA DE PAGO</th>
+
+     <th  rowspan="3">DIAS <BR> LAB</th>
+     <th  colspan="2" rowspan="2">SUELDOS Y GRATIFICACIONES</th>
+<th  rowspan="3">TOTAL INGRESOS BASE IESS</th>
+    <th colspan="4" rowspan="2">PROVISION DE BENEFICIOS SOCIALES</th>
+    <th rowspan="3">TOTAL BENEFICIOS SOCIALES</th>
+
+</tr>
+<tr>
+    <th colspan="5"  style="text-align: center">SUELDOS Y GRATIFICACIONES</th>
+    <th colspan="3"  style="text-align: center">HORAS EXTRAS</th>
+    <th rowspan="2"  style="text-align: center">TOTAL INGRESOS BASE IESS</th>
+    <th colspan="6"  style="text-align: center">BENEFICIOS SOCIALES</th>
+    </tr>
+<tr>
+    <th>SUELDO BASICO	</th>
+    <th>VACACIONES Y/O LICENCIAS</th>
+<th>COMISIONES	</th>
+    <th>BONIFICACIONES</th>
+     <!--<th>OTROS INGRESOS</th>-->
+<th>ALIMENTACION Y TRANSP</th>
+    <th>HORAS SUPLEMENTARIAS</th>
+    <th>HORAS EXTRA SABADOS</th>
+    <th>HORAS EXTRA DOM Y FERIADOS</th>
+
+<th>DECIMO TERCERO</th>
+    <th>	DECIMO CUARTO</th>
+    <th>	FONDO RESERVA</th>
+    <th>	MOVILIZACION ADICIONAL</th>
+    <th>	I R ASUMIDOS</th>
+    <th>  IESS ASUMIDOS</th>
+
+
+    <th>I.E.S.S. 9.45%</th>
+<th>	ANTICIPO SEMANAL</th>
+<th>	ANTICIPO QUINCENA</th>
+<th>	R.F. IMPUESTO A LA RENTA</th>
+<th>	NC IESS CONYUGE</th>
+<th>PRESTAMOS QUIROGRAFARIOS</th>
+<th>PRESTAMOS HIPOTECARIOS</th>
+<th>	RETENCIONES JUDICIALES (PATERNIDAD)</th>
+<th>	ANTICIPO FUNCIONARIOS</th>
+<th>	CONVENIO CELULARES</th>
+<th>	PRESTAMOS INTERNOS</th>
+<th>	MULTAS	</th>
+<th>CONSUMO ALIMENTOS	</th>
+<th>PERMISOS</th>
+<th>OTROS</th>
+<th>SUELDO DEL MES</th>
+    <th>GRATIFICACIONES</th>
+    <th>DECIMO TERCERO</th>
+    <th>DECIMO CUARTO</th>
+	<th>VACACIONES</th>
+    <th>FONDO RESERVA</th>
+    <th>IESS PATRONAL</th>
+    </tr></thead>
+<tbody>
+
+    </tr></thead>
+<tbody>
+
+
+{{ html |safe }}
+
+</tbody>
+	<tfoot>
+<tr>
+	<td colspan="4">--------------<br/> ELABORADO POR <br />RRHH</td>
+	<td colspan="4">--------------<br/> REVISADO POR <br />CONTADOR</td>
+	<td colspan="4">--------------<br/> REVISADO POR <br />GERENTE ADMINISTRATIVO</td>
+	<td colspan="4">--------------<br/> APROBADO POR <br />GERENTE DE PRODUCCION</td>
+</tr>
+	</tfoot>
+</table>
+
+						</div>
+					</div>
+
+				</div>
+				<!-- end col-12 -->
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+
+
+<script src="{% static 'color_admin/assets/js/excellentexport.js' %}" type="text/javascript"></script>
+
+	<script type="text/javascript">
+
+
+	function consultar(){
+		var vendedor=$("#vendedor").val();
+		var fechainicial=$("#fechainicial").val();
+		var fechafin=$("#fechafin").val();
+
+          $.ajax({
+                url: "/reporte/obtenerDiarioVentas/", // the endpoint
+                type : "POST", // http method
+                data : { vendedor : vendedor,fechainicial : fechainicial,fechafin : fechafin,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+                $("#detalle tbody tr").remove();
+                  $("#detalle").append(data);
+                },
+                error: function(){
+
+                },
+              });
+    }
+	</script>
+	<!-- ================== END PAGE LEVEL JS ================== -->
+	{% if form.errors or form_mode == "update" %}
+	<script type="text/javascript">
+		$( document ).ready(function() {
+		    $(".modal").modal('toggle');
+		});
+
+	</script>
+	{% endif %}
+{% endblock %}
+

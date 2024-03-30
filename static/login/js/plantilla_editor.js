@@ -1,0 +1,1 @@
+(function($) {$(document).ready(function(){$('#id_plantilla').cleditor({height:530,width:700});});})(django.jQuery);

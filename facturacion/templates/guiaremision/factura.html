@@ -1,0 +1,484 @@
+  {% extends "login/base_nuevo.html" %}
+  {% load staticfiles %}
+
+  {# Load the tag library #}
+  {% load bootstrap3 %}
+
+  {# Load CSS and JavaScript #}
+  {% bootstrap_javascript %}
+
+  {# Display django.contrib.messages as Bootstrap alerts #}
+  {% bootstrap_messages %}
+
+  {% block css %}
+  {{ block.super }}
+  <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+  <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+  <!-- ================== END PAGE LEVEL STYLE ================== -->
+  {% endblock %}
+
+  {% block section_title %}Guia de Remisi&oacute;n{% endblock %}
+  {% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+  {% block content %}
+  <style>
+  .panel-border{border: 1px solid #ddd !important}
+  .form-ajust .form-group{margin-bottom: 0px !important}
+  input[type="text"],select,input[type="number"]
+  {
+
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    box-shadow: none;
+    font-size: 12px;
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+  }
+.table2 {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+  display:table}
+
+  .table2>tbody>tr>td, .table2>tbody>tr>th, .table2>tfoot>tr>td, .table2>tfoot>tr>th, .table2>thead>tr>td, .table2>thead>tr>th {
+    border-color: #e2e7eb;
+    padding: 10px 15px;
+  }
+
+
+  </style>
+  {% if mensaje %}
+  <div class="alert alert-success alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    {{ mensaje }}
+
+  </div>
+  {% else %}
+  {% endif %}
+  <form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+    <!-- begin row -->
+    <div class="row">
+      <!-- begin col-6 -->
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Guia Remision</h3>
+          </div>
+          <div class="panel-body">
+            <div class="col-md-10">
+              <div>
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                  <li role="presentation" class="active"><a href="#principales" aria-controls="principales" role="tab" data-toggle="tab">Documento</a></li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                  <div role="tabpanel" class="tab-pane fade in active" id="principales">
+                    <!--INICIO ORDEN PRODUCCION-->
+
+                    <div class="row">
+                      <div class="col-md-12">
+                      <div class="panel panel-default panel-border">
+                        <div class="panel-heading">Documento</div>
+                        <div class="panel-body">
+
+                          <div class="col-md-4">
+                            <label for="id_nro_guia">Numero</label>
+                            {% bootstrap_field guiaremision_form.nro_guia show_label=False %}
+
+                          </div>
+                          
+                          <div class="col-md-4">
+                            <label for="id_fecha_inicio">Fecha Inicio Traslado</label>
+                            {% bootstrap_field guiaremision_form.fecha_inicio show_label=False%}
+                          </div>
+                          <div class="col-md-4">
+                            <label for="id_fecha_fin">Fecha Fin Traslado</label>
+                            {% bootstrap_field guiaremision_form.fecha_fin show_label=False%}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                    <div class="col-md-12">
+                      <div class="panel panel-default panel-border">
+                        <div class="panel-heading">Datos Comprobante</div>
+                        <div class="panel-body">
+
+                          <div class="col-md-3">
+                            <label for="id_tipo_documento">Tipo Documento</label>
+                            {% bootstrap_field guiaremision_form.tipo_documento show_label=False %}
+                          </div>
+                          <div class="col-md-3">
+                            <label for="id_fecha_emision">Fecha Emision</label>
+                            {% bootstrap_field guiaremision_form.fecha_emision show_label=False%}
+                          </div>
+                         
+                          <div class="col-md-6">
+                            <label for="id_motivo_traslado">Motivo Traslado</label>
+                            {% bootstrap_field guiaremision_form.tipo_guia show_label=False%}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+
+
+                    <div class="col-md-12">
+                      <div class="panel panel-default panel-border">
+                        <div class="panel-heading">Datos Principales</div>
+                        <div class="panel-body">
+
+                          <div class="form-horizontal form-ajust">
+                            <div class="form-group">
+                           <label for="id_vehiculo" class="col-sm-3 control-label">Puntos de Venta</label>
+                           <div class="col-sm-6">
+                             {% bootstrap_field guiaremision_form.puntos_venta show_label=False %}
+                           </div>
+
+                         </div>
+                               <div class="form-horizontal form-ajust">
+                               <div class="form-group">
+                           <label for="id_bodega" class="col-sm-3 control-label">Bodega</label>
+                           <div class="col-sm-6">
+                             {% bootstrap_field guiaremision_form.bodega show_label=False %}
+                           </div>
+
+                         </div>
+                            <div class="form-group">
+                             <label for="id_cliente" class="col-sm-3 control-label">Cliente</label>
+
+                             <div class="col-sm-6">
+                              {% bootstrap_field guiaremision_form.cliente show_label=False %}
+
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+
+                           <label for="id_vehiculo" class="col-sm-3 control-label">Vehiculo</label>
+                           <div class="col-sm-6">
+                             {% bootstrap_field guiaremision_form.vehiculo show_label=False %}
+                           </div>
+
+                         </div>
+                         <div class="form-group">
+                           <label for="id_chofer" class="col-sm-3 control-label">Chofer</label>
+                           <div class="col-sm-6">
+                            {% bootstrap_field guiaremision_form.chofer show_label=False %}
+                          </div>
+
+                        </div>
+                        <div class="form-group">
+                         <label for="id_partida" class="col-sm-3 control-label">Partida</label>
+                         <div class="col-sm-6">
+                          {% bootstrap_field guiaremision_form.partida show_label=False %}
+
+                        </div>
+                      </div>
+                      <div class="form-group">
+                       <label for="id_destino" class="col-sm-3 control-label">Destino</label>
+                       <div class="col-sm-6">
+                        {% bootstrap_field guiaremision_form.destino show_label=False %}
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+            </div>
+                    </div>
+                  </div>
+                </div></div>
+
+             <div class="col-md-2">
+    <div class="row">
+
+
+      <p class="text-center">
+        <a href="/facturacion/imprimir/{{ guiaremision.guia_id }}/">
+                  <button type="button" class="btn btn-default btn-block">Imprimir <i class=" glyphicon glyphicon-print icon-white"></i></button>
+
+        </a>
+      </p>
+
+    </div>
+
+  </div>
+
+
+                  </div>
+
+
+                               <button type="button" class="btn btn-primary" data-toggle="modal" onclick="op_ad()">Productos</button>
+
+         <div class="panel-body">
+            <div class="col-md-12">
+           <div class="row">
+            <div class="col-md-12">
+              <div class="panel panel-default panel-border">
+                <!-- Default panel contents -->
+                <div class="panel-heading">Productos</div>
+                <div class="panel-body">
+
+                <!-- Table -->
+                <table class="table2 table-striped table-bordered" id="tabla" >
+                  <tr>
+                    <th></th>
+                    <th>Item</th>
+                    <th>Descripcion</th>
+
+                    <th style="width:120px">Cantidad</th>
+                  </tr>
+
+                  {% if detalle %}
+                  {% for kit  in detalle %}
+                  <tr>
+                    <td class="eliminar"><a class="btn btn-danger remove_fields">
+                      <i class=" glyphicon glyphicon-trash icon-white"></i>
+                    </a>
+
+                    <input type="hidden" class="form-control" id="id_detalle{{ forloop.counter }}" name="id_detalle{{ forloop.counter }}" value="{{ kit.detalle_id }}"/>
+                    <input type="hidden" class="form-control" id="id_kits{{ forloop.counter }}" name="id_kits{{ forloop.counter }}" value="{{ kit.producto.producto_id }}"/>
+                      <input type="hidden" class="form-control" id="bodega_kits{{ forloop.counter }}" name="bodega_kits{{ forloop.counter }}" value="{{ kit.bodega_id }}"/>
+                      <input type="hidden" class="form-control" id="documento_kits{{ forloop.counter }}" name="documento_kits{{ forloop.counter }}" value="{{ kit.nro_documento }}"/>
+                    </td>
+                  <!--<td><input type="text" class="form-control" id="codigo_kits{{ forloop.counter }}" name="codigo_kits{{ forloop.counter }}" onfocus="mostrarProductos({{ forloop.counter }})" value="{{ kit.producto_id.codigo_producto }}" readonly="readonly"></td>-->
+                    <td><input type="text" class="form-control" id="nombre_kits{{ forloop.counter }}" name="nombre_kits{{ forloop.counter }}" value="{{ kit.producto.descripcion_producto }}" readonly="readonly"></td>
+                    <td><input type="text" class="form-control" id="descripcion_kits{{ forloop.counter }}" name="descripcion_kits{{ forloop.counter }}" value="{{ kit.descripcion }}" ></td>
+                    <td><input type="text" class="form-control" id="cantidad_kits{{ forloop.counter }}" name="cantidad_kits{{ forloop.counter }}" onkeyup="actualizarCosto({{ forloop.counter }})" value="{{ kit.cantidad }}" readonly="readonly">
+                    <input type="hidden"  id="valor_kits{{ forloop.counter }}" name="valor_kits{{ forloop.counter }}" value="{{ kit.precio_compra }}"/>
+                    <input type="hidden"  id="total_kits{{ forloop.counter }}" name="total_kits{{ forloop.counter }}" value="{{ kit.total }}"/>
+                    </td>
+                   </tr>
+
+                   {% endfor %}
+                   {% else %}
+                   {% endif %}
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+
+
+          <!--FIN ORDEN PRODUCCION-->
+
+
+
+
+
+    </div>
+
+ </div>
+
+
+</div>
+
+<p class="text-center">
+
+  <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+  <a class="default btn btn-link" href="/facturacion/guiaremision/"><button type="button" class="btn btn-primary btn-lg">  Regresar</button></a>
+</p>
+<!--  <p class="text-right m-b-0">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-cog"></i> Guardar</button>
+                                </p>
+                                <a class="default btn btn-link" href="/inventario/producto">
+      <i class="fa fa-times"></i> Regresar
+    </a> -->
+    {% if detalle %}
+    <input type="hidden" name="columnas_receta" id="columnas_receta" value="{{ detalle|length }}" />
+    {% else %}
+    <input type="hidden" name="columnas_receta" id="columnas_receta" value="1" />
+
+    {% endif %}
+                                    <input type="hidden" name="total" id="total" value="{{guiaremision.total}}" />
+
+  </form>
+   <div aria-hidden="true" style="display: none;"  id="dlgOP" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 id="id_popup_OP" class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                   <input type="hidden" id="tipo_egreso_id" name="tipo_egreso" value="" />
+                   <div id="contenido_dlgOP">
+                       <div class="indicator show"><span class="spinner spinner16"></span></div>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  {% endblock %}
+
+  {% block javascript %}
+  {{ block.super }}
+  <!-- ================== BEGIN PAGE LEVEL JS ================== -->
+  <script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+  <script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+  <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+  <script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+  <!-- ================== END PAGE LEVEL JS ================== -->
+  <script>
+  $(document).ready(function() {
+    // App.init();
+    FormWizardValidation.init();
+  });
+  </script>
+  <script>
+  $(document).ready(function() {
+    $('#id_fecha').attr('readonly','readonly');
+    $('#id_bodega').attr('readonly','readonly');
+    $('#id_concepto').attr('readonly','readonly');
+    $('#id_proveedor').attr('readonly','readonly');
+        $('#id_puntos_venta').attr('readonly','readonly');
+
+    $('#id_notas').attr('readonly','readonly'); 
+    $('#id_nro_guia').each(function(){
+      $(this).attr('readonly','readonly');
+    });
+$('#id_fecha_emision').datepicker({todayHighlight:true,autoclose:true,format:'yyyy-mm-dd'});
+$('#id_fecha_inicio').datepicker({todayHighlight:true,autoclose:true,format:'yyyy-mm-dd'});
+$('#id_fecha_fin').datepicker({todayHighlight:true,autoclose:true,format:'yyyy-mm-dd'});
+
+    //$.ajax({
+    //            url: "/config/obtenerSecuencial/", // the endpoint
+    //            type : "POST", // http method
+    //            data : { id : 'guiaremision','csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+    //            success:function(data){
+    //             $('#id_nro_guia').val(data);
+    //
+    //           },
+    //           error: function(){
+    //            alert( "Escoja una empresa");
+    //          },
+    //        });
+       $('#id_bodega').change(function(){
+        var bodega=$("#id_bodega").val();
+           var cliente=$("#id_cliente").val();
+
+           if (cliente==''){
+               //alert(cliente);
+               cliente=0
+           }
+
+               $.ajax({
+                url: "/facturacion/cargarDireccionBodega/", // the endpoint
+                type : "POST", // http method
+                data : { bodega_id : bodega,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+
+                    $("#id_partida").val(data['direccion_partida']);
+
+
+                },
+                error: function(){
+
+                },
+              });
+         });
+
+
+          $('#id_cliente').change(function(){
+           var cliente=$("#id_cliente").val();
+
+
+
+               $.ajax({
+                url: "/facturacion/cargarDireccionCliente/", // the endpoint
+                type : "POST", // http method
+                data : { cliente_id : cliente,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+
+                    $("#id_destino").val(data['direccion_destino']);
+
+
+                },
+                error: function(){
+
+                },
+              });
+         });
+
+  });
+      function op_ad(){
+            $("#id_popup_OP").html("<b>Productos</b>");
+            var id_cliente=$("#id_cliente").val();
+             var tipo_guia=$('input:radio[name=tipo_guia]:checked').val();
+             var bodega=$("#id_bodega").val();
+             var mensaje='Debe ingresar: ';
+             var cont=0;
+            // alert(tipo_guia);
+
+
+             if (id_cliente==''){
+                 mensaje+=' cliente,';
+                 cont++;
+
+             }
+             if (tipo_guia=='' || tipo_guia=='undefined'){
+                 mensaje+=' tipo de guia,';
+                 cont++;
+
+             }
+             if (bodega==''){
+                 mensaje+=' bodega,';
+                 cont++;
+
+             }
+             if (cont >0 ){
+                 alert(mensaje);
+             }else {
+
+
+                 var parametros = {
+                     'id_cliente': id_cliente,
+                     'id_bodega': bodega,
+                     'id_tipo_guia': tipo_guia,
+
+                     'csrfmiddlewaretoken': '{{ csrf_token }}'
+
+                 }
+
+                 $.ajax({
+                     url: "/facturacion/mostrar_op/",
+                     type: "POST",
+                     async: true,
+                     data: parametros,
+                     success: function (data) {
+                         $('#contenido_dlgOP').html(data);
+
+
+                     },
+                     complete: function () {
+                         $("#btn_guardar_egresos").show();
+                     }
+                 });
+                 $('#dlgOP').modal();
+             }
+        }
+
+
+ </script>
+ {% endblock %}                                                                                                                                                                                                                                                                

@@ -1,0 +1,376 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block css %}
+    {{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+{% block section_title %} Registrar anticipo {% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+    <style>
+        .panel-border {
+            border: 1px solid #ddd !important;
+        }
+
+        .form-group {
+            margin-bottom: 0px !important;
+        }
+
+        .panel-border {
+            border: 1px solid #ddd !important
+        }
+    </style>
+
+    <div class="row">
+        <!-- begin col-6 -->
+        <div class="col-md-12">
+            <form class="form-horizontal" method="post" action="{% url "movimiento-update" movimiento.id %}">
+                {% csrf_token %}
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                               data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                <i class="fa fa-plus-circle pull-right"></i>
+                                Datos generales
+                            </a>
+                        </h3>
+                    </div>
+                    <div id="collapseOne" aria-expanded="true" id="collapseOne"
+                         class="panel-collapse collapse in">
+                        <div class="panel-body panel-border">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label"
+                                       for="exampleInputName2">Tipo de anticipo</label>
+                                <div class="col-sm-8">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <select class="form-control" name="tipo_anticipo">
+                                                <option value="" selected>Seleccione una opción</option>
+                                                {% for tipo_anticipo in tipo_anticipos %}
+                                                    <option value="{{ tipo_anticipo.id }}">{{ tipo_anticipo.descripcion }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <select class="form-control" name="tipo_documento">
+                                                <option value="" selected>Seleccione una opción</option>
+                                                {% for tipo_documento in tipo_documentos %}
+                                                    <option value="{{ tipo_documento.id }}">{{ tipo_documento.descripcion }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="exampleInputEmail2">Fecha de emisión</label>
+                                <div class="col-sm-4">
+                                    <input id="fecha_emision" class="form-control" type="text"
+                                           value="{{ movimiento.fecha_emision }}" name="fecha_emision">
+                                </div>
+                            </div>
+                            <div class="form-group mostrar-transf">
+                                <label class="col-sm-4 control-label"
+                                       for="exampleInputEmail2">Número de comprobante</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" value="{{ movimiento.numero_comprobante }}"
+                                           name="numero_comprobante">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label"
+                                       for="exampleInputName2">Cuenta bancaria</label>
+                                <div class="col-sm-4">
+                                    <div class="input-group add-on">
+                                        <input class="form-control" placeholder="..." name="cuenta_bancaria"
+                                               type="text">
+                                        <div class="input-group-btn">
+                                            <a class="btn btn-inverse" data-toggle="modal"
+                                               data-target=".bd-example-modal-lg">
+                                                <i class=" glyphicon glyphicon-search icon-white"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="exampleInputEmail2">Persona</label>
+                                <div class="col-sm-4">
+                                    <div class="input-group add-on">
+                                        <input class="form-control" placeholder="..." name="persona" type="text">
+                                        <div class="input-group-btn">
+                                            <a class="btn btn-inverse" data-toggle="modal" data-target="#myModal">
+                                                <i class=" glyphicon glyphicon-search icon-white"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mostrar-cheque">
+                                <label class="col-sm-4 control-label" for="exampleInputEmail2">Páguese a la ordern
+                                    de</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" value="{{ movimiento.paguese_a }}"
+                                           name="paguese_a">
+                                </div>
+                            </div>
+                            <div class="form-group mostrar-cheque">
+                                <label class="col-sm-4 control-label"
+                                       for="exampleInputEmail2">Número de cheque</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" value="{{ movimiento.numero_cheque }}"
+                                           name="numero_cheque">
+                                </div>
+                            </div>
+                            <div class="form-group mostrar-cheque">
+                                <label class="col-sm-4 control-label" for="exampleInputEmail2">Fecha cheque</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" id="fecha_cheque"
+                                           value="{{ movimiento.fecha_cheque }}" name="fecha_cheque">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="exampleInputEmail2">Drescripción</label>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control"
+                                              name="descripcion" rows="5">{{ movimiento.descripcion }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                               data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                <i class="fa fa-plus-circle pull-right"></i>
+                                Cuentas
+                            </a>
+                        </h3>
+                    </div>
+                    <div id="collapseTwo" aria-expanded="true" id="collapseOne"
+                         class="panel-collapse collapse in">
+                        <table class="table2  table table-striped table-bordered dataTable no-footer dtr-inline"
+                               id="tabla">
+                            <thead>
+                            <tr>
+                                <th>Cuenta</th>
+                                <th>Monto</th>
+                                <th>Centro de costo</th>
+                                <th>Proyecto</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <div class="input-group">
+                                        <input class="form-control" placeholder="..." name=""
+                                               type="text">
+                                        <div class="input-group-btn">
+                                            <a class="btn btn-inverse">
+                                                <i class=" glyphicon glyphicon-search icon-white"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><input type="text" class="form-control"></td>
+                                <td>
+                                    <div class="input-group">
+                                        <input class="form-control" placeholder="..." name=""
+                                               type="text">
+                                        <div class="input-group-btn">
+                                            <a class="btn btn-inverse">
+                                                <i class=" glyphicon glyphicon-search icon-white"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input class="form-control" placeholder="..." name=""
+                                               type="text">
+                                        <div class="input-group-btn">
+                                            <a class="btn btn-inverse">
+                                                <i class=" glyphicon glyphicon-search icon-white"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-inverse"><i class="fa fa-save"></i> Guardar
+                </button>
+            </form>
+        </div>
+    </div>
+    <!-- Modal Persona-->
+    <div class="modal fade bs-example-modal-lg" id="myModal">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Personas</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla2">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Ruc</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for cliente  in clientes %}
+                                <tr>
+                                    <td>{{ cliente.codigo_cliente }}</td>
+                                    <td>{{ cliente.nombre_cliente }}</td>
+                                    <td>{{ cliente.ruc }}</td>
+                                    <td>
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Banco -->
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cuenta bancaria</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped " width="100%" id="tabla_cuenta">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Cuenta</th>
+                                <th>Estado</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for banco  in bancos %}
+                                <tr>
+                                    <td>{{ banco.codigo }}</td>
+                                    <td>{{ banco.nombre }}</td>
+                                    {% if banco.estado == True %}
+                                        <td>Activo</td>
+                                    {% else %}
+                                        <td>Inactivo</td>
+                                    {% endif %}
+                                    <td>
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/data-table.js' %}"></script>
+
+    <script>
+        $('#fecha_emision').datepicker({todayHighlight: true, autoclose: true});
+        $('#fecha_emision').val(getFechaHoy());
+        $('#fecha_cheque').datepicker({todayHighlight: true, autoclose: true});
+        $('#fecha_cheque').val(getFechaHoy());
+        function getFechaHoy() {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear();
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+            today = dd + '/' + mm + '/' + yyyy;
+            return today;
+        }
+
+        $(document).ready(function () {
+            var tipo_anticipo = $("select[name='tipo_anticipo']");
+            var tipo_documento = $("select[name='tipo_documento']");
+
+            $('#tabla2').DataTable();
+
+            $('#tabla_cuenta').DataTable();
+
+            tipo_documento.change(function () {
+                if ($(this).val() == "2") {//Transf
+                    $('.mostrar-cheque').attr('style', 'display: none;');
+                    $('.mostrar-transf').removeAttr('style')
+                }
+                if ($(this).val() == "1") {
+                    $('.mostrar-transf').attr('style', 'display: none;');
+                    $('.mostrar-cheque').removeAttr('style')
+                }
+            });
+
+            tipo_documento.select(function () {
+                if ($(this).val() == "2") {//Transf
+                    $('.mostrar-cheque').attr('style', 'display: none;');
+                    $('.mostrar-transf').removeAttr('style')
+                }
+                if ($(this).val() == "1") {
+                    $('.mostrar-transf').attr('style', 'display: none;');
+                    $('.mostrar-cheque').removeAttr('style')
+                }
+            });
+
+            tipo_anticipo.val("{{ movimiento.tipo_anticipo_id }}");
+            tipo_documento.val("{{ movimiento.tipo_documento_id }}");
+        });
+
+    </script>
+
+{% endblock %}

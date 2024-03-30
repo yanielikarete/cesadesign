@@ -1,0 +1,119 @@
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+{% load staticfiles %}
+
+{% block css %}
+{{ block.super }}
+{% endblock %}
+
+{% block section_title %}Producto en Bodega{% endblock %}
+{% block section_subtitle %}
+<br />
+ <div class="email-btn-row hidden-xs">
+                   
+                    </div>
+
+                    {% endblock %}
+
+{% block content %}
+				<!-- begin col-12 -->
+				<div class="col-md-12">
+					<!-- begin panel -->
+					<div class="panel panel-inverse">
+						<div class="panel-heading">
+							<div class="panel-heading-btn">
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+							</div>
+							<h4 class="panel-title">Producto en Bodega</h4>
+						</div>
+						<div class="panel-body">
+						{% for b  in bodega %}
+						<a href="{% url 'productoenbodega-list' b.id %}" <button type="button" class="btn btn-info btn-xs">{{ b.codigo_bodega }}-{{ b.nombre }}</button></a>
+						{% endfor %}
+							<div class="table-responsive">
+								<table id="data-table" class="table table-striped table-bordered">
+									<thead>
+										<tr>
+											
+											<th>Producto</th>
+											<th>Bodega</th>
+											<th>cantidad</th>
+											<th>Maximo</th>
+											<th>Minima</th>
+											<th>Observaciones</th>
+
+											
+										</tr>
+									</thead>
+									<tbody>
+										{% for k  in productosenbodega %}
+											<tr>
+												<td>{{ k.producto }}</a></td>
+												<td>{{ k.bodega }}</td>
+												{% if k.cantidad < k.producto.cant_minimia %}
+												<td style="color:red;font-weight:bold">{{ k.cantidad }}</td>
+												{% else %}
+												<td style="color:green">{{ k.cantidad }}</td>
+												{% endif %}
+												<td>{{ k.producto.cant_maxima }}</td>
+												<td>{{ k.producto.cant_minimia}}</td>
+												{% if k.cantidad < k.producto.cant_minimia %}
+												<td style="color:red;font-weight:bold">Comprar</td>
+												{% else %}
+												<td style="color:green"></td>
+												{% endif %}
+												
+											</tr >
+										{% endfor %} 
+									</tbody>
+								</table>
+							</div>
+
+
+
+						</div>
+					</div>
+					<!-- end panel -->
+
+					<!-- #modal-dialog -->
+					
+				</div>
+				<!-- end col-12 -->	
+			
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+
+    
+	<script type="text/javascript">
+	    function cambiarBodega(id){
+         $.ajax({
+                url: "/inventario/obtenerproductoenbodega/", // the endpoint
+                type : "POST", // http method
+                data : { id : id,'csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+                success:function(data){
+                	
+                  $("#data-table tbody tr").remove();
+
+                  $("#data-table").append(data);
+                },
+                error: function(){
+                 
+                },
+              });
+    }
+	</script>
+
+	{% if form.errors or form_mode == "update" %}
+	<script type="text/javascript">
+
+		$( document ).ready(function() {
+		    $(".modal").modal('toggle');
+		});
+	
+	</script>
+	{% endif %}
+{% endblock %}

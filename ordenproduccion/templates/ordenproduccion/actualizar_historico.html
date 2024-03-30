@@ -1,0 +1,734 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+        <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css'%}" rel="stylesheet" />
+  <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css'%}" rel="stylesheet" />
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block breadcrumb %}Sucursal {{ sucursal.nombre }}{% endblock %}
+{% block section_title %}Ordenes de Produccion{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+
+            <!-- begin row -->
+           <style>
+       .panel-border{border: 1px solid #ddd !important}
+       .form-ajust .form-group{margin-bottom: 0px !important}
+      input[type="text"],select,input[type="number"]
+      {
+
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    box-shadow: none;
+    font-size: 12px;
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+       }
+
+ .table2 {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+      display:table}
+
+.table2>tbody>tr>td, .table2>tbody>tr>th, .table2>tfoot>tr>td, .table2>tfoot>tr>th, .table2>thead>tr>td, .table2>thead>tr>th {
+    border-color: #e2e7eb;
+    padding: 10px 15px;
+}
+
+
+    </style>
+
+  <div class="row">
+                <!-- begin col-6 -->
+      <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                         <form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+
+                        <h3 class="panel-title">Ordenes de Produccion</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <div>
+
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                  <li role="presentation" class="active"><a href="#principales" aria-controls="principales" role="tab" data-toggle="tab">Principales</a></li>
+<!--                                     <li role="presentation"><a href="#costo" aria-controls="costo" role="tab" data-toggle="tab">Costos y Precios</a></li>
+ -->
+                                  <li role="presentation"><a href="#foto" aria-controls="foto" role="tab" data-toggle="tab">Foto</a></li>
+                                </ul>
+
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade in active" id="principales">
+                                        <div class="row">
+
+                                            <div class="panel panel-default panel-border">
+                                                <div class="panel-heading">Id del Registro</div>
+                                                <div class="panel-body">
+                                                  <div class="col-md-2">
+                                                      <label for="exampleInputName2">Tipo</label>
+                                                      {% bootstrap_field ordenproduccion_form.tipo show_label=False %}
+
+                                                   </div>
+                                                    <div class="col-md-2">
+                                                      <label for="exampleInputName2">C&oacute;digo</label>
+                                                      {% bootstrap_field ordenproduccion_form.codigo show_label=False %}
+
+                                                   </div>
+                                                    <div class="col-md-3">
+                                                      <label for="exampleInputEmail2">Tipo Mueble </label>
+                                                        {% bootstrap_field ordenproduccion_form.tipo_mueb show_label=False %}
+
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                      <label for="exampleInputEmail2">Fecha </label>
+                                                        {% bootstrap_field ordenproduccion_form.fecha show_label=False %}
+
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                      <label for="exampleInputName2">Fecha Entrega</label>
+{% bootstrap_field ordenproduccion_form.fechapedido show_label=False %}
+
+
+                                                   </div>
+                                                    <div class="col-md-3">
+                                                      <label for="exampleInputName2">Nombre del Cliente</label>
+                                                        {% bootstrap_field ordenproduccion_form.cliente show_label=False %}
+
+                                                   </div>
+                                                    <div class="col-md-2">
+                                                      <label for="exampleInputName2">Estados</label>
+                                                        {% bootstrap_field ordenproduccion_form.aprobada show_label=False %}
+                                                    {% bootstrap_field ordenproduccion_form.anulada show_label=False %}
+
+
+                                                   </div>
+                                                    <div class="col-md-3">
+                                                      <label for="exampleInputName2">#Pedido</label>
+{% bootstrap_field ordenproduccion_form.pedido_codigo show_label=False %}
+
+
+                                                   </div>
+                                                    <div class="col-md-4">
+                                                      <label for="exampleInputEmail2">Descripcion </label>
+                                                     {% bootstrap_field ordenproduccion_form.descripcion show_label=False %}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                      <label for="exampleInputEmail2">Cantidad</label>
+                                                     {% bootstrap_field ordenproduccion_form.cantidad show_label=False %}
+                                                    </div>
+                                                      <div class="col-md-3">
+                                                            <label for="exampleInputEmail2">Cod. Produccion</label>
+                                                           {% bootstrap_field ordenproduccion_form.codigo_item show_label=False %}
+                                                          </div>
+                                                            <div class="col-md-2">
+                                                            <label for="exampleInputEmail2">&nbsp;</label>
+                                                           {% bootstrap_field ordenproduccion_form.venta_local show_label=False %}
+                                                          </div>
+                                                            <div class="col-md-2">
+                                                            <label for="exampleInputEmail2">&nbsp;</label>
+                                                           {% bootstrap_field ordenproduccion_form.exportacion show_label=False %}
+                                                          </div>
+                                                      <div class="col-md-2">
+                                                            <label for="exampleInputEmail2">&nbsp;</label>
+                                                           {% bootstrap_field ordenproduccion_form.garantia show_label=False %}
+                                                          </div>
+                                                    <div class="col-md-10">
+                                                      <label for="exampleInputEmail2">Detalle</label>
+                                                     {% bootstrap_field ordenproduccion_form.detalle show_label=False %}
+                                                    </div>
+
+                                                  <div class="col-md-2 ui-sortable">
+                                                      <label for="exampleInputEmail2"></label>
+                                                     <div class="form-group"><label class="sr-only control-label" for="id_cantidad"></label>
+                                                     <button type="button" onclick="cerrar()" class="btn btn-danger btn-block">Pedido <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+                                                     </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+
+                                                  </div>
+                                                   <div class="col-md-6">
+                                                                <a href="#" class="thumbnail">
+                                                              {% if ordenproduccion_form.imagen.value != "" %}
+                                                                     <img src="/media/{{ op.imagen}}" alt="logo producto">
+                                                              {% else %}
+                                                                      <img src="/media/imagenes/producto/logo-producto.svg" alt="logo producto">
+
+                                                              {% endif %}
+                                                                    </a>
+                                                                                  <label for="exampleInputName2">Imagen </label>
+                                                         <input type="file" name="imagen" id="imagen" />
+
+
+                                                              </div>
+                                                      <div class="col-md-2">
+                                                      <label for="exampleInputName2">Largo </label>
+                                                      {% bootstrap_field ordenproduccion_form.ancho show_label=False %}
+
+                                                   </div>
+                                                     <div class="col-md-2">
+                                                      <label for="exampleInputName2">Fondo </label>
+                                                      {% bootstrap_field ordenproduccion_form.fondo show_label=False %}
+
+                                                   </div>
+                                                    <div class="col-md-2">
+                                                      <label for="exampleInputName2">Alto</label>
+                                                      {% bootstrap_field ordenproduccion_form.alto show_label=False %}
+
+                                                   </div>
+
+
+                                                   <div class="col-md-1">
+                                                      <label for="exampleInputName2">Tope en </label>
+                                                      {% bootstrap_field ordenproduccion_form.madera show_label=False %}
+                                                      {% bootstrap_field ordenproduccion_form.hierro show_label=False %}
+
+
+                                                   </div>
+                                                    <div class="col-md-2">
+                                                      <label for="exampleInputName2"> :</label>
+
+                                                      {% bootstrap_field ordenproduccion_form.vidrio show_label=False %}
+                                                      {% bootstrap_field ordenproduccion_form.marmol show_label=False %}
+
+
+                                                   </div>
+                                                   <div class="col-md-6">
+                                                      <label for="exampleInputName2"> </label>
+                                                      {% bootstrap_field ordenproduccion_form.enchape show_label=False %}
+
+                                                   </div>
+                                                   <div class="col-md-3">
+                                                      <label for="exampleInputName2"></label>
+                                                      {% bootstrap_field ordenproduccion_form.enchape_detalle show_label=False %}
+
+                                                   </div>
+                                                    <div class="col-md-8">
+                                                      <label for="exampleInputName2">Tono </label>
+                                                      {% bootstrap_field ordenproduccion_form.tono show_label=False %}
+
+                                                   </div>
+                                                   <div class="col-md-4">
+                                                      <label for="exampleInputName2">Tipo Metal </label>
+                                                      {% bootstrap_field ordenproduccion_form.metal_hierro show_label=False %}
+                                                      {% bootstrap_field ordenproduccion_form.acero show_label=False %}
+                                                      {% bootstrap_field ordenproduccion_form.aluminio show_label=False %}
+
+
+                                                      <div id="hierro" style="display:none">
+                                                        {% bootstrap_field ordenproduccion_form.patina_color show_label=False %}
+
+                                                      </div>
+                                                      <div id="acero" style="display:none">
+                                                         {% bootstrap_field ordenproduccion_form.satinado show_label=False %}
+                                                      {% bootstrap_field ordenproduccion_form.brillante show_label=False %}
+
+
+                                                      </div>
+                                                      <div id="aluminio" style="display:none">
+                                                      {% bootstrap_field ordenproduccion_form.abrillantado show_label=False %}
+                                                      {% bootstrap_field ordenproduccion_form.patina_color show_label=False %}
+
+
+                                                      </div>
+
+                                                   </div>
+                                                   <div class="col-md-2">
+                                                      <label for="exampleInputName2">Acabado </label>
+                                                      {% bootstrap_field ordenproduccion_form.mate show_label=False %}
+                                                      {% bootstrap_field ordenproduccion_form.semimate show_label=False %}
+                                                      {% bootstrap_field ordenproduccion_form.brillante show_label=False %}
+                                                   </div>
+                                                    <div class="col-md-2">
+                                                      <label for="exampleInputName2">:</label>
+                                                      {% bootstrap_field ordenproduccion_form.pulido show_label=False %}
+                                                      {% bootstrap_field ordenproduccion_form.poroabierto show_label=False %}
+                                                      {% bootstrap_field ordenproduccion_form.semiabierto show_label=False %}
+                                                      {% bootstrap_field ordenproduccion_form.polyester show_label=False %}
+<div class="form-group"><div class="checkbox"><label for="id_poroabierto"></label></div></div>                                                   </div>
+
+
+                                                   <div class="col-md-3">
+                                                      <label for="exampleInputName2">Herrajes Especiales </label>
+                                                      {% bootstrap_field ordenproduccion_form.retractil show_label=False %}
+                                                      {% bootstrap_field ordenproduccion_form.corredizo show_label=False %}
+<div class="form-group"><div class="checkbox"><label for="id_poroabierto"></label></div></div>
+                                                   </div>
+
+
+
+                                                   <div class="col-md-2">
+                                                      <label for="exampleInputName2">Topes de  </label>
+                                                      {% bootstrap_field ordenproduccion_form.engrampe show_label=False %}
+                                                      {% bootstrap_field ordenproduccion_form.impulso show_label=False %}
+                                                      <div class="form-group"><div class="checkbox"><label for="id_poroabierto"></label></div></div>
+
+                                                   </div>
+                                                   <div class="col-md-2">
+                                                      <label for="exampleInputName2">Detalles  </label>
+                                                      {% bootstrap_field ordenproduccion_form.pintado_mano show_label=False %}
+                                                      {% bootstrap_field ordenproduccion_form.conchaperla show_label=False %}
+<div class="form-group"><div class="checkbox"><label for="id_poroabierto"></label></div></div>
+                                                   </div>
+
+                                                     <div class="col-md-2">
+                                                      <label for="exampleInputName2">Telas </label>
+                                                      {% bootstrap_field ordenproduccion_form.tela_almacen show_label=False %}
+                                                      {% bootstrap_field ordenproduccion_form.tela_cliente show_label=False %}
+
+                                                   </div>
+                                                   <div class="col-md-4">
+                                                      <label for="exampleInputName2">Cueros </label>
+                                                      {% bootstrap_field ordenproduccion_form.cuero_almacen show_label=False %}
+                                                      {% bootstrap_field ordenproduccion_form.cuero_cliente show_label=False %}
+
+                                                   </div>
+                                                   <div class="col-md-6">
+                                                      <label for="exampleInputName2">Fecha Inicio</label>
+                                                      {% bootstrap_field ordenproduccion_form.fechainicio show_label=False %}
+
+                                                   </div>
+                                                    <div class="col-md-6">
+                                                      <label for="exampleInputName2">Fecha Tope de Entrega </label>
+                                                      {% bootstrap_field ordenproduccion_form.fechaentrega show_label=False %}
+
+                                                   </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="inputEmail3" >Observaci&oacute;n</label>
+                                                    <div>
+                                                        {% bootstrap_field ordenproduccion_form.observacion show_label=False %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                           <!--  <div class="col-md-6">
+                                                <label for="inputEmail3" >Usuario y Fecha de Edici&oacute;n</label>
+                                                <table class="table table-bordered">
+                                                    <tr>
+                                                        <th>Creaci&oacute;n</th>
+
+                                                        <td>{{ ordenproduccion_form.created_by.value}}</td>
+                                                        <td>{{ ordenproduccion_form.created_at.value}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Actualizado</th>
+                                                        <td>{{ ordenproduccion_form.updated_by.value}}</td>
+                                                        <td>{{ ordenproduccion_form.updated_at.value}}</td>
+                                                    </tr>
+                                                </table>
+                                            </div> -->
+
+                                        </div>
+
+
+
+
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane fade" id="costo">..
+
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="codigo">...</div>
+                                    <div role="tabpanel" class="tab-pane fade" id="foto">
+                                        <div class="row">
+
+                                            <div class="panel panel-default panel-border">
+                                                <div class="panel-heading">Foto</div>
+                                                <div class="panel-body">
+
+                                                     <div class="col-md-6">
+                                                                <a href="#" class="thumbnail">
+                                                              {% if ordenproduccion_form.imagen_global.value != "" %}
+                                                                     <img src="/media/{{ op.imagen_global }}" alt="logo producto">
+                                                              {% else %}
+                                                                      <img src="/media/imagenes/producto/logo-producto.svg" alt="logo producto">
+
+                                                              {% endif %}
+                                                                    </a>
+                                                           <label for="exampleInputName2">Imagen General</label>
+                                                      <input type="file" name="imagen_global" id="imagen_global" />
+
+
+                                                              </div>
+
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                      <!--   <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                  <a href="#" class="thumbnail">
+                                  {% if ordenproduccion_form.imagen.value != "" %}
+                                   <img src="/media/{{ ordenproduccion_form.imagen.value}}" alt="logo producto">
+                                    {% else %}
+                                    <img src="/media/imagenes/producto/logo-producto.svg" alt="logo producto">
+                                    {% endif %}
+                                  </a>
+                                </div>
+                            </div>
+
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+     <p class="text-center">
+
+                                    <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+                                            <a class="default btn btn-link" href="/ordenproduccion/ordenproduccion/"><button type="button" class="btn btn-primary btn-lg">  Regresar</button></a>
+                                        </p>
+                                         {% if kits %}
+<input type="hidden" name="columnas_receta" id="columnas_receta" value="{{ kits|length }}" />
+{% else %}
+<input type="hidden" name="columnas_receta" id="columnas_receta" value="1" />
+
+{% endif %}
+<input type="hidden" name="id_fila_cambiar" id="id_fila_cambiar" value="" />
+<input type="hidden" name="product_id" id="product_id" value="{{ producto_form.producto_id.value}}" />
+<input type="hidden" name="deta" id="deta" value="" />
+<input type="hidden" name="pedido" id="pedido" value="" />
+
+
+
+<!--  <p class="text-right m-b-0">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-cog"></i> Guardar</button>
+                                </p>
+                                <a class="default btn btn-link" href="/inventario/producto">
+      <i class="fa fa-times"></i> Regresar
+    </a> -->
+                            </form>
+                                <div class="modal fade" id="modal-dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                             <div class="panel-body">
+                                <div class="table-responsive">
+                                                    <table class="table table-striped table-bordered" id="tabla">
+                                                        <thead>
+                                                            <tr>
+                                                            <td></td>
+                                                                 <th>Codigo Pedido</th>
+                                                                <th>Nombre</th>
+                                                                <th>Cantidad</th>
+                                                                <th>Cliente</th>
+                                                                 <th>Repar.</th>
+                                                                 <th>Cod.Produccion.</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for r  in row %}
+                                                            <tr>
+<td  onclick="cargarPedido('{{ r.0 }}','{{ r.1 }}','{{ r.2|date:"Y-m-d "}}','{{ r.3 }}','{{ r.4}}','{{ r.5|date:"Y-m-d" }}','{{ r.6}}','{{ r.7 }}','{{ r.8}}');">
+<a class="btn btn-danger remove_fields"><i class=" glyphicon glyphicon-plus icon-white"></i>
+                                                      </a></td><td>{{ r.1 }}</td>
+                                                                <td>{{ r.7 }}</td>
+                                                                <td>{{ r.8 }}</td>
+                                                                 <td>{{ r.11 }}</td>
+                                                                  <td>{{ r.15 }}</td>
+                                                                  <td>{{ r.16 }}</td>
+
+                                                            </tr >
+                                                        {% endfor %}
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <button type="button" onclick="cerrar()" class="btn btn-danger btn-block">Cerrar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+
+
+                            </div>
+                        </div>
+                    </div>
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+<script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<!-- <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+ --><script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+ <script src="{% static 'color_admin/assets/js/bootstrap-datepicker.js' %}"></script>
+
+<!-- ================== END PAGE LEVEL JS ================== -->
+<script>
+    // $(document).ready(function() {
+    //     App.init();
+    //     FormWizardValidation.init();
+    // });
+</script>
+
+<script>
+    $(document).ready(function() {
+      $('#id_codigo').each(function(){
+  $(this).attr('readonly','readonly');
+});
+             $('#id_created_by').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_updated_by').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_created_at').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_updated_at').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('input[type="checkbox"][name="metal_hierro"]').change(function() {
+     if(this.checked) {
+         // do something when checked
+         $('#hierro').css('display','block')
+     }else{
+      $('#hierro').css('display','none')
+     }
+ });
+
+   $('input[type="checkbox"][name="acero"]').change(function() {
+     if(this.checked) {
+         // do something when checked
+         $('#acero').css('display','block')
+     }else{
+      $('#acero').css('display','none')
+     }
+ });
+
+
+    $('input[type="checkbox"][name="aluminio"]').change(function() {
+     if(this.checked) {
+         // do something when checked
+         $('#aluminio').css('display','block')
+     }else{
+      $('#aluminio').css('display','none')
+     }
+ });
+
+         $('#id_fecha').datepicker({todayHighlight:true,autoclose:true,format:'yyyy-mm-dd'});
+      $('#id_fechainicio').datepicker({todayHighlight:true,autoclose:true,format:'yyyy-mm-dd'});
+  $('#id_fechaentrega').datepicker({todayHighlight:true,autoclose:true,format:'yyyy-mm-dd'});
+     $('#id_fecha').datepicker({todayHighlight:true,autoclose:true,format:'yyyy-mm-dd'});
+       $('#id_fechapedido').datepicker({todayHighlight:true,autoclose:true,format:'yyyy-mm-dd'});
+
+      var codigo=$("#id_codigo").val().length ;
+      if(codigo < 1){
+             $.ajax({
+                url: "/config/obtenerSecuencial/", // the endpoint
+                type : "POST", // http method
+                data : { id : 'ordenproduccion','csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+                 $('#id_codigo').val('00'+data);
+
+                },
+                error: function(){
+
+                },
+              });
+      var fecha=new Date().toJSON().slice(0,10);
+      $('#id_fecha').val(fecha);
+      }else{
+               // alert(codigo);
+
+      }
+
+
+
+      $('#id_fecha').datepicker({todayHighlight:true,autoclose:true});
+            $('#id_fecha').datepicker('option', {dateFormat: 'yy/mm/dd'});
+       $('#id_fechapedido').datepicker({todayHighlight:true,autoclose:true});
+            $('#id_fechapedido').datepicker('option', {dateFormat: 'yy/mm/dd'});
+           var codigo_reunion=$("#id_reunion_codigo").val();
+
+   $("#id_reunion_codigo").focusout(function(){
+        codigo_reunion=$("#id_reunion_codigo").val();
+               $.ajax({
+                url: "/config/obtenerReunion/", // the endpoint
+                type : "POST", // http method
+                data : { id : codigo_reunion,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+                       $('#id_cliente option[value='+data['cliente']+']').attr('selected','selected');
+
+                       $('#id_vendedor option[value='+data['vendedor']+']').attr('selected','selected');
+
+
+                },
+                error: function(){
+
+                },
+              });
+         });
+   });
+</script>
+<script>
+    function mostrarProductos(data){
+       $('#id_fila_cambiar').val(data);
+       $(".modal").modal('toggle');
+    }
+    function cerrar(){
+       $(".modal").modal('toggle');
+    }
+  function cargarPedidoAhora(id){
+               $.ajax({
+                url: "/config/obtenerPedidoOrdenProduccion/", // the endpoint
+                type : "POST", // http method
+                data : { id : id,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+                      $('#id_detalle').val(data['detalle']);
+                      $('#id_largo').val(data['medida']);
+                      $('#id_codigo_item').val(data['codigoproduccion']);
+                      var reparacion=data['reparacion'];
+                       if(reparacion=='True'){
+                                   $.ajax({
+                                        url: "/config/obtenerSecuencial/", // the endpoint
+                                        type : "POST", // http method
+                                        data : { id : 'ordenreparacion','csrfmiddlewaretoken': '{{ csrf_token }}'},
+                                        success:function(data){
+                                         $('#id_codigo').val('00'+data);
+                                         $('#id_tipo').val('OR');
+
+
+                                        },
+                                        error: function(){
+
+                                        },
+                                      });
+                        }else{
+                                     $.ajax({
+                                        url: "/config/obtenerSecuencial/", // the endpoint
+                                        type : "POST", // http method
+                                        data : { id : 'ordenproduccion','csrfmiddlewaretoken': '{{ csrf_token }}'},
+                                        success:function(data){
+                                         $('#id_codigo').val('00'+data);
+                                          $('#id_tipo').val('OP');
+
+                                        },
+                                        error: function(){
+
+                                        },
+                                      })
+
+                                  }
+                },
+                error: function(){
+
+                },
+              });
+
+      }
+    function cargarPedido(id,codigo,fecha,cliente,vendedor,fechaentrega,pedidoid,nombre,cantidad){
+      ///alert(cantidad);
+cant = cantidad.toString().replace(/\,/g,'.');
+        $('#id_pedido_codigo').val(codigo);
+        $('#id_descripcion').val(nombre);
+   $('#id_fechapedido').val(fechaentrega);
+          $('#id_fecha').val(fecha);
+
+         $('#id_cliente option[value='+cliente+']').attr('selected','selected');
+        $('#id_cantidad').val(cant);
+   $('#deta').val(id);
+
+
+$('#pedido').val(pedidoid);
+cargarPedidoAhora(id);
+          cerrar();
+
+
+
+
+    }
+
+</script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        /**
+         */
+        $("#add").click(function(){
+            // Obtenemos el numero de filas (td) que tiene la primera columna
+            // (tr) del id "tabla"
+            var num_recetas=$('#columnas_receta').val();
+            num_recetas=parseInt(num_recetas)+1;
+
+            var tds=$("#tabla tr:first td").length;
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla tr").length;
+            var nuevaFila='<tr><td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+                nuevaFila+='<td><input type="hidden" class="form-control" id="id_kits'+num_recetas+'" name="id_kits'+num_recetas+'"> ';
+                nuevaFila+='<input type="text" required="required" class="form-control" id="codigo_kits'+num_recetas+'" name="codigo_kits'+num_recetas+'" onfocus="mostrarProductos('+num_recetas+')" readonly="readonly"></td>';
+                 nuevaFila+='<td><input type="text"  id="nombre_kits'+num_recetas+'" name="nombre_kits'+num_recetas+'" ></td>';
+                nuevaFila+='<td><input type="text" class="form-control" required="required" id="cantidad_kits'+num_recetas+'" name="cantidad_kits'+num_recetas+'" onkeyup="actualizarCosto('+num_recetas+')"></td>';
+                nuevaFila+='<td><input type="text" class="form-control" id="medida_kits'+num_recetas+'" name="medida_kits'+num_recetas+'" ></td>';
+                nuevaFila+='<td><input type="text" class="form-control" id="costo_kits'+num_recetas+'" name="costo_kits'+num_recetas+'" onkeyup="actualizarCosto('+num_recetas+')"></td>';
+                nuevaFila+='<td><input type="text" class="form-control" id="total_kits'+num_recetas+'" name="total_kits'+num_recetas+'" readonly="readonly"></td>';
+                nuevaFila+='<td><input type="text" class="form-control" id="imagen_kits'+num_recetas+'" name="imagen_kits'+num_recetas+'" ></td>';
+                nuevaFila+='<td><input type="text" class="form-control" id="observacion_kits'+num_recetas+'" name="observacion_kits'+num_recetas+'" ></td>';
+                nuevaFila+='</tr>';
+
+              $('#columnas_receta').val(num_recetas);
+            // for(var i=0;i<tds;i++){
+            //     nuevaFila+="<td>columna "+(i+1)+" </td>";
+            // }
+            // nuevaFila+="<td>"+(trs+1)+" columnas";
+            // nuevaFila+="</tr>";
+            $("#tabla").append(nuevaFila);
+        });
+
+        /**
+         * Funcion para eliminar la ultima columna de la tabla.
+         * Si unicamente queda una columna, esta no sera eliminada
+         */
+        $("#del").click(function(){
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla tr").length;
+            if(trs>1)
+            {
+                // Eliminamos la ultima columna
+                $("#tabla tr:last").remove();
+            }
+             actualizarTotal();
+        });
+
+
+        $(document).on("click",".eliminar",function(){
+            var parent = $(this).parent();
+  $(parent).remove();
+   actualizarTotal();
+          });
+
+    });
+    </script>
+{% endblock %}

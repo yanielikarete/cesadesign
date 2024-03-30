@@ -1,0 +1,200 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>SUB ORDEN DE PRODUCCI&Oacute;N - MUEDIRSA</title>
+</head>
+<style>
+
+    .head{
+        width: 100%;
+        text-align: center;
+
+    }
+
+    #detail{
+        width: 100%;
+
+    }
+
+    .contenido{
+        width: 100%;
+        padding: 2px 0;
+
+    }
+
+    .contenido td{
+        text-align: left;
+        padding: 3px 5px;
+        font-size: 10pt
+    }
+    td{
+
+        font-size: 10pt
+    }
+    .contenido th{
+        text-align: center;
+        padding: 3px 5px;
+        background-color: #EEEEEE;
+    }
+
+    .foot{
+        text-align: center;
+    }
+    @page {
+        size: a4 ;
+        margin: 1cm;
+        font-size: 10pt;
+
+    }
+	#tabla_costo th{
+		 text-align: center;
+        padding: 3px 5px;
+        background-color: #EEEEEE;
+	}
+
+
+</style>
+<body>
+    <div class="head">
+
+    </div>
+    <div id="detail" >
+    </div>
+    <div class="contenido">
+        <table>
+            <tr><td colspan="2"><b>{{ op.tipo}} &nbsp;{{ op.codigo }}</b> </td><td rowspan="6" width="210px"> {% if op.imagen %}
+                <img src="{{media_root}}{{op.imagen}}" alt="logo producto" width="200" height="167">
+                                {% else %}
+                <img src="{{media_root}}imagenes/producto/error.jpg" alt="logo producto" width="200px" height="167px">
+
+                                                                {% endif %}</td></tr>
+            <tr><td width="150px"> <b>Fecha:</b>&nbsp;</td><td>{{ op.fecha }} </td></tr>
+            <tr><td> <b>Cliente:</b>&nbsp;</td><td>{{ op.cliente.nombre_cliente}} </td></tr>
+            <tr><td> <b>Descripci&oacute;n:</b></td><td>{{ op.descripcion }} </td></tr>
+            <tr><td> <b>Detalle:</b>&nbsp;</td><td>{{ op.detalle }} </td></tr>
+            <tr><td> <b>Cantidad:</b>&nbsp;</td><td>{{ op.cantidad }} </td></tr>
+        </table>
+       <br />
+							 &nbsp;&nbsp;&nbsp;&nbsp;
+
+		<div >
+								<table border="1">
+									<thead>
+										<tr>
+
+											<th width="200px">Areas</th>
+											<th>Secuencia</th>
+											<th>Horas</th>
+											<th>Costo Horas</th>
+											<th>Costo Materiales</th>
+                                            <th>Total</th>
+											<th width="200px">Observaciones</th>
+											<!--<th>Estado</th>-->
+                                        </tr>
+
+									</thead>
+									<tbody>
+
+										<!--{% for orden  in subordenes %}-->
+										<!--{% if orden.reproceso %}-->
+										<!--{% else %}-->
+											<!--<tr>-->
+												<!--<td>-->
+												<!--<input type="hidden" id="suborden_id{{ forloop.counter }}" name="suborden_id{{ forloop.counter }}" value="{{ orden.id }}"><a class="btn btn-danger remove_fields" onclick="eliminar({{ orden.id }},{{ id }})">-->
+                                                        <!--<i class=" glyphicon glyphicon-trash icon-white"></i>-->
+                                                      <!--</a></td>-->
+												<!--<td>{{ orden.areas.descripcion }} </td>-->
+												<!--<td>{{ orden.secuencia }}</td>-->
+												<!--<td>{{ orden.horas }}<input type="hidden" id="horas{{ forloop.counter }}" name="horas{{ forloop.counter }}" value="{{ orden.horas }}"></td>-->
+												<!--<td>{{ orden.costo_horas }}<input type="hidden" id="costo_horas{{ forloop.counter }}" name="costo_horas{{ forloop.counter }}" value="{{ orden.costo_horas }}"></td>-->
+
+												<!--<td>{{ orden.costo_materiales}}<input type="hidden" id="costo_material{{ forloop.counter }}" name="costo_material{{ forloop.counter }}" value="{{ orden.costo_materiales }}"></td>-->
+
+												<!--<td>-->
+													<!--{{ orden.observaciones }}-->
+												<!--</td>-->
+
+													<!--<td>{% if orden.finalizada %}-->
+												<!--Finalizada-->
+
+														<!--{% else %}-->
+												<!--En Proceso-->
+														<!--{% endif %}-->
+												<!--</td>-->
+
+												<!--<td>-->
+
+												<!--<a href="{% url 'subordenproduccion-manoobra' orden.id %}">-->
+												<!--<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Mano de Obra</button>	</a>-->
+													<!--<a href="{% url 'subordenproduccion-receta' orden.id %}">-->
+												<!--<button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Materiales</button>	</a>-->
+
+											<!--</td>-->
+
+											<!--</tr >-->
+											<!--{% endif %}-->
+										<!--{% endfor %}-->
+
+            {{ html |safe }}
+									</tbody>
+                                    <tfoot>{{ html_total |safe }}</tfoot>
+								</table>
+							</div>
+<h4>REPROCESO</h4>
+
+							<div >
+								<table border="1">
+									<thead>
+										<tr>
+
+											<th>Areas</th>
+											<th>Secuencia</th>
+											<th>Horas</th>
+											<th>Costo Horas</th>
+											<th>Costo Materiales</th>
+                                            <th>Total</th>
+											<th width="200px">Observaciones</th>
+
+										</tr>
+
+									</thead>
+									<tbody>
+										  {{ html_rep |safe }}
+									</tbody>
+                                    <tfoot>{{ html_total_rep |safe }}</tfoot>
+								</table>
+							</div>
+
+	</div>
+    <br />
+<!--{{ html_total_final |safe }}
+-->
+<table border="1" id="tabla_costo">
+	<tbody>
+		<tr>
+<th>Costo Producci&oacute;n:</th><td>&nbsp;{{ op.costo}}</td>
+
+		</tr>
+			<tr>
+<th>Costo Fijo {{ op.porcentaje_costo}} %:</th><td>&nbsp;{{ op.costo_directo}}</td>
+
+		</tr>
+			<tr>
+<th>Costo Final:</th><td>&nbsp;{{ op.costo_final}}</td>
+
+		</tr>
+	</tbody>
+</table>
+
+
+    </div>
+    <div class="foot">
+        <br><br><br>
+
+    </div>
+   <br />
+
+</body>
+</html>

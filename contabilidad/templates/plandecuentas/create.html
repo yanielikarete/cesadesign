@@ -1,0 +1,179 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+<link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css'%}" rel="stylesheet"/>
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css'%}" rel="stylesheet"/>
+<!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block content %}
+
+<!-- begin row -->
+<style>
+    .panel-border {
+        border: 1px solid #ddd !important
+    }
+
+    .form-ajust .form-group {
+        margin-bottom: 0px !important
+    }
+
+    input[type="text"], select, input[type="number"] {
+
+        border: 1px solid #ccd0d4;
+        border-radius: 3px;
+        box-shadow: none;
+        font-size: 12px;
+        display: block;
+        width: 100%;
+        height: 34px;
+        padding: 6px 12px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+    }
+
+    .table2 {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 20px;
+        display: table
+    }
+
+    .table2 > tbody > tr > td, .table2 > tbody > tr > th, .table2 > tfoot > tr > td, .table2 > tfoot > tr > th {
+        border-color: #e2e7eb;
+        padding: 1px 0px;
+    }
+
+    .table2 > thead > tr > td, .table2 > thead > tr > th {
+        border-color: #e2e7eb;
+        padding: 10px 5px;
+    }
+
+    #id_abreviatura_codigo {
+        width: 50px;
+    }
+
+    #id_codigo {
+        width: 120px;
+    }
+</style>
+<form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+    {{ form.title.errors }}
+    <div class="row">
+        <!-- begin col-6 -->
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+
+                    <h3 class="panel-title">Plan de Cuentas</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12">
+
+
+                        <!-- Tab panes -->
+                        <div class="row">
+
+
+                            <div class="col-md-6">
+                                <label>Codigo Plan</label>
+
+                                {% bootstrap_field form.codigo_plan show_label=False %}
+
+
+                            </div>
+                            <div class="col-md-6">
+                                <label>Nombre</label>
+                                {% bootstrap_field form.nombre_plan show_label=False %}
+                            </div>
+                            <div class="col-md-6">
+                                <label>Categoría</label>
+                                {% bootstrap_field form.categoria show_label=False %}
+                            </div>
+                             <div class="col-md-6">
+                                <label>Categoría Especial</label>
+                                {% bootstrap_field form.categoria_especial show_label=False %}
+                            </div>
+                            <div class="col-md-6">
+                                <label>Grupo</label>
+                                {% bootstrap_field form.grupo show_label=False %}
+                            </div>
+                            <div class="col-md-6">
+                                <label>Tipo Cuenta</label>
+                                {% bootstrap_field form.tipo_cuenta show_label=False %}
+                            </div>
+                            <div class="col-md-6">
+                                <label>Nivel</label>
+                                {% bootstrap_field form.nivel show_label=False %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label>Nivel Superior</label>
+                                {% bootstrap_field form.nivel_padre show_label=False %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label> Descripcion</label>
+                                {% bootstrap_field form.descripcion show_label=False %}
+                            </div>
+                            <div class="col-md-6">
+                                <label> Calificacion</label>
+                                {% bootstrap_field form.calificacion show_label=False %}
+                            </div>
+                             <div class="col-md-6">
+                                <label>Saldo Inicial</label>
+                                {% bootstrap_field form.saldo_inicial show_label=False %}
+                            </div>
+                            <div class="col-md-6">
+                                <label> Activo</label>
+                                {% bootstrap_field form.activo show_label=False %}
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <p class="text-center">
+
+                        <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+                        <a class="default btn btn-link" href="/contabilidad/plandecuentas/">
+                            <button type="button" class="btn btn-primary btn-lg"> Regresar</button>
+                        </a>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</form>
+
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+<script>
+
+</script>
+{% endblock %}                                                                                                                                                

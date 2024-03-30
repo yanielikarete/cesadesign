@@ -1,0 +1,133 @@
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+{% load staticfiles %}
+
+{% block css %}
+{{ block.super }}
+{% endblock %}
+
+{% block section_title %}Orden Produccion{% endblock %}
+{% block section_subtitle %}
+<br />
+ <div class="email-btn-row hidden-xs">
+                    </div>
+
+                    {% endblock %}
+
+{% block content %}
+				<!-- begin col-12 -->
+				<div class="col-md-12">
+					<!-- begin panel -->
+					<div class="panel panel-inverse">
+						<div class="panel-heading">
+							<div class="panel-heading-btn">
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+							</div>
+							<h4 class="panel-title">Reporte por estado de Orden de Produccion:</h4>
+						</div>
+						<div class="panel-body">
+							<div class="table-responsive">
+						
+						
+							
+						<div class="col-md-4">
+                                                      <label for="exampleInputName2">Fecha desde:</label>
+                                                     <input  class="form-control" type="date" name="fechainicial" id="fechainicial" />
+                                               
+							</div>
+
+<div class="col-md-4">
+                                                      <label for="exampleInputName2">Fecha hasta:</label>
+                                                     <input  class="form-control" type="date" name="fechafin" id="fechafin" />
+                                               
+							</div>
+<div class="col-md-4">
+                                                      <label for="exampleInputName2">Estado</label>
+                                                      <select name="estado" id="estado" class="form-control">
+                                                      	
+                                                      	
+                                                      	<option value="0">Todos</option>
+		                <option value="1">Creada</option>
+		                <option value="2">Aprobada</option>
+		                 <option value="3">Finalizada</option>
+
+		                </select>
+
+                                                   </div>
+                                <a class="default btn btn-link"  onclick="consultar()"> <button type="button" class="btn btn-primary btn-lg">  Consultar</button> </a>
+  
+  <a class="btn btn-default buttons-copy buttons-html5" tabindex="0" aria-controls="tabla" download="orden_produccion_por_estado.xls" href="#" onclick="return ExcellentExport.excel(this, 'detalle', 'Sheet Name Here');">
+	<span>EXCEL</span></a>  
+
+   <a class="btn btn-default buttons-copy buttons-html5" onclick="printDiv()">
+    PDF
+ </a>
+
+<h2>Resultados</h2>
+<div id="imprimir">
+<table id="detalle" border="1"  class="table table-striped table-bordered dataTable" aria-describedby="data-table_info">
+<thead>
+	<th>TIP</th><th>NUMERO</th><th>FECHA</th><th>CLIENTE</th><th>PRODUCTO</th><th>CANT</th><th>CODIGO</th><th>PEDIDO</th><th>ESTADO</th> <th>FECHA FINALIZACION</th>
+</thead>
+<tbody></tbody>
+	
+</table>
+
+</div>						</div>
+					</div>
+					
+				</div>
+				<!-- end col-12 -->	
+<iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
+			
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+
+<!--    	    <script src="{% static 'color_admin/assets/js/exportFile.js' %}" type="text/javascript"></script>
+-->
+<script src="{% static 'color_admin/assets/js/excellentexport.js' %}" type="text/javascript"></script>
+    <script src=" https://printjs-4de6.kxcdn.com/print.min.js"></script>
+<script src="{% static 'color_admin/assets/js/script_autotable.js' %}"></script>
+
+	<script type="text/javascript">
+		
+
+	function consultar(){
+		var estado=$("#estado").val();
+		var fechainicial=$("#fechainicial").val();
+		var fechafin=$("#fechafin").val();
+
+          $.ajax({
+                url: "/reporte/obtenerOrdenProduccionxEstado/", // the endpoint
+                type : "POST", // http method
+                data : { estado : estado,fechainicial : fechainicial,fechafin : fechafin,'csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+                success:function(data){
+                $("#detalle tbody tr").remove();
+                  $("#detalle").append(data);
+                },
+                error: function(){
+                 
+                },
+              });
+    }
+    function printDiv() {
+         window.frames["print_frame"].document.body.innerHTML = document.getElementById("imprimir").innerHTML;
+         window.frames["print_frame"].window.focus();
+         window.frames["print_frame"].window.print();
+       }
+	</script>
+	<!-- ================== END PAGE LEVEL JS ================== -->
+	{% if form.errors or form_mode == "update" %}
+	<script type="text/javascript">
+		$( document ).ready(function() {
+		    $(".modal").modal('toggle');
+		});
+	
+	</script>
+	{% endif %}
+{% endblock %}
+

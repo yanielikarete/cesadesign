@@ -1,0 +1,40 @@
+{% extends 'login/base.html' %}
+{% load static from staticfiles %}
+{% load extra_filters %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static 'categoria/lib/handsontable/handsontable.full.css' %}" />
+{% endblock %}
+
+{% block content %}
+    <h1>Agregar </h1>
+    <div class="row">
+       
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-1">
+            <div id="categorias"></div>
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 25px;">
+        <div class="col-md-8 col-md-offset-2">
+            <code>NOTA: Para agregar una nueva fila presione 2 veces la tecla ENTER.</code>
+        </div>
+    </div>
+    <div class="row">
+        <button class="btn btn-primary btn-lg pull-right bnt-guardar">Guardar listado</button>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'categoria/lib/handsontable/handsontable.full.js' %}"></script>
+<script src="{% static 'categoria/js/categoriaproducto.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        var lista_categorias = CategoriaProductoCtr.crearHandsontable();
+        $('.bnt-guardar').click(function () {
+            CategoriaProductoCtr.guardarDatos(lista_categorias.getData(),"{% url "configuracion-categoria-producto-guardar" %}");
+        });
+    });
+</script>
+{% endblock %}

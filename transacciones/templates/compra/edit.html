@@ -1,0 +1,2165 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block css %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+<link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css' %}" rel="stylesheet"/>
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
+
+      rel="stylesheet"/>
+<!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+{% block section_title %} Registro de Factura (Proveedor) {% endblock %}
+{% block content %}
+<style>
+    .panel-border {
+        border: 1px solid #ddd !important;
+    }
+
+    .form-group {
+        margin-bottom: 0px !important;
+    }
+
+    .panel-border {
+        border: 1px solid #ddd !important
+    }
+
+    .highlighter {
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .no-border-input{
+        border: none !important;
+        background-color: #fff !important;
+        border-bottom: 1px solid #eee !important;
+    }
+</style>
+<div class="row">
+    <!-- begin col-6 -->
+    <div class="col-md-12">
+        <form id="formulario" class="form-horizontal" method="post">
+            {% csrf_token %}
+
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                           data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                            <i class="fa fa-plus-circle pull-right"></i>
+                            Datos generales de la factura
+                        </a>
+                    </h3>
+                </div>
+                <div id="collapseOne" aria-expanded="true" id="collapseOne" class="panel-collapse collapse in">
+                    <div class="panel-body panel-border">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Fecha de emisión</label>
+                                <div class="col-sm-3">
+                                    <input id="fecha_emision" class="form-control" type="text"
+                                           name="fecha_emision" value="{{documento.fecha_emision | date:'Y-m-d'}}">
+                                </div>
+                                <label class="col-sm-3 control-label">Fecha de vencimiento</label>
+                                <div class="col-sm-3">
+                                    <input id="fecha_vencimiento" class="form-control" type="text"
+                                           name="fecha_vencimiento" value="{{documento.fecha_vencimiento | date:'Y-m-d'}}" readonly>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Proveedor</label>
+                                <div class="col-sm-9">
+
+                                    <input type="hidden" name="proveedor" value="{{documento.proveedor_id}}"/>
+                                    <select class="form-control" name="proveedor_descripcion" value="{{documento.proveedor_id}}" required readonly>
+                                        <option value="">SELECCIONE PROVEEDOR</option>
+                                        {% for proveedor in proveedores %}
+                                        <option value="{{ proveedor.proveedor_id }}"
+                                                data-id="{{ proveedor.proveedor_id }}"
+                                                data-nombre="{{ proveedor.nombre_proveedor }}"
+                                                data-autorizacion="{{ proveedor.autorizacion_sri }}"
+                                                data-cuenta-contable-compra="{{ proveedor.cuenta_contable_compra.plan_id }}"
+                                                data-establecimiento="{{ proveedor.establecimiento }}"
+                                                data-punto-emision="{{ proveedor.punto_emision }}"
+                                                data-tipo-venta="{{ proveedor.tipo_venta.codigo }}"
+                                                data-venta-descripcion="{{ proveedor.tipo_venta.descripcion }}"
+                                                data-cuenta-gasto="{{ proveedor.cuenta_gasto.plan_id }}"
+                                                data-dias-credito="{{proveedor.dias_credito}}"
+                                                data-retencion-iva="{{proveedor.retencion_iva.id}}"
+                                                data-retencion-fuente="{{proveedor.retencion_fuente.id}}">
+                                            {{ proveedor.codigo_proveedor }} -
+                                            {{ proveedor.nombre_proveedor }} -
+                                            {{ proveedor.ruc }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+
+                                </div>
+                            </div>
+                            {% if documento.compra %}
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Orden de compra #</label>
+                                <div class="col-sm-3">
+                                    <input type="hidden" name="orden_compra" value="{{documento.orden_compra.compra_id | default_if_none:''}}"/>
+                                    <label class="control-label highlighter label label-default" name="orden_compra_numero">  {{documento.orden_compra.nro_compra | default_if_none:''}} </label>
+                                </div>
+                                <label class="col-sm-3 control-label">Compra Local #</label>
+                                <div class="col-sm-3">
+                                        <input type="hidden" name="compra_local" value="{{documento.compra.id | default_if_none:''}}"/>
+                                        <label class="control-label highlighter label label-default" name="compra_local_numero"> {{documento.compra.codigo | default_if_none:''}} </label>
+                                </div>
+                            </div>
+                            
+                            {% endif %}
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Tipo provisión</label>
+                                <div class="col-sm-3">
+                                    <input id="tipo_provision" class="form-control" type="text"
+                                           name="tipo_provision" value="{{documento.tipo_provision | default_if_none:'' }}" readonly required>
+                                </div>
+                                <label class="col-sm-3 control-label">Sustento tributario</label>
+                                <div class="col-sm-3">
+                                    <select class="form-control" name="sustento_tributario" required>
+                                        <option value=""> ---</option>
+                                        {% for s in sustento %}
+                                        <option value="{{ s.id }}" data-id="{{ s.id }}" data-codigo="{{ s.codigo }}">
+                                            {{ s.codigo }} - {{ s.descripcion }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Número de documento</label>
+                                <div class="col-sm-3">
+                                    <input class="form-control highlighter" type="text" placeholder="Establecimiento"
+                                           name="establecimiento" value="{{documento.establecimiento}}" required>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input class="form-control highlighter" type="text" placeholder="Punto de emisión"
+                                           name="punto_emision" value="{{documento.punto_emision }}" required>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input class="form-control highlighter" type="text" placeholder="000"
+                                           name="secuencial" value="{{documento.secuencial}}" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">N° Autorización</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control highlighter" name="autorizacion" type="text" value="{{documento.autorizacion | default_if_none:''}}" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Puntos de Venta</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control" name="puntos_venta" id="puntos_venta" required>
+                                        {% for p in puntos_venta %}
+                                        <option value="{{ p.id }}" data-id="{{ p.id }}" data-establecimiento="{{ p.establecimiento }}"  data-punto_emision="{{ p.punto_emision }}"
+                                                data-secuencial_retencion_electronica="{{ p.secuencial_retencion_electronica }}"
+                                               {% if documento.puntos_venta_id == p.id %}
+                                                selected
+                                                {% endif %} >
+                                             {{ p.nombre }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Descripción</label>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control" name="descripcion" rows="5" required>{{documento.descripcion}}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">Forma de Pago</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" name="forma_pago" required>
+                                            <option value=""> ---</option>
+                                            {% for forma in formas_pago %}
+                                            <option value="{{ forma.id }}" data-id="{{ forma.id }}"
+                                                    data-codigo="{{ forma.codigo }}">
+                                                {{ forma.codigo }} - {{ forma.descripcion }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Base 0%</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control mask_float text-right highlighter"
+                                               name="base_iva_0_factura" value="{{documento.base_iva_0 | floatformat:2 | default_if_none:'0'}}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Base no sujeto IVA</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control mask_float text-right highlighter"
+                                               name="base_no_iva_factura" value="{{ documento.base_no_iva_factura | floatformat:2 | default_if_none:'0' }}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">RISE</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control mask_float text-right highlighter"
+                                               name="base_rise_factura" value="{{ documento.base_rise_factura | default_if_none:'0'  }}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Base IVA {{ documento.porcentaje_iva | floatformat:2 | default_if_none:porcentaje_iva }}%</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control mask_float text-right highlighter"
+                                               name="base_iva_factura" value="{{documento.base_iva | floatformat:2 | default_if_none:'0'}}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">IVA {{ documento.porcentaje_iva | floatformat:2 | default_if_none:porcentaje_iva }}%</label>
+                                    <div class="col-sm-8">
+                                        <input type="hidden" name="porcentaje_iva_factura" value={{ documento.porcentaje_iva }}>
+                                        <input type="text" class="form-control mask_float text-right highlighter"
+                                               name="valor_iva_factura" value="{{documento.valor_iva | floatformat:2 | default_if_none:'0.00'}}"
+                                               readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">TOTAL</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control mask_float text-right highlighter"
+                                               name="total_factura" id="total_factura" style="font-size: 16px;font-weight: 600;"
+                                               value="{{documento.total | floatformat:2  | default_if_none:'0.00'}}" readonly>
+                                    </div>
+                                </div>
+                                    
+                                    <!--<div class="form-group">
+                                    <label class="col-sm-4 control-label">AFECTA AL COSTEO</label>
+                                    <div class="col-sm-8">
+                                       <select class="form-control" name="afecta_costeo" >
+                                            <option value="0" > NO</option>
+                                            <option value="1"
+                                            {% if documento.afecta_produccion%}
+                                                    selected
+                                                  {% endif %} > SI</option>
+                                            
+                                        </select>
+                                    </div>
+                                </div>-->
+                                    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+
+                <ul class="nav nav-tabs nav-tabs-inverse">
+                    <li class="active"><a href="#nav-tab-2" data-toggle="tab">Asiento</a></li>
+                    <li class=""><a href="#nav-tab-3" data-toggle="tab">Retención</a></li>
+                    <li class=""><a href="#nav-tab-4" data-toggle="tab">Costeo</a></li>
+
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade" id="nav-tab-1">
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="tabla-productos">
+                                <thead style="background-color: #ccd0d4">
+                                <tr>
+                                    <th>Acción</th>
+                                    <th style="display:none;">Id</th>
+                                    <th>Cantidad</th>
+                                    <th>Producto</th>
+                                    <th>Precio unitario</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="col-sm-9 control-label">Subtotal {{ documento.porcentaje_iva }}%</label>
+                                <div class="col-sm-2">
+                                    <input type="number" class="form-control" name="base_iva" value="0"
+                                           readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-9 control-label">Subtotal 0%</label>
+                                <div class="col-sm-2">
+                                    <input type="hidden" name="valor_iva_0" value="0">
+                                    <input type="number" class="form-control" name="base_iva_0"
+                                           value="0" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-9 control-label">Descuento</label>
+                                <div class="col-sm-2">
+                                    <input type="number" class="form-control" name="descuento"
+                                           value="0" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-9 control-label">ICE</label>
+                                <div class="col-sm-2">
+                                    <input type="hidden" name="base_ice" value="0">
+                                    <input type="hidden" name="porcentaje_ice" value="0">
+                                    <input type="number" class="form-control" name="valor_ice" value="0"
+                                           readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-9 control-label">IVA {{ documento.porcentaje_iva }}%</label>
+                                <div class="col-sm-2">
+                                    <input type="hidden" name="porcentaje_iva" value={{ documento.porcentaje_iva }}>
+                                    <input type="number" class="form-control" name="valor_iva" value="0"
+                                           readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-9 control-label">Total</label>
+                                <div class="col-sm-2">
+                                    <input type="number" class="form-control" name="total"
+                                           value="0" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade active in" id="nav-tab-2">
+                        <p class="text-right">
+                            <button type="button" class="btn btn-warning" id="add-asiento"><i class="fa fa-plus"></i>
+                            </button>
+                        </p>
+                        <table class="table table-striped table-bordered" id="tabla-asiento">
+                            <thead style="background-color: #ccd0d4">
+                            <tr>
+                                <th style="display:none;">ID</th>
+                                <th style="text-align:center;"></th>
+                                <th style="text-align: center;min-width: 300px;">Cuenta</th>
+                                <th style="text-align: center">Debe</th>
+                                <th style="text-align: center">Haber</th>
+                                <th style="text-align: center">Centro de Costo</th>
+                                <th style="text-align: center">Concepto</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td></td>
+                                <td><strong>TOTAL:</strong></td>
+                                <td align="right">
+                                    <div class="input-group"><span class="input-group-addon">$</span><input
+                                            class="form-control mask_float text-right"
+                                            style="font-size: 16px;font-weight: 600;" name="asiento-total-debe"
+                                            value="0.00" readonly></div>
+                                </td>
+                                <td align="right">
+                                    <div class="input-group"><span class="input-group-addon">$</span><input
+                                            class="form-control mask_float text-right"
+                                            style="font-size: 16px;font-weight: 600;" name="asiento-total-haber"
+                                            value="0.00" readonly></div>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            </tfoot>
+                        </table>
+
+                        <input type="hidden" name="columnas_receta" id="columnas_receta" value="0"/>
+                        <input type="hidden" name="id_fila_cambiar" id="id_fila_cambiar" value=""/>
+                        <input type="hidden" name="centro_defecto_id" id="centro_defecto_id" value="{{centros_defecto.centro_id}}"/>
+                        <input type="hidden" name="centro_defecto_nombre" id="centro_defecto_nombre" value="{{centros_defecto.nombre_centro}}"/>
+
+                    </div>
+                    <div class="tab-pane fade" id="nav-tab-3">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Fecha de emisión</label>
+                            <div class="col-sm-3">
+                                <input class="form-control" type="text" name="retencion-fecha-emision">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Número de documento</label>
+                            <div class="col-sm-2">
+                                <input class="form-control" type="text" placeholder="Establecimiento"
+                                       name="retencion-establecimiento" maxlength="3">
+                            </div>
+                            <div class="col-sm-2">
+                                <input class="form-control" type="text" placeholder="Punto de emisión"
+                                       name="retencion-punto" maxlength="3">
+                            </div>
+                            <div class="col-sm-3">
+                                <input class="form-control" type="text" placeholder="Secuencial"
+                                       name="retencion-secuencial">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Autorización</label>
+                            <div class="col-sm-3">
+                                <input class="form-control" type="text" name="retencion-autorizacion">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Descripción</label>
+                            <div class="col-sm-5">
+                                <textarea class="form-control" name="retencion-descripcion" rows="5"></textarea>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="tabla-retencion">
+                                <thead style="background-color: #ccd0d4">
+                                <tr>
+                                    <th style="display:none;">Id</th>
+                                    <th>Acción</th>
+                                    <th>Código</th>
+                                    <th>Concepto</th>
+                                    <th>Base imponible</th>
+                                    <th>% retención</th>
+                                    <th>Valor retenido</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td style="display:none;"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><strong>TOTAL RETENIDO:</strong></td>
+                                    <td><input type="text" class="form-control mask_float"
+                                               name="retencion_total_retenido"
+                                               placeholder="0.00" required readonly></td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <button style="margin-left: 1%;" type="button" class="btn btn-inverse" data-toggle="modal"
+                                data-target="#modal-retencion-fuente">
+                            <i class="fa fa-plus-circle"></i>
+                            Retención fuente
+                        </button>
+                        <button style="margin-left: 1%;" type="button" class="btn btn-inverse" data-toggle="modal"
+                                data-target="#modal-retencion-iva">
+                            <i class="fa fa-plus-circle"></i>
+                            Retención IVA
+                        </button>
+                    </div>
+                
+                  <div class="tab-pane fade" id="nav-tab-4">
+                       
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="tabla-costeo">
+                                <thead style="background-color: #ccd0d4">
+                                <tr>
+                                    <th  width="15px">Acc.</th>
+                                    <th  width="50px">Tipo</th>
+                                    <th  width="50px">Rubro</th>
+                                     <th  width="100px">OP</th>
+                                    <th width="15px">Porcentaje</th>
+                                    <th width="15px">Valor</th>
+                                   
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {% if costeo %}
+                                                    {% for c  in costeo %}
+
+                                                  <tr>
+                                                    <input type="hidden" class="form-control" id="id_costeo{{ forloop.counter }}" name="id_costeo{{ forloop.counter }}" value="{{ c.id }}"/>
+                                                    <td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>
+             <td><select class="form-control" id="tipo_costeo_kits{{ forloop.counter }}" name="tipo_costeo_kits{{ forloop.counter }}" onchange="mostrarOP({{ forloop.counter }})" > 
+             <option value="DIRECTO"  {% if c.tipo == 'DIRECTO' %}
+                                                           selected="selected" 
+                                                           {% endif %}>DIRECTO </option>
+             <option value="INDIRECTO"  {% if c.tipo == 'INDIRECTO' %}
+                                                           selected="selected" 
+                                                           {% endif %}>INDIRECTO </option>
+                 
+             </select></td>
+              <td><select class="form-control" id="rubro_kits{{ forloop.counter }}" name="rubro_kits{{ forloop.counter }}" > 
+            <option value="ALIMENTACION" {% if c.rubro == 'ALIMENTACION' %}
+                                                           selected="selected" 
+                                                           {% endif %}>ALIMENTACION </option>
+             <option value="OTROS PRODUCCION"  {% if c.rubro == 'OTROS PRODUCCION' %}
+                                                           selected="selected" 
+                                                           {% endif %} >OTROS PRODUCCION </option>
+             <option value="PLANTA" {% if c.rubro == 'PLANTA' %}
+                                                           selected="selected" 
+                                                           {% endif %}>PLANTA </option>
+             <option value="MANTENIMIENTO"  {% if c.rubro == 'MANTENIMIENTO' %}
+                                                           selected="selected" 
+                                                           {% endif %}>MANTENIMIENTO</option>
+              </select></td>
+              <td><span id="div_op{{ forloop.counter }}"><select class="form-control" id="op_kits{{ forloop.counter }}" name="op_kits{{ forloop.counter }}" >
+                            <option value="0"> SELECCIONE</option>
+
+                                    {% for o  in ordenes %}
+                      <option value="{{ o.id }}"  {% if o.id == c.orden_produccion_id %}
+                                                           selected="selected" 
+                                                           {% endif %} > {{ o.tipo }}-{{ o.codigo }}|{{ o.descripcion }}</option>
+                 
+                                  {% endfor %} 
+              </select></span></td>
+               
+            <td>
+            <input type="text" required="required" class="form-control" id="porcentaje_kits{{ forloop.counter }}" name="porcentaje_kits{{ forloop.counter }}" onkeyup="mostrarPorcentaje({{ forloop.counter }})"  value="{{ c.porcentaje }}"  ></td>
+            <td><input type="text" required="required" class="form-control" id="total_kits{{ forloop.counter }}" name="total_kits{{ forloop.counter }}" value="{{ c.total }}" readonly /></td>
+            </tr>
+                                                    
+                                                    {% endfor %} 
+                                                   {% endif %}
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                     <td></td>
+                                    <td colspan="3"><strong>TOTAL :</strong></td>
+                                     <td><input type="text" class="form-control mask_float text-right highlighter"
+                                               name="porcentaje_costeo"  id="porcentaje_costeo"
+                                               required readonly></td>
+                                   
+                                    
+                                    <td><input type="text" class="form-control mask_float text-right highlighter"
+                                               name="valor_costeo" id="valor_costeo"
+                                               required readonly></td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                            <p class="text-right">
+                                <button type="button" class="btn btn-default btn-lg" id="add-costeo"><i class="fa fa-plus"></i>Agregar</button>
+         {% if costeo %}
+<input type="hidden" name="columnas_costeo" id="columnas_costeo" value="{{ costeo|length }}" />
+{% else %}
+<input type="hidden" name="columnas_costeo" id="columnas_costeo" value="1" />
+
+{% endif %}
+
+                                                                                             
+                                                 </p>
+                        </div>
+                       
+                    </div>
+                        
+                        
+                </div>
+                
+                
+                
+                </div>
+            </div>
+            <button type="submit" class="btn btn-inverse"
+                    onclick="return confirm('¿Está seguro de guardar la factura?')"><i class="fa fa-save"></i> Guardar
+            </button>
+        </form>
+    </div>
+</div>
+<!-- Modal Retencion fuente-->
+<div class="modal fade bs-example-modal-lg" id="modal-retencion-fuente">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Retención en la fuente</h4>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table2 table-striped" width="100%" id="tabla-retencion-fuente">
+                        <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Descripción</th>
+                            <th>Porcentaje</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for retencion_fuente in retenciones_fuente %}
+                        <tr>
+                            <td>{{ retencion_fuente.codigo }}</td>
+                            <td>{{ retencion_fuente.descripcion }}</td>
+                            <td>{{ retencion_fuente.porcentaje }}</td>
+                            <td onclick="cargar_retencion('{{ retencion_fuente.id }}','{{ retencion_fuente.codigo }}','{{ retencion_fuente.descripcion }}','{{ retencion_fuente.porcentaje }}',0,0)">
+                                <a class="btn btn-inverse remove_fields">
+                                    <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Retencion iva-->
+<div class="modal fade bs-example-modal-lg" id="modal-retencion-iva">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Retención en IVA</h4>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table2 table-striped" width="100%" id="tabla-retencion-iva">
+                        <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Descripción</th>
+                            <th>Porcentaje</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for retencion_iva in retenciones_iva %}
+                        <tr>
+                            <td>{{ retencion_iva.codigo }}</td>
+                            <td>{{ retencion_iva.descripcion }}</td>
+                            <td>{{ retencion_iva.porcentaje }}</td>
+                            <td onclick="cargar_retencion_iva('{{ retencion_iva.id }}','{{ retencion_iva.codigo }}','{{ retencion_iva.descripcion }}','{{ retencion_iva.porcentaje }}',0,0)">
+                                <a class="btn btn-inverse remove_fields">
+                                    <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Plan Cuenta-->
+<div class="modal fade bs-example-modal-lg" id="modal-plan-cuenta">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Plan de cuenta</h4>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table2 table-striped table-bordered" width="100%" id="tabla-plan-cuenta">
+                        <thead>
+                        <tr>
+                            <th>Acción</th>
+                            <th>Código</th>
+                            <th>Descripción</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for cuenta in cuentas %}
+                        <tr>
+                            <td onclick="cargar_plan_cuenta('{{ cuenta.plan_id }}','{{ cuenta.nombre_plan }}')">
+                                <a class="btn btn-inverse btn-sm remove_fields">
+                                    <i class="fa fa-plus"></i>
+                                </a>
+                            </td>
+                            <td>{{ cuenta.codigo_plan }}</td>
+                            <td>{{ cuenta.nombre_plan }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- MODAL CENTROS DE COSTO -->
+<div class="modal fade" id="modal-dialog-centro">
+  	<div class="modal-dialog">
+  		<div class="modal-content">
+  			<div class="panel-body">
+  				<div class="table-responsive">
+  					<table class="table table-striped table-bordered" id="tabla_centro" style="width:100%;">
+  						<thead>
+  							<tr>
+  								<td></td>
+  								<th>Centro</th>
+
+  							</tr>
+  						</thead>
+  						<tbody>
+  							{% for centro  in centros %}
+  							<tr>
+  								<td  onclick="cargarCodigoCentro('{{ centro.centro_id }}','{{ centro.nombre_centro }}')"><a class="btn btn-danger remove_fields">
+  									<i class=" glyphicon glyphicon-plus icon-white"></i>
+  								</a></td>
+  								<td>{{ centro.nombre_centro }}</td>
+  							</tr >
+  							{% endfor %}
+
+  						</tbody>
+  					</table>
+  				</div>
+  				<button type="button" onclick="cerrarCentros()" class="btn btn-danger btn-block">Cerrar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+
+
+  			</div>
+  		</div>
+  	</div>
+  </div>
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>>
+
+<script>
+    
+    $('#fecha_emision').datepicker({todayHighlight: true, autoclose: true, format: 'yyyy-mm-dd'});
+    $('#fecha_vencimiento').datepicker({todayHighlight: true, autoclose: true, format: 'yyyy-mm-dd'});
+    $('select[name="proveedor_descripcion"]').val("{{documento.proveedor_id}}").trigger("change");
+    $('select[name="sustento_tributario"]').val("{{documento.sustento_tributario_id}}").trigger("change");
+    $('select[name="forma_pago"]').val("{{documento.sri_forma_pago_id}}").trigger("change");
+    $('input[name="retencion-fecha-emision"]').datepicker({todayHighlight: true,autoclose: true,format: 'yyyy-mm-dd'});
+        $('input[name="retencion-secuencial"]').mask('999999999');
+
+     function pad (str, max) {
+        str = str.toString();
+        return str.length < max ? pad("0" + str, max) : str;
+      }
+      
+    var secuencial = $('input[name="secuencial"]').val();
+    if(secuencial.length  < 9){
+        while(secuencial.length  < 9){
+            secuencial = '0'+secuencial;
+        }
+        $('input[name="secuencial"]').val(secuencial);
+    }
+    $('input[name="secuencial"]').mask('999999999');
+    $('input[name="punto_emision"]').mask('999');
+    $('input[name="establecimiento"]').mask('999');
+    $(".mask_float").maskMoney({thousands: '', decimal: '.', allowZero: true});
+    //$('input[name="retencion-secuencial"]').mask('000999999');
+
+
+
+    $("#columnas_receta").val("0");
+    cuenta_contable_compra_id = 0;
+    cuenta_contable_gasto_id = 0;
+    cuenta_contable_inventario = 628;
+    cuenta_contable_iva = 617;
+    dias_credito=0;
+    var valor_retencion_fuente = 0;
+    var valor_retenvion_iva = 0;
+
+    function getFechaHoy() {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+        var yyyy = today.getFullYear();
+
+        if (dd < 10) {
+            dd = '0' + dd
+        }
+        if (mm < 10) {
+            mm = '0' + mm
+        }
+        today = yyyy + '-' + mm + '-' + dd;
+        return today;
+    }
+    
+      
+        
+
+    $(document).ready(function () {
+
+        $('#tabla-cliente').DataTable();
+        $('#tabla-proveedor').DataTable();
+        $('#tabla-bodega').DataTable();
+        $('#tabla-producto').DataTable();
+        $('#tabla-item').DataTable();
+        $('#tabla-retencion-fuente').DataTable();
+        $('#tabla-retencion-iva').DataTable();
+        $('#tabla-orden-compra').DataTable();
+        $('#tabla-plan-cuenta').DataTable();
+
+        //cargar secuenciales y datos de la retención de la empresa
+        var retencion_autorizacion = $('input[name="retencion-autorizacion"]').val();
+        var retencion_establecimiento = $('input[name="retencion-establecimiento"]').val();
+        var retencion_punto = $('input[name="retencion-punto"]').val();
+        var retencion_secuencial = $('input[name="retencion-secuencial"]').val();
+        //CARGAS AUTOMÁTICAS
+        actualizarPorcentaje();
+                {% if documento.retenido %}
+            $.ajax({
+                    type: "POST",
+                    url: "{% url 'consultar-documento-retencion' %}",
+                    data: {
+                        'id': {{documento.id}},
+                        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                    },
+                    async:false,
+                    success: function(response) {
+
+                        if(response.length>0){
+
+                            $('input[name="retencion-autorizacion"]').val(response[0][3]);
+                            $('input[name="retencion-establecimiento"]').val(response[0][0]);
+                            $('input[name="retencion-punto"]').val(response[0][1]);
+                            $('input[name="retencion-secuencial"]').val(response[0][2]);
+                            $('input[name="retencion-fecha-emision"]').val(response[0][5]);
+                            $('textarea[name="retencion-descripcion"]').val(response[0][4]);
+
+                            for (var i = 0; i < response.length; i++) {
+                                //console.log(response[i]);
+                                if(response[i][12]==1){ //RETENCION DE LA FUENTA
+                                    cuenta_contable_retencion_fuente= response[i][13];
+                                    cargar_retencion2(response[i][6], response[i][7], response[i][8], response[i][10],response[i][9],response[i][11]);
+                                }
+                                if(response[i][12]==2){ //RETENCION IVA
+                                    cuenta_contable_retencion_iva = response[i][13];
+                                    cargar_retencion_iva2(response[i][6], response[i][7], response[i][8], response[i][10],response[i][9],response[i][11]);
+                                }
+
+                            }
+                            actualizar_retencion(0);
+                            actualizar_tabla_retencion();
+                        }
+
+                    },
+                    error: function(response) {
+                        alert("El documento no tiene retención asociada.");
+                    }
+            });
+
+        {% endif %}
+
+        {% if documento.asiento_id %}
+            $.ajax({
+                    type: "POST",
+                    url: "{% url 'consultar-documento-asiento' %}",
+                    data: {
+                        'id': {{documento.asiento_id}},
+                        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                    },
+                    async:false,
+                    success: function(response) {
+                        for (var i = 0; i < response.length; i++) {
+                            //console.log(response[i]);
+                            cargarasiento(response[i][2],response[i][2],response[i][9], response[i][3], response[i][4],response[i][5],response[i][6],"");
+                        }
+                        calcular_totales_asiento();
+                    },
+                    error: function(response) {
+                        alert("El proveedor no tiene retención de IVA asociada.");
+
+                    }
+                });
+        {% endif %}
+
+        {% if documento.generada %}
+
+            $('input[name="retencion-fecha-emision"]').val(getFechaHoy());
+
+            
+            if (retencion_secuencial == "") {
+                var selected = $('#puntos_venta').find('option:selected');
+                var sec = selected.data('secuencial_retencion_electronica');
+                var nsec=pad (sec, 9);
+                $('input[name="retencion-secuencial"]').val(nsec);
+                //$.ajax({
+                //    url: '/config/obtenerSecuencial/',
+                //    type: "POST",
+                //    data: {id: 'retencion'},
+                //    async: false,
+                //    success: function (data) {
+                //        data = parseInt(data) + 1;
+                //        $('input[name="retencion-secuencial"]').val('000' + data);
+                //    }
+                //});
+            }
+            if (retencion_autorizacion == "") {
+                $.ajax({
+                    url: '/config/obtenerParametro/',
+                    type: "POST",
+                    async: false,
+                    data: {clave: 'autorizacion_retencion'},
+                    success: function (data) {
+                        $('input[name="retencion-autorizacion"]').val(data);
+                    }
+                });
+            }
+            if (retencion_establecimiento == "") {
+                var selected = $('#puntos_venta').find('option:selected');
+                var establ = selected.data('establecimiento');
+                //alert(establ);
+                 $('input[name="retencion-establecimiento"]').val(establ);
+                //$.ajax({
+                //    url: '/config/obtenerParametro/',
+                //    type: "POST",
+                //    async: false,
+                //    data: {clave: 'establecimiento_retencion'},
+                //    success: function (data) {
+                //        $('input[name="retencion-establecimiento"]').val(data);
+                //    }
+                //});
+            }
+            if (retencion_punto == "") {
+                var selected = $('#puntos_venta').find('option:selected');
+                var punt = selected.data('punto_emision');
+                $('input[name="retencion-punto"]').val(punt);
+           
+                
+                //$.ajax({
+                //    url: '/config/obtenerParametro/',
+                //    type: "POST",
+                //    async: false,
+                //    data: {clave: 'emision_retencion'},
+                //    success: function (data) {
+                //        $('input[name="retencion-punto"]').val(data);
+                //    }
+                //});
+            }
+           
+           
+           $("select[name='puntos_venta']").change(function () {
+            var selected = $(this).find('option:selected');
+            var punt = selected.data('punto_emision');
+            var sec = selected.data('secuencial_retencion_electronica');
+            var establ = selected.data('establecimiento');
+            if (retencion_establecimiento == "") {
+             $('input[name="retencion-establecimiento"]').val(establ);
+            }
+            if (retencion_punto == "") {
+             $('input[name="retencion-punto"]').val(punt);
+            }
+            if (retencion_secuencial == "") {
+                 var nsec=pad (sec, 9);
+             $('input[name="retencion-secuencial"]').val(nsec);
+            }
+
+        });
+           
+           
+            cargar_proveedor_selected();
+            calcular_totales_base_iva($('input[name="base_iva_factura"]').val());
+
+        {% else %}// si no es generada debe inicializar la cuentas contables del proveedor, estas cuentas deben coincidir con las cuentas del módulo proveedor
+
+            cargar_cuentas_proveedor();
+
+        {% endif %}
+        
+        actualizar_tipo_asiento();
+
+    });
+
+    function mostrarCuentas(data) {
+        $('#id_fila_cambiar').val(data);
+        $("#modal-plan-cuenta").modal('toggle');
+    }
+
+    function cargar_plan_cuenta(id, nombre) {
+        var fila = $('#id_fila_cambiar').val();
+        $('#id_cuenta_kits' + fila).val(id);
+        $('#cuenta_kits' + fila).val(nombre);
+        $('#modal-plan-cuenta').modal('toggle');
+    }
+    function mostrarCentros(data){
+     $('#id_fila_cambiar').val(data);
+     $("#modal-dialog-centro").modal('toggle');
+    }
+    function cargarCodigoCentro(id,nombre){
+      var fila=$('#id_fila_cambiar').val();
+      $('#id_centro_kits'+fila).val(id);
+      $('#centro_kits'+fila).val(nombre);
+      $("#modal-dialog-centro").modal('toggle');
+    }
+
+    //CUANDO SE CAMBIA EL PROVEEDOR
+    $(function () {
+        $('select[name="proveedor_descripcion"]').change(function () {
+            cargar_proveedor_selected();
+        });
+
+    });
+
+    function cargar_proveedor_selected(){
+
+        var selected = $('select[name="proveedor_descripcion"]').find('option:selected');
+
+        if (selected.val() != "") {
+                var id = selected.data('id');
+                var descripcion = selected.data('nombre');
+                var autorizacion = selected.data('autorizacion');
+                var cuenta_compra_id = selected.data('cuenta-contable-compra');
+                var establecimiento = selected.data('establecimiento');
+                var punto_emision = selected.data('punto-emision');
+                var tipo_venta_codigo = selected.data('tipo-venta');
+                var tipo_venta_desc = selected.data('venta-descripcion');
+                var cuenta_gasto_id = selected.data('cuenta-gasto');
+                dias_credito = selected.data('dias-credito');
+                var retencion_iva = selected.data('retencion-iva');
+                var retencion_fuente = selected.data('retencion-fuente');
+                //console.log(selected);
+                cargar_proveedor(id, descripcion, autorizacion, cuenta_compra_id, establecimiento, punto_emision, tipo_venta_codigo, tipo_venta_desc, cuenta_gasto_id, dias_credito, retencion_iva, retencion_fuente);
+
+        }
+    }
+
+    function cargar_cuentas_proveedor(){
+        var selected = $('select[name="proveedor_descripcion"]').find('option:selected');
+        if (selected.val() != "") {
+                var id = selected.data('id');
+                var descripcion = selected.data('nombre');
+                var autorizacion = selected.data('autorizacion');
+                var cuenta_compra_id = selected.data('cuenta-contable-compra');
+                var establecimiento = selected.data('establecimiento');
+                var punto_emision = selected.data('punto-emision');
+                var tipo_venta_codigo = selected.data('tipo-venta');
+                var tipo_venta_desc = selected.data('venta-descripcion');
+                var cuenta_gasto_id = selected.data('cuenta-gasto');
+                dias_credito = selected.data('dias-credito');
+                var retencion_iva = selected.data('retencion-iva');
+                var retencion_fuente = selected.data('retencion-fuente');
+
+            //asignamos los atributos al proveedor
+            cuenta_contable_compra_id = cuenta_compra_id;
+            cuenta_contable_gasto_id = cuenta_gasto_id;
+
+
+        }
+    }
+
+    function cargar_proveedor(id, descripcion, autorizacion, cuenta_compra_id, establecimiento, punto_emision, tipo_venta_codigo, tipo_venta_desc, cuenta_gasto_id, dias_credito, retencion_iva, retencion_fuente) {
+        $('input[name="proveedor"]').val(id);
+        $('input[name="autorizacion"]').val(autorizacion);
+        $('input[name="establecimiento"]').val(establecimiento);
+        $('input[name="punto_emision"]').val(punto_emision);
+        $('input[name="tipo_provision"]').val(tipo_venta_desc);
+        $('#fecha_vencimiento').datepicker("setDate", "+" + dias_credito + "d");
+
+        $("#tabla-orden-compra tbody tr").remove();
+        $("#tabla-asiento tbody tr").remove();
+
+        //setear la cuenta de gasto o cuenta del proveedor
+        cuenta_contable_compra_id = cuenta_compra_id;
+        cuenta_contable_gasto_id = cuenta_gasto_id;
+        cuenta_contable_inventario = 628;
+        cuenta_contable_iva = 617;
+
+
+        cargar_cuenta_contable(cuenta_contable_compra_id);
+
+        {% if documento.compra %}
+            cargar_cuenta_contable(cuenta_contable_inventario);
+        {% else %}
+            cargar_cuenta_contable(cuenta_contable_gasto_id);
+        {% endif %}
+
+        cargar_cuenta_contable(cuenta_contable_iva);
+        var cont_retf=0;
+        var cont_reti=0;
+
+        /* Consulta las retenciones y se agregan a la tabla de retenciones por proveedor*/
+        if (retencion_fuente) {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'consultar-retencion' %}",
+                async:false,
+                data: {
+                    'id': retencion_fuente,
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: function (response) {
+                    for (var i = 0; i < response.length; i++) {
+                        cargar_retencion(response[i][0], response[i][1], response[i][2], response[i][3],0,0);
+                        cuenta_contable_retencion_fuente = response[i][7];
+                        cargar_cuenta_contable(cuenta_contable_retencion_fuente);
+                        cont_retf=cont_retf+1;
+
+                    }
+                },
+                error: function (response) {
+                    alert("El proveedor no tiene retención de la fuente asociada.");
+                    cont_retf=0;
+
+                }
+            });
+        }else{
+            alert("El proveedor no tiene retención de la fuente asociada.");
+             cont_retf=0;
+        }
+
+        if (retencion_iva) {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'consultar-retencion' %}",
+                async:false,
+                data: {
+                    'id': retencion_iva,
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: function (response) {
+                    for (var i = 0; i < response.length; i++) {
+                        cargar_retencion_iva(response[i][0], response[i][1], response[i][2], response[i][3],0,0);
+                        cuenta_contable_retencion_iva = response[i][7];
+                        cargar_cuenta_contable(cuenta_contable_retencion_iva);
+                        cont_reti=cont_reti+1;
+                    }
+                },
+                error: function (response) {
+                    alert("El proveedor no tiene retención de IVA asociada.");
+                     cont_reti=0;
+
+                }
+            });
+        }else{
+            alert("El proveedor no tiene retención de IVA asociada.");
+             cont_reti=0;
+        }
+     //alert(cont_retf);
+     //alert(cont_reti);
+        
+        if (cont_retf==0 && cont_reti==0) {
+             var selected = $('#puntos_venta').find('option:selected');
+             var retencion_establecimiento = $('input[name="retencion-establecimiento"]').val();
+        var retencion_punto = $('input[name="retencion-punto"]').val();
+        var retencion_secuencial = $('input[name="retencion-secuencial"]').val();
+        
+            var punt = selected.data('punto_emision');
+            var sec = selected.data('secuencial_retencion_electronica');
+            var establ = selected.data('establecimiento');
+            if (retencion_establecimiento == "") {
+             $('input[name="retencion-establecimiento"]').val(establ);
+            }
+            if (retencion_punto == "") {
+             $('input[name="retencion-punto"]').val(punt);
+            }
+            if (retencion_secuencial == "") {
+             $('input[name="retencion-secuencial"]').val(sec);
+            }
+            
+            
+            
+            //$('input[name="retencion-secuencial"]').val('000');
+            //
+            //$('input[name="retencion-autorizacion"]').val('0000000000');
+            //
+            //$('input[name="retencion-establecimiento"]').val('000');
+            //
+            //$('input[name="retencion-punto"]').val('000');
+
+            //code
+        }
+
+    }
+
+    function cargar_cuenta_contable(id) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'consultar-cuenta-compra' %}",
+            data: {
+                'id': id,
+                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+            },
+            success: function (response) {
+                for (var i = 0; i < response.length; i++) {
+                    cargarasiento(response[i][0], response[i][1], response[i][2], 0, 0,"","","");
+                }
+            },
+            error: function (response) {
+                alert("El proveedor no tiene cuenta contable asociada.");
+                console.log(response);
+            }
+        });
+    }
+
+    /**
+     * Funcion para añadir una nueva fila en la tabla
+     */
+    $("#add-asiento").click(function () {
+
+        var num_recetas = $('#columnas_receta').val();
+        num_recetas = parseInt(num_recetas) + 1;
+        var tds = $("#tabla-asiento tr:first td").length;
+        var trs = $("#tabla-asiento tr").length;
+        var centro_id=$('#centro_defecto_id').val();
+        var centro_nombre=$('#centro_defecto_nombre').val();
+        var nuevaFila = '<tr><td  class="eliminar-asiento"><a class="btn btn-danger btn-sm remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+        nuevaFila += '<td><input type="hidden" required="required" class="form-control asiento-id" id="id_cuenta_kits' + num_recetas + '" name="id_cuenta_kits' + num_recetas + '"> ';
+        nuevaFila += '<div class="input-group add-on"><input type="text" required="required" class="form-control asiento-descripcion" id="cuenta_kits' + num_recetas + '" name="cuenta_kits' + num_recetas + '" onfocus="mostrarCuentas(' + num_recetas + ')" readonly="readonly"><div class="input-group-btn"> <a class="btn btn-inverse" data-toggle="modal" data-target=".bd-example-modal-lg" onclick="mostrarCuentas(' + num_recetas + ')"><i class=" glyphicon glyphicon-search icon-white"></i></a></div></td>';
+        nuevaFila += '<td><div class="input-group"><span class="input-group-addon">$</span><input class="form-control mask_float highlighter asiento-debe text-right" required="required" id="debe_kits' + num_recetas + '" name="debe_kits' + num_recetas + '" onkeyup="calcular_totales_asiento()"  title="Debe"></td></div>';
+        nuevaFila += '<td><div class="input-group"><span class="input-group-addon">$</span><input class="form-control mask_float highlighter asiento-haber text-right" required="required" id="haber_kits' + num_recetas + '" name="haber_kits' + num_recetas + '" onkeyup="calcular_totales_asiento()"  title="Haber"></td></div>';
+        nuevaFila += '<td><input type="hidden" class="form-control asiento-centro" id="id_centro_kits' + num_recetas + '" name="id_centro_kits' + num_recetas + '" value="'+centro_id+'"> ';
+        nuevaFila += '<div class="input-group add-on"><input type="text" required="required" class="form-control" id="centro_kits' + num_recetas + '" value="'+centro_nombre+'" name="centro_kits' + num_recetas + '" onfocus="mostrarCentros('+num_recetas+')" readonly="readonly"><div class="input-group-btn"><a class="btn btn-inverse" data-toggle="modal" data-target=".bd-example-modal-lg" onclick="mostrarCentros('+num_recetas+')"> <i class=" glyphicon glyphicon-search icon-white"></i></a></div></td>';
+        nuevaFila += '<td><input type="text"  class="form-control asiento-concepto" id="concepto_kits' + num_recetas + '" name="concepto_kits' + num_recetas + '"> ';
+        nuevaFila += '</tr>';
+        $('#columnas_receta').val(num_recetas);
+        $("#tabla-asiento").append(nuevaFila);
+        $(".mask_float").maskMoney({thousands: '', decimal: '.', allowZero: true});
+
+    });
+
+
+    /**
+     * Funcion para eliminar la ultima columna de la tabla.
+     * Si unicamente queda una columna, esta no sera eliminada
+     */
+    $("#del").click(function () {
+        // Obtenemos el total de columnas (tr) del id "tabla"
+        var trs = $("#tabla-asiento tr").length;
+        if (trs > 1) {
+            // Eliminamos la ultima columna
+            $("#tabla-asiento tr:last").remove();
+        }
+    });
+
+
+    $(document).on("click", ".eliminar-asiento", function () {
+        var parent = $(this).parent();
+        $(parent).remove();
+        calcular_totales_asiento();
+    });
+
+    function cargarasiento(id, codigo, descripcion, debe, haber, centro, concepto,tipo) {
+        var contador=validar_registro_asiento('tabla-asiento',id,descripcion);
+        if (contador>0){
+            
+        }else{
+
+        var num_recetas = $('#columnas_receta').val();
+        var clase="";
+        num_recetas = parseInt(num_recetas) + 1;
+        var tds = $("#tabla-asiento tr:first td").length;
+        var trs = $("#tabla-asiento tr").length;
+        var centro_id=$('#centro_defecto_id').val();
+        var centro_nombre=$('#centro_defecto_nombre').val();
+        
+        var nombre_c='';
+        
+        {% for centro  in centros %}
+        var centro_id={{ centro.centro_id }};
+        var c_nombre='{{ centro.nombre_centro }}';
+        if (centro_id==centro){
+            nombre_c=c_nombre;
+        }
+ 		{% endfor %}
+        
+        if (centro==''){
+            nombre_c=centro_nombre;
+            centro=centro_id
+        }
+        
+        if (debe>haber){
+            clase="debe";
+        }else{
+            clase="haber";
+        }
+         
+        var nuevaFila = '<tr><td  class="eliminar-asiento"><a class="btn btn-danger btn-sm remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+        nuevaFila += '<td><input type="hidden" required="required" class="form-control asiento-id" id="id_cuenta_kits' + num_recetas + '" name="id_cuenta_kits' + num_recetas + '" value="'+id+'"> ';
+        nuevaFila += '<div class="input-group add-on"><input type="text" required="required" class="form-control asiento-descripcion" id="cuenta_kits' + num_recetas + '" name="cuenta_kits' + num_recetas + '" onfocus="mostrarCuentas(' + num_recetas + ')" readonly="readonly" value="'+descripcion+'"><div class="input-group-btn"> <a class="btn btn-inverse" data-toggle="modal" data-target=".bd-example-modal-lg" onclick="mostrarCuentas(' + num_recetas + ')"><i class=" glyphicon glyphicon-search icon-white"></i></a></div></td>';
+        nuevaFila += '<td><div class="input-group"><span class="input-group-addon">$</span><input class="form-control mask_float highlighter asiento-debe text-right" required="required" id="debe_kits' + num_recetas + '" name="debe_kits' + num_recetas + '" onkeyup="calcular_totales_asiento()"  title="Debe" value="'+parseFloat(debe).toFixed(2)+'"></td></div>';
+        nuevaFila += '<td><div class="input-group"><span class="input-group-addon">$</span><input class="form-control mask_float highlighter asiento-haber text-right" required="required" id="haber_kits' + num_recetas + '" name="haber_kits' + num_recetas + '" onkeyup="calcular_totales_asiento()"  title="Haber" value="'+parseFloat(haber).toFixed(2)+'"></td></div>';
+        nuevaFila += '<td><input type="hidden" class="form-control asiento-centro" id="id_centro_kits' + num_recetas + '" name="id_centro_kits' + num_recetas + '" value="'+centro+'"><input type="hidden" class="form-control" id="tipo_kits' + num_recetas + '" name="tipo_kits' + num_recetas + '" value="'+tipo+'"> <input type="hidden" class="form-control" id="clase_kits' + num_recetas + '" name="clase_kits' + num_recetas + '" value="'+clase+'"> ';
+        nuevaFila += '<div class="input-group add-on"><input type="text" required="required" class="form-control" id="centro_kits' + num_recetas + '" name="centro_kits' + num_recetas + '" onfocus="mostrarCentros('+num_recetas+')" readonly="readonly" value="' + nombre_c + '"><div class="input-group-btn"><a class="btn btn-inverse" data-toggle="modal" data-target=".bd-example-modal-lg" onclick="mostrarCentros('+num_recetas+')"> <i class=" glyphicon glyphicon-search icon-white"></i></a></div></td>';
+        nuevaFila += '<td><input type="text"  class="form-control asiento-concepto" id="concepto_kits' + num_recetas + '" name="concepto_kits' + num_recetas + '" value="'+concepto+'"> ';
+        nuevaFila += '</tr>';
+        $('#columnas_receta').val(num_recetas);
+        $("#tabla-asiento").append(nuevaFila);
+        $(".mask_float").maskMoney({thousands: '', decimal: '.', allowZero: true});
+        }
+
+    }
+
+    function eliminarasiento(id) {
+        $('#tabla-asiento tbody tr').each(function () {
+            var row = $(this).closest('tr');
+            var identificador = $('.asiento-id', row).val();
+            if (identificador == id) {
+                row.remove();
+            }
+        });
+    }
+
+    function set_value_asiento(id, campo, value) {
+
+        $('#tabla-asiento tbody tr').each(function () {
+            var row = $(this).closest('tr');
+            ///$row = $(this);
+            var identificador = $('.asiento-id', row).val();
+            //console.log("id="+id+"=="+identificador);
+
+            if (id == identificador) {
+                $('.' + campo + '', row).val(parseFloat(value).toFixed(2));
+            }
+
+        });
+    }
+
+    /*function calcular_totales_base_cero(valor, obj) {
+        var iva = 0;
+        var total = valor + iva;
+
+
+        $('input[name="base_iva_factura"]').attr('value', 0.00);
+        $('input[name="valor_iva_factura"]').attr('value', 0.00);
+        $('input[name="retencion-base-iva"]').attr('value', 0.00);
+        obj.attr('value', parseFloat(valor).toFixed(2));
+        $('input[name="total_factura"]').attr('value', parseFloat(valor).toFixed(2));
+        $('input[name="retencion-base"]').attr('value', parseFloat(valor).toFixed(2));
+        actualizar_retencion(parseFloat(valor).toFixed(2));
+        actualizar_tabla_retencion();
+
+        set_value_asiento(cuenta_contable_iva, 'asiento-debe', parseFloat(iva).toFixed(2));
+        var valor_cuenta_pagar = total - $('input[name="retencion_total_retenido"]').val();
+        set_value_asiento(cuenta_contable_compra_id, 'asiento-haber', valor_cuenta_pagar);
+        set_value_asiento(cuenta_contable_gasto_id, 'asiento-debe', valor);
+        set_value_asiento(cuenta_contable_inventario, 'asiento-debe', valor);
+        calcular_totales_asiento();
+    }
+    function calcular_totales_base_iva(valor) {
+        var porcentaje_iva = $('input[name="porcentaje_iva_factura"]').val();
+        var iva = (valor * parseFloat(porcentaje_iva)) / 100;
+        var total = parseFloat(valor) + parseFloat(iva);
+
+        $('input[name="base_iva_factura"]').attr('value', parseFloat(valor).toFixed(2));
+        $('input[name="valor_iva_factura"]').attr('value', parseFloat(iva).toFixed(2));
+        $('input[name="total_factura"]').attr('value', parseFloat(total).toFixed(2));
+        $('input[name="retencion-base"]').attr('value', parseFloat(valor).toFixed(2));
+        $('input[name="retencion-base-iva"]').attr('value', parseFloat(iva).toFixed(2));
+        actualizar_retencion(parseFloat(valor).toFixed(2));
+        actualizar_tabla_retencion();
+        set_value_asiento(cuenta_contable_iva, 'asiento-debe', parseFloat(iva).toFixed(2));
+        var valor_cuenta_pagar = total - $('input[name="retencion_total_retenido"]').val();
+        set_value_asiento(cuenta_contable_compra_id, 'asiento-haber', valor_cuenta_pagar);
+        set_value_asiento(cuenta_contable_gasto_id, 'asiento-debe', valor);
+        set_value_asiento(cuenta_contable_inventario, 'asiento-debe', valor);
+
+        calcular_totales_asiento();
+    }*/
+
+    /*
+    * Función que permite calcular el total de la factura
+    * Validando la base imponible para cada registro, es decir, si grava o no impuestos
+    */
+    function calcular_total_factura() {
+        // (1) Calculamos el total del monto que grava iva
+        var porcentaje_iva = $('input[name="porcentaje_iva_factura"]').val();
+        var valor_iva = $('input[name="base_iva_factura"]').val();
+        var iva = (valor_iva * parseFloat(porcentaje_iva)) / 100;
+        var total_iva = parseFloat(valor_iva) + parseFloat(iva);
+
+        // (2) Calculamos el total de los montos que no gravan impuestos
+        var valor_0_iva = $('input[name="base_iva_0_factura"]').val();
+        var valor_rise = $('input[name="base_rise_factura"]').val();
+        var valor_no_iva = $('input[name="base_no_iva_factura"]').val();
+
+
+
+        var total_no_iva = parseFloat(valor_0_iva) + parseFloat(valor_no_iva) + parseFloat(valor_rise);
+
+        var subtotal = parseFloat(valor_iva) + parseFloat(total_no_iva);
+        var total_factura = total_iva + total_no_iva;
+
+        console.log(total_iva);
+        console.log(total_no_iva);
+        console.log(subtotal);
+        console.log(valor_iva);
+
+        //$('input[name="base_iva_factura"]').attr('value', parseFloat(total_iva).toFixed(2));
+        $('input[name="valor_iva_factura"]').attr('value', parseFloat(iva).toFixed(2));
+        $('input[name="total_factura"]').attr('value', parseFloat(total_factura).toFixed(2));
+        $('input[name="retencion-base"]').attr('value', parseFloat(subtotal).toFixed(2));
+        $('input[name="retencion-base-iva"]').attr('value', parseFloat(iva).toFixed(2));
+        actualizar_retencion(parseFloat(subtotal).toFixed(2));
+        actualizar_tabla_retencion();
+        set_value_asiento(cuenta_contable_iva, 'asiento-debe', parseFloat(iva).toFixed(2));
+        var valor_cuenta_pagar = total_factura - $('input[name="retencion_total_retenido"]').val();
+
+        set_value_asiento(cuenta_contable_compra_id, 'asiento-haber', valor_cuenta_pagar);
+        set_value_asiento(cuenta_contable_gasto_id, 'asiento-debe', subtotal);
+        set_value_asiento(cuenta_contable_inventario, 'asiento-debe', subtotal);
+
+        calcular_totales_asiento();
+    }
+
+     /* ACTUALIZAR VALORES EN LA FACTURA */
+    $('input[name="base_iva_0_factura"]').on("change keyup paste", function () {
+        $('input[name="base_rise_factura"]').attr('value', 0);
+        calcular_total_factura();
+    });
+
+     /*
+    * Cuando se actualiza la fecha de la factura autmáticamente se debe actualizar la fecha de la retención
+    * */
+    $('input[name="fecha_emision"]').on("change keyup paste", function () {
+        $('input[name="retencion-fecha-emision"]').val($('input[name="fecha_emision"]').val());
+    });
+
+    $('input[name="base_rise_factura"]').on("change keyup paste", function () {
+        $('input[name="base_no_iva_factura"]').attr('value', 0);
+        $('input[name="base_iva_0_factura"]').attr('value', 0);
+        $('input[name="base_iva_factura"]').attr('value', 0);
+        $('input[name="valor_iva_factura"]').attr('value', 0);
+        calcular_total_factura();
+    });
+    $('input[name="base_no_iva_factura"]').on("change keyup paste", function () {
+        $('input[name="base_rise_factura"]').attr('value', 0);
+        calcular_total_factura();
+    });
+    $('input[name="base_iva_factura"]').on("change keyup paste", function () {
+
+        $('input[name="base_rise_factura"]').attr('value', 0);
+        calcular_total_factura();
+    });
+
+
+    function calcular_totales(subtotal12) {
+        var porcentaje_iva = $('input[name="porcentaje_iva_factura"]').val();
+        var iva = (subtotal12 * porcentaje_iva) / 100;
+        var total = subtotal12 + iva;
+        $('input[name="base_iva"]').attr('value', parseFloat(subtotal12).toFixed(2));
+        $('input[name="valor_iva"]').attr('value', parseFloat(iva).toFixed(2));
+        $('input[name="total"]').attr('value', parseFloat(total).toFixed(2));
+    }
+
+    function calcular_totales_asiento() {
+        var suma_debe = 0;
+        var suma_haber = 0;
+        $('#tabla-asiento tbody tr').each(function () {
+            var row = $(this).closest('tr');
+            var debe = $('.asiento-debe', row).val();
+            var haber = $('.asiento-haber', row).val();
+            suma_debe = +suma_debe + +debe;
+            suma_haber = +suma_haber + +haber;
+        });
+        $('input[name="asiento-total-debe"]').val(parseFloat(suma_debe).toFixed(2));
+        $('input[name="asiento-total-haber"]').val(parseFloat(suma_haber).toFixed(2));
+    }
+
+    function cargar_retencion(id, codigo, descripcion, porcentaje,base,valor) {
+         var plan_id=0;
+    $.ajax({
+                    type: "POST",
+                    url: "{% url 'consultar-plan-cuentas-retencion-detalle' %}",
+                    async: false,
+                    data: {
+                        'id':id,
+                        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                    },
+                    success: function(response) {
+                        for (var i = 0; i < response.length; i++) {
+                            //console.log(response[i]);
+                            cargarasiento(response[i][0],response[i][1],response[i][2], 0, 0,"","","fuente");
+                              plan_id=response[i][0];
+                        }
+                       
+                        calcular_totales_asiento();
+                    },
+                    error: function(response) {
+                        alert("El proveedor no tiene retención de IVA asociada.");
+
+                    }
+                });
+        var retencion =
+                '<tr>' +
+                '<td style="display:none;" name="retencion-id">' + id + '</td>' +
+                '<td style="display:none;" name="cuenta-id">' + plan_id + '</td>' +
+                '<td class="eliminar">' +
+                '<a class="btn btn-danger remove-field-secuencia">' +
+                '<i class="glyphicon glyphicon-trash icon-white"></i>' +
+                '</a>' +
+                '</td>' +
+                '<td name="retencion-codigo">' + codigo + '</td>' +
+                '<td name="retencion-descripcion">' + descripcion + '</td>' +
+                '<td >' +
+                '<input type="text" name="retencion-base" class="form-control mask_float" value="'+parseFloat(base).toFixed(2)+'" onkeyup="actualizar_asiento_retenciones()" required>' +
+                '</td>' +
+                '<td name="retencion-porcentaje">' + parseFloat(porcentaje).toFixed(2) + '</td>' +
+                '<td name="retencion-valor-retenido" class="retencion-valor-retenido">'+ parseFloat(valor).toFixed(2)+'</td>' +
+                '</tr>';
+        var resultado = validar_registro_tabla('tabla-retencion', id, 'retencion-id');
+        if (resultado) {
+            alert("Registro ya se encuentra en la tabla.");
+        }
+        else {
+            $('#tabla-retencion').append(retencion);
+            //$('#modal-retencion-fuente').modal('toggle');
+            if (codigo!='332') {
+                cargarDatosRetencion();
+                //code
+            }
+        }
+        $(".mask_float").maskMoney({thousands: '', decimal: '.', allowZero: true});
+    }
+
+    function cargar_retencion_iva(id, codigo, descripcion, porcentaje,base,valor) {
+        var plan_id=0;
+          $.ajax({
+                    type: "POST",
+                    url: "{% url 'consultar-plan-cuentas-retencion-detalle' %}",
+                    async: false,
+                    data: {
+                        'id':id,
+                        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                    },
+                    success: function(response) {
+                        for (var i = 0; i < response.length; i++) {
+                            //console.log(response[i]);
+                            plan_id=response[i][0];
+                            cargarasiento(response[i][0],response[i][1],response[i][2], 0, 0,"","","iva");
+                        }
+                        calcular_totales_asiento();
+                    },
+                    error: function(response) {
+                        alert("El proveedor no tiene retención de IVA asociada.");
+
+                    }
+                });
+          
+        var retencion =
+                '<tr>' +
+                '<td style="display:none;" name="retencion-id">' + id + '</td>' +
+                '<td style="display:none;" name="cuenta-id">' + plan_id + '</td>' +
+                '<td class="eliminar">' +
+                '<a class="btn btn-danger remove-field-secuencia">' +
+                '<i class="glyphicon glyphicon-trash icon-white"></i>' +
+                '</a>' +
+                '</td>' +
+                '<td name="retencion-codigo">' + codigo + '</td>' +
+                '<td name="retencion-descripcion" >' + descripcion + '</td>' +
+                '<td>' +
+                '<input type="text" value="'+parseFloat(base).toFixed(2)+'"  name="retencion-base-iva" class="form-control mask_float" onkeyup="actualizar_asiento_retenciones()" >' +
+                '</td>' +
+                '<td name="retencion-porcentaje">' + parseFloat(porcentaje).toFixed(2) + '</td>' +
+                '<td name="retencion-valor-retenido" class="retencion-valor-retenido">'+parseFloat(valor).toFixed(2)+'</td>' +
+                '</tr>';
+        var resultado = validar_registro_tabla('tabla-retencion', id, 'retencion-id');
+        if (resultado) {
+            alert("Registro ya se encuentra en la tabla.");
+        }
+        else {
+            $('#tabla-retencion tbody').append(retencion);
+            // $('#modal-retencion-iva').modal('toggle');
+           // alert(codigo);
+            if (codigo!='332') {
+                  //alert(codigo);
+                cargarDatosRetencion();
+                //code
+            }
+        }
+        $(".mask_float").maskMoney({thousands: '', decimal: '.', allowZero: true});
+    }
+
+    
+    
+       function cargar_retencion2(id, codigo, descripcion, porcentaje,base,valor) {
+         var plan_id=0;
+    $.ajax({
+                    type: "POST",
+                    url: "{% url 'consultar-plan-cuentas-retencion-detalle' %}",
+                    async: false,
+                    data: {
+                        'id':id,
+                        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                    },
+                    success: function(response) {
+                        for (var i = 0; i < response.length; i++) {
+                            //console.log(response[i]);
+                           // cargarasiento(response[i][0],response[i][1],response[i][2], 0, 0,"","","fuente");
+                              plan_id=response[i][0];
+                        }
+                       
+                        calcular_totales_asiento();
+                    },
+                    error: function(response) {
+                        alert("El proveedor no tiene retención de IVA asociada.");
+
+                    }
+                });
+        var retencion =
+                '<tr>' +
+                '<td style="display:none;" name="retencion-id">' + id + '</td>' +
+                '<td style="display:none;" name="cuenta-id">' + plan_id + '</td>' +
+                '<td style="display:none;" name="tipo-retencion-id">1</td>' +
+                '<td class="eliminar">' +
+                '<a class="btn btn-danger remove-field-secuencia">' +
+                '<i class="glyphicon glyphicon-trash icon-white"></i>' +
+                '</a>' +
+                '</td>' +
+                '<td name="retencion-codigo">' + codigo + '</td>' +
+                '<td name="retencion-descripcion">' + descripcion + '</td>' +
+                '<td >' +
+                '<input type="text" name="retencion-base" class="form-control mask_float" value="'+parseFloat(base).toFixed(2)+'" onkeyup="actualizar_asiento_retenciones()" required>' +
+                '</td>' +
+                '<td name="retencion-porcentaje">' + parseFloat(porcentaje).toFixed(2) + '</td>' +
+                '<td name="retencion-valor-retenido" class="retencion-valor-retenido">'+ parseFloat(valor).toFixed(2)+'</td>' +
+                '</tr>';
+        var resultado = validar_registro_tabla('tabla-retencion', id, 'retencion-id');
+        if (resultado) {
+            alert("Registro ya se encuentra en la tabla.");
+        }
+        else {
+            $('#tabla-retencion').append(retencion);
+            //$('#modal-retencion-fuente').modal('toggle');
+            if (codigo!='332') {
+                cargarDatosRetencion();
+                //code
+            }
+        }
+        $(".mask_float").maskMoney({thousands: '', decimal: '.', allowZero: true});
+    }
+
+    function cargar_retencion_iva2(id, codigo, descripcion, porcentaje,base,valor) {
+        var plan_id=0;
+          $.ajax({
+                    type: "POST",
+                    url: "{% url 'consultar-plan-cuentas-retencion-detalle' %}",
+                    async: false,
+                    data: {
+                        'id':id,
+                        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                    },
+                    success: function(response) {
+                        for (var i = 0; i < response.length; i++) {
+                            //console.log(response[i]);
+                            plan_id=response[i][0];
+                            //cargarasiento(response[i][0],response[i][1],response[i][2], 0, 0,"","","iva");
+                        }
+                        calcular_totales_asiento();
+                    },
+                    error: function(response) {
+                        alert("El proveedor no tiene retención de IVA asociada.");
+
+                    }
+                });
+          
+        var retencion =
+                '<tr>' +
+                '<td style="display:none;" name="retencion-id">' + id + '</td>' +
+                '<td style="display:none;" name="cuenta-id">' + plan_id + '</td>' +
+                '<td style="display:none;" name="tipo-retencion-id">2</td>' +
+                '<td class="eliminar">' +
+                '<a class="btn btn-danger remove-field-secuencia">' +
+                '<i class="glyphicon glyphicon-trash icon-white"></i>' +
+                '</a>' +
+                '</td>' +
+                '<td name="retencion-codigo">' + codigo + '</td>' +
+                '<td name="retencion-descripcion" >' + descripcion + '</td>' +
+                '<td>' +
+                '<input type="text" value="'+parseFloat(base).toFixed(2)+'"  name="retencion-base-iva" class="form-control mask_float" onkeyup="actualizar_asiento_retenciones()" >' +
+                '</td>' +
+                '<td name="retencion-porcentaje">' + parseFloat(porcentaje).toFixed(2) + '</td>' +
+                '<td name="retencion-valor-retenido" class="retencion-valor-retenido">'+parseFloat(valor).toFixed(2)+'</td>' +
+                '</tr>';
+        var resultado = validar_registro_tabla('tabla-retencion', id, 'retencion-id');
+        if (resultado) {
+            alert("Registro ya se encuentra en la tabla.");
+        }
+        else {
+            $('#tabla-retencion tbody').append(retencion);
+            // $('#modal-retencion-iva').modal('toggle');
+            if (codigo!='332') {
+                cargarDatosRetencion();
+                //code
+            }
+        }
+        $(".mask_float").maskMoney({thousands: '', decimal: '.', allowZero: true});
+    }
+
+   
+    $(document).on("click", ".eliminar", function () {
+        var parent = $(this).parent();
+        var num_recetas = $('#columnas_receta').val();
+
+         var row = $(this).closest('tr');
+         var total=0;
+        var id = $('td[name="cuenta-id"]', row).text();
+        var valor_retenido = $('td[name="retencion-valor-retenido"]', row).text();
+        var tipo = $('td[name="tipo-retencion-id"]', row).text();
+                    for (i = 1; i <= num_recetas; i++) {
+                            var plan= $('#id_cuenta_kits'+i).val();
+                            var valor= $('#haber_kits'+i).val();
+                                 if (plan==id){
+                                    total=parseFloat(valor)-parseFloat(valor_retenido);
+                                    
+                                    $('#haber_kits'+i).val(total);
+                                    if (total == 0){
+                                        var primeraColumna = $('#id_cuenta_kits' + i).parents('tr');
+                                         primeraColumna.remove();
+                                       // $('#id_cuenta_kits' + i).parent().remove();
+                                    }
+                                       }else{
+                                          
+                                    
+                                       }
+                            
+                         }
+                         
+        $(parent).remove();
+        
+        actualizar_tabla_retencion();
+        calcular_totales_asiento();
+        actualizar_asiento_retenciones();
+    });
+
+    /* INICIO: Actualizar decripción retención */
+    $('textarea[name="descripcion"]').on("change keyup paste", function () {
+        $('textarea[name="retencion-descripcion"]').val($('textarea[name="descripcion"]').val());
+        $('.asiento-concepto').val($('textarea[name="descripcion"]').val());
+    })
+
+    $('#tabla-retencion').on('change paste', 'input', function () {
+        var row = $(this).closest('tr');
+        var base = 0;
+        var porcentaje = 0;
+        var valor_retenido = 0;
+        base = Number($('input', row).val());
+        porcentaje = parseFloat($('td[name="retencion-porcentaje"]', row).text()).toFixed(2) / 100;
+        valor_retenido = base * porcentaje;
+        $('.retencion-valor-retenido', row).text(parseFloat(valor_retenido).toFixed(2));
+        actualizar_tabla_retencion();
+    });
+
+    function actualizar_retencion(base) {
+        var porcentaje = 0;
+        var valor_retenido = 0;
+        var subtotal_retenido = parseFloat(0).toFixed(2);
+        $('#tabla-retencion tbody tr').each(function () {
+            var row = $(this).closest('tr');
+            porcentaje = parseFloat($('td[name="retencion-porcentaje"]', row).text()).toFixed(2) / 100;
+            valor_retenido = parseFloat($('input', row).val()).toFixed(2) * porcentaje;
+
+            if ($('input[name="retencion-base-iva"]', row).val()) {
+                set_value_asiento(cuenta_contable_retencion_iva, 'asiento-haber', valor_retenido);
+            }
+            if ($('input[name="retencion-base"]', row).val()) {
+                set_value_asiento(cuenta_contable_retencion_fuente, 'asiento-haber', valor_retenido);
+            }
+            $('.retencion-valor-retenido', row).text(parseFloat(valor_retenido).toFixed(2));
+            subtotal_retenido = subtotal_retenido + valor_retenido;
+        });
+
+        $('input[name="retencion_total_retenido"]').val(parseFloat(subtotal_retenido).toFixed(2));
+
+    }
+
+    function actualizar_tabla_retencion() {
+        var valor_retenido = parseFloat(0).toFixed(2);
+        var subtotal_retenido = parseFloat(0).toFixed(2);
+        $('#tabla-retencion tbody tr').each(function () {
+            var row = $(this).closest('tr');
+            valor_retenido = parseFloat($('.retencion-valor-retenido', row).text()).toFixed(2);
+            subtotal_retenido = +subtotal_retenido + +valor_retenido;
+        });
+        $('input[name="retencion_total_retenido"]').val(parseFloat(subtotal_retenido).toFixed(2));
+    }
+
+    function validar_registro_tabla(nombre_tabla, id, name) {
+        var resultado = false;
+        $("#" + nombre_tabla + " tbody tr").each(function () {
+            var row = $(this).closest('tr');
+            var value = $('td[name="' + name + '"]', row).text();
+            if (value.localeCompare(id) == 0) {
+                resultado = true;
+            }
+        });
+        return resultado;
+    }
+   function validar_registro_asiento(nombre_tabla, id, name) {
+            var num_recetas = $('#columnas_receta').val();
+            //alert(num_recetas);
+            var cont=0;
+         for (i = 1; i <= num_recetas; i++) {
+                    var plan= $('#cuenta_kits'+i).val();
+                   
+                    if (plan==id){
+                        cont++;
+                    }
+         
+      }
+
+        return cont;
+    }
+
+    $('#formulario').submit(function (event) {
+        var retenciones = JSON.stringify(get_array_retenciones());
+        var asientos = JSON.stringify(get_array_asientos());
+        var data = $(this).serialize() +
+                '&arreglo_asientos=' + asientos +
+                '&arreglo_retenciones=' + retenciones;
+        //console.log(data);
+        //alert(asientos);
+        event.preventDefault();
+        var total_debe = $('input[name="asiento-total-debe"]').val();
+        var total_haber = $('input[name="asiento-total-haber"]').val();
+        var ret_autorizacion= $('input[name="retencion-autorizacion"]').val();
+        var autorizacion= $('input[name="autorizacion"]').val();
+        if (autorizacion.length<'10') {
+                alert('Debe ingresar almenos 10 digitos en el No. de Autorizacion de la factura');
+                //code
+                return false;
+            }
+
+
+        if(total_debe==total_haber){
+            $.ajax({
+                type: "POST",
+                url: "{% url 'documento-compra-update' documento.id %}",
+                data: data,
+                success: function (response) {
+                    alert("FACTURA ACTUALIZADA");
+                    console.log(response);
+                    document.location.href = '/transacciones/documento/compra';
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });
+        }else{
+            alert("El total debe tiene que ser igual al total haber en el registro de asiento");
+        }
+    });
+
+    function get_array_asientos() {
+        var asientos = [];
+        $('#tabla-asiento tbody tr').each(function () {
+            var row = $(this).closest('tr');
+            var id = $('.asiento-id', row).val();
+            var cuenta = $('.asiento-descripcion', row).val();
+            var debe = $('.asiento-debe', row).val();
+            var haber = $('.asiento-haber', row).val();
+            var centro_id = $('.asiento-centro', row).val();
+            var concepto = $('.asiento-concepto', row).val();
+            var asiento = {
+                "id_plancuenta": id,
+                "cuenta": cuenta,
+                "debe": debe,
+                "haber": haber,
+                "centro_id": centro_id,
+                "concepto": concepto
+            };
+            asientos.push(asiento);
+        });
+        return asientos;
+    }
+
+    function get_array_retenciones() {
+        var retenciones = [];
+        $('#tabla-retencion tbody tr').each(function () {
+            var row = $(this).closest('tr');
+            var id = $('td[name="retencion-id"]', row).text();
+            var codigo = $('td[name="retencion-codigo"]', row).text();
+            var descripcion = $('td[name="retencion-descripcion"]', row).text();
+            if ($('input[name="retencion-base"]', row).val()) {
+                var base = $('input[name="retencion-base"]', row).val();
+            }
+            if ($('input[name="retencion-base-iva"]', row).val()) {
+                var base = $('input[name="retencion-base-iva"]', row).val();
+            }
+            var porcentaje = $('td[name="retencion-porcentaje"]', row).text();
+            var valor_retenido = $('td[name="retencion-valor-retenido"]', row).text();
+            var retencion = {
+                "id": id,
+                "codigo": codigo,
+                "descripcion": descripcion,
+                "base": base,
+                "porcentaje": porcentaje,
+                "valor_retenido": parseFloat(valor_retenido).toFixed(2)
+            };
+            retenciones.push(retencion);
+        });
+        return retenciones;
+    }
+    function buscarIdPlan(id){
+        var plan_id=0;
+           $.ajax({
+                    type: "POST",
+                    url: "{% url 'consultar-plan-cuentas-retencion-detalle' %}",
+                    data: {
+                        'id':id,
+                        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                    },
+                    success: function(response) {
+                        for (var i = 0; i < response.length; i++) {
+                            //console.log(response[i]);
+                            plan_id=response[i][0];
+                            
+                        }
+                        
+                    },
+                    error: function(response) {
+
+                    }
+                });
+         //  alert(plan_id);
+           return plan_id;
+        
+    }
+    
+  
+function actualizar_asiento_retenciones(){
+     var num_recetas = $('#columnas_receta').val();
+        var t=0
+        var total=0;
+        var total_r=0
+        var total_retenido= $('input[name="retencion_total_retenido"]').val();
+        var total_factura= $('input[name="total_factura"]').val();
+            //alert(num_recetas);
+            var cont=0;
+            
+            
+                         
+             $('#tabla-retencion tbody tr').each(function () {
+                var row = $(this).closest('tr');
+                var id = $('td[name="cuenta-id"]', row).text();
+                porcentaje = parseFloat($('td[name="retencion-porcentaje"]', row).text()).toFixed(2) / 100;
+                valor_retenido = parseFloat($('input', row).val()).toFixed(2) * porcentaje;
+                    for (i = 1; i <= num_recetas; i++) {
+                            var plan= $('#id_cuenta_kits'+i).val();
+                                 if (plan==id){
+                                           total=parseFloat(valor_retenido);
+                                           total_r=total_r+total;
+                                            $('#haber_kits'+i).val(parseFloat(total).toFixed(2));
+                                       }else{
+                                          
+                                    
+                                       }
+                            
+                         }
+          
+        });
+             
+             for (i = 1; i <= num_recetas; i++) {
+                            var tipo= $('#tipo_kits'+i).val();
+                            var haber= $('#haber_kits'+i).val();
+                                 if (tipo!="iva" && tipo!="fuente" && haber>0 ){
+                                           total=parseFloat(total_factura-total_r);
+                                            $('#haber_kits'+i).val(parseFloat(total).toFixed(2));
+                                       }else{
+                                         
+                                    
+                                       }
+                            
+                         }
+         
+calcular_totales_asiento();
+        
+        
+    
+}
+
+function actualizar_tipo_asiento(){
+    var num_recetas = $('#columnas_receta').val();
+   // alert(num_recetas);
+$('#tabla-retencion tbody tr').each(function () {
+                var row = $(this).closest('tr');
+                var id = $('td[name="cuenta-id"]', row).text();
+                var tipo = $('td[name="tipo-retencion-id"]', row).text();
+                    for (i = 1; i <= num_recetas; i++) {
+                            var plan= $('#id_cuenta_kits'+i).val();
+                                 if (plan==id){
+                                    // alert("entrooo id");
+                                            if(tipo=='1'){
+                                             $('#tipo_kits'+i).val('fuente');
+
+                                            }
+                                          if(tipo=='2'){
+                                             $('#tipo_kits'+i).val('iva');
+
+                                            }
+                                       }else{
+                                          
+                                    
+                                       }
+                            
+                         }
+          
+        });
+    
+}
+function cargarDatosRetencion() {
+      
+        var retencion_establecimiento = $('input[name="retencion-establecimiento"]').val();
+        var retencion_punto = $('input[name="retencion-punto"]').val();
+        var retencion_secuencial = $('input[name="retencion-secuencial"]').val();
+        //alert(retencion_establecimiento);
+        //alert(retencion_punto);
+     if (retencion_secuencial == "000") {
+                $.ajax({
+                    url: '/config/obtenerSecuencial/',
+                    type: "POST",
+                    data: {id: 'retencion'},
+                    async: false,
+                    success: function (data) {
+                        data = parseInt(data) + 1;
+                        $('input[name="retencion-secuencial"]').val('000' + data);
+                    }
+                });
+            }
+          if (retencion_establecimiento == "000") {
+                $.ajax({
+                    url: '/config/obtenerParametro/',
+                    type: "POST",
+                    async: false,
+                    data: {clave: 'establecimiento_retencion'},
+                    success: function (data) {
+                        $('input[name="retencion-establecimiento"]').val(data);
+                    }
+                });
+            }
+            if (retencion_punto == "000") {
+                $.ajax({
+                    url: '/config/obtenerParametro/',
+                    type: "POST",
+                    async: false,
+                    data: {clave: 'emision_retencion'},
+                    success: function (data) {
+                        $('input[name="retencion-punto"]').val(data);
+                    }
+                });
+            }
+            
+    //code
+}
+
+        $("#add-costeo").click(function(){
+            // Obtenemos el numero de filas (td) que tiene la primera columna
+            // (tr) del id "tabla"
+            var num_recetas=$('#columnas_costeo').val();
+            num_recetas=parseInt(num_recetas)+1;
+
+            var tds=$("#tabla-costeo tr:first td").length;
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla-costeo tr").length;
+            var nuevaFila='<tr><td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+             nuevaFila+='<td><select class="form-control" id="tipo_costeo_kits'+num_recetas+'" name="tipo_costeo_kits'+num_recetas+'" onchange="mostrarOP('+num_recetas+')"> ';
+             nuevaFila+='<option value="DIRECTO">DIRECTO </option>';
+             nuevaFila+='<option value="INDIRECTO">INDIRECTO </option>';
+                 
+              nuevaFila+='</select></td>';
+              nuevaFila+='<td><select class="form-control" id="rubro_kits'+num_recetas+'" name="rubro_kits'+num_recetas+'" > ';
+             nuevaFila+='<option value="ALIMENTACION">ALIMENTACION </option>';
+             nuevaFila+='<option value="OTROS PRODUCCION">OTROS PRODUCCION </option>';
+             nuevaFila+='<option value="PLANTA">PLANTA </option>';
+             nuevaFila+='<option value="MANTENIMIENTO">MANTENIMIENTO</option>';
+              nuevaFila+='</select></td>';
+              nuevaFila+='<td><span id="div_op'+num_recetas+'"><select class="form-control" id="op_kits'+num_recetas+'" name="op_kits'+num_recetas+'" > ';
+                            nuevaFila+='<option value="0"> SELECCIONE</option>';
+
+                                    {% for o  in ordenes %}
+                      nuevaFila+='<option value="{{ o.id }}"> {{ o.tipo }}-{{ o.codigo }}|{{ o.descripcion }}</option>';
+                 
+                                  {% endfor %} 
+              nuevaFila+='</select></span></td>';
+               
+            nuevaFila+='<td>';
+            nuevaFila+='<input type="text" required="required" class="form-control" id="porcentaje_kits'+num_recetas+'" name="porcentaje_kits'+num_recetas+'" onkeyup="mostrarPorcentaje('+num_recetas+')"  ></td>';
+            nuevaFila+='<td><input type="text" required="required" class="form-control" id="total_kits'+num_recetas+'" name="total_kits'+num_recetas+'" readonly/></td>';
+            nuevaFila+='</tr>';
+
+              $('#columnas_costeo').val(num_recetas);
+            // for(var i=0;i<tds;i++){
+            //     // añadimos las columnas
+            //     nuevaFila+="<td>columna "+(i+1)+" Añadida con jquery</td>";
+            // }
+            // // Añadimos una columna con el numero total de columnas.
+            // // Añadimos uno al total, ya que cuando cargamos los valores para la
+            // // columna, todavia no esta añadida
+            // nuevaFila+="<td>"+(trs+1)+" columnas";
+            // nuevaFila+="</tr>";
+            $("#tabla-costeo").append(nuevaFila);
+            $('select').select2();
+        });
+ 
+        
+
+        
+function mostrarOP(data) {
+      var tipo= $('#tipo_costeo_kits'+data).val();
+     // alert(tipo);
+      if (tipo == 'DIRECTO') {
+         $('#op_kits'+data).css("display", "block");
+         $('#div_op'+data).css("display", "block");
+         
+        
+      }else{
+        $('#op_kits'+data).select2("val", "0"); 
+        $('#op_kits'+data).css("display", "none");
+         $('#div_op'+data).css("display", "none");
+         
+      }
+
+
+}
+  function mostrarPorcentaje(data){
+      var cantidad=$('#porcentaje_kits'+data).val();
+      var costo= $('#total_factura').val();
+      
+       var valor=parseFloat(parseFloat(cantidad)*parseFloat(costo)/100).toFixed(2);
+   //alert(cantidad);
+     //  alert(costo);
+      // alert(valor);
+      $('#total_kits'+data).val(valor);
+      actualizarPorcentaje();
+    }
+   
+        
+    function actualizarPorcentaje(){
+      var num_recetas=$('#columnas_costeo').val();
+      var total=0;
+      var cantidad=0;
+      var porc=0;
+      var total_porcentaje=0;
+      var totalidad=0;
+      var i;
+      for (i = 1; i <= num_recetas; i++) {
+        if ($('#total_kits'+i).length){
+            cantidad=$('#total_kits'+i).val();
+            total=parseFloat(total)+parseFloat(cantidad);
+          }
+          
+          if ($('#porcentaje_kits'+i).length){
+            porc=$('#porcentaje_kits'+i).val();
+            total_porcentaje=parseFloat(total_porcentaje)+parseFloat(porc);
+          }
+        
+         
+      }
+    
+      $('#porcentaje_costeo').val((total_porcentaje).toFixed(2));
+      $('#valor_costeo').val((total).toFixed(2));
+    }
+
+        
+
+
+
+
+</script>
+
+{% endblock %}

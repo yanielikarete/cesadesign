@@ -1,0 +1,137 @@
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+{% load staticfiles %}
+
+{% block css %}
+{{ block.super }}
+{% endblock %}
+
+{% block section_title %}Diario de Ventas {% endblock %}
+{% block section_subtitle %}
+<br />
+<style type="text/css">
+	table td{
+		padding: 2px;
+	}
+	table th{
+		padding: 2px;
+	}
+</style>
+ <div class="email-btn-row hidden-xs">
+                    </div>
+
+                    {% endblock %}
+
+{% block content %}
+				<!-- begin col-12 -->
+				<div class="col-md-12">
+					<!-- begin panel -->
+					<div class="panel panel-inverse">
+						<div class="panel-heading">
+							<div class="panel-heading-btn">
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+							</div>
+							<h4 class="panel-title">Reporte:</h4>
+						</div>
+						<div class="panel-body">
+							<div class="table-responsive">
+
+						<div class="col-md-4">
+                                                      <label for="exampleInputName2">Vendedor</label>
+                                                      <select name="vendedor" id="vendedor" class="form-control">
+
+                                                      	{% for c  in vendedor %}
+                                                      	<option value="{{c.id}}"> {{c.nombre}}
+                                                      		{% endfor %}
+                                                      </select>
+
+                                                   </div>
+
+						<div class="col-md-4">
+                                                      <label for="exampleInputName2">Fecha desde:</label>
+                                                     <input  class="form-control" type="date" name="fechainicial" id="fechainicial" />
+
+							</div>
+
+<div class="col-md-4">
+                                                      <label for="exampleInputName2">Fecha hasta:</label>
+                                                     <input  class="form-control" type="date" name="fechafin" id="fechafin" />
+
+							</div>
+<a class="default btn btn-link"  onclick="consultar()"> <button type="button" class="btn btn-primary btn-lg">  Consultar</button> </a>
+<a download="diario_ventas.xls" href="#" onclick="return ExcellentExport.excel(this, 'detalle', 'Sheet Name Here');"><button type="button" class="btn btn-primary btn-lg">  Exportar</button></a>
+<h2>Resultados</h2>
+<table id="detalle" class="table" border="1"   aria-describedby="data-table_info">
+<thead><tr><th>Nombre de la Empresa</th>
+    <th>Fecha</th>
+<th> No. Proforma</th>
+    <th> No. Recibo</th>
+
+<th width="100px">Cliente&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+
+<th>Total de Compra</th>
+    <th>Total Pagado</th>
+    <th>Saldo Pendiente</th>
+    <th>Retencion</th>
+    <th>Entregado</th>
+    <th>Facturado</th>
+    <th>Nota de Credito</th>
+    <th>Deposito al Dia</th>
+     <th>Cheques a Fecha</th>
+</tr></thead>
+<tbody></tbody>
+
+
+
+
+
+</table>
+
+						</div>
+					</div>
+
+				</div>
+				<!-- end col-12 -->
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+
+   	    <script src="{% static 'color_admin/assets/js/exportFile.js' %}" type="text/javascript"></script>
+
+	<script type="text/javascript">
+
+
+	function consultar(){
+		var vendedor=$("#vendedor").val();
+		var fechainicial=$("#fechainicial").val();
+		var fechafin=$("#fechafin").val();
+
+          $.ajax({
+                url: "/reporte/obtenerReporteVentas/", // the endpoint
+                type : "POST", // http method
+                data : { vendedor : vendedor,fechainicial : fechainicial,fechafin : fechafin,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+                $("#detalle tbody tr").remove();
+                  $("#detalle").append(data);
+                },
+                error: function(){
+
+                },
+              });
+    }
+	</script>
+	<!-- ================== END PAGE LEVEL JS ================== -->
+	{% if form.errors or form_mode == "update" %}
+	<script type="text/javascript">
+		$( document ).ready(function() {
+		    $(".modal").modal('toggle');
+		});
+
+	</script>
+	{% endif %}
+{% endblock %}
+

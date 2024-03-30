@@ -1,0 +1,561 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Cliente{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+  <style>
+       .panel-border{border: 1px solid #ddd !important}
+       .form-ajust .form-group{margin-bottom: 0px !important}
+      input[type="text"],select,input[type="number"]
+      {
+
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    box-shadow: none;
+    font-size: 12px;
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+       }
+
+    
+
+    </style>
+
+<div class="row">
+                <!-- begin col-6 -->
+      <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                         <form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+
+                        <h3 class="panel-title">Nuevo Cliente</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-9">
+                            <div>
+
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                  <li role="presentation" class="active"><a href="#principales" aria-controls="principales" role="tab" data-toggle="tab">Principales</a></li>
+                                  <li role="presentation"><a href="#receta" aria-controls="receta" role="tab" data-toggle="tab">Documentos Pendientes</a></li>
+                                  
+                                  <li role="presentation"><a href="#presupuesto" aria-controls="presupuesto" role="tab" data-toggle="tab">Descuentos Personalizados</a></li>
+                                     </ul>
+                              
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade in active" id="principales">
+                                        <div class="row">
+                                            
+                                            <div class="panel panel-default panel-border">
+                                                <div class="panel-heading">Id del Registro</div>
+                                                <div class="panel-body">
+                                                 
+                                                    <div class="col-md-4">
+                                                      <label for="exampleInputName2">C&oacute;digo</label>
+                                                     {% bootstrap_field form.codigo_cliente show_label=False %}
+
+                                                   </div>
+                                                    <div class="col-md-8">
+                                                      <label for="exampleInputEmail2">Nombre</label>
+                                                     {% bootstrap_field form.nombre_cliente show_label=False %}
+                                                    </div>
+                                                    
+                                                  
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                          <div class="row">
+                                            <div class="col-md-7">
+                                                <div class="row">
+                                                    <div class="panel panel-default panel-border">
+                                                            <div class="panel-heading">Datos Principales</div>
+                                                            <div class="panel-body">
+                                                             
+                                                                <div class="form-horizontal">
+                                                                    <div class="form-group">
+                                                                         <label for="inputEmail3" class="col-sm-3 control-label">RUC o CI</label>
+                                                                         
+                                                                         <div class="col-sm-6">
+                                                                      {% bootstrap_field form.ruc show_label=False %}
+
+
+                                                                         </div>
+                                                                     </div>
+                                                                    <div class="form-group">
+                                                                         <label for="inputEmail3" class="col-sm-3 control-label">Tel&eacute;fono</label>
+                                                                        
+                                                                         <div class="col-sm-6">
+                                                                    {% bootstrap_field form.telefono1 show_label=False %}
+
+                                                                         </div>
+                                                                     </div>
+                                                                    <div class="form-group">
+                                                                         <label for="inputEmail3" class="col-sm-3 control-label">Zona</label>
+                                                                         
+                                                                         <div class="col-sm-6">
+                                                                    {% bootstrap_field form.zona_id show_label=False %}
+                                                                         </div>
+                                                                     </div>
+                                                                    <div class="form-group">
+                                                                         <label for="inputEmail3" class="col-sm-3 control-label">Provincia</label>
+                                                                         
+                                                                         <div class="col-sm-6">
+                                                                    {% bootstrap_field form.provincia_id show_label=False %}
+                                                                         </div>
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                                                
+                                                              
+                                                            </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                  
+                                                </div>
+                                             
+                                            </div>
+                                            <div class="col-md-5">
+                                            <div class="form-horizontal form-ajust">
+                                               <div class="form-group">
+                                                    <label for="inputEmail3" class="col-sm-4 control-label">Direccion</label>
+                                                    <div class="col-sm-8">
+                                              {% bootstrap_field form.direccion1 show_label=False %}
+
+                                                    </div>
+                                                </div>
+                                             
+                                               <div class="form-group">
+                                                    <label for="inputEmail3" class="col-sm-4 control-label">Email</label>
+                                                    <div class="col-sm-8">
+                                                  {% bootstrap_field form.email1 show_label=False %}
+
+                                                    </div>
+                                                </div>
+                                               <div class="form-group">
+                                                    <label for="inputEmail3" class="col-sm-4 control-label">Vendedor</label>
+                                                    <div class="col-sm-8">
+                                            {% bootstrap_field form.vendedor_id show_label=False %}
+
+                                                    </div>
+                                                </div>
+                                               <div class="form-group">
+                                                    <label for="inputEmail3" class="col-sm-4 control-label">Ciudad</label>
+                                                    <div class="col-sm-8">
+                                                {% bootstrap_field form.ciudad_id show_label=False %}
+
+                                                    </div>
+                                                </div>
+                                               <div class="form-group">
+                                                    <label for="inputEmail3" class="col-sm-4 control-label">Precio de Dos</label>
+                                                    <div class="col-sm-8">
+                                              {% bootstrap_field producto_form.precio2 show_label=False %}
+                                                    </div>
+                                                </div>
+                                               <div class="form-group">
+                                                    <label for="inputEmail3" class="col-sm-4 control-label">Precio de Tres</label>
+                                                    <div class="col-sm-8">
+                                          {% bootstrap_field producto_form.precio3 show_label=False %}                                                   
+                                                     </div>
+                                                </div>
+                                               <div class="form-group">
+                                                    <label for="inputEmail3" class="col-sm-4 control-label">Stock maximo</label>
+                                                    <div class="col-sm-8">
+                                                    {% bootstrap_field producto_form.cant_maxima show_label=False %}
+                                                    </div>
+                                                </div>
+                                                 <div class="form-group">
+                                                    <label for="inputEmail3" class="col-sm-4 control-label">Stock minimo</label>
+                                                    <div class="col-sm-8">
+                                                    {% bootstrap_field producto_form.cant_minimia show_label=False %}
+                                                    </div>
+                                                </div>
+                                               <div class="form-group">
+                                                    <label for="inputEmail3" class="col-sm-4 control-label">UAT</label>
+                                                    <div class="col-sm-8">
+                                                {% bootstrap_field producto_form.uat show_label=False %}
+                                                    </div>
+                                                </div>
+                                               <div class="form-group">
+                                                    <label for="inputEmail3" class="col-sm-4 control-label">Precio compra max.</label>
+                                                    <div class="col-sm-8">
+                                                {% bootstrap_field producto_form.precio_de_compra_max show_label=False %}
+
+
+                                                    </div>
+                                                </div>
+                                                <div class="form-group text-right ">
+                                                    <label class="checkbox">
+                                              {% bootstrap_field producto_form.acepta_iva show_label=False %}
+  Producto con IVA
+                                                    </label>
+                                                   
+                                               </div>
+                         
+                                            </div> 
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="inputEmail3" >Observaci&oacute;n</label>
+                                                    <div>
+                                                      
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="inputEmail3" >Usuario y Fecha de Edici&oacute;n</label>
+                                                <table class="table table-bordered">
+                                                    <tr>
+                                                        <th>Creaci&oacute;n</th>
+                                                        <td> </td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th></th>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        
+                                      
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="receta">
+                                         <div class="row">
+                                            
+                                            <div class="panel panel-default panel-border">
+                                                <div class="panel-heading">Id del Registro</div>
+                                                <div class="panel-body">
+                                                 
+                                                    <div class="col-md-4">
+                                                      <label for="exampleInputName2">C&oacute;digo</label>
+                                                      <input type="text" class="form-control" id="codigo" placeholder="Codigo">
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                      <label for="exampleInputEmail2">Nombre</label>
+                                                      <input type="text" class="form-control" id="nombre" placeholder="Ingrese el nombre del producto">
+                                                    </div>
+                                                    
+                                                  
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="row">
+                                            <div class="panel panel-default panel-border">
+                                                <!-- Default panel contents -->
+                                                <div class="panel-heading">Componentes de producto terminado</div>
+                                                <div class="panel-body">
+                                                  
+                                                </div>
+                                              
+                                                <!-- Table -->
+                                                <table class="table">
+                                                  <tr>
+                                                    <th></th>
+                                                    <th>Componente</th>
+                                                    <th>Nombre</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Med</th>
+                                                    <th>Costo</th>
+                                                    <th>Subtotal</th>
+                                                  </tr>
+                                                  <tr>
+                                                    <td><a class="btn btn-danger remove_fields">
+                                                        <i class=" glyphicon glyphicon-trash icon-white"></i>
+                                                      </a>
+                                                    </td>
+                                                    <td>nombre componente</td>
+                                                    <td>nombre</td>
+                                                    <td>10</td>
+                                                    <td>1</td>
+                                                    <td>$4.00</td>
+                                                    <td>$40.00</td>
+                                                  </tr>
+                                                  <tfoot>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td><button type="button" class="btn btn-success btn-lg">Actualizar CP</button></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <th>Total:</th>
+                                                    <th>$40.00</th>
+                                                  </tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        
+                                        <p class="text-center">
+                                            <button type="button" class="btn btn-primary btn-lg">Grabar</button>
+                                            <button type="button" class="btn btn-default btn-lg">Cancelar</button>
+                                        </p>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="movimientos">
+                                            <table class="table">
+                                                  <tr>
+                                                    <th></th>
+                                                    <th>Tipo</th>
+                                                    <th>Numero</th>
+                                                    <th>Fecha</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Saldo</th>
+                                                    <th>Comentario</th>
+                                                  </tr>
+
+                                                  </table>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="presupuesto">
+                                        <div class="row">
+                                            
+                                            <div class="panel panel-default panel-border">
+                                                <div class="panel-heading">Id del Registro</div>
+                                                <div class="panel-body">
+                                                 
+                                                    <div class="col-md-4">
+                                                      <label for="exampleInputName2">C&oacute;digo</label>
+                                                      <input type="text" class="form-control" id="codigo" placeholder="Codigo">
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                      <label for="exampleInputEmail2">Nombre</label>
+                                                      <input type="text" class="form-control" id="nombre" placeholder="Ingrese el nombre del producto">
+                                                    </div>
+                                                    
+                                                  
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="inputEmail3" >Enero</label>
+                                                    <div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="inputEmail3" >Julio</label>
+                                             
+                                            </div>
+                                        </div>
+
+                                              <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="inputEmail3" >Febrero</label>
+                                                    <div>
+                                                     
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="inputEmail3" >Agosto</label>
+                                               
+                                            </div>
+                                        </div>
+
+
+                                           <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="inputEmail3" >Marzo</label>
+                                                    <div>
+                                                      
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="inputEmail3" >Septiembre</label>
+                                               
+                                            </div>
+                                        </div>
+
+                                           <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="inputEmail3" >Abril</label>
+                                                    <div>
+                                                      
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="inputEmail3" >Octubre</label>
+                                               
+                                            </div>
+                                        </div>
+
+
+   <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="inputEmail3" >Mayo</label>
+                                                    <div>
+                                                     
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="inputEmail3" >Noviembre</label>
+                                              
+
+                                            </div>
+                                        </div>
+
+                                           <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="inputEmail3" >Junio</label>
+                                                    <div>
+                                                      
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="inputEmail3" >Diciembre</label>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="costo">..
+                                     
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="codigo">...</div>
+                                    <div role="tabpanel" class="tab-pane fade" id="foto">
+                                        <div class="row">
+                                            
+                                            <div class="panel panel-default panel-border">
+                                                <div class="panel-heading">Foto</div>
+                                                <div class="panel-body">
+                                                 
+                                                    <div class="col-md-4">
+                                                      <label for="exampleInputName2">Imagen</label>
+
+
+                                                   </div>
+                                                    
+                                                  
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                              
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                  <a href="#" class="thumbnail">
+                                    <img src="/media/imagenes/producto/logo-producto.svg" alt="logo producto">
+                                  </a>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+     <p class="text-center">
+
+                                    <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+                                            <a class="default btn btn-link" href="/inventario/producto"><button type="button" class="btn btn-primary btn-lg">  Regresar</button></a>
+                                        </p>
+<!--  <p class="text-right m-b-0">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-cog"></i> Guardar</button>
+                                </p>
+                                <a class="default btn btn-link" href="/inventario/producto">
+      <i class="fa fa-times"></i> Regresar
+    </a> -->
+                            </form>
+
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+<script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+
+<script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+<!-- ================== END PAGE LEVEL JS ================== -->
+<script>
+    $(document).ready(function() {
+      $('#id_codigo_producto').each(function(){
+  $(this).attr('readonly','readonly');
+});
+      var codigo_producto=$('#id_codigo_producto').val();
+      //alert(codigo_producto);
+      if(codigo_producto==""){
+         $.ajax({
+                url: "/config/obtenerSecuencial/", // the endpoint
+                type : "POST", // http method
+                data : { id : 'producto','csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+                success:function(data){
+                 $('#id_codigo_producto').val('000'+data);
+                  
+                },
+                error: function(){
+                 
+                },
+              });
+      }
+      
+        
+    });
+</script>
+
+<script type="text/javascript">
+  $(document).ready(
+    function(){
+      var codigo=$("#id_codigo_cliente").val();
+    //alert(codigo);
+      $.ajax({
+        url:'/config/obtenerSecuencial/',
+        type: "POST",
+        data: {id:'cliente'},
+        success: function(data){
+          $("#id_codigo_cliente").val('000'+data);
+        }
+      });
+    }
+    );
+</script>
+{% endblock %}

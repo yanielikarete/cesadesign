@@ -1,0 +1,134 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block css %}
+    {{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+{% block section_title %} Editar C&oacute;digo De Retenci&oacute;n {% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+    <style>
+        .panel-border {
+            border: 1px solid #ddd !important;
+        }
+
+        .form-group {
+            margin-bottom: 0px !important;
+        }
+    </style>
+    <div class="row">
+        <!-- begin col-6 -->
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <form class="form-horizontal" method="post" action="{% url "retenciones-update" retenciones.id %}" data-validate="parsley">
+                    {% csrf_token %}
+                    <ul class="nav nav-tabs nav-tabs-inverse">
+                        <li class="active">
+                            <a data-toggle="tab" href="#datos-generales" aria-controls="datos-generales" role="tab">Ingreso de Datos</a>
+                        </li>
+
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" id="datos-generales" class="tab-pane fade in active">
+                            <div class="panel-heading">
+                                <div class="panel panel-inverse">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">
+                                            <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                                               data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                                <i class="fa fa-plus-circle pull-right"></i>
+                                                Datos
+                                            </a>
+                                        </h3>
+                                    </div>
+                                    <div id="collapseOne" aria-expanded="true" id="collapseOne"
+                                         class="panel-collapse collapse in">
+                                        <div class="panel-body panel-border">
+                                             <div class="form-group">
+                                                <label class="col-sm-4 control-label"
+                                                       for="codigo">C&oacute;digo</label>
+                                                <div class="col-sm-4">
+                                                    <input class="form-control" type="number" name="codigo"  value="{{ retenciones.codigo }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label"
+                                                       for="descripcion">Descripci&oacute;n</label>
+                                                <div class="col-sm-4">
+                                                    <input class="form-control" type="text" name="descripcion" value="{{ retenciones.descripcion }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label"
+                                                       for="porcentaje">Porcentaje</label>
+                                                <div class="col-sm-4">
+                                                    <input class="form-control" type="text" name="porcentaje" value="{{ retenciones.porcentaje |stringformat:".2f" }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label"
+                                                       for="codigo_anexo">C&oacute;digo de anexo</label>
+                                                <div class="col-sm-4">
+                                                    <input class="form-control" type="text" name="codigo_anexo" value="{{ retenciones.codigo_anexo }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label"
+                                                       for="tipo_retencion">Tipo de retenci&oacute;n</label>
+                                                <div class="col-sm-4">
+                                                    <select class="form-control" name="tipo_retencion" required>
+                                                        <option value="" selected>Seleccione tipo de retenci&oacute;n
+                                                        </option>
+                                                        {% for tipo_retencion in tipo_retenciones %}
+                                                            <option value="{{ tipo_retencion.id }}">{{ tipo_retencion.descripcion }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                             <div class="form-group">
+                                                <label class="col-sm-4 control-label"
+                                                       for="campo_formulario">Campo formulario</label>
+                                                <div class="col-sm-4">
+                                                    <input class="form-control" type="text" name="campo_formulario" value="{{ retenciones.campo_formulario }}" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-inverse"><i class="fa fa-save"></i> Guardar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'color_admin/assets/plugins/parsley/src/parsley.js' %}"></script>
+       <script>
+        $(document).ready(function () {
+            $('#agregar-secuencia').click(function(){
+                $('#tabla-secuencia-cheques tbody').append('<tr><td class="eliminar"><a class="btn btn-danger remove-field-secuencia"><i class="glyphicon glyphicon-trash icon-white"></i></a></td><td><input type="text" class="form-control" name="secuencia-inicio"></td><td><input type="text" class="form-control" name="secuencia-fin"></td><td><select class="form-control" name="estado-secuencia"><option value="" selected>Seleccione un estado</option><option value="1">Activo</option><option value="0">Inactivo</option></select></td></tr>');
+                $('.remove-field-secuencia').click(function() {
+                    $(this).closest('tr').remove();
+                });
+            });
+            $("select[name='tipo_retencion']").val("{{ retenciones.tipo_retencion_id }}");
+            function pad (str, max) {
+              str = str.toString();
+              return str.length < max ? pad("0" + str, max) : str;
+            }
+        });
+    </script>
+
+{% endblock %}

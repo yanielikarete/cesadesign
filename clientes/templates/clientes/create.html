@@ -1,0 +1,729 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+    {{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+   <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/parsley/src/parsley.css' %}" rel="stylesheet"/>
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Nuevo Cliente{% endblock %}
+{% block content %}
+
+    <!-- begin row -->
+    <style>
+        .panel-border {
+            border: 1px solid #ddd !important
+        }
+
+        .form-ajust .form-group {
+            margin-bottom: 0px !important
+        }
+
+        input[type="text"], select, input[type="number"] {
+
+            border: 1px solid #ccd0d4;
+            border-radius: 3px;
+            box-shadow: none;
+            font-size: 12px;
+            display: block;
+            width: 100%;
+            height: 34px;
+            padding: 6px 12px;
+            line-height: 1.42857143;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+        }
+
+        .table2 {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 20px;
+            display: table
+        }
+
+        .table2 > tbody > tr > td, .table2 > tbody > tr > th, .table2 > tfoot > tr > td, .table2 > tfoot > tr > th {
+            border-color: #e2e7eb;
+            padding: 1px 0px;
+        }
+
+        .table2 > thead > tr > td, .table2 > thead > tr > th {
+            border-color: #e2e7eb;
+            padding: 10px 5px;
+        }
+
+        #id_abreviatura_codigo {
+            width: 50px;
+        }
+
+        #id_codigo {
+            width: 120px;
+        }
+    </style>
+  <form method="post" id="formulario" > {% csrf_token %}
+    {{ form.title.errors }}
+    <div class="row">
+        <!-- begin col-6 -->
+        <div class="col-md-12">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+
+                    <h3 class="panel-title">NUEVO CLIENTE</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-10 col-md-offset-1">
+
+                        <div class="row">
+
+
+                            <div class="col-md-6">
+                                <label>C&oacute;digo</label>
+                                {% bootstrap_field form.codigo_cliente show_label=False  %}
+
+                            </div>
+                            <div class="col-md-6">
+                                <label>Nombre</label>
+                                {% bootstrap_field form.nombre_cliente show_label=False %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label>Tipo</label>
+                                {% bootstrap_field form.tipo_cliente show_label=False %}
+
+                            </div>
+                            <div class="col-sm-4">
+                                <label>RUC</label>
+                                {% bootstrap_field form.ruc show_label=False %}
+
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Cédula</label>
+                                {% bootstrap_field form.cedula show_label=False %}
+
+                            </div>
+                        </div>
+                         <div class="row">
+
+                            <div class="col-sm-6">
+                                <label>Dirección Tributaria</label>
+                                {% bootstrap_field form.direccion1 show_label=False %}
+
+                            </div>
+                              <div class="col-sm-6">
+                                <label>Dirección del Domicilio</label>
+                                {% bootstrap_field form.direccion2 show_label=False %}
+
+                            </div>
+                             </div>
+                              <div class="row">
+                             <div class="col-sm-4">
+                                <label>Teléfono</label>
+                                {% bootstrap_field form.telefono1 show_label=False %}
+
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Correo electrónico</label>
+                                {% bootstrap_field form.email1 show_label=False %}
+
+                            </div>
+
+                                   <div class="col-sm-4">
+                                <label>Contacto</label>
+                                {% bootstrap_field form.contacto show_label=False %}
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label>País</label>
+                                {% bootstrap_field form.pais show_label=False %}
+
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Vendedor</label>
+                                {% bootstrap_field form.vendedor show_label=False %}
+
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label>Cupo credito</label>
+                                {% bootstrap_field form.cupo_credito show_label=False %}
+
+                            </div>
+
+
+                        </div>
+                         <div class="row">
+<div class="col-sm-4">
+                                <label>Zona</label>
+                                {% bootstrap_field form.zona show_label=False %}
+
+                            </div>
+                            <!--<div class="col-sm-4">
+                                <label>Tipo</label>
+                                {% bootstrap_field form.tipo_cliente show_label=False %}
+
+                            </div>-->
+<div class="col-sm-4">
+                                <label>Banco</label>
+                                {% bootstrap_field form.banco show_label=False %}
+
+                            </div>
+
+                        </div>
+                            <div class="row">
+<div class="col-sm-4">
+                                <label>Provincia</label>
+                                {% bootstrap_field form.provincia show_label=False %}
+
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Categoria Cliente</label>
+                                {% bootstrap_field form.categoria_cliente show_label=False %}
+
+                            </div>
+                                 <div class="col-sm-4">
+                                <label>Descuento</label>
+                                {% bootstrap_field form.descuento show_label=False %}
+
+                            </div>
+
+
+                        </div>
+
+                        <div class="row">
+<div class="col-sm-4">
+                                <label>Ciudad</label>
+                                {% bootstrap_field form.ciudad show_label=False %}
+
+                            </div>
+                            <div class="col-sm-4">
+</div>
+<div class="col-sm-4">
+                                <label>Dias Credito</label>
+                                {% bootstrap_field form.dias_credito show_label=False %}
+
+                            </div>
+
+                        </div>
+
+
+
+
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+
+                    <h3 class="panel-title">CUENTAS CONTABLES</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-10 col-md-offset-1">
+
+                        <div class="row">
+
+
+                            <div class="col-md-6">
+                                <label>Cuenta de Anticipo</label>
+                                {% bootstrap_field form.cuenta_contable_venta show_label=False %}
+
+                            </div>
+                            <div class="col-md-6">
+                                <label>Cuenta por Cobrar</label>
+                                {% bootstrap_field form.cuenta_cobrar show_label=False %}
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+
+                    <h3 class="panel-title">RETENCIONES</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-10 col-md-offset-1">
+
+                        <div class="row">
+
+
+                            <div class="col-md-6">
+                                <label>Retención IVA</label>
+                                {% bootstrap_field form.retencion_iva show_label=False %}
+
+                            </div>
+                            <div class="col-md-6">
+                                <label>Retención FUENTE</label>
+                                {% bootstrap_field form.retencion_fuente show_label=False %}
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+
+                    <h3 class="panel-title">SALDOS INICIALES</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-10 col-md-offset-1">
+
+                        <div class="row">
+
+
+                            <div class="col-md-6">
+                                <label style="width: 100%">Saldo Factura actual  <b> $ {{form.saldo_factura.value}} </b> </label>
+                                <div class="input-group"><span class="input-group-addon">$</span><input type="text" class="form-control" id="id_saldo_factura" name="saldo_factura" value="{{form.saldo_factura.value}}"/></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label style="width: 100%">Saldo Proforma actual  <b> $ {{form.saldo_proforma.value}} </b> </label>
+                                <div class="input-group"><span class="input-group-addon">$</span><input type="text" class="form-control" id="id_saldo_proforma" name="saldo_proforma" value="{{form.saldo_proforma.value}}"/></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+             <div class="panel panel-default">
+                <div class="panel-heading">
+
+                    <h3 class="panel-title">LISTADO RAZÓN SOCIAL - CLIENTE</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-10 col-md-offset-1">
+
+                        <div class="row">
+                            <table class="table table-bordered" id="tabla">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th width="200px">Componente</th>
+                                    <th>Nombre</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% if detalle %}
+                                {% for kit in detalle %}
+
+                                <tr>
+                                    <td class="eliminar"><a class="btn btn-danger remove_fields"
+                                                            onclick="eliminar({{ kit.id }})">
+                                        <i class=" glyphicon glyphicon-trash icon-white"></i>
+                                    </a>
+                                    </td>
+
+                                    <td>
+                                        <input type="hidden" class="form-control" id="id_detalle{{ forloop.counter }}"
+                                               name="id_detalle{{ forloop.counter }}" value="{{ kit.id }}"/>
+                                        <input type="hidden" class="form-control" id="id_kits{{ forloop.counter }}"
+                                               name="id_kits{{ forloop.counter }}" value="{{ kit.razon_social.id }}"/>
+                                        <input type="text" class="form-control" id="codigo_kits{{ forloop.counter }}"
+                                               name="codigo_kits{{ forloop.counter }}"
+                                               onfocus="mostrarProductos({{ forloop.counter }})"
+                                               value="{{ kit.razon_social.codigo_razon_social }}" readonly="readonly">
+                                    </td>
+                                    <td><textarea class="form-control" id="nombre_kits{{ forloop.counter }}"
+                                                  name="nombre_kits{{ forloop.counter }}" readonly="readonly">{{ kit.razon_social.nombre }}</textarea>
+                                    </td>
+
+                                </tr>
+                                {% endfor %}
+                                {% else %}
+
+                                <tr>
+                                    <td class="eliminar"><a class="btn btn-danger remove_fields">
+                                        <i class=" glyphicon glyphicon-trash icon-white"></i>
+                                    </a>
+                                    </td>
+
+                                    <td>
+                                        <input type="hidden" class="form-control" id="id_kits1" name="id_kits1"/>
+                                        <input type="text" class="form-control" id="codigo_kits1" name="codigo_kits1"
+                                               onfocus="mostrarProductos(1)" readonly="readonly"></td>
+                                    <td><textarea class="form-control" id="nombre_kits1" name="nombre_kits1"
+                                                  readonly="readonly"></textarea></td>
+
+                                </tr>
+                                {% endif %}
+
+
+                                </tbody>
+                                <tfoot>
+
+
+                                </tfoot>
+                            </table>
+                            <p class="text-right">
+                                <button type="button" class="btn btn-warning" id="add"><i class="fa fa-plus"></i>
+                                </button>
+
+
+                            </p>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <p class="text-center">
+
+        <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+        <a class="default btn btn-link" href="/clientes/clientes/">
+            <button type="button" class="btn btn-primary btn-lg"> Regresar</button>
+        </a>
+    </p>
+
+    <input type="hidden" name="id_fila_cambiar" id="id_fila_cambiar" value=""/>
+{% if detalle %}
+<input type="hidden" name="columnas_receta" id="columnas_receta" value="{{ detalle|length }}" />
+{% else %}
+<input type="hidden" name="columnas_receta" id="columnas_receta" value="1" />
+
+{% endif %}
+
+
+</form>
+                  <div class="modal fade bs-example-modal-sm" id="modal-dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                             <div class="panel-body">
+                                <div class="table-responsive">
+                                                    <table class="table table-bordered" id="tabla2">
+                                                        <thead>
+                                                            <tr>
+                                                            <th></th>
+                                                                <th>Codigo</th>
+                                                                <th>Nombre</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for r  in razonsocial %}
+                                                            <tr>
+                                                                <td  onclick="cargarCodigoProducto('{{ r.id }}','{{ r.codigo_razon_social }}','{{ r.nombre }}')"><a class="btn btn-danger remove_fields">
+                                                        <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                                      </a></td><td>{{ r.codigo_razon_social }}</td>
+                                                                <td>{{ r.nombre }}</td>
+
+                                                            </tr >
+                                                        {% endfor %}
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <button type="button" onclick="cerrar()" class="btn btn-danger btn-block">Cerrar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+
+
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+
+    <script>
+        $('#formulario').submit(function (event) {
+            {% if cliente  %}
+                
+              
+                var ruc = $('input[name="ruc"]').val();
+                var ruc2=parseInt(ruc);
+                var id={{cliente.id_cliente}};
+               //  event.preventDefault();
+                if(ruc != ""){
+                                 $.ajax({
+                                    url: '/clientes/clientes/validarRucCliente/',
+                                    type: "POST",
+                                    data: {ruc: ruc,ruc2: ruc2,id: id},
+                                    dataType: "json",
+                                    async:false,
+                                   success: function (response) {
+                                            if (!$.trim(response)){   
+                                                add_div();
+
+                                            }
+                                            else{   
+                                                var mensaje="El ruc ya existe en el cliente "+response[0][1];
+                                                  alert(mensaje);
+                                                event.preventDefault();
+                                                return false;
+                                            }
+                                            
+                                  
+                                    
+                                    },
+                            });
+                }
+                 
+            
+            
+ 
+    
+    {% else %}
+              
+                var ruc = $('input[name="ruc"]').val();
+                var ruc2=parseInt(ruc);
+                var id="0";
+               
+               //  event.preventDefault();
+                if(ruc != ""){
+                                 $.ajax({
+                                    url: '/clientes/clientes/validarRucCliente/',
+                                    type: "POST",
+                                    data: {ruc: ruc,ruc2: ruc2,id: id},
+                                    dataType: "json",
+                                    async:false,
+                                   success: function (response) {
+                                            
+                                            if (!$.trim(response)){   
+                                                        add_div();
+
+                                            }
+                                            else{   
+                                                var mensaje="El ruc ya existe en el cliente "+response[0][1];
+                                                  alert(mensaje);
+                                                event.preventDefault();
+                                                return false;
+                                            }
+                                            
+                                  
+                                    
+                                    },
+                            });
+                }
+                 
+            
+           
+           
+            {% endif %} 
+            });
+   
+        $(document).ready(function () {
+            // App.init();
+            $('#tabla2').DataTable();
+            $('#tabla3').DataTable();
+
+            FormWizardValidation.init();
+            $(".parsley-errors-list").css('display', 'none');
+            $('#id_fecha_nacimiento').datepicker({todayHighlight: true, autoclose: true});
+            $('#id_fechapedido').datepicker({todayHighlight: true, autoclose: true});
+            $('#id_saldo_factura').maskMoney({thousands:'', decimal:'.', allowZero: true});
+            $('#id_saldo_proforma').maskMoney({thousands:'', decimal:'.', allowZero: true});
+         
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#id_codigo_cliente').each(function () {
+                $(this).attr('readonly', 'readonly');
+            });
+            $('#id_abreviatura_codigo').each(function () {
+                $(this).attr('readonly', 'readonly');
+            });
+            $('#id_created_by').each(function () {
+                $(this).attr('readonly', 'readonly');
+            });
+            $('#id_updated_by').each(function () {
+                $(this).attr('readonly', 'readonly');
+            });
+            $('#id_created_at').each(function () {
+                $(this).attr('readonly', 'readonly');
+            });
+            $('#id_updated_at').each(function () {
+                $(this).attr('readonly', 'readonly');
+            });
+
+
+        });
+        $(document).ready(
+                function () {
+                    var codigo = $("#id_codigo_cliente").val();
+                    if(codigo == "") {
+                        $.ajax({
+                            url: '/config/obtenerSecuencial/',
+                            type: "POST",
+                            data: {id: 'cliente'},
+                            success: function (data) {
+                                data = parseInt(data) + 1;
+                                var nl = data.toString().length;
+                                prefijo = '000';
+
+                                if (nl == 3){
+                                    prefijo = '000';
+                                }else {
+                                    if (nl == 4) {
+                                        prefijo = '00';
+                                    }else {
+                                        if (nl == 5) {
+                                            prefijo = '0';
+                                        } else {
+                                            prefijo = '';
+                                        }
+                                    }
+                                }
+                                $("#id_codigo_cliente").val(prefijo + data);
+                            }
+                        });
+                    }
+                }
+        );
+
+
+        function mostrarProductos(data){
+       $('#id_fila_cambiar').val(data);
+       $(".bs-example-modal-sm").modal('toggle');
+    }
+    function cerrar(){
+       $(".bs-example-modal-sm").modal('toggle');
+    }
+
+
+    function cargarCodigoProducto(id,codigo,descripcion){
+      var fila=$('#id_fila_cambiar').val();
+         $('#id_kits'+fila).val(id);
+
+
+        $('#codigo_kits'+fila).val(codigo);
+         $('#nombre_kits'+fila).val(descripcion);
+          // $('#medida_kits'+fila).val(medida);
+
+          cerrar();
+
+    }
+    </script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        /**
+         * Funcion para añadir una nueva columna en la tabla
+         */
+        $("#add").click(function(){
+            // Obtenemos el numero de filas (td) que tiene la primera columna
+            // (tr) del id "tabla"
+            var num_recetas=$('#columnas_receta').val();
+            num_recetas=parseInt(num_recetas)+1;
+
+            var tds=$("#tabla tr:first td").length;
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla tr").length;
+            var nuevaFila='<tr><td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+          nuevaFila+='<td><input type="hidden" class="form-control" id="id_kits'+num_recetas+'" name="id_kits'+num_recetas+'"> ';
+
+                nuevaFila+='<input type="text" required="required" class="form-control" id="codigo_kits'+num_recetas+'" name="codigo_kits'+num_recetas+'" onfocus="mostrarProductos('+num_recetas+')" readonly="readonly"></td>';
+                 nuevaFila+='<td><textarea  id="nombre_kits'+num_recetas+'" name="nombre_kits'+num_recetas+'" class="form-control" readonly="readonly"/></textarea></td>';
+
+                nuevaFila+='</tr>';
+
+              $('#columnas_receta').val(num_recetas);
+            // for(var i=0;i<tds;i++){
+            //     // añadimos las columnas
+            //     nuevaFila+="<td>columna "+(i+1)+" Añadida con jquery</td>";
+            // }
+            // // Añadimos una columna con el numero total de columnas.
+            // // Añadimos uno al total, ya que cuando cargamos los valores para la
+            // // columna, todavia no esta añadida
+            // nuevaFila+="<td>"+(trs+1)+" columnas";
+            // nuevaFila+="</tr>";
+            $("#tabla").append(nuevaFila);
+        });
+
+        /**
+         * Funcion para eliminar la ultima columna de la tabla.
+         * Si unicamente queda una columna, esta no sera eliminada
+         */
+        $("#del").click(function(){
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla tr").length;
+            if(trs>1)
+            {
+                // Eliminamos la ultima columna
+                $("#tabla tr:last").remove();
+            }
+        });
+
+
+        $(document).on("click",".eliminar",function(){
+            var parent = $(this).parent();
+         $(parent).remove();
+                 });
+
+           });
+    function eliminar(id){
+
+          $.ajax({
+                url: "/clientes/razonsocial/eliminarRazonSocialCliente/", // the endpoint
+                type : "POST", // http method
+                data : { id : id,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+                  alert("Se elimino el item satisfactoriamente");
+
+
+                },
+                error: function(){
+                    alert("Se elimino el item satisfactoriamente");
+
+                },
+              });
+    }
+    
+            
+        function add_div() {
+            var div_externo = $('<div id="div-consultando" style="width: 100%; height: 100%; background-color: #191a1b; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1050; opacity: 0.8">');
+            var div_interno = $('<div class="progress progress-striped active" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, 50%); width: 50%">');
+            var progress = $('<div class="progress-bar progress-bar-inverse" style="width: 100%">Guardando...</div>');
+
+            div_interno.append(progress);
+            div_externo.append(div_interno);
+
+            div_externo.appendTo($('body'));
+
+        }
+
+    
+
+  
+
+    </script>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Orden de Egreso (OE){% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+
+<body class="blue">
+    <div class="container sign-login">
+        <div class="col-md-offset-4 col-sm-offset-0 col-xs-offset-0 col-md-4 col-sm-12 col-xs-12">
+            <div class="form-login">
+                <div class="header text-center">
+                    <h1 class="fcw"><i class="fa fa-cloud"></i> Aprobación de Requisiciones</h1>
+                </div>
+				<div class="">
+			        <h3>Parece que algo salió mal</h3>
+			        <p>
+						Error en Integridad de los datos, al parecer un producto no cuenta con inventario suficiente.
+					</p>
+					<p></p>
+					<div class="form-group">
+						<div class="controls" style="padding:0">
+							<a href="/login/inicio/" class="btn btn-default">Ir a la página de Inicio</a>
+			    			<button onclick="window.history.back();" class="btn btn-info">Regresar a la Página Anterior</button>
+						</div>
+					</div>
+			    </div>
+            </div>
+    	</div>
+    </div>
+</body>
+{% endblock %}

@@ -1,0 +1,241 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <title>ORDEN DE PRODUCCI&Oacute;N - MUEDIRSA</title>
+</head>
+<style>
+    
+    .head{
+        width: 100%;
+        text-align: center;
+        
+    }
+    
+    #detail{
+        width: 100%;
+     
+    }
+    
+    .contenido{
+        width: 100%;
+        padding: 2px 0;
+        
+    }
+    
+    .contenido td{
+        text-align: left;
+        padding: 3px 5px
+    }
+    .contenido th{
+        text-align: center;
+        padding: 3px 5px;
+        background-color: #EEEEEE;
+    }
+    
+    .foot{
+        text-align: center;
+    }
+    @page {
+        /*size: a4 landscape;*/
+        margin: 1cm;
+        
+    }
+    
+    
+</style>
+<body>
+    <div class="head">
+        <h1>MUEDIRSA</h1>
+        <h3>ORDEN DE PRODUCCI&Oacute;N</h3>
+    </div>
+    <div id="detail" >
+    </div>
+    <div class="contenido">
+      
+        <table border="1">
+            <tr>
+                <td colspan="4"><b>Fecha abono:</b> {{ordenproduccion.codigo}} </td><td rowspan="2"><b>OP # {{ordenproduccion.codigo}}</b><br> Fecha: {{ordenproduccion.fecha}} <br> DOC# 0</td>
+            </tr>
+            <tr>
+                <td colspan="4"><b>Cliente:</b> {{ordenproduccion.cliente}} </td>
+            </tr>
+            <tr>
+                <td colspan="5"> <img src="http://ec2-54-183-88-0.us-west-1.compute.amazonaws.com:9092/media/imagenes/pedido_detalle/descarga_u87vOPI.jpg" alt="logo producto"></td>
+            </tr>
+            <tr>
+                <td><b>C&oacute;digo</b></td><td colspan="4">{{ordenproduccion.codigo_item}}</td
+            </tr>
+            <tr>
+                <td><b>Descripci&oacute;n</b></td><td colspan="4">{{ordenproduccion.detalle}}</td
+            </tr>
+            <tr>
+                <td><b>Cantidad</b></td><td colspan="4">{{ordenproduccion.cantidad}}</td>
+            </tr>
+            <tr>
+                <th colspan="3">MEDIDAS </th><th colspan="2">TOPE EN</th>
+            </tr>
+
+            <tr>
+                <td>LARGO</td><td> FONDO</td><td>ALTO</td><td><input type="checkbox" />
+                <input type="checkbox"  {% if ordenproduccion.madera %}
+                                 checked="checked"
+                                {% else %}
+                                {% endif %}/>MADERA</td><td><input type="checkbox"  {% if ordenproduccion.hierro %}
+                                 checked="checked"
+                                {% else %}
+                                {% endif %}/>HIERRO</td>
+            </tr>
+             <tr>
+                <td>{{ordenproduccion.largo}}</td><td>{{ordenproduccion.fondo}} </td><td>{{ordenproduccion.alto}}</td><td>
+                <input type="checkbox" {% if ordenproduccion.vidrio %}
+                                 checked="checked"
+                                {% else %}
+                                {% endif %}/>VIDRIO</td><td><input type="checkbox"  {% if ordenproduccion.marmol %}
+                                 checked="checked"
+                                {% else %}
+                                {% endif %} />MARMOL</td>
+            </tr>
+             <tr>
+                <td colspan="5" ><input type="checkbox" {% if ordenproduccion.enchape %}
+                                 checked="checked"
+                                {% else %}
+                                {% endif %}/>ECNCHAPE</td>
+            </tr>
+            <tr>
+                <td>TONO</td><td colspan="3">{{ordenproduccion.tono}} </td><th>TIPO MATERIAL</th>
+            </tr>
+            <tr>
+                <td>ACABADO</td><td colspan="3"> <input type="checkbox" {% if ordenproduccion.mate %}
+                                 checked="checked"
+                                {% else %}
+                                {% endif %}/>Mate 
+                                <input type="checkbox" {% if ordenproduccion.brillante %}
+                                 checked="checked"
+                                {% else %}
+                                {% endif %}/>Brillante
+                                 <input type="checkbox" {% if ordenproduccion.semimate %}
+                                 checked="checked"
+                                {% else %}
+                                {% endif %}/>Semimate
+                                 <input type="checkbox" {% if ordenproduccion.pulido %}
+                                 checked="checked"
+                                {% else %}
+                                {% endif %}/>Pulido
+                                 <input type="checkbox" {% if ordenproduccion.poroabierto %}
+                                 checked="checked"
+                                {% else %}
+                                {% endif %}/>Poro Abierto</td>
+                                <td>
+                                  <input type="checkbox" {% if ordenproduccion.hierro %}
+                                 checked="checked"
+                                {% else %}
+                                {% endif %}/>Hierro 
+                                {% if ordenproduccion.hierro %}
+                                {{ordenproduccion.patina_color}}
+                                {% else %}
+                                {% endif %}
+                                
+                                <input type="checkbox" {% if ordenproduccion.acero %}
+                                 checked="checked"
+                                {% else %}
+                                {% endif %}/>Acero 
+                                 {% if ordenproduccion.acero %}
+                                        <input type="checkbox" {% if ordenproduccion.satinado %}
+                                         checked="checked"
+                                        {% else %}
+                                        {% endif %}/>satinado
+                                        <input type="checkbox" {% if ordenproduccion.brillante %}
+                                         checked="checked"
+                                        {% else %}
+                                        {% endif %}/>brillante
+                                {% else %}
+                                {% endif %}
+                                    <input type="checkbox" {% if ordenproduccion.aluminio %}
+                                 checked="checked"
+                                {% else %}
+                                {% endif %}/>Aluminio 
+                                
+                                {% if ordenproduccion.aluminio %}
+                                {{ordenproduccion.patina_color}}
+                                {% else %}
+                                {% endif %}
+                                </td>
+            </tr>
+            <tr>
+                <th colspan="2">HERRAJES ESPECIALES </th><th colspan="2">TOPE DE</th><th>TELAS</th>
+            </tr>
+            <tr>
+                <td> <input type="checkbox" {% if ordenproduccion.retractil %}
+                                         checked="checked"
+                                        {% else %}
+                                        {% endif %}/>RETRACTIL</td><td> <input type="checkbox" {% if ordenproduccion.corredizo %}
+                                         checked="checked"
+                                        {% else %}
+                                        {% endif %}/>CORREDIZO</td><td> <input type="checkbox" {% if ordenproduccion.engrampe %}
+                                         checked="checked"
+                                        {% else %}
+                                        {% endif %}/>ENGRAMPE</td><td>
+                                         <input type="checkbox" {% if ordenproduccion.impulso %}
+                                         checked="checked"
+                                        {% else %}
+                                        {% endif %}/>IMPULSO</td><td>
+                                         <input type="checkbox" {% if ordenproduccion.tela_almacen %}
+                                         checked="checked"
+                                        {% else %}
+                                        {% endif %}/>ALMACEN 
+                                        <input type="checkbox" {% if ordenproduccion.tela_cliente %}
+                                         checked="checked"
+                                        {% else %}
+                                        {% endif %}/>CLIENTE</td>
+            </tr>
+            <tr>
+                <th colspan="4">DETALLES</th><th>CUEROS</th>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="checkbox" {% if ordenproduccion.pintado %}
+                                         checked="checked"
+                                        {% else %}
+                                        {% endif %}/>PINTADO A MANO</td>
+                                        <td colspan="2"><input type="checkbox" {% if ordenproduccion.conchaperla %}
+                                         checked="checked"
+                                        {% else %}
+                                        {% endif %}/>CONCHA PERLA</td>
+                <td><input type="checkbox" {% if ordenproduccion.cuero_almacen %}
+                                         checked="checked"
+                                        {% else %}
+                                        {% endif %}/>ALMACEN 
+                                        <input type="checkbox" {% if ordenproduccion.cuero_cliente %}
+                                         checked="checked"
+                                        {% else %}
+                                        {% endif %}/>CLIENTE</td>
+            </tr>
+            <tr>
+                <th colspan="2">FECHA INICIO</th><td>{{ordenproduccion.fechainicio}}</td>
+            </tr>
+            <tr>
+                <th colspan="2">FECHA TOPE DE ENTREGA</th><td>{{ordenproduccion.fechaentrega}}</td>
+            </tr>
+            
+            
+        </table>
+        
+    </div>
+    <div class="foot">
+        <br><br><br>
+        <table>
+            
+                <tr>
+                    <td>___________________</td><td> ___________________</td>
+                </tr>
+                <tr>
+                    <td>RECIBI CONFORME</td><td> ENTREGADO POR</td>
+                </tr>
+            </tbody>
+            
+        </table>
+    </div>
+   
+   
+</body>
+</html>

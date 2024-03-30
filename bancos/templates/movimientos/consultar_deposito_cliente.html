@@ -1,0 +1,460 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block css %}
+    {{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+{% block section_title %} Consultar movimiento del cliente {% endblock %}
+{% block content %}
+    <style>
+        .panel-border {
+            border: 1px solid #ddd !important;
+        }
+
+        .form-group {
+            margin-bottom: 0px !important;
+        }
+
+        .input-group input {
+            border-right: 0px solid transparent;
+        }
+
+        .input-group .input-group-addon {
+            background-color: transparent;
+            border-left: 0px solid transparent;
+        }
+    </style>
+    <div class="row">
+        <!-- begin col-6 -->
+        <div class="col-md-12">
+            <form id="formulario" class="form-horizontal" method="post">
+                {% csrf_token %}
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                               data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                <i class="fa fa-plus-circle pull-right"></i>
+                                Datos generales
+                            </a>
+                        </h3>
+                    </div>
+                    <div id="collapseOne" aria-expanded="true" id="collapseOne"
+                         class="panel-collapse collapse in">
+                        <div class="panel-body panel-border">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Tipo</label>
+                                <div class="col-sm-8">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <select class="form-control" name="tipo_anticipo" id="tipo_anticipo"  style="background: #e5e9ed;opacity: .6;">
+
+                                                {% for tipo_anticipo in tipo_anticipos %}
+                                                {% if tipo_anticipo.id == 2 %}
+                                                     <option value="{{ tipo_anticipo.id }}"
+                                                      {% if tipo_anticipo.id == movimiento.tipo_anticipo_id %}
+                                                            selected="selected"
+                                                    {% endif %}>{{ tipo_anticipo.descripcion }}</option>
+
+                                                    {% endif %}
+
+
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <select class="form-control" name="tipo_documento" id="tipo_documento" style="background: #e5e9ed;opacity: .6;">
+                                                <option value="" selected>Seleccione una opción</option>
+                                                {% for tipo_documento in tipo_documentos %}
+                                                    <option value="{{ tipo_documento.id }}" {% if tipo_documento.id == movimiento.tipo_documento_id %}
+                                                            selected="selected"
+                                                    {% endif %}>{{ tipo_documento.descripcion }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Fecha de emisión</label>
+                                <div class="col-sm-4">
+                                    <input id="fecha_emision" class="form-control" type="text" name="fecha_emision" value="{{ movimiento.fecha_emision | date:'Y-m-d'  }}" readonly>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="div_cuenta_bancaria">
+                                <label class="col-sm-4 control-label">Cuenta bancaria</label>
+                                <div class="col-sm-4">
+                                        <input class="form-control"  id="cuenta_bancaria"
+                                               name="nombre_cuenta_bancaria" type="text" value="{{ movimiento.banco  }}" readonly >
+                                       
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Persona</label>
+                                <div class="col-sm-4">
+                                        <input class="form-control" name="persona" type="text" value="{{ movimiento.cliente  }}" readonly>
+                                   
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="form-group" >
+                                <label class="col-sm-4 control-label">Punto de Venta</label>
+                            <div class="col-sm-4">
+                                        <input class="form-control" name="persona" type="text" value="{{ movimiento.puntos_venta  }}" readonly>
+                                   
+                                </div>
+                            </div>
+                            <div class="form-group mostrar-cheque mostrar-no-deposito" style="display:none">
+                                <label class="col-sm-4 control-label">Páguese a la orden
+                                    de</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" name="paguese_a" value="{{ movimiento.paguese_a  }}" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group mostrar-cheque mostrar-no-deposito" style="display: none">
+                                <label class="col-sm-4 control-label">Número de cheque</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" name="numero_cheque" value="{{ movimiento.numero_cheque  }}" readonly>
+                                </div>
+                            </div>
+
+                            <div class="form-group div_tarjeta_credito"  style="display: none">
+                                <label class="col-sm-4 control-label">Tarjeta de Credito</label>
+                            <div class="col-sm-4" >
+                                <input class="form-control" type="text" name="numero_cheque" value="{{ movimiento.tarjeta_credito.nombre }}" readonly>
+                                            
+                                        </div>
+                            </div>
+
+                                <div class="div_tarjeta_credito form-group ">
+                                <label class="col-sm-4 control-label">Número de lote</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" name="numero_lote" id="numero_lote" value="{{ movimiento.numero_lote  }}" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group mostrar-cheque mostrar-no-deposito" style="display: none">
+                                <label class="col-sm-4 control-label">Fecha cheque</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" id="fecha_cheque"
+                                           name="fecha_cheque" value="{{ movimiento.fecha_cheque | date:'Y-m-d'  }}" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Descripción</label>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control" name="descripcion" id="descripcion" rows="5" readonly>{{ movimiento.descripcion  }}</textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Monto <b> $ {{movimiento.monto}} </b></label>
+                                <div class="col-sm-6">
+                                    <div class="input-group"><span class="input-group-addon">$</span>
+                                    <input type="text" class="form-control" id="id_monto" name="monto" value="{{movimiento.monto}}" readonly/></div>
+                                </div>
+                            </div>
+                       
+                        </div>
+                    </div>
+                </div>
+                      <div class="panel panel-inverse panel-with-tabs">
+                    <div class="panel-heading p-0">
+                        <!-- begin nav-tabs -->
+                        <ul class="nav nav-tabs nav-tabs-inverse">
+                            <li class="active"><a href="#nav-tab-1" data-toggle="tab">Facturas</a></li>
+                            <li class=""><a href="#nav-tab-2" data-toggle="tab">Asiento</a></li>
+                        </ul>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade active in" id="nav-tab-1">
+                            <br>
+                            <table class="table table-bordered display" id="tabla-facturas" cellspacing="0" width="100%">
+                                <thead style="background-color: #ccd0d4">
+                                <tr>
+                                    <th></th>
+                                    <th>Id</th>
+                                    <th style="text-align: center">Fecha emisión</th>
+                                    <th style="text-align: center">Establecimiento</th>
+                                    <th style="text-align: center">Subtotal</th>
+                                    <th style="text-align: center">Iva</th>
+                                    <th style="text-align: center">Total</th>
+                                     <th style="text-align: center">Cantidad Anterior</th>
+                                     <th style="text-align: center">Diferencia</th>
+                                    <th style="text-align: center">Abono</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if facturas %}
+                                                    {% for f  in facturas %}
+                                <tr>
+                                    <td><input value="{{ f.id }}" type="checkbox" id="checkbox-factura{{ f.0 }}" checked>
+                                    <input type="hidden" id="fact_total_{{ f.0 }}" value="{{ f.5  }}"></td>
+                                    <td name="factura-id">{{ f.0 }}</td>
+                        <td name="factura-fecha-emision">{{ f.1 }}</td>
+                        <td name="factura-establecimiento">{{ f.2 }}-{{ f.9  }}-{{ f.10  }}</td>
+                        <td align="right" name="factura-subtotal">{{ f.3 }}</td>
+                        <td align="right" name="factura-iva">{{ f.4 }}</td>
+                        <td align="right" name="factura-total">{{ f.5  }}</td>
+                                     <td align="right" name="abono">{{ f.7  }}</td>
+                                 <td align="right" name="abono">{{ f.8  }}</td>
+                                <td align="right" name="abono">{{ f.6  }}</td></tr>
+                                {% endfor %}
+                                {% endif %}
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="7"></td>
+                                    <td align="right" name="facturas-subtotal"><strong></strong></td>
+                                    <td align="right" name="facturas-iva"><strong></strong></td>
+                                    <td align="right" name="facturas-total"><strong>{{ total_f }}</strong></td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="nav-tab-2">
+                            <table class="table table-bordered" id="tabla-asiento">
+                                <thead style="background-color: #ccd0d4">
+                                <tr>
+                                    <th style="display:none;">Id</th>
+                                    <th style="text-align: center">Cód.</th>
+                                    <th style="text-align: center">Cuenta</th>
+                                    <th style="text-align: center; width: 15%;">Debe</th>
+                                    <th style="text-align: center; width: 15%;">Haber</th>
+
+<th style="text-align: center">Centro de Costos</th>
+<th style="text-align: center">Concepto</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if detalle_asientos %}
+                                                    {% for de  in detalle_asientos %}
+                                <tr class="asiento-row" >
+                                    <td name="asiento-plan-cuenta-id" style="display:none;">{{ de.cuenta_id}}</td>
+
+                        <td name="asiento-codigo">{{ asientos.codigo_asiento}}</td>
+                        <td><div class="input-group add-on" style="width:100%"><input class="form-control" type="text" name="asiento-plan-cuenta-descripcion" value="{{ de.cuenta.nombre_plan}}"   readonly>
+                        </div>
+                        </td>
+                        <td>
+                            <input style="text-align: right;" class="form-control" type="hidden"  name="detalle_id" value="{{ de.detalle_id}}" >
+
+
+                            <input style="text-align: right;" class="form-control" type="number" step="0.01" name="asiento-debe" value="{{ de.debe}}" readonly>
+                        </td>
+                        <td align="right" >
+                            <input style="text-align: right;" class="form-control" type="number" step="0.01" name="asiento-haber" value="{{ de.haber}}" readonly >
+                        </td>
+                         <td>
+                            {{ de.centro_costo | default_if_none:""}}</td>
+                        
+                        <td>
+                            <textarea style="text-align: right;" class="form-control"  name="concepto-asiento"  >{{ de.concepto}}</textarea></td>
+                    </tr>
+                                {% endfor %}
+                                {% endif %}
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td></td>
+                                    <td><strong>TOTAL:</strong></td>
+                                    <td align="right"><strong>{{total_asientos_debe}}</strong></td>
+                                    <td align="right"><strong>{{total_asientos_haber}}</strong></td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                            <!--<button id="agregar-asiento" style="margin-left: 1%;" type="button" class="btn btn-inverse">
+                                    <i class="fa fa-plus-circle"></i>Agregar
+                            </button>-->
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+
+              
+               <a class="default btn btn-link" href="/bancos/movimiento_cliente"><button type="button" class="btn btn-inverse">  Regresar</button></a>
+
+
+                
+                
+                </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+
+    <script>
+       
+        $(".bd-example-modal-lg").modal('toggle');
+        $('#tipo_documento').select2().select2("readonly", true);
+        $('#tipo_anticipo').select2().select2("readonly", true);
+
+        var tabla_facturas = $('#tabla-facturas');
+
+        function getFechaHoy() {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear();
+
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+            today = yyyy + '-' + mm + '-' + dd;
+            return today;
+        }
+
+        $(document).ready(function () {
+            //$('#formulario').trigger("reset");
+            $('#tabla-cliente').DataTable();
+            $('#tabla-plan-cuenta').DataTable();
+            $('#tabla_cuenta').DataTable({ordering:false});
+            $('#tabla-proveedor').DataTable();
+            $('.formato_numero').maskMoney({thousands:'', decimal:'.', allowZero: true});
+            $("select[name='tipo_documento']").change(function () {
+                if ($(this).val() != "1") {//Transf
+                    $('.mostrar-cheque').attr('style', 'display: none;');
+                    $('.mostrar-transf').removeAttr('style')
+                }
+                if ($(this).val() == "1") {//Cheque
+                    $('.mostrar-transf').attr('style', 'display: none;');
+                    $('.mostrar-cheque').removeAttr('style');
+                    $('.div_tarjeta_credito').attr('style', 'display: none;');
+                    $('.div_retenciones').attr('style', 'display: none;');
+                }
+              //  alert($(this).val());
+               
+                
+                 if ($(this).val() == "3" || $(this).val() == "4") {//Nota de Credito Bancaria o Deposito
+                    $('.mostrar-transf').attr('style', 'display: block;');
+                    $('.mostrar-cheque').removeAttr('style');
+                    $('#div_cuenta_bancaria').attr('style', 'display: block;');
+                     $('.div_tarjeta_credito').attr('style', 'display: none;');
+                     $('.div_retenciones').attr('style', 'display: none;');
+                }
+                
+
+                if ($(this).val() == "5") {//Tarjeta de Credito
+                    $('.mostrar-transf').attr('style', 'display: none;');
+                    $('.mostrar-cheque').attr('style', 'display: none;');
+                    $('#div_cuenta_bancaria').attr('style', 'display: none;');
+                    $('.div_tarjeta_credito').attr('style', 'display: block;');
+                    $('.div_retenciones').attr('style', 'display: none;');
+                    //alert("entro");
+
+
+                }
+
+               
+
+                 if ($(this).val() == "7" || $(this).val() == "11") {//Otros Cobros
+                    $('.mostrar-transf').attr('style', 'display: none;');
+                    $('.mostrar-cheque').attr('style', 'display: none;');
+                    $('#div_cuenta_bancaria').attr('style', 'display: none;');
+                     $('.div_tarjeta_credito').attr('style', 'display: none;');
+                     $('.div_retenciones').attr('style', 'display: none;');
+                }
+
+                if ($(this).val() == "8") {//Efectivo
+                    $('.mostrar-transf').attr('style', 'display: none;');
+                    $('.mostrar-cheque').attr('style', 'display: none;');
+                    $('#div_cuenta_bancaria').attr('style', 'display: none;');
+                     $('.div_tarjeta_credito').attr('style', 'display: none;');
+                     $('.div_retenciones').attr('style', 'display: none;');
+                }
+            });
+
+            $('#persona_modal').removeAttr('data-target');
+            $('#persona_modal').attr('data-target', '#modal-cliente');
+            var tipo=$('#tipo_documento').val();
+            //alert(tipo);
+            if (tipo != "1") {//Transf
+                    $('.mostrar-cheque').attr('style', 'display: none;');
+                    $('.mostrar-transf').removeAttr('style')
+                }
+                if (tipo == "1") {//Cheque
+                    $('.mostrar-transf').attr('style', 'display: none;');
+                    $('.mostrar-cheque').removeAttr('style');
+                    $('.div_tarjeta_credito').attr('style', 'display: none;');
+                    $('.div_retenciones').attr('style', 'display: none;');
+                }
+              //  alert($(this).val());
+               
+                
+                 if (tipo == "3" || tipo == "4") {//Nota de Credito Bancaria o Deposito
+                    $('.mostrar-transf').attr('style', 'display: block;');
+                    $('.mostrar-cheque').removeAttr('style');
+                    $('#div_cuenta_bancaria').attr('style', 'display: block;');
+                     $('.div_tarjeta_credito').attr('style', 'display: none;');
+                     $('.div_retenciones').attr('style', 'display: none;');
+                }
+                
+
+                if (tipo == "5") {//Tarjeta de Credito
+                    $('.mostrar-transf').attr('style', 'display: none;');
+                    $('.mostrar-cheque').attr('style', 'display: none;');
+                    $('#div_cuenta_bancaria').attr('style', 'display: none;');
+                    $('.div_tarjeta_credito').attr('style', 'display: block;');
+                    $('.div_retenciones').attr('style', 'display: none;');
+                    //alert("entro");
+
+
+                }
+
+               
+
+                 if (tipo == "7" || tipo == "11") {//Otros Cobros
+                    $('.mostrar-transf').attr('style', 'display: none;');
+                    $('.mostrar-cheque').attr('style', 'display: none;');
+                    $('#div_cuenta_bancaria').attr('style', 'display: none;');
+                     $('.div_tarjeta_credito').attr('style', 'display: none;');
+                     $('.div_retenciones').attr('style', 'display: none;');
+                }
+
+                if (tipo == "8") {//Efectivo
+                    $('.mostrar-transf').attr('style', 'display: none;');
+                    $('.mostrar-cheque').attr('style', 'display: none;');
+                    $('#div_cuenta_bancaria').attr('style', 'display: none;');
+                     $('.div_tarjeta_credito').attr('style', 'display: none;');
+                     $('.div_retenciones').attr('style', 'display: none;');
+                }
+
+            tabla_facturas.DataTable( {
+                columnDefs: [ {
+                    orderable: false,
+                    className: 'select-checkbox',
+                    targets:   0
+                } ],
+                select: {
+                    style:    'os',
+                    selector: 'td:first-child'
+                },
+                order: [[ 1, 'asc' ]]
+            } );
+
+
+
+        });
+
+   </script>
+{% endblock %}

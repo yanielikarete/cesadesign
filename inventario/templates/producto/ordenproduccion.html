@@ -1,0 +1,386 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block breadcrumb %}Sucursal {{ sucursal.nombre }}{% endblock %}
+{% block section_title %}Producto{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+
+            <!-- begin row -->
+           <style>
+       .panel-border{border: 1px solid #ddd !important}
+       .form-ajust .form-group{margin-bottom: 0px !important}
+      input[type="text"],select,input[type="number"]
+      {
+
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    box-shadow: none;
+    font-size: 12px;
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+       }
+
+    
+
+    </style>
+
+ <div class="row">
+                <!-- begin col-6 -->
+      <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Ordenes de Producci&oacute;n</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-10">
+                            <div>
+
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                  <li role="presentation" class="active"><a href="#principales" aria-controls="principales" role="tab" data-toggle="tab">Documento</a></li>
+        </ul>
+                              
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade in active" id="principales">
+                                        <!--INICIO ORDEN PRODUCCION-->
+                                        
+                                        <div class="row">
+                                            <div class="col-md-7">
+            <div class="panel panel-default panel-border">
+                <div class="panel-heading">Documento</div>
+                <div class="panel-body">
+                 
+              <div class="col-md-4">
+                <label for="exampleInputName2">Numero</label>
+                <input type="text" class="form-control" id="codigo" placeholder="##">
+              </div>
+              <div class="col-md-4">
+                <label for="exampleInputEmail2">Fecha</label>
+                <input type="text" class="form-control" id="nombre" placeholder="dd/mm/yyyy">
+              </div>
+              <div class="col-md-4">
+                <label for="exampleInputEmail2">Produccion</label>
+                <input type="text" class="form-control" id="nombre" placeholder="dd/mm/yyyy">
+              </div>
+              
+                  
+                </div>
+            </div>
+              </div>
+              <div class="col-md-5">
+            <div class="panel panel-default panel-border">
+                <div class="panel-heading">Estado</div>
+                <div class="panel-body">
+                 
+              <div class="form-group text-center">
+                                                                          <label class="checkbox-inline">
+                                                                            <input type="checkbox" id="inlineCheckbox1" value="option1"> Eliminado
+                                                                          </label>
+                                                                          <label class="checkbox-inline">
+                                                                            <input type="checkbox" id="inlineCheckbox2" value="option2"> Impreso
+                                                                          </label>
+                    <label class="checkbox-inline">
+                                                                            <input type="checkbox" id="inlineCheckbox2" value="option2"> Aprobado
+                                                                          </label>
+                                                        </div>
+              
+                  
+                </div>
+            </div>
+              </div>
+                                            
+                                        </div>
+          <div class="row">
+                                            <div class="col-md-7">
+            <div class="panel panel-default panel-border">
+                <div class="panel-heading">Datos Principales</div>
+                <div class="panel-body">
+                 
+              <form class="form-horizontal form-ajust">
+                                                                    <div class="form-group">
+                                                                         <label for="inputEmail3" class="col-sm-3 control-label">Producto</label>
+                                                                         <div class="col-sm-3">
+                                                                           <input type="text" class="form-control" id="inputEmail3" >
+                                                                         </div>
+                                                                         <div class="col-sm-6">
+                                                                            <input type="text" class="form-control" id="inputEmail31" >
+                                                                         </div>
+                                                                     </div>
+                    <div class="form-group">
+                                                                         <label for="inputEmail3" class="col-sm-3 control-label">Cantidad</label>
+                                                                         <div class="col-sm-3">
+                                                                           <input type="text" class="form-control" id="Cantidad" >
+                                                                         </div>
+                                                                         <div class="col-sm-6">
+                      <table class="table">
+                    <tr>
+                      <th>IP</th>
+                      <th>PT</th>
+                      <th>EP</th>
+                    </tr>
+                    <tr>
+                     
+                      <td>2</td>
+                      <td>1</td>
+                      <td>2</td>
+                    </tr>
+                    
+                    
+                      </table>
+                  </div>
+                                                                    </div>
+                    
+              </form>
+              
+                </div>
+            </div>
+              </div>
+              <div class="col-md-5">
+             <!-- Table -->
+                                                <table class="table">
+                                                  <tr>
+                                                    <th>Tipo</th>
+                                                    <th>Bodega</th>
+                                                    <th>Stock</th>
+                                                  </tr>
+                                                  <tr>
+                                                   
+                                                    <td>001</td>
+                                                    <td>0001-0001</td>
+                                                    <td>5</td>
+                                                  </tr>
+              <tr>
+                                                   
+                                                    <td>002</td>
+                                                    <td>0002-0002</td>
+                                                    <td>0</td>
+                                                  </tr>
+                                                  
+                                                </table>
+              </div>
+                                            
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="panel panel-default panel-border">
+                <!-- Default panel contents -->
+                <div class="panel-heading">Datos</div>
+                <div class="panel-body">
+                  
+                </div>
+              
+                <!-- Table -->
+                <table class="table">
+                  <tr>
+            
+              <th>Largo</th>
+              <th>Fondo </th>
+              <th>Alto</th>
+              <th>Tope</th>
+              
+                  </tr>
+                  <tr>
+              <td><input type="text" class="form-control" id="Cantidad" ></td>
+              <td><input type="text" class="form-control" id="Cantidad" ></td>
+              <td><input type="text" class="form-control" id="Cantidad" ></td>
+              <td><input type="text" class="form-control" id="Cantidad" ></td>
+              <td><input type="checkbox">Madera
+              <input type="checkbox">Vidrio</td>
+              
+                  </tr>
+                  
+                </table>
+            </div>
+                                            </div>
+                                            
+                                        </div>
+            <div class="panel panel-default panel-border">
+                <!-- Default panel contents -->
+                <div class="panel-heading">Productos</div>
+                <div class="panel-body">
+                  
+                </div>
+              
+                <!-- Table -->
+                <table class="table">
+                  <tr>
+              <th></th>
+              <th>Item</th>
+              <th>Nombre</th>
+              <th>Und</th>
+              <th>Med</th>
+              <th>Unidades</th>
+              <th>Med</th>
+              <th>Costo</th>
+              <th>Subtotal</th>
+                  </tr>
+                  <tr>
+              <td><input type="checkbox">
+              </td>
+              <td>001</td>
+              <td>CARTULINA</td>
+              <td>5</td>
+              <td>UNI</td>
+              <td>5</td>
+              <td>UNI</td>
+              <td>$1.99</td>
+              <td>$1.00</td>
+                  </tr>
+                  <tfoot>
+              <td></td>
+              <td></td>
+              <td></td>
+              <th>Costo Und:</th>
+              <td>$1.99</td>
+              <td></td>
+              <td></td>
+              <th>Total:</th>
+              <th>$40.00</th>
+                  </tfoot>
+                </table>
+            </div>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                        
+                                        <p class="text-center">
+                                            <button type="button" class="btn btn-primary btn-lg">Grabar</button>
+                                            <button type="button" class="btn btn-default btn-lg">Cancelar</button>
+                                        </p>
+                                        <!--FIN ORDEN PRODUCCION-->
+                                    </div>
+                                   
+                                   
+                                </div>
+                              
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="row">
+                             
+            <p class="text-center">
+          <button type="button" class="btn btn-success btn-block">Agregar <i class=" glyphicon glyphicon-plus icon-white"></i></button>
+            </p>
+            <p class="text-center">
+          <button type="button" class="btn btn-danger btn-block">Eliminar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+            </p>
+            <p class="text-center">
+          <button type="button" class="btn btn-default btn-block">Buscar <i class=" glyphicon glyphicon-search icon-white"></i></button>
+            </p>
+            <p class="text-center">
+          <button type="button" class="btn btn-default btn-block">Imprimir <i class=" glyphicon glyphicon-print icon-white"></i></button>
+            </p>
+                              
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+  
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+<script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<!-- <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+ --><script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+<!-- ================== END PAGE LEVEL JS ================== -->
+<script>
+    // $(document).ready(function() {
+    //     App.init();
+    //     FormWizardValidation.init();
+    // });
+</script>
+<script>
+    $(document).ready(function() {
+      $('#id_codigo_producto').each(function(){
+  $(this).attr('readonly','readonly');
+});
+       $('#id_created_by').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_updated_by').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_created_at').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_updated_at').each(function(){
+  $(this).attr('readonly','readonly');
+});
+      var codigo_producto=$('#id_codigo_producto').val();
+      //alert(codigo_producto);
+      if(codigo_producto==""){
+         $.ajax({
+                url: "/config/obtenerSecuencial/", // the endpoint
+                type : "POST", // http method
+                data : { id : 'producto','csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+                success:function(data){
+                 $('#id_codigo_producto').val(data);
+                  
+                },
+                error: function(){
+                 
+                },
+              });
+      }
+      
+        
+    });
+    function mostrarProductos(data){
+       $('#id_fila_cambiar').val(data);
+       $(".modal").modal('toggle');
+    }
+
+    function cargarCodigoProducto(id,codigo,descripcion,medida,costo){
+      var fila=$('#id_fila_cambiar').val();
+         $('#id_kits'+fila).val(id);
+
+        $('#codigo_kits'+fila).val(codigo);
+         $('#nombre_kits'+fila).val(descripcion);
+           $('#medida_kits'+fila).val(medida);
+         $('#costo_kits'+fila).val(costo);
+    }
+    function actualizarCosto(data){
+      var cantidad=$('#cantidad_kits'+data).val();
+      var costo= $('#costo_kits'+data).val();
+     
+
+       var valor=parseFloat(cantidad)*parseFloat(costo);
+       alert(data);
+      alert(costo);
+      alert(valor);
+      $('#total_kits'+data).val(valor);
+    }
+</script>
+
+{% endblock %}

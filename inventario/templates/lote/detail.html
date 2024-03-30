@@ -1,0 +1,14 @@
+{% extends "login/base-detail.html" %}
+{% load extra_filters %}
+
+{% block breadcrumbs %}
+    {{ block.super }} » <a href="{% url "lote-list" %}">{{verbose_name}}</a> » Detalle
+{% endblock %}
+
+{% block back-list %}
+{% url "lote-list" %}
+{% endblock %}
+
+{% block detail-url-edit %}
+{% url "lote-update" object.id %}
+{% endblock %}

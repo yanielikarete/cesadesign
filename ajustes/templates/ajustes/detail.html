@@ -1,0 +1,14 @@
+{% extends "login/base-detail.html" %}
+{% load extra_filters %}
+
+{% block breadcrumbs %}
+    {{ block.super }} » <a href="{% url "ordenescompra-list" %}">{{verbose_name}}</a> » Detalle
+{% endblock %}
+
+{% block back-list %}
+{% url "ordenescompra-list" %}
+{% endblock %}
+
+{% block detail-url-edit %}
+{% url "ordenescompra-update" object.id %}
+{% endblock %}

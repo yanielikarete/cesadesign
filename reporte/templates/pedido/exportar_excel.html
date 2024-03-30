@@ -1,0 +1,65 @@
+
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>MUEDIRSA</title>
+</head>
+<style>
+    
+    .head{
+        width: 100%;
+        text-align: center;
+        font-size: 9pt;
+
+        
+    }
+    
+    #detail{
+        width: 100%;
+       font-size: 9pt;
+
+     
+    }
+    
+    .contenido{
+        width: 100%;
+        padding: 2px 0;
+        font-size: 9pt;
+        
+    }
+    
+    .contenido td{
+        text-align: right;
+        font-size: 9pt;
+        padding: 3px 5px
+    }
+    
+    .foot{
+        text-align: center;
+        font-size: 9pt;
+    }
+    @page {
+       size: 21.5cm 14cm;
+        margin: 1cm;
+        
+    }
+    
+    
+</style>
+<body>
+    <div class="head">
+        <h1>MUEDIRSA-REPORTE</h1>
+    </div>
+    <div id="detail" >
+    <table>
+						{{ html |safe }}
+</table>
+    </div>
+ 
+   
+   
+</body>
+</html>
+

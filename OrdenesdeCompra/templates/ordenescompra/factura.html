@@ -1,0 +1,396 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Ordenes de Compra{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+  <style>
+       .panel-border{border: 1px solid #ddd !important}
+       .form-ajust .form-group{margin-bottom: 0px !important}
+      input[type="text"],select,input[type="number"]
+      {
+
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    box-shadow: none;
+    font-size: 12px;
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+       }
+
+    
+
+    </style>
+      {% if mensaje %}
+    <div class="alert alert-success alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        {{ mensaje }}
+
+                    </div>
+     {% else %}
+     {% endif %}
+     <form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+            <!-- begin row -->
+          <div class="row">
+                    <!-- begin col-6 -->
+        <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Orden de Compra</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-10">
+                            <div>
+
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                  <li role="presentation" class="active"><a href="#principales" aria-controls="principales" role="tab" data-toggle="tab">Documento</a></li>
+                </ul>
+                              
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade in active" id="principales">
+                                        <!--INICIO ORDEN PRODUCCION-->
+                                        
+                                        <div class="row">
+                                            <div class="col-md-7">
+                        <div class="panel panel-default panel-border">
+                            <div class="panel-heading">Documento</div>
+                            <div class="panel-body">
+                             
+                            <div class="col-md-4">
+                              <label for="exampleInputName2">Numero</label>
+                               {% bootstrap_field ordencompra_form.nro_compra show_label=False %}
+                            </div>
+                            <div class="col-md-8">
+                              <label for="exampleInputEmail2">Fecha</label>
+                                {% bootstrap_field ordencompra_form.fecha show_label=False %}
+                            </div>
+                            
+                            
+                              
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-md-5">
+                        <div class="panel panel-default panel-border">
+                            <div class="panel-heading">Estado</div>
+                            <div class="panel-body">
+                             
+                            <div class="form-group text-center">
+                                                                          <label class="checkbox-inline">
+                                                                            <input type="checkbox" id="inlineCheckbox1" value="option1"> Eliminado
+                                                                          </label>
+                                                                          <label class="checkbox-inline">
+                                                                            <input type="checkbox" id="inlineCheckbox2" value="option2"> Impreso
+                                                                          </label>
+                                      <label class="checkbox-inline">
+                                                                            <input type="checkbox" id="inlineCheckbox2" value="option2" checked="checked"> Aprobado
+                                                                          </label>
+                                                        </div>
+                            
+                              
+                            </div>
+                        </div>
+                        </div>
+                                            
+                                        </div>
+                    <div class="row">
+                                            <div class="col-md-12">
+                        <div class="panel panel-default panel-border">
+                            <div class="panel-heading">Datos Principales</div>
+                            <div class="panel-body">
+                             
+                            <div class="form-horizontal form-ajust">
+                                                                    <div class="form-group">
+                                                                         <label for="inputEmail3" class="col-sm-3 control-label">Concepto</label>
+                                                                        
+                                                                         <div class="col-sm-6">
+                                                                          {% bootstrap_field ordencompra_form.notas show_label=False %}
+                                                                         </div>
+                                                                     </div>
+                                    <div class="form-group">
+                                                                         <label for="inputEmail3312" class="col-sm-3 control-label">Proveedor</label>
+                                                                         <div class="col-sm-6">
+                                                                        {% bootstrap_field ordencompra_form.proveedor show_label=False %}
+
+                                                                         </div>
+                                                                         
+                                                                    </div>
+                                    <div class="form-group">
+                                                                         <label for="inputEmail332" class="col-sm-3 control-label">Bodega interna</label>
+                                                                        
+                                                                         <div class="col-sm-6">
+{% bootstrap_field ordencompra_form.bodega show_label=False %}
+                                                                         </div>
+                                                                    </div>
+                                    <div class="form-group">
+                                                                         <label for="fecha" class="col-sm-3 control-label">Fecha de compra</label>
+                                                                         <div class="col-sm-8">
+{% bootstrap_field ordencompra_form.fecha show_label=False %}                                                                      </div>
+                                                                         
+                                                                    </div>
+                                    <div class="form-group">
+                                                                         <label for="fecha" class="col-sm-3 control-label">Comentario</label>
+                                                                         <div class="col-sm-8">
+                                                                           
+                                                    {% bootstrap_field ordencompra_form.comentario show_label=False %}
+                                      
+                                                                         </div>
+                                                                         
+                                                                    </div>
+                                      <div class="form-group">
+                                                                         <label for="fecha" class="col-sm-3 control-label">Numero de Factura</label>
+                                                                         <div class="col-sm-9">
+                                                                           
+                                       {% bootstrap_field ordencompra_form.nro_fact_proveedor show_label=False %}
+
+                                      
+                                                                         </div>
+                                                                         
+                                                                    </div>
+                                    
+                            </div>
+                            
+                            </div>
+                        </div>
+                        </div>
+                       
+                                            
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                        <div class="panel panel-default panel-border">
+                            <!-- Default panel contents -->
+                            <div class="panel-heading">Productos</div>
+                            <div class="panel-body">
+                              
+                            </div>
+                          
+                            <!-- Table -->
+                            <table class="table">
+                              <tr>
+                            <th></th>
+                            <th>Item</th>
+                            <th>Nombre</th>
+                            
+                            <th>Med</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Subtotal</th>
+                            <th>Recibido</th>
+                              </tr>
+                              <tr>
+                           
+                            </td>
+                               {% if detalle %}
+                                                    {% for kit  in detalle %}
+    <tr>
+                                                    <td class="eliminar"><a class="btn btn-danger remove_fields">
+                                                        <i class=" glyphicon glyphicon-trash icon-white"></i>
+                                                      </a>
+                                                    </td>
+                                                    <td> 
+                                                      <input type="hidden" class="form-control" id="id_detalle{{ forloop.counter }}" name="id_detalle{{ forloop.counter }}" value="{{ kit.compras_detalle_id }}"/>
+                                                    <input type="hidden" class="form-control" id="id_kits{{ forloop.counter }}" name="id_kits{{ forloop.counter }}" value="{{ kit.producto.producto_id }}"/>
+                                                    <input type="text" class="form-control" id="codigo_kits{{ forloop.counter }}" name="codigo_kits{{ forloop.counter }}" onfocus="mostrarProductos({{ forloop.counter }})" value="{{ kit.producto.codigo_producto }}" readonly="readonly"></td>
+                                                    <td><input type="text" class="form-control" id="nombre_kits{{ forloop.counter }}" name="nombre_kits{{ forloop.counter }}" value="{{ kit.producto.descripcion_producto }}"></td>
+                                                    <td><input type="text" class="form-control" id="medida_kits{{ forloop.counter }}" name="medida_kits{{ forloop.counter }}" value="{{ kit.producto.medida }}" readonly="readonly"></td>
+                                                    <td><input type="text" class="form-control" id="cantidad_kits{{ forloop.counter }}" name="cantidad_kits{{ forloop.counter }}" onkeyup="actualizarCosto({{ forloop.counter }})" value="{{ kit.cantidad }}" readonly="readonly"></td>
+                                                    <td><input type="text" class="form-control" id="costo_kits{{ forloop.counter }}" name="costo_kits{{ forloop.counter }}" value="{{ kit.precio_compra }}" readonly="readonly"></td>
+                                                    <td><input type="text" class="form-control" id="total_kits{{ forloop.counter }}" name="total_kits{{ forloop.counter }}" value="{{ kit.total }}" readonly="readonly"></td>
+                                                     <td><input type="checkbox" class="form-control" id="recibido_kits{{ forloop.counter }}" name="recibido_kits{{ forloop.counter }}" value="{{ kit.recibido }}"  {% if kit.recibido %}
+                                                     checked="checked"
+                                                     {% else %}
+                                                     {% endif %}
+                                                     
+                                                      {{ kit.recibido }} onclick="recibir({{ kit.compras_detalle_id }},{{ forloop.counter }})" > </td>
+                                                  </tr>
+
+                         {% endfor %}
+                         {% else %}
+                          {% endif %}
+                                <tfoot>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <th>Total:</th>
+                                                    <th> 
+                                                    <input type="text" class="form-control" id="total23" name="total23" value="{{ ordencompra_form.total.value }}" readonly="readonly"  />
+</th>
+                                                  </tfoot>
+                            </table>
+                        </div>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                        
+                                        
+                                        <!--FIN ORDEN PRODUCCION-->
+                                    </div>
+                                   
+                                   
+                                </div>
+                              
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="row">
+                             
+                    <p class="text-center">
+                    <button type="button" class="btn btn-success btn-block">Agregar <i class=" glyphicon glyphicon-plus icon-white"></i></button>
+                    </p>
+                    <p class="text-center">
+                    <button type="button" class="btn btn-danger btn-block">Eliminar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+                    </p>
+                    <p class="text-center">
+                    <button type="button" class="btn btn-default btn-block">Buscar <i class=" glyphicon glyphicon-search icon-white"></i></button>
+                    </p>
+                    <p class="text-center">
+                    <button type="button" class="btn btn-default btn-block">Imprimir <i class=" glyphicon glyphicon-print icon-white"></i></button>
+                    </p>
+                              
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+   <p class="text-center">
+
+                                    <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+                                            <a class="default btn btn-link" href="/OrdenesdeCompra/OrdenesdeCompra/"><button type="button" class="btn btn-primary btn-lg">  Regresar</button></a>
+                                        </p>
+<!--  <p class="text-right m-b-0">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-cog"></i> Guardar</button>
+                                </p>
+                                <a class="default btn btn-link" href="/inventario/producto">
+      <i class="fa fa-times"></i> Regresar
+    </a> -->
+    {% if detalle %}
+<input type="hidden" name="columnas_receta" id="columnas_receta" value="{{ detalle|length }}" />
+{% else %}
+<input type="hidden" name="columnas_receta" id="columnas_receta" value="1" />
+
+{% endif %}
+                            </form>
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+<script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+<!-- ================== END PAGE LEVEL JS ================== -->
+<script>
+  $(document).ready(function() {
+    // App.init();
+    FormWizardValidation.init();
+    	$('#id_fecha').change(
+                            function() {
+                              
+                                 var fecha=$('#id_fecha').val();
+                                                  
+
+             $.ajax({
+                                    url: '/bancos/movimiento/validarBloqueoPeriodo/',
+                                    type: "POST",
+                                    data: {fecha: fecha},
+                                    dataType: "json",
+                                    async:false,
+                                   success: function (response) {
+                                  // alert(response.length);
+                                            if (response.length != 0){
+                                                 var mensaje="No se puede ingresar ningun movimiento en este mes debido a que se encuentra bloqueado. Por favor ingrese otra fecha ";
+                                                  alert(mensaje);
+                                                  $('#id_fecha').val('');
+                                                event.preventDefault();
+                                               
+                                            }else{   
+                                               
+                                            }
+                                            
+                                  
+                                    
+                                    },
+                            });
+                     
+                              }
+                              
+                              );
+  });
+</script>
+<script>
+    $(document).ready(function() {
+      $('#id_fecha').attr('readonly','readonly');
+      $('#id_bodega').attr('readonly','readonly');
+      $('#id_concepto').attr('readonly','readonly');
+      $('#id_proveedor').attr('readonly','readonly');
+      $('#id_notas').attr('readonly','readonly');
+
+      $('#id_bodega option[value=1]').attr('selected','selected');
+      $('#id_nro_compra').each(function(){
+  $(this).attr('readonly','readonly');
+});
+         $.ajax({
+                url: "/config/obtenerSecuencial/", // the endpoint
+                type : "POST", // http method
+                data : { id : 'ordenesdecompra','csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+                success:function(data){
+                 $('#id_nro_compra').val(data);
+                  
+                },
+                error: function(){
+                  alert( "Escoja una empresa");
+                },
+              });
+    });
+
+      function recibir(id,i){
+        
+      if($('#recibido_kits'+i).attr('checked')) {
+       $.ajax({
+                url: "/config/recibirDetalleCompra/", // the endpoint
+                type : "POST", // http method
+                data : { id : id,'csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+                success:function(data){
+                  alert("Se recibio el item")
+                },
+                error: function(){
+                 
+                },
+              });
+}
+       
+    }
+</script>
+{% endblock %}                                                                                                                                                                                                                                                                

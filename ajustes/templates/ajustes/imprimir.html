@@ -1,0 +1,149 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>AJUSTES DE INVENTARIO - MUEDIRSA</title>
+</head>
+<style>
+    
+    .head{
+        width: 100%;
+        text-align: center;
+        
+    }
+    
+    #detail{
+        width: 100%;
+     
+    }
+    
+    .contenido{
+        width: 100%;
+        padding: 2px 0;
+        
+    }
+    
+    .contenido td{
+        text-align: right;
+        padding: 3px 5px
+    }
+    
+    .foot{
+        text-align: center;
+    }
+    @page {
+        /*size: a4 landscape;*/
+        size: 21.5cm 14cm;
+        margin: 1cm;
+        
+    }
+    
+    
+</style>
+<body>
+    <div class="head">
+        <h1>MUEDIRSA</h1>
+        <h3>AJUSTES DE INVENTARIO</h3>
+    </div>
+    <div id="detail" >
+       
+        <table width="250">
+             <tr>
+                <td width="80">
+                    <b>Documento:</b>
+                </td>
+                <td width="170">
+                    <span>{{ajustes.codigo}}</span>
+                </td>
+            </tr>
+              <tr>
+                <td>
+                    <b>Fecha:</b>
+                </td>
+                <td>
+                    <span>{{ajustes.fecha}}</span>
+                </td>
+            </tr>
+         
+            <tr>
+                <td >
+                    <b>Comentario:</b>
+                </td>
+                <td >
+                    <span>{{ajustes.comentario}}</span>
+                </td>
+            </tr>
+
+            <tr>
+                <td >
+                    <b>Concepto:</b>
+                </td>
+                <td >
+                    <span>{{ajustes.concepto_ajustes}}</span>
+                </td>
+            </tr>
+
+            <tr>
+                <td >
+                    <b>Bodega Interna:</b>
+                </td>
+                <td >
+                    <span>{{ajustes.bodega}}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="contenido">
+        <br>
+        <br>
+        <table border="1">
+            <thead>
+                <tr>
+                   <th>Codigo</th><th>Producto</th> <th>Cantidad</th><th> Costo</th><th>Total</th>
+            </thead>
+            <tbody>
+                 {% if detalle %}
+                     {% for kit  in detalle %}
+                        <tr>
+                            <td> {{ kit.producto.codigo_producto }}</td>
+                            <td> {{ kit.producto.descripcion_producto }}</td>
+                            <td> {{ kit.cantidad }} </td>
+                                                  
+                            <td>{{ kit.costo }}</td>
+                            <td>{{ kit.total }}</td>
+
+                        </tr>
+
+                         {% endfor %}
+                         {% else %}
+                          {% endif %}
+            </tbody>
+            
+        </table>
+        
+    </div>
+    <div class="foot">
+        <br><br><br>
+        <table>
+            <tr>
+                    <td>ELABORADO POR</td><td>REVISADO POR</td><td>APROBADO POR</td>
+                </tr>
+                 <tr>
+                    <td>&nbsp;</td><td> &nbsp;</td><td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>___________________</td><td> ___________________</td><td>___________________</td>
+                </tr>
+                <tr>
+                    <td>{{orden.created_by}}</td><td> FIRMA 2</td><td>FIRMA 3</td>
+                </tr>
+            </tbody>
+            
+        </table>
+    </div>
+   
+   
+</body>
+</html>
+

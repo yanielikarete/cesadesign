@@ -1,0 +1,359 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+<link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css'%}" rel="stylesheet" />
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css'%}" rel="stylesheet" />
+<!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Proforma Contable{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+<style>
+.panel-border{border: 1px solid #ddd !important}
+.form-ajust .form-group{margin-bottom: 0px !important}
+input[type="text"],select,input[type="number"]
+{
+
+  border: 1px solid #ccd0d4;
+  border-radius: 3px;
+  box-shadow: none;
+  font-size: 12px;
+  display: block;
+  width: 100%;
+  height: 34px;
+  padding: 6px 12px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+}
+
+.table2 {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+  display:table}
+
+  .table2>tbody>tr>td, .table2>tbody>tr>th, .table2>tfoot>tr>td, .table2>tfoot>tr>th, .table2>thead>tr>td, .table2>thead>tr>th {
+    border-color: #e2e7eb;
+    padding: 10px 15px;
+  }
+  </style>
+
+
+  <form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+   {{ proforma_form.title.errors }}
+   <!-- begin row -->
+   <div class="row">
+    <!-- begin col-6 -->
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Proforma</h3>
+        </div>
+        <div class="panel-body">
+              <!-- Nav tabs -->
+
+              <!-- Tab panes -->
+              <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade in active" id="principales">
+                  <!--INICIO ORDEN PRODUCCION-->
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="panel panel-default panel-border">
+                        <div class="panel-heading">Informacion de la Proforma</div>
+                        <div class="panel-body">
+
+                          
+                          <div class="col-md-4">
+                            <label for="id_fecha">Fecha</label>
+                            {% bootstrap_field proforma_form.fecha show_label=False%}
+                          </div>
+                          <div class="col-md-4">
+                            <label for="id_codigo_proforma">Codigo Proforma</label>
+                            {% bootstrap_field proforma_form.codigo show_label=False %}
+
+                          </div>
+                          <div class="col-md-4">
+                            <label for="id_glosa">Cliente</label>
+                            {% bootstrap_field proforma_form.cliente show_label=False %}
+
+                          </div>
+                          <div class="col-md-4">
+                            <label for="id_glosa">Referencia</label>
+                            {% bootstrap_field proforma_form.referencia show_label=False %}
+
+                          </div>
+                          <div class="col-md-4">
+                            <label for="id_glosa">Vendedor</label>
+                            {% bootstrap_field proforma_form.vendedor show_label=False %}
+
+                          </div>
+                          <div class="col-md-4">
+                            <label for="id_glosa">Vencimiento(D&iacute;as)</label>
+                            {% bootstrap_field proforma_form.vencimiento show_label=False %}
+
+                          </div>
+                          <div class="col-md-4">
+                            <label for="id_glosa">Proyecto</label>
+                            {% bootstrap_field proforma_form.proyecto show_label=False %}
+
+                          </div>
+                          <div class="col-md-4">
+                            <label for="id_glosa">Atencion</label>
+                            {% bootstrap_field proforma_form.atencion show_label=False %}
+
+                          </div>
+                          <div class="col-md-4">
+                            <label for="id_glosa">Forma de Pago</label>
+                            {% bootstrap_field proforma_form.forma_de_pago show_label=False %}
+
+                          </div>
+                          <div class="col-md-4">
+                            <label for="id_glosa">Garantia</label>
+                            {% bootstrap_field proforma_form.garantia show_label=False %}
+
+                          </div>
+                          <div class="col-md-4">
+                            {% bootstrap_field proforma_form.activo show_label=False %}
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+          <div class="row">
+            <div class="col-md-12">
+              <div class="panel panel-default panel-border">
+                <!-- Default panel contents -->
+                <div class="panel-heading">Productos</div>
+                <div class="panel-body">
+
+                </div>
+
+                <!-- Table -->
+                <table class="table2 table-striped table-bordered" id="tabla" >
+                  <tr>
+                    <th>Cantidad</th>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Centro de Costo</th>
+                    <th>&#37; Descuento</th>
+                    <th>Descuento</th>
+                    <th>Subtotal</th>
+                  </tr>
+                  {% if detalle %}
+                  {% for kit in detalle %}
+
+                  <tr>
+                    <td><input class="form-control" id="cantidad_kits{{forloop.counter}}" name="cantidad_kits{{forloop.counter}}" readonly="readonly" value="{{kit.cantidad}}"  /></td>
+                    <td>
+                    	<input type="hidden" class="form-control" id="id_producto_kits{{forloop.counter}}" name="id_producto_kits{{forloop.counter}}" value="{{kit.producto.producto_id}}"/>
+                    	<input required="required" type="text" class="form-control" id="producto_kits{{forloop.counter}}" name="producto_kits{{forloop.counter}}" readonly="readonly" value="{{kit.producto.descripcion_producto}}"></td>
+                    <td><input class="form-control" id="precio_kits{{forloop.counter}}" name="precio_kits{{forloop.counter}}" readonly="readonly" value="{{kit.producto.precio1}}" /></td>
+                    <td>
+                    	<input type="hidden" class="form-control" id="id_centro_kits{{forloop.counter}}" name="id_centro_kits{{forloop.counter}}" value="{{kit.centro.centro_id}}"/>
+                    	<input required="required" type="text" class="form-control" id="centro_kits1" name="centro_kits1" readonly="readonly" value="{{kit.centro.nombre_centro}}">
+                    </td>                    
+                    <td><input type="text" class="form-control" id="descuento_kits{{forloop.counter}}" name="descuento_kits{{forloop.counter}}"  required="required" readonly="readonly" value="{{kit.desc}}" /></td>
+                    <td><input type="text" class="form-control" id="subtotal_kits{{forloop.counter}}" name="subtotal_kits{{forloop.counter}}"  required="required" readonly="readonly" value="{{kit.subtotal}}" /></td>
+					
+					
+                  </tr>
+                  {% endfor %}
+                  {% endif %}
+                  <tfoot>
+                  	<td></td>
+                  	<th>
+                  		<input type="text" class="form-control" id="total_debe" name="total_debe"  required="required" readonly="readonly" />
+                  	</th>
+                  	<th>
+                  		<input type="text" class="form-control" id="total_haber" name="total_haber"  required="required" readonly="readonly" />
+                  	</th>
+                  	<td></td>
+                  	<td></td>
+                  </tfoot>              
+               </table>
+             </div>
+           </div>
+         </div>
+       </div>
+
+     </div>
+
+
+
+     <!--FIN ORDEN PRODUCCION-->
+   </div>
+
+
+ </div>
+
+</div>
+</div>
+                   <!--      <div class="col-md-2">
+                            <div class="row">
+                             
+                    <p class="text-center">
+                    <button type="button" class="btn btn-success btn-block">Agregar <i class=" glyphicon glyphicon-plus icon-white"></i></button>
+                    </p>
+                    <p class="text-center">
+                    <button type="button" class="btn btn-danger btn-block">Eliminar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+                    </p>
+                    <p class="text-center">
+                    <button type="button" class="btn btn-default btn-block">Buscar <i class=" glyphicon glyphicon-search icon-white"></i></button>
+                    </p>
+                    <p class="text-center">
+                    <button type="button" class="btn btn-default btn-block">Imprimir <i class=" glyphicon glyphicon-print icon-white"></i></button>
+                    </p>
+                              
+                            </div>
+                            
+                          </div> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p class="text-center">
+
+                    <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+                    <a class="default btn btn-link" href="/transacciones/proforma/"><button type="button" class="btn btn-primary btn-lg">  Regresar</button></a>
+                  </p>
+<!--  <p class="text-right m-b-0">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-cog"></i> Guardar</button>
+                                </p>
+                                <a class="default btn btn-link" href="/inventario/producto">
+      <i class="fa fa-times"></i> Regresar
+    </a> -->
+    <input type="hidden" name="columnas_receta" id="columnas_receta" value="0" />
+
+    <input type="hidden" name="id_fila_cambiar" id="id_fila_cambiar" value="" />
+
+
+  </form>
+  {% endblock %}
+
+  {% block javascript %}
+  {{ block.super }}
+  <!-- ================== BEGIN PAGE LEVEL JS ================== -->
+  <script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+  <script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+  <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+  <script src="{% static 'color_admin/assets/js/bootstrap-datepicker.js' %}"></script>
+
+  
+  <script>
+  $(document).ready(function() {
+  	$('#id_codigo_proforma').attr('readonly','readonly');
+  	$('#id_fecha').datepicker({todayHighlight:true,autoclose:true});
+  	$('#id_fecha').datepicker('option', {dateFormat: 'yy/mm/dd'});
+  });
+
+  </script>
+  <script>
+  $(document).ready(function() {
+    // App.init();
+    $('.table').DataTable();
+    FormWizardValidation.init();
+  });
+  </script>
+  <script>
+  $(document).ready(function() {
+  	$('#id_codigo_producto').each(function(){
+  		$(this).attr('readonly','readonly');
+  	});
+  	$('#id_created_by').each(function(){
+  		$(this).attr('readonly','readonly');
+  	});
+  	$('#id_updated_by').each(function(){
+  		$(this).attr('readonly','readonly');
+  	});
+  	$('#id_created_at').each(function(){
+  		$(this).attr('readonly','readonly');
+  	});
+  	$('#id_updated_at').each(function(){
+  		$(this).attr('readonly','readonly');
+  	});
+    actualizarTotal();
+  });
+function mostrarCuentas(data){
+ $('#id_fila_cambiar').val(data);
+ $("#modal-dialog-cuenta").modal('toggle');
+}
+function mostrarCentros(data){
+ $('#id_fila_cambiar').val(data);
+ $("#modal-dialog-centro").modal('toggle');
+}
+function cerrarCentros(){
+ $("#modal-dialog-centro").modal('toggle');
+}
+function cerrarCuentas(){
+ $("#modal-dialog-cuenta").modal('toggle');
+}
+
+function cargarCodigoCuenta(id,nombre){
+  var fila=$('#id_fila_cambiar').val();
+  $('#id_cuenta_kits'+fila).val(id);
+  $('#cuenta_kits'+fila).val(nombre);
+  cerrarCuentas();
+}
+function cargarCodigoCentro(id,nombre){
+  var fila=$('#id_fila_cambiar').val();
+  $('#id_centro_kits'+fila).val(id);
+  $('#centro_kits'+fila).val(nombre);
+  cerrarCentros();
+}
+function actualizarTotal(){
+	var num_recetas=$('#columnas_receta').val();
+	var totaldebe=0;
+	var totalhaber=0;
+	var deb=0;
+	var hab=0;
+	var i;
+	var d=document.getElementById('total_debe')
+	var h=document.getElementById('total_haber')
+	//alert(' BNUM RECETS'+num_recetas);
+	for (i = 1; i <= num_recetas; i++) {
+    var hab=$('#haber_kits'+i).val();
+    hab=hab.replace(/,/g,'.');
+    var deb=$('#debe_kits'+i).val();
+    deb=deb.replace(/,/g,'.');
+		if ($.isNumeric(hab)){
+			totalhaber=parseFloat(totalhaber)+parseFloat(hab);
+		}
+		if ($.isNumeric(deb)){
+			totaldebe=parseFloat(totaldebe)+parseFloat(deb);
+		}
+	}
+	if ($.isNumeric(totalhaber)) {
+		$('#total_haber').val(totalhaber);
+	};
+	$('#total_debe').val(totaldebe);
+	if (totaldebe!=totalhaber){
+		d.setAttribute("aria-invalid", "true");
+		h.setAttribute("aria-invalid", "true");
+	}else{
+		d.setAttribute("aria-invalid", "false");
+		h.setAttribute("aria-invalid", "false");
+	}
+
+}
+</script>
+{% endblock %}                                                                                                                                                                                                                                                                

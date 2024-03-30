@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}acceso denegado{% endblock title %}
+
+{% block content-title %}
+    <div class="title clearfix">
+        <h1>Acceso Denegado</h1>
+    </div>
+{% endblock %}
+
+{% block content %}
+<br /><br />
+<div class="well">
+ <h4 class="text-center">
+ 	No está autorizado para ver esta página.
+ </h4>
+</div>
+ <button onclick="window.history.back();" class="btn btn-info">
+ 	<i class="fa fa-reply"></i>
+ 	regresar a la página anterior
+ </button>
+{% endblock content %}

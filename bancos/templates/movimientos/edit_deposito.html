@@ -1,0 +1,926 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block css %}
+    {{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+{% block section_title %} Actualizar movimiento {% endblock %}
+{% block content %}
+    <style>
+        .panel-border {
+            border: 1px solid #ddd !important;
+        }
+
+        .form-group {
+            margin-bottom: 0px !important;
+        }
+
+        .input-group input {
+            border-right: 0px solid transparent;
+        }
+
+        .input-group .input-group-addon {
+            background-color: transparent;
+            border-left: 0px solid transparent;
+        }
+    </style>
+    <div class="row">
+        <!-- begin col-6 -->
+        <div class="col-md-12">
+            <form id="formulario" class="form-horizontal" method="post" action="{% url "movimiento-update-deposito" movimiento.id %}">
+                {% csrf_token %}
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                               data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                <i class="fa fa-plus-circle pull-right"></i>
+                                Datos generales
+                            </a>
+                        </h3>
+                    </div>
+                    <div id="collapseOne" aria-expanded="true" id="collapseOne"
+                         class="panel-collapse collapse in">
+                        <div class="panel-body panel-border">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Tipo</label>
+                                <div class="col-sm-8">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <select class="form-control" name="tipo_anticipo" id="tipo_anticipo" readonly="readonly">
+                                                <option value="" selected>Seleccione una opción</option>
+                                                {% for tipo_anticipo in tipo_anticipos %}
+                                                    <option value="{{ tipo_anticipo.id }}"
+                                                    {% if tipo_anticipo.id == movimiento.tipo_anticipo_id %}
+                                                            selected="selected"
+                                                    {% endif %}
+                                                    >{{ tipo_anticipo.descripcion }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <select class="form-control" name="tipo_documento" readonly="readonly">
+                                                <option value="" selected>Seleccione una opción</option>
+                                                {% for tipo_documento in tipo_documentos %}
+                                                    <option value="{{ tipo_documento.id }}"
+                                                            {% if tipo_documento.id == movimiento.tipo_documento_id %}
+                                                            selected="selected"
+                                                    {% endif %}>{{ tipo_documento.descripcion }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Fecha de emisión</label>
+                                <div class="col-sm-4">
+                                    <input id="fecha_emision" readonly="readonly" class="form-control" type="text" name="fecha_emision" value="{{ movimiento.fecha_emision | date:'Y-m-d'  }}">
+                                </div>
+                            </div>
+<div class="form-group mostrar-transf">
+                                <label class="col-sm-4 control-label"
+                                       for="exampleInputEmail2">Número de comprobante</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" value="{{ movimiento.numero_comprobante }}"
+                                           name="numero_comprobante" readonly="readonly">
+                                    <input class="form-control" type="hidden" value="{{ movimiento.id }}"
+                                           name="id" id="id" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Cuenta bancaria</label>
+                                <div class="col-sm-4">
+                                    <div class="input-group add-on">
+                                        <input class="form-control" placeholder="..." id="cuenta_bancaria"
+                                               name="nombre_cuenta_bancaria" type="text" readonly value="{{ movimiento.banco.cuenta_contable }}">
+                                        <input type="hidden" value="{{ movimiento.banco.id }}" id="cuenta_bancaria_id" name="banco"/>
+                                        <div class="input-group-btn">
+                                            <a class="btn btn-inverse" data-toggle="modal"
+                                               data-target=".bd-example-modal-lg">
+                                                <i class=" glyphicon glyphicon-search icon-white"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--<div class="form-group">
+                                <label class="col-sm-4 control-label">Persona</label>
+                                <div class="col-sm-4">
+                                    <div class="input-group add-on">
+                                                         {%  if movimiento.tipo_anticipo_id == 2 %}
+                                                       <input type="hidden" name="persona_id"  id="persona_id" value="{{ movimiento.cliente_id }}"/>
+                                                       <input class="form-control" name="persona" type="text"  value="{{ movimiento.cliente }} " readonly>
+
+
+                   {% else %}
+                                        <input type="hidden" name="persona_id"  id="persona_id" value="{{ movimiento.proveedor_id }}"/>
+                                        <input class="form-control" name="persona" type="text"  value="{{ movimiento.proveedor }} " readonly>
+                                        {% endif %}
+                                        <div class="input-group-btn">
+                                            <a id="persona_modal" class="btn btn-inverse" data-toggle="modal" >
+                                                <i class="glyphicon glyphicon-search icon-white"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>-->
+                            <div class="form-group mostrar-cheque">
+                                <label class="col-sm-4 control-label">Páguese a la orden
+                                    de</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" name="paguese_a" value="{{ movimiento.paguese_a }}" readonly>
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Descripción</label>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control" id="descripcion" name="descripcion" rows="5" onkeyup="actualizar_descripcion()">{{ movimiento.descripcion }}</textarea>
+                                </div>
+                            </div>
+                            
+
+
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Monto <b> $ {{ movimiento.monto }} </b></label>
+                                <div class="col-sm-6">
+                                    <div class="input-group"><span class="input-group-addon">$</span>
+                                    <input readonly="readonly" type="text" class="form-control" id="id_monto" name="monto" value="{{movimiento.monto}}"/></div>
+                                </div>
+                            </div>
+
+
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-inverse panel-with-tabs">
+                    <div class="panel-heading p-0">
+                        <!-- begin nav-tabs -->
+                        <ul class="nav nav-tabs nav-tabs-inverse">
+                            <li class="active"><a href="#nav-tab-1" data-toggle="tab">Facturas</a></li>
+                            <li class=""><a href="#nav-tab-2" data-toggle="tab">Asiento</a></li>
+                        </ul>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade active in" id="nav-tab-1">
+                            <br>
+                            <table class="table table-bordered display" id="tabla-facturas" cellspacing="0" width="100%">
+                                <thead style="background-color: #ccd0d4">
+                                <tr>
+                                    <th></th>
+                                    <th>Id</th>
+                                    <th style="text-align: center">Fecha emisión</th>
+                                    <th style="text-align: center">Establecimiento</th>
+                                    <th style="text-align: center">Subtotal</th>
+                                    <th style="text-align: center">Iva</th>
+                                    <th style="text-align: center">Total</th>
+                                     <th style="text-align: center">Cantidad Anterior</th>
+                                     <th style="text-align: center">Diferencia</th>
+                                    <th style="text-align: center">Abono</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if facturas %}
+                                                    {% for f  in facturas %}
+                                <tr><td><input value="{{ f.id }}" type="checkbox" id="checkbox-factura{{ f.0 }}" checked><input type="hidden" id="fact_total_{{ f.0 }}" value="{{ f.5  }}"></td>' +
+                        <td name="factura-id">{{ f.0 }}</td>
+                        <td name="factura-fecha-emision">{{ f.1 }}</td>
+                        <td name="factura-establecimiento">{{ f.2 }}-{{ f.9  }}-{{ f.10  }}</td>
+                        <td align="right" name="factura-subtotal">{{ f.3 }}</td>
+                        <td align="right" name="factura-iva">{{ f.4 }}</td>
+                        <td align="right" name="factura-total">{{ f.5  }}</td>
+                                     <td align="right" name="abono">{{ f.7  }}</td>
+                                 <td align="right" name="abono">{{ f.8  }}</td>
+                                <td align="right" name="abono">{{ f.6  }}</td></tr>
+                                {% endfor %}
+                                {% endif %}
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="7"></td>
+                                    <td align="right" name="facturas-subtotal"><strong></strong></td>
+                                    <td align="right" name="facturas-iva"><strong></strong></td>
+                                    <td align="right" name="facturas-total"><strong>{{ total_f }}</strong></td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="nav-tab-2">
+                            <table class="table table-bordered" id="tabla-asiento">
+                                <thead style="background-color: #ccd0d4">
+                                <tr>
+                                    <th style="display:none;">Id</th>
+                                    <th style="text-align: center">Código</th>
+                                    <th style="text-align: center">Cuenta</th>
+                                    <th style="text-align: center; width: 15%;">Debe</th>
+                                    <th style="text-align: center; width: 15%;">Haber</th>
+                                    <th style="text-align: center">Concepto</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if detalle_asientos %}
+                                                    {% for de  in detalle_asientos %}
+                                <tr class="asiento-row" >
+                                    <td name="asiento-plan-cuenta-id" style="display:none;">{{ de.cuenta_id}}</td>
+
+                        <td name="asiento-codigo">{{ asientos.codigo_asiento}}</td>
+                        <td><div class="input-group add-on" style="width:100%"><input class="form-control" type="text" name="asiento-plan-cuenta-descripcion" value="{{ de.cuenta.nombre_plan}}"   readonly>
+                        </div>
+                        </td>
+                        <td>
+                            <input style="text-align: right;" class="form-control" type="hidden"  name="detalle_id" value="{{ de.detalle_id}}" >
+
+
+                            <input style="text-align: right;" class="form-control" type="number" step="0.01" name="asiento-debe" value="{{ de.debe}}" readonly>
+                        </td>
+                        <td align="right" >
+                            <input style="text-align: right;" class="form-control" type="number" step="0.01" name="asiento-haber" value="{{ de.haber}}" readonly >
+                        </td>
+                        <td>
+                            <textarea style="text-align: right;" class="form-control"  name="concepto-asiento"  >{{ de.concepto}}</textarea></td>
+                    </tr>
+                                {% endfor %}
+                                {% endif %}
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td></td>
+                                    <td><strong>TOTAL:</strong></td>
+                                    <td align="right" name="asiento-total-debe"><strong>0.00</strong></td>
+                                    <td align="right" name="asiento-total-haber"><strong>0.00</strong></td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                            <!--<button id="agregar-asiento" style="margin-left: 1%;" type="button" class="btn btn-inverse">
+                                    <i class="fa fa-plus-circle"></i>Agregar
+                            </button>-->
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+
+                <!--<button type="submit" class="btn btn-inverse"><i class="fa fa-save"></i> Guardar-->
+                <!--</button>-->
+              <a class="default btn btn-link" href="/bancos/movimiento/deposito"><button type="button" class="btn btn-inverse">  Regresar</button></a>
+<a class="default btn btn-link" onclick="guardar_descripcion()"><button type="button" class="btn btn-inverse"> <i class="fa fa-save"></i> Guardar
+                </button></a>
+            </form>
+        </div>
+    </div>
+    <!-- Modal Cliente-->
+    <div class="modal fade bs-example-modal-lg" id="modal-cliente">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cliente</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-cliente">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Ruc</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for cliente  in clientes %}
+                                <tr>
+                                    <td>{{ cliente.codigo_cliente }}</td>
+                                    <td>{{ cliente.nombre_cliente }}</td>
+                                    <td>{{ cliente.ruc }}</td>
+                                    <td onclick="cargar_cliente('{{ cliente.id_cliente }}','{{ cliente.nombre_cliente }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Proveedor-->
+    <div class="modal fade bs-example-modal-lg" id="modal-proveedor">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Proveedor</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-proveedor">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Ruc</th>
+                                <th>Acción</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for proveedor  in proveedores %}
+                                <tr>
+                                    <td>{{ proveedor.codigo_proveedor }}</td>
+                                    <td>{{ proveedor.nombre_proveedor }}</td>
+                                    <td>{{ proveedor.ruc }}</td>
+                                    <td onclick="cargar_proveedor('{{ proveedor.proveedor_id }}', '{{ proveedor.nombre_proveedor }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Banco -->
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cuenta bancaria</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped " width="100%" id="tabla_cuenta">
+                            <thead>
+                            <tr>
+
+                                <th>Banco</th>
+                                <th>Tipo</th>
+                                <th>Número cuenta</th>
+                                <th>Estado</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for banco  in bancos %}
+                                <tr>
+
+                                    <td>{{ banco.nombre }}</td>
+                                    <td>{{ banco.tipo_cuenta }}</td>
+                                    <td>{{ banco.numero_cuenta }}</td>
+                                    {% if banco.estado == True %}
+                                        <td>Activo</td>
+                                    {% else %}
+                                        <td>Inactivo</td>
+                                    {% endif %}
+                                    <td onclick="cargar_banco('{{ banco.id }}','{{ banco.nombre }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Plan Cuenta-->
+    <div class="modal fade bs-example-modal-lg" id="modal-plan-cuenta">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Plan de cuenta</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-plan-cuenta">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>Código</th>
+                                <th>Descripción</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for cuenta  in cuentas %}
+                                <tr>
+                                    <td onclick="cargar_plan_cuenta('{{ cuenta.plan_id }}','{{ cuenta.codigo_plan }}','{{ cuenta.nombre_plan }}')">
+                                        <a class="btn btn-inverse btn-sm remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                    <td>{{ cuenta.codigo_plan }}</td>
+                                    <td>{{ cuenta.nombre_plan }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+ <script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+
+    <script>
+              $('#fecha_emision').datepicker({todayHighlight:true,autoclose:true,format:'yyyy-mm-dd'});
+
+        $('#fecha_cheque').datepicker({todayHighlight: true, autoclose: true ,format: 'yyyy-mm-dd'});
+
+        var tabla_facturas = $('#tabla-facturas');
+
+        function getFechaHoy() {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear();
+
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+            today = yyyy + '-' + mm + '-' + dd;
+            return today;
+        }
+
+        $(document).ready(function () {
+            //$('#formulario').trigger("reset");
+            $('#tabla-cliente').DataTable();
+            $('#tabla-plan-cuenta').DataTable();
+            $('#tabla_cuenta').DataTable({ordering:false});
+            $('#tabla-proveedor').DataTable();
+            $("select[name='tipo_documento']").change(function () {
+                if ($(this).val() != "1") {//Transf
+                    $('.mostrar-cheque').attr('style', 'display: none;');
+                    $('.mostrar-transf').removeAttr('style')
+                }
+                if ($(this).val() == "1") {//Cheque
+                    $('.mostrar-transf').attr('style', 'display: none;');
+                    $('.mostrar-cheque').removeAttr('style')
+                }
+            });
+            $("select[name='tipo_anticipo']").change(function () {
+                if ($(this).val() == "1") {
+                    $('#persona_modal').removeAttr('data-target');
+                    $('#persona_modal').attr('data-target', '#modal-proveedor');
+                }
+                if ($(this).val() == "2") {
+                    $('#persona_modal').removeAttr('data-target');
+                    $('#persona_modal').attr('data-target', '#modal-cliente');
+                }
+            });
+
+            tabla_facturas.DataTable( {
+                columnDefs: [ {
+                    orderable: false,
+                    className: 'select-checkbox',
+                    targets:   0
+                } ],
+                select: {
+                    style:    'os',
+                    selector: 'td:first-child'
+                },
+                order: [[ 1, 'asc' ]]
+            } );
+calcular_totales_asiento();
+ //cargar_asientos_facturas();
+
+        });
+function cargar_asientos_facturas(){
+    var id= $('input[name="persona_id"]').val();
+    $.ajax({
+                type: "POST",
+                url: "{% url 'consultar-facturas' %}",
+                data: {
+                    'id': id,
+                    'tipo': "proveedor",
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: function (response) {
+                    for (var i = 0; i < response.length; i++) {
+                        cargarfacturas(response[i][0], response[i][1], response[i][2],response[i][3], response[i][4], response[i][5]);
+                    }
+                },
+                error: function (response) {
+                    alert("El proveedor no tiene facturas.");
+                    console.log(response);
+                }
+            });
+
+
+}
+        function cargar_banco(id, nombre) {
+            $('#cuenta_bancaria_id').val(id);
+            $('#cuenta_bancaria').val(nombre);
+            $.ajax({
+                type: "POST",
+                url: "{% url 'consultar-secuencia-cheque' %}",
+                data: {'id': id, csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val() },
+                success: function (response) {
+                    $('input[name="numero_cheque"]').val(response[0][1]);
+                    /*
+                    for (var i = 0; i < response.length; i++) {
+                        $('input[name="numero_cheque"]').val(response[i][1]);
+                    }*/
+                }
+            });
+            $(".bd-example-modal-lg").modal('toggle');
+            agregar_asiento();
+        }
+
+        function cargar_proveedor(id, descripcion) {
+            $('input[name="persona_id"]').val(id);
+            $('input[name="persona"]').val(descripcion);
+            $('input[name="paguese_a"]').val(descripcion);
+            $("#modal-proveedor").modal('toggle');
+            $.ajax({
+                type: "POST",
+                url: "{% url 'consultar-facturas' %}",
+                data: {
+                    'id': id,
+                    'tipo': "proveedor",
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: function (response) {
+                    for (var i = 0; i < response.length; i++) {
+                        cargarfacturas(response[i][0], response[i][1], response[i][2],response[i][3], response[i][4], response[i][5]);
+                    }
+                },
+                error: function (response) {
+                    alert("El proveedor no tiene facturas.");
+                    console.log(response);
+                }
+            });
+
+            agregar_asiento();
+        }
+
+        function cargar_cliente(id, nombre) {
+            $('input[name="persona_id"]').val(id);
+            $('input[name="persona"]').val(nombre);
+            $('input[name="paguese_a"]').val(nombre);
+            $("#modal-cliente").modal('toggle');
+            $.ajax({
+                type: "POST",
+                url: "{% url 'consultar-facturas' %}",
+                data: {
+                    'id': id,
+                    'tipo': "cliente",
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: function (response) {
+                    for (var i = 0; i < response.length; i++) {
+                        cargarfacturas(response[i][0], response[i][1], response[i][2],response[i][3], response[i][4], response[i][5]);
+                    }
+                },
+                error: function (response) {
+                    alert("El cliente no tiene facturas.");
+                    console.log(response);
+                }
+            });
+
+
+        }
+
+        $(document).on("click", ".eliminar", function () {
+            var parent = $(this).parent();
+            $(parent).remove();
+            calcular_totales_asiento();
+        });
+
+        /*---------------- Asiento ---------------------------*/
+
+        var row_clicked_asiento;
+        function agregar_asiento(){
+            var banco=$('#cuenta_bancaria_id').val();
+            var persona=$('#persona_id').val();
+            var tipo=$('#tipo_anticipo').val();
+            $('#tabla-asiento tbody').html("");
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'consultar_plan_cuentas_personas_bancos' %}",
+                data: {
+                    'banco': banco,
+                    'tipo': tipo,
+                    'persona': persona,
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: function (response) {
+                    for (var i = 0; i < response.length; i++) {
+                        cargarasiento(response[i][0], response[i][1], response[i][2],response[i][3], response[i][4]);
+                    }
+                },
+                error: function (response) {
+                    alert("Se generaron los asientos.");
+                    console.log(response);
+                }
+            });
+
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'consultar_plan_cuentas_personas_bancos' %}",
+                data: {
+                    'banco': banco,
+                    'tipo': 0,
+                    'persona': persona,
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: function (response) {
+                    for (var i = 0; i < response.length; i++) {
+                        cargarasiento(response[i][0], response[i][1], response[i][2],response[i][3], response[i][4], response[i][5]);
+                    }
+                },
+                error: function (response) {
+                    alert("Se generaron los asientos.");
+                    console.log(response);
+                }
+            });
+//verificar si se cargan las facturas
+//var facturas = JSON.stringify(get_array_facturas());
+//          alert(facturas);
+        }
+
+        function cuenta_contable(id_cuenta) {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'consultar-cuenta-contable' %}",
+                data: {'id': id_cuenta, csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val() },
+                success: function (response) {
+                    for (var i = 0; i < response.length; i++) {
+                        var plan_id = response[i][0];
+                        var codigo_plan = response[i][1];
+                        var nombre_plan = response[i][2];
+                        var deber = 0;
+                        var haber = 0;
+                        cargarasiento(plan_id, codigo_plan, nombre_plan, deber, haber);
+                    }
+                },
+                error: function (response) {
+                    alert(response);
+                }
+            });
+        }
+
+        $(document).ready(function(){
+            $("#tabla-asiento").delegate("tr.asiento-row", "click", function(){
+                row_clicked_asiento = $(this).closest('tr');
+            });
+        });
+
+        function cargar_plan_cuenta(id, codigo_plan, nombre) {
+            $('td[name="asiento-plan-cuenta-id"]', row_clicked_asiento).text(id);
+            $('input[name="asiento-plan-cuenta-descripcion"]', row_clicked_asiento).val(nombre);
+            $('td[name="asiento-codigo"]', row_clicked_asiento).text(codigo_plan)
+            $('#modal-plan-cuenta').modal('toggle');
+        }
+
+        function cargarfacturas(id, fecha_emision, establecimiento, subtotal, iva, total) {
+            var factura =
+                    '<tr>' +
+                        '<td><input value="'+ id +'" type="checkbox" id="checkbox-factura'+id+'"><input type="hidden" id="fact_total_'+ id +'" value="' + total + '"></td>' +
+                        '<td name="factura-id">' + id + '</td>' +
+                        '<td name="factura-fecha-emision">' + fecha_emision + '</td>' +
+                        '<td name="factura-establecimiento">' + establecimiento + '</td>' +
+                        '<td align="right" name="factura-subtotal">' + subtotal + '</td>' +
+                        '<td align="right" name="factura-iva">' + iva + '</td>' +
+                        '<td align="right" name="factura-total">' + total + '</td>' +
+                    '</tr>';
+            $('#tabla-facturas tbody').html("");
+            $('#tabla-facturas tbody').append(factura);
+
+            $('input[type=checkbox]').click(function() {
+                var id =$(this).val();
+                var valor=$('#fact_total_'+id).val();
+                if($(this).is(':checked')) {
+                    actualizar_monto_movimiento('sum',valor);
+                } else {
+                    actualizar_monto_movimiento('sub',valor);
+                }
+            });
+            //numero_asiento++;
+        }
+
+        function actualizar_monto_movimiento(operation,value){
+
+            var total = $('td[name="facturas-total"]').text();
+
+            if(operation == "sum"){
+                // se suma al valor del monto total del movimiento
+                total = parseFloat(total) + parseFloat(value);
+
+            }else if(operation == "sub"){
+                // se resta al valor del monto total del movimiento
+                total = parseFloat(total) - parseFloat(value);
+            }
+            $('td[name="facturas-total"]').text(total.toFixed(2));
+        }
+
+        function cargarasiento(plan_id, codigo, descripcion, debe, haber) {
+            var asiento = '';
+            asiento =
+                    '<tr class="asiento-row" >' +
+                        '<td name="asiento-plan-cuenta-id" style="display:none;">' + plan_id + '</td>' +
+                        '<td class="eliminar">' +
+                            '<a class="btn btn-danger remove-field-secuencia">' +
+                                '<i class="glyphicon glyphicon-trash icon-white"></i>' +
+                            '</a>' +
+                        '</td>' +
+                        '<td name="asiento-codigo">' + codigo + '</td>' +
+                        '<td>' +
+                            '<div class="input-group add-on">' +
+                                '<input class="form-control" type="text" name="asiento-plan-cuenta-descripcion" value="'+descripcion+'"   readonly>' +
+                                '<div class="input-group-btn">' +
+                                    '<a class="btn btn-inverse" data-toggle="modal" data-target="#modal-plan-cuenta">' +
+                                        '<i class="glyphicon glyphicon-search icon-white"></i>' +
+                                    '</a>' +
+                                '</div>' +
+                            '</div>' +
+                        '</td>' +
+                        '<td>' +
+                            '<input style="text-align: right;" class="form-control" type="number" step="0.01" name="asiento-debe" value="'+parseFloat(debe).toFixed(2)+'" >' +
+                        '</td>' +
+                        '<td align="right" >' +
+                            '<input style="text-align: right;" class="form-control" type="number" step="0.01" name="asiento-haber" value="'+parseFloat(haber).toFixed(2)+'" >' +
+                        '</td>' +
+                    '</tr>';
+            $('#tabla-asiento tbody').append(asiento);
+            //numero_asiento++;
+        }
+
+        $('#agregar-asiento').click(function () {
+            cargarasiento('','','',0,0);
+        });
+
+        $('#tabla-asiento').on('change', 'input', function () {
+            calcular_totales_asiento();
+        });
+
+        function calcular_totales_asiento() {
+            var suma_debe = 0;
+            var suma_haber = 0;
+            $('#tabla-asiento tbody tr').each(function () {
+                var row = $(this).closest('tr');
+                var debe = $('input[name="asiento-debe"]', row).val();
+                var haber = $('input[name="asiento-haber"]', row).val();
+                suma_debe = +suma_debe + +debe;
+                suma_haber = +suma_haber + +haber;
+            });
+            $('td[name="asiento-total-debe"]').text(parseFloat(suma_debe).toFixed(2));
+            $('td[name="asiento-total-haber"]').text(parseFloat(suma_haber).toFixed(2));
+        }
+
+        function get_array_asientos() {
+            var asientos = [];
+            $('#tabla-asiento tbody tr').each(function () {
+                var row = $(this).closest('tr');
+                var id = $('td[name="asiento-plan-cuenta-id"]', row).text();
+                var codigo = $('td[name="asiento-codigo"]', row).text();
+                var cuenta = $('input[name="asiento-plan-cuenta-descripcion"]', row).val();
+                var debe = $('input[name="asiento-debe"]', row).val();
+                var haber = $('input[name="asiento-haber"]', row).val();
+                var detalle_id = $('input[name="detalle_id"]', row).val();
+                var concepto = $('textarea[name="concepto-asiento"]', row).val();
+                var asiento = {"id_plancuenta": id, "codigo": codigo, "cuenta": cuenta, "debe": debe, "haber": haber, "detalle_id": detalle_id, "concepto": concepto};
+                asientos.push(asiento);
+            });
+            return asientos;
+        }
+
+        function get_array_facturas() {
+            var facturas = [];
+            $('#tabla-facturas tbody tr').each(function () {
+
+                var row = $(this).closest('tr');
+
+                var id = $('td[name="factura-id"]', row).text();
+                 var check =false;
+                if( $('#checkbox-factura'+id).attr('checked') ) {
+                        check=true;
+                }
+
+
+                var factura = {"check": check, "id": id};
+                facturas.push(factura);
+            });
+            return facturas;
+        }
+        
+        
+        
+    function actualizar_descripcion(){
+                var descrip = '';
+                        descrip=$('#descripcion').val() ;
+                $('#tabla-asiento tbody tr').each(function () {
+                                var row = $(this).closest('tr');
+                    var id = $('textarea[name="concepto-asiento"]', row).val();
+            
+                        $('textarea[name="concepto-asiento"]', row).val(descrip);
+            
+            
+                                   });
+
+}
+
+
+ function guardar_descripcion(){
+                var descrip = '';
+             descrip=$('#descripcion').val() ;
+             
+             var id =$('#id').val() ;
+            var asientos = JSON.stringify(get_array_asientos());
+             var data = $(this).serialize() +'&arreglo_asientos=' + asientos+'&descripcion=' + descrip+'&id=' + id;
+
+ $.ajax({
+                type: "POST",
+                url: "{% url 'movimiento-guardar-descripcion' %}",
+                data: data,
+                dataType: "json",
+                async:false,
+                success: function (response) {
+                    alert("Movimiento actualizado");
+                    document.location.href = '/bancos/movimiento/deposito';
+                },
+                error: function (response) {
+
+                    console.log(response);
+                }
+});
+}
+        /*-------------------------------------------*/
+
+//        $('#formulario').submit(function (event) {
+//
+//            var asientos = JSON.stringify(get_array_asientos());
+////            alert(asientos);
+//            var facturas = JSON.stringify(get_array_facturas());
+//          //  alert(facturas);
+//            var data = $(this).serialize() +'&arreglo_asientos=' + asientos+'&arreglo_facturas=' + facturas;
+//            console.log(data);
+//            $.ajax({
+//                type: "POST",
+//                url: "{% url 'movimiento-crear' %}",
+//                data: data,
+//                success: function (response) {
+//                    alert("Movimiento ingresado");
+//                    document.location.href = '/bancos/movimiento';
+//                },
+//                error: function (response) {
+//
+//                    console.log(response);
+//                }
+//            });
+//            event.preventDefault();
+//        });
+
+
+
+    </script>
+
+{% endblock %}

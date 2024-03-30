@@ -1,0 +1,227 @@
+{% load staticfiles %}
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+</head>
+<style>
+    body{
+        font-family: Lucida Console;
+        letter-spacing: 2px;
+        font-weight: bold;
+    }
+    table.table-border th,table.table-border td{
+        border:1px solid black;padding: 4px;
+    }
+
+    table{
+        width:100%;
+        border-collapse: collapse;
+
+    }
+    .head {
+        width: 100%;
+        text-align: center;
+        font-size: 8pt;
+    }
+
+    #detail {
+        width: 100%;
+        font-size: 8pt;
+    }
+
+    .contenido {
+        width: 100%;
+        padding: 2px 0;
+        font-size:8pt;
+    }
+
+    .contenido td {
+        text-align: right;
+        font-size: 8pt;
+        padding: 0.5px 0px;
+    }
+
+    .foot {
+        text-align: center;
+        font-size: 8pt;
+    }
+    .censea-footer {
+        padding: 3px 0;
+        font-size: 7pt;
+    }
+
+    /*@page {*/
+        /*size: 21.5cm 14cm;*/
+        /*!*size: a5 landscape;*!*/
+        /*margin: 1cm;*/
+
+    /*}*/
+
+
+</style>
+<body>
+<div class="head">
+    <table   class="table-border">
+        <tr>
+            <td align="center" width="600">COMPROBANTE DE ASIENTO DIARIO
+            
+            {% if asiento.anulado %}
+                                    <B>ANULADO</B>  
+                                 {% else %}
+                            
+                                {% endif %}</td>
+            <td align="right">
+             
+                
+               
+            </td>
+        </tr>
+    </table>
+    <h3>MUEDIRSA<br/>Direccion: KM 11.5 V&Iacute;A DAULE, CESADESIGN
+        <br/> Ruc:0992128372001</h3>
+    <table border="0" cellpadding="4" style="width:100%">
+      
+        
+    </table>
+
+</div>
+<div id="detail">
+
+    <table>
+        <tr>
+        
+            <td>
+                <b>FECHA:</b>
+            </td>
+            <td>
+                <span>{{asiento.fecha | date:'Y-m-d'}}</span>
+            </td>
+             <td>
+            </td>
+              <td>
+            </td>
+            
+        </tr>
+        <tr>
+            <td>
+                
+                             <b>GLOSA:</b>
+
+            </td>
+            <td>
+                <span>{{asiento.glosa}}</span>
+            </td>
+            <td>
+                <b>
+                     
+              SECUENCIA :
+            </b>
+            </td>
+            <td>
+                <span> {{asiento.secuencia_asiento  | default_if_none:"" }}</span>
+            </td>
+        </tr>
+         <tr>
+            <td>
+                
+                             <b>Codigo:</b>
+
+            </td>
+            <td>
+                <span>{{asiento.codigo_asiento  | default_if_none:"" }}</span>
+            </td>
+            <td>
+                <b>
+                     
+              MODULO :
+            </b>
+            </td>
+            <td>
+                <span> {{asiento.modulo  | default_if_none:"" }}</span>
+            </td>
+        </tr>
+  </table>
+</div>
+<div class="contenido">
+    <hr>
+    <table cellpadding="3">
+        <thead>
+        <tr >
+            <th>CUENTA</th>
+            <th> NOMBRE</th>
+            <th>DEBITO</th>
+            <th>CREDITO</th>
+            <th>CONCEPTO</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% if detalle %}
+        {% for kit in detalle %}
+           {% if kit.debe == 0 and kit.haber == 0 %}
+           
+           {% else %}
+           <tr>
+
+            <td>{{ kit.cuenta.codigo_plan }}</td>
+            <td style="text-align: left">&nbsp;{{ kit.cuenta.nombre_plan |truncatechars:45 }}</td>
+            <td>{{ kit.debe }}</td>
+            <td>{{ kit.haber }}</td>
+            <td >{{ kit.concepto | default_if_none:"" |truncatechars:45  }}</td>
+
+        </tr>
+        {% endif %}
+        
+
+        {% endfor %}
+        {% else %}
+        {% endif %}
+        {% if asiento %}
+        <tr>
+
+            <td></td>
+            <td><b>TOTAL DIARIO:</b></td>
+            <td>{{ asiento.total_debe | default_if_none:"" }}</td>
+            <td>{{ asiento.total_haber | default_if_none:"" }}</td>
+            <td></td>
+
+        </tr>
+        {% endif %}
+        </tbody>
+
+    </table>
+
+</div>
+<div class="foot">
+    <br>
+    <table class="table-border">
+        <tr>
+            <td>ELABORADO POR</td>
+            <td>REVISADO POR</td>
+            <td>APROBADO POR</td>
+            <td>RECIBI CONFORME</td>
+        </tr>
+        <tr>
+            <td> <br>&nbsp;</td>
+            <td> &nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        </tbody>
+
+    </table>
+</div>
+<div class="censea-footer">
+    <table border="0"><tr><td align="right">USUARIO: {{ request.user.username }}    FECHA: {% now "Y-m-d H:i" %}</td></tr></table>
+</div>
+</body>
+<script src="{% static 'color_admin/assets/plugins/jquery-1.8.2/jquery-1.8.2.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        window.print();
+    });
+</script>
+</html>

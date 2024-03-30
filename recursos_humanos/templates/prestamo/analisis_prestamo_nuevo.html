@@ -1,0 +1,629 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}An&aacute;lisis Pr&eacute;stamo{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+  <style>
+       .panel-border{border: 1px solid #ddd !important}
+       .form-ajust .form-group{margin-bottom: 0px !important}
+      input[type="text"],select,input[type="number"]
+      {
+
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    box-shadow: none;
+    font-size: 12px;
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+       }
+
+    .table2 {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+      display:table}
+
+.table2>tbody>tr>td, .table2>tbody>tr>th, .table2>tfoot>tr>td, .table2>tfoot>tr>th, .table2>thead>tr>td, .table2>thead>tr>th {
+    border-color: #e2e7eb;
+    padding: 10px 15px;
+}
+    </style>
+
+
+     <form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+     {{ ordencompra_form.title.errors }}
+            <!-- begin row -->
+          <div class="row">
+                    <!-- begin col-6 -->
+        <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">An&aacute;lisis Pr&eacute;stamo</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <div>
+
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                  <li role="presentation" class="active"><a href="#principales" aria-controls="principales" role="tab" data-toggle="tab">Documento</a></li>
+
+                </ul>
+
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade in active" id="principales">
+                                        <!--INICIO ORDEN PRODUCCION-->
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                        <div class="panel panel-default panel-border">
+                            <div class="panel-heading">Documento</div>
+                            <div class="panel-body">
+
+                            <div class="col-md-3">
+                              <label for="exampleInputName2">Codigo</label>
+                               {% bootstrap_field form.codigo show_label=False %}
+
+                            </div>
+                                <div class="col-md-3">
+                              <label for="exampleInputName2">Fecha</label>
+                               {% bootstrap_field form.fecha show_label=False %}
+
+                            </div>
+                                 <div class="col-md-3">
+                              <label for="exampleInputName2">Sueldo Fijo</label>
+                               {% bootstrap_field form.sueldo_fijo show_label=False %}
+
+                            </div>
+                            <div class="col-md-6">
+                              <label for="exampleInputName2">Empleado</label>
+                               {% bootstrap_field form.empleado show_label=False %}
+
+                            </div>
+                                <div class="col-md-6">
+                              <label for="exampleInputName2">Fecha Ingreso</label>
+<div class="form-group">
+                                <input type="text" class="form-control" id="fecha_ingreso" name="fecha_ingreso" value=""/>
+</div>
+                            </div>
+                                <div class="col-md-6">
+                              <label for="exampleInputName2">Cargo</label>
+                               {% bootstrap_field form.tipoempleado show_label=False %}
+
+                            </div>
+                            <div class="col-md-6">
+                              <label for="exampleInputName2">Area</label>
+                               {% bootstrap_field form.departamento show_label=False %}
+
+                            </div>
+                                 <div class="col-md-6">
+                              <label for="exampleInputName2">Tiempo en la empresa</label>
+                               {% bootstrap_field form.tiempo_servicio show_label=False %}
+
+                            </div>
+                             <div class="col-md-12">
+                              <label for="exampleInputName2">Motivo del Anticipo</label>
+  <
+                                 {% bootstrap_field form.motivo_anticipo show_label=False %}
+                            </div>
+                             <div class="col-md-3">
+                              <label for="exampleInputName2">Monto a Solicitar</label>
+                               {% bootstrap_field form.monto_solicitado show_label=False %}
+
+                            </div>
+                             <div class="col-md-3">
+                              <label for="exampleInputName2">Plazo a Solicitar</label>
+                               {% bootstrap_field form.plazo_solicitar show_label=False %}
+
+                            </div>
+
+
+
+
+
+
+
+
+                            </div>
+                        </div>
+                        </div>
+
+
+                                        </div>
+
+
+
+
+                                           <!-- comienza -->
+                                         <div class="row">
+                                            <div class="col-md-12">
+                        <div class="panel panel-default panel-border">
+                            <div class="panel-heading">INFORMACION ECONOMICA/ANALISIS DE DESCUENTO</div>
+                            <div class="panel-body">
+
+
+<div class="col-md-6">
+     <h5>Gu&icute;a descuentos de 3&uacute;ltimos meses disponibles</h5>
+                                <table>
+                                    <thead><tr>
+                                        <td></td>
+                                         <td>MES 1</td>
+                                         <td>MES 2</td>
+                                         <td>MES 3</td>
+                                    </tr></thead>
+                                    <tbody>
+                                    <tr>
+                                         <td>IESS</td>
+                                         <td><input type="text" name="iess_1" id="iess_1" /></td>
+                                          <td><input type="text" name="iess_2" id="iess_2" /></td>
+                                         <td><input type="text" name="iess_3" id="iess_3" /></td>
+                                    </tr>
+                                     <tr>
+                                         <td>SEGURO SALUD</td>
+                                         <td><input type="text" name="seguro_1" id="seguro_1" /></td>
+                                          <td><input type="text" name="seguro_2" id="seguro_2" /></td>
+                                         <td><input type="text" name="seguro_3" id="seguro_3" /></td>
+                                    </tr>
+                                     <tr>
+                                         <td>TELEFONIA</td>
+                                         <td><input type="text" name="celular_1" id="celular_1" /></td>
+                                          <td><input type="text" name="celular_2" id="celular_2" /></td>
+                                         <td><input type="text" name="celular_3" id="celular_3" /></td>
+                                    </tr>
+                                     <tr>
+                                         <td>PTMO EMPRESA</td>
+                                         <td><input type="text" name="prestamo_1" id="prestamo_1" /></td>
+                                          <td><input type="text" name="prestamo_2" id="prestamo_2" /></td>
+                                         <td><input type="text" name="prestamo_3" id="prestamo_3" /></td>
+                                    </tr>
+                                        <tr>
+                                         <td> DONACIONES</td>
+                                         <td><input type="text" name="donaciones_1" id="donaciones_1" /></td>
+                                          <td><input type="text" name="donaciones_2" id="donaciones_2" /></td>
+                                         <td><input type="text" name="donaciones_3" id="donaciones_3" /></td>
+                                    </tr>
+                                    <tr>
+                                         <td> OTROS</td>
+                                         <td><input type="text" name="otros_1" id="otros_1" /></td>
+                                          <td><input type="text" name="otros_2" id="otros_2" /></td>
+                                         <td><input type="text" name="otros_3" id="otros_3" /></td>
+                                    </tr>
+                                    <tr>
+                                         <td> QUIROGRAFARIO</td>
+                                         <td><input type="text" name="quirografario_1" id="quirografario_1" /></td>
+                                          <td><input type="text" name="quirografario_2" id="quirografario_2" /></td>
+                                         <td><input type="text" name="quirografario_3" id="quirografario_3" /></td>
+                                    </tr>
+                                    <tr>
+                                         <td> TOTAL DE DESCUENTO</td>
+                                         <td><input type="text" name="descuento_1" id="descuento_1" /></td>
+                                          <td><input type="text" name="descuento_2" id="descuento_2" /></td>
+                                         <td><input type="text" name="descuento_3" id="descuento_3" /></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+</div>
+<div class="col-md-6">
+    <h5>Tabla de promedio de 3 &uacute;ltimos meses disponibles</h5>
+                                <table>
+                                    <thead><tr>
+                                        <td></td>
+                                         <td>MES 1</td>
+                                         <td>MES 2</td>
+                                         <td>MES 3</td>
+                                    </tr></thead>
+                                    <tbody>
+                                    <tr>
+                                         <td>Total Ingresos sueldo</td>
+                                         <td><input type="text" name="ingreso_1" id="ingreso_1" /></td>
+                                          <td><input type="text" name="ingreso_2" id="ingreso_2" /></td>
+                                         <td><input type="text" name="ingreso_3" id="ingreso_3" /></td>
+                                    </tr>
+                                     <tr>
+                                         <td>Anticipo sueldo</td>
+                                         <td><input type="text" name="anticipo_1" id="anticipo_1" /></td>
+                                          <td><input type="text" name="anticipo_2" id="anticipo_2" /></td>
+                                         <td><input type="text" name="anticipo_3" id="anticipo_3" /></td>
+                                    </tr>
+                                     <tr>
+                                         <td>Sueldo fin de mes</td>
+                                         <td><input type="text" name="sueldo_1" id="sueldo_1" /></td>
+                                          <td><input type="text" name="sueldo_2" id="sueldo_2" /></td>
+                                         <td><input type="text" name="sueldo_3" id="sueldo_3" /></td>
+                                    </tr>
+
+                                    <tr>
+                                         <td> Total Descuentos</td>
+                                         <td><input type="text" name="descuento_promedio_1" id="descuento_promedio_1" /></td>
+                                          <td><input type="text" name="descuento_promedio_2" id="descuento_promedio_2" /></td>
+                                         <td><input type="text" name="descuento_promedio_3" id="descuento_promedio_3" /></td>
+                                    </tr>
+                                     <tr>
+                                         <td> <b>Neto a Recibir</b></td>
+                                         <td><input type="text" name="neto_recibir_1" id="neto_recibir_1" /></td>
+                                          <td><input type="text" name="neto_recibir_2" id="neto_recibir_2" /></td>
+                                         <td><input type="text" name="neto_recibir_3" id="neto_recibir_3" /></td>
+                                    </tr>
+                                     <tr>
+                                         <td colspan="3">  <b>Monto Neto Promedio</b></td>
+                                         </td>
+                                         <td><input type="text" name="neto_promedio" id="neto_promedio" /></td>
+                                    </tr>
+                                    <tr>
+                                         <td colspan="3">  <b>Monto  Promedio a recibir el fin de mes(30 %)</b></td>
+                                         <td ><input type="text" name="neto_promedio_30" id="neto_promedio_30" /></td>
+                                           </tr>
+                                    <tr>
+                                         <td  colspan="3">  <b>Monto  disponible para Descuento (70 %):</b></td>
+                                          <td><input type="text" name="neto_promedio_70" id="neto_promedio_70" /></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+</div>
+
+
+
+
+
+
+                            </div>
+                        </div>
+                        </div>
+
+
+                                        </div>
+
+
+                                            </div>
+
+                                        </div>
+
+
+
+                                        <!--FIN ORDEN PRODUCCION-->
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+   <p class="text-center">
+
+                                    <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+                                            <a class="default btn btn-link" href="/recursos_humanos/prestamo/"><button type="button" class="btn btn-primary btn-lg">  Regresar</button></a>
+                                        </p>
+<!--  <p class="text-right m-b-0">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-cog"></i> Guardar</button>
+                                </p>
+                                <a class="default btn btn-link" href="/inventario/producto">
+      <i class="fa fa-times"></i> Regresar
+    </a> -->
+    <input type="hidden" name="columnas_receta" id="columnas_receta" value="1" />
+
+<input type="hidden" name="id_fila_cambiar" id="id_fila_cambiar" value="" />
+
+
+                            </form>
+
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+<script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/data-table.js' %}"></script>
+
+<script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/bootstrap-datepicker.js' %}"></script>
+
+<script>
+  $(document).ready(function() {
+    // App.init();
+    $('.table').DataTable();
+    //FormWizardValidation.init();
+      $("#id_empleado").change(function(){
+      cargarAbreviatura();
+         });
+  });
+</script>
+<script>
+    $(document).ready(function() {
+     $('#id_codigo').attr('readonly','readonly');
+       $('#total').attr('readonly','readonly');
+
+$( "#id_plazos" ).keyup(function() {
+    actualizarValor();
+});
+ $('#id_fecha').datepicker({todayHighlight: true, autoclose: true, format: 'yyyy-mm-dd'});
+        $("#id_fecha").datepicker('setDate', new Date());
+         $.ajax({
+                url: "/config/obtenerSecuencial/", // the endpoint
+                type : "POST", // http method
+                data : { id : 'analisis_prestamo','csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+                 $('#id_codigo').val(data);
+
+                },
+                error: function(){
+                  alert( "Escoja una empresa");
+                },
+              });
+    });
+   function actualizarValor(){
+      var plazo=$('#id_plazos').val();
+      var valor=$('#valor_mensual').val();
+      var total=0;
+      total=valor*plazo;
+
+             $("#total").val(total);
+    }
+
+
+    function cargarAbreviatura(){
+     codigo_reunion=$("#id_empleado").val();
+        fecha=$("#id_fecha").val();
+
+               $.ajax({
+                url: "/recursos_humanos/obtenerEmpleadoAnalisis/", // the endpoint
+                type : "POST", // http method
+                data : { id : codigo_reunion,fecha:fecha,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+
+                    $("#iess_1").val(data['iess1']);
+                    $("#iess_2").val(data['iess2']);
+                    $("#iess_3").val(data['iess3']);
+                    $("#seguro_1").val(data['salud1']);
+                    $("#seguro_2").val(data['salud2']);
+                    $("#seguro_3").val(data['salud3']);
+
+                    $("#celular_1").val(data['telefonia1']);
+                    $("#celular_2").val(data['telefonia2']);
+                    $("#celular_3").val(data['telefonia3']);
+
+                     $("#prestamo_1").val(data['prestamo1']);
+                    $("#prestamo_2").val(data['prestamo2']);
+                    $("#prestamo_3").val(data['prestamo3']);
+
+
+                     $("#donaciones_1").val(data['donaciones1']);
+                    $("#donaciones_2").val(data['donaciones2']);
+                    $("#donaciones_3").val(data['donaciones3']);
+
+                      $("#otros_1").val(data['otros1']);
+                    $("#otros_2").val(data['otros2']);
+                    $("#otros_3").val(data['otros3']);
+
+                      $("#quirografario_1").val(data['quirografario1']);
+                    $("#quirografario_2").val(data['quirografario2']);
+                    $("#quirografario_3").val(data['quirografario3']);
+
+                      $("#descuento_1").val(data['total_descuento1']);
+                    $("#descuento_2").val(data['total_descuento2']);
+                    $("#descuento_3").val(data['total_descuento3']);
+
+                      $("#ingreso_1").val(data['ingreso1']);
+                    $("#ingreso_2").val(data['ingreso2']);
+                    $("#ingreso_3").val(data['ingreso3']);
+
+
+                      $("#anticipo_1").val(data['anticipo1']);
+                    $("#anticipo_2").val(data['anticipo2']);
+                    $("#anticipo_3").val(data['anticipo3']);
+
+                       $("#sueldo_1").val(data['sueldo_mensual1']);
+                    $("#sueldo_2").val(data['sueldo_mensual2']);
+                    $("#sueldo_3").val(data['sueldo_mensual3']);
+
+                      $("#descuento_promedio_1").val(data['total_descuento1']);
+                    $("#descuento_promedio_2").val(data['total_descuento2']);
+                    $("#descuento_promedio_3").val(data['total_descuento3']);
+
+
+                      $("#neto_recibir_1").val(data['neto_recibir1']);
+                    $("#neto_recibir_2").val(data['neto_recibir2']);
+                    $("#neto_recibir_3").val(data['neto_recibir3']);
+
+                      $("#neto_promedio").val(data['neto_promedio']);
+
+                    $("#neto_promedio_30").val(data['neto_promedio_treinta']);
+                    $("#neto_promedio_70").val(data['neto_promedio_setenta']);
+                     $("#id_departamento").val(data['departamento']);
+                    $("#id_tipoempleado").val(data['cargo']);
+                    $("#id_sueldo_fijo").val(data['ingreso1']);
+
+
+
+                },
+                error: function(){
+
+                },
+              });
+
+}
+
+</script>
+
+<script>
+    $(document).ready(function() {
+      $('#id_codigo').each(function(){
+  $(this).attr('readonly','readonly');
+});
+       $('#id_created_by').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_updated_by').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_created_at').each(function(){
+  $(this).attr('readonly','readonly');
+});
+        $('#id_updated_at').each(function(){
+  $(this).attr('readonly','readonly');
+});
+
+
+
+    });
+ function cerrarProforma(){
+       $(".bs-example-modal-lg").modal('toggle');
+    }
+
+    function mostrarProductos(data){
+       $('#id_fila_cambiar').val(data);
+       $(".modal").modal('toggle');
+       cerrarProforma();
+    }
+    function cerrar(){
+       $(".modal").modal('toggle');
+                 cerrarProforma();
+
+    }
+    function cargarCodigoProforma(cod){
+             $('#id_orden_produccion_codigo').val(cod);
+cerrarProforma();
+    }
+
+    function cargarCodigoProducto(id,codigo,descripcion,medida,costo,unidad_medida){
+      var fila=$('#id_fila_cambiar').val();
+         $('#id_kits'+fila).val(id);
+         costo = costo.toString().replace(/\,/g,'.');
+
+
+        $('#codigo_kits'+fila).val(codigo);
+         $('#nombre_kits'+fila).append(descripcion);
+           $('#medida_kits'+fila).val(unidad_medida);
+         $('#costo_kits'+fila).val(costo);
+   $('#total_kits'+fila).val('');
+          $('#cantidad_kits'+fila).val('');
+          cerrar();
+
+    }
+    function actualizarCosto(data){
+      var cantidad=$('#cantidad_kits'+data).val();
+      var costo= $('#costo_kits'+data).val();
+     var medida= $('#medida_kits'+data).val();
+
+
+       var valor=parseFloat(parseFloat(cantidad)*parseFloat(costo)).toFixed(2);
+
+      //  alert(data);
+      // alert(costo);
+      // alert(valor);
+      $('#total_kits'+data).val(valor);
+      actualizarTotal();
+    }
+    function actualizarTotal(){
+      var num_recetas=$('#columnas_receta').val();
+      var total=0;
+      var cantidad=0;
+      var i;
+      //alert(' BNUM RECETS'+num_recetas);
+      for (i = 1; i <= num_recetas; i++) {
+
+        if ($('#total_kits'+i).length){
+            cantidad=$('#total_kits'+i).val();
+            total=parseFloat(total)+parseFloat(cantidad);
+          }
+
+
+      }
+
+      $('#total').val(total);
+    }
+</script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        /**
+         * Funcion para añadir una nueva columna en la tabla
+         */
+        $("#add").click(function(){
+            // Obtenemos el numero de filas (td) que tiene la primera columna
+            // (tr) del id "tabla"
+            var num_recetas=$('#columnas_receta').val();
+            num_recetas=parseInt(num_recetas)+1;
+
+            var tds=$("#tabla tr:first td").length;
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla tr").length;
+            var nuevaFila='<tr><td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+                nuevaFila+='<td><input type="hidden" class="form-control" id="id_kits'+num_recetas+'" name="id_kits'+num_recetas+'"> ';
+                nuevaFila+='<input type="text" required="required" class="form-control" id="codigo_kits'+num_recetas+'" name="codigo_kits'+num_recetas+'" onfocus="mostrarProductos('+num_recetas+')" readonly="readonly"></td>';
+                 nuevaFila+='<td><span  id="nombre_kits'+num_recetas+'" name="nombre_kits'+num_recetas+'" ></span></td>';
+                nuevaFila+='<td><input type="text" class="form-control" required="required" id="cantidad_kits'+num_recetas+'" name="cantidad_kits'+num_recetas+'" onkeyup="actualizarCosto('+num_recetas+')"></td>';
+                nuevaFila+='<td><input type="text" class="form-control" id="medida_kits'+num_recetas+'" name="medida_kits'+num_recetas+'" readonly="readonly"></td>';
+                nuevaFila+='<td><input type="text" class="form-control" id="costo_kits'+num_recetas+'" name="costo_kits'+num_recetas+'" readonly="readonly"></td>';
+                nuevaFila+='<td><input type="text" class="form-control" id="total_kits'+num_recetas+'" name="total_kits'+num_recetas+'" readonly="readonly"></td>';
+                nuevaFila+='</tr>';
+
+              $('#columnas_receta').val(num_recetas);
+            // for(var i=0;i<tds;i++){
+            //     // añadimos las columnas
+            //     nuevaFila+="<td>columna "+(i+1)+" Añadida con jquery</td>";
+            // }
+            // // Añadimos una columna con el numero total de columnas.
+            // // Añadimos uno al total, ya que cuando cargamos los valores para la
+            // // columna, todavia no esta añadida
+            // nuevaFila+="<td>"+(trs+1)+" columnas";
+            // nuevaFila+="</tr>";
+            $("#tabla").append(nuevaFila);
+        });
+
+        /**
+         * Funcion para eliminar la ultima columna de la tabla.
+         * Si unicamente queda una columna, esta no sera eliminada
+         */
+        $("#del").click(function(){
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla tr").length;
+            if(trs>1)
+            {
+                // Eliminamos la ultima columna
+                $("#tabla tr:last").remove();
+            }
+             actualizarTotal();
+        });
+
+
+        $(document).on("click",".eliminar",function(){
+            var parent = $(this).parent();
+  $(parent).remove();
+   actualizarTotal();
+          });
+
+    });
+    </script>
+{% endblock %}

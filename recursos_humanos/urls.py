@@ -1,0 +1,588 @@
+from django.conf.urls import patterns, include, url
+from django.views.defaults import *
+from .views import *
+from .forms import *
+
+urlpatterns = patterns('',
+                       url(
+                           r'^roles_pago/$',
+                           'recursos_humanos.views.RolesPagoView',
+                           name='roles-pago-list',
+                       ),
+                       url(
+                           r'^rolesPagoCuentasContables/$',
+                           'recursos_humanos.views.RolesPagoCuentasContablesListView',
+                           name='roles-pago-cuentas-contables-list',
+                       ),
+
+                       url(
+                           r'^rolesPagoCuentasContablesCreate/$',
+                           RolesPagoCuentasContablesCreateView.as_view(),
+                           name='roles-pago-cuentas-contables-create',
+                       ),
+
+                       url(
+                           r'^guardarCargoView/$',
+                           'recursos_humanos.views.guardarCargoView',
+                           name='guardar-cargo',
+                       ),
+                       url(
+                           r'^guardarRolesView/$',
+                           'recursos_humanos.views.guardarRolesView',
+                           name='guardar-roles',
+                       ),
+                       url(
+                           r'^guardarDepartamentoView/$',
+                           'recursos_humanos.views.guardarDepartamentoView',
+                           name='guardar-departamento',
+                       ),
+                       url(
+                           r'^generar_roles_pago/$',
+                           'recursos_humanos.views.GenerarRolesPagoView',
+                           name='generar-roles-pago-list',
+                       ),
+                       url(
+                           r'^obtenerEmpleados/$',
+                           'recursos_humanos.views.obtenerEmpleados',
+                           name='obtener-empleados',
+                       ),
+
+                       url(
+                           r'^mostrar_otros_ingresos/$',
+                           'recursos_humanos.views.MostrarOtrosIngresosView',
+                           name='mostrar_otros_ingresos',
+                       ),
+                       url(
+                           r'^guardarOtrosIngresos/$',
+                           'recursos_humanos.views.guardarOtrosIngresosView',
+                           name='guardar_otros_ingresos',
+                       ),
+                       url(
+                           r'^mostrar_otros_egresos/$',
+                           'recursos_humanos.views.MostrarOtrosEgresosView',
+                           name='mostrar_otros_egresos',
+                       ),
+                       url(
+                           r'^mostrar_egresos/$',
+                           'recursos_humanos.views.MostrarEgresosView',
+                           name='mostrar_egresos',
+                       ),
+                       url(
+                           r'^guardarOtrosEgresos/$',
+                           'recursos_humanos.views.guardarOtrosEgresosView',
+                           name='guardar_otros_egresos',
+                       ),
+                       url(
+                           r'^mostrar_dias/$',
+                           'recursos_humanos.views.MostrarOtrosDiasNoLaboradosView',
+                           name='mostrar_dias_no_laborados',
+                       ),
+                       url(
+                           r'^guardarDiasNoLaborados/$',
+                           'recursos_humanos.views.guardarDiasNoLaboradosView',
+                           name='guardar_dias_no_laborados',
+                       ),
+                       url(
+                           r'^consultar_roles_pago/$',
+                           'recursos_humanos.views.ConsultarRolesPagoView',
+                           name='consultar-roles-pago-list',
+                       ),
+                       url(
+                           r'^obtenerRol/$',
+                           'recursos_humanos.views.obtenerRolView',
+                           name='obtener-rol',
+                       ),
+                       url(
+                           r'^prestamo/$',
+                           'recursos_humanos.views.PrestamosListView',
+                           name='prestamo-list',
+                       ),
+                       url(
+                           r'^prestamo/nuevo$',
+                           'recursos_humanos.views.PrestamoCreateView',
+                           name='prestamo-create',
+                       ),
+
+                       url(
+                           r'^prestamo/(?P<pk>\d+)/editar/$',
+                           'recursos_humanos.views.PrestamoUpdateView',
+                           name='prestamo-update',
+                       ),
+                       url(
+                           r'^guardarCuentasContablesView/$',
+                           'recursos_humanos.views.guardarCuentasContablesView',
+                           name='guardar-cuentas-contables',
+                       ),
+
+                       url(
+                           r'^rol_cuenta_contable/$',
+                           'recursos_humanos.views.RolCuentaContableListView',
+                           name='rol-cuenta-contable-list',
+                       ),
+                       url(
+                           r'^rol_cuenta_contable/nuevo$',
+                           'recursos_humanos.views.RolCuentaContableCreateView',
+                           name='rol-cuenta-contable-nuevo',
+                       ),
+
+                       url(
+                           r'^rol_cuenta_contable/(?P<pk>\d+)/editar/$',
+                           'recursos_humanos.views.RolCuentaContableUpdateView',
+                           name='rol-cuenta-contable-update',
+                       ),
+                       url(
+                           r'^consular_pago_roles/$',
+                           'recursos_humanos.views.ConsultarPagosView',
+                           name='consultar-pagos-roles-list',
+                       ),
+                       url(
+                           r'^mostrar_empleados/$',
+                           'recursos_humanos.views.MostrarEmpleadosView',
+                           name='mostrar_empleados',
+                       ),
+                       url(
+                           r'^mostrar_ingresos/$',
+                           'recursos_humanos.views.MostrarIngresosView',
+                           name='mostrar_ingresos',
+                       ),
+                       url(
+                           r'^imprimir/(?P<pk>\d+)/$',
+                           'recursos_humanos.views.index',
+                           name='recursos-humanos-imprimir',
+                       ),
+                       url(
+                           r'^plantilla_rrhh/$',
+                           'recursos_humanos.views.PlantillaListView',
+                           name='plantillas-list',
+                       ),
+
+                       url(
+                           r'^plantilla_rrhh/nuevo$',
+                           'recursos_humanos.views.PlantillaCreateView',
+                           name='plantillas-create',
+                       ),
+                       url(
+                           r'^plantilla_rrhh/(?P<pk>\d+)/editar/$',
+                           PlantillaUpdateView.as_view(),
+                           name='plantillas-update',
+                       ),
+                       url(
+                           r'^obtenerRolPlantillas/$',
+                           'recursos_humanos.views.obtenerRolPlantillas',
+                           name='obtener-rol-plantillas',
+                       ),
+                       url(
+                           r'^agregarPlantillas/$',
+                           'recursos_humanos.views.agregarPlantillas',
+                           name='agregar-plantillas',
+                       ),
+                       url(
+                           r'^obtenerOtrosIngresos/$',
+                           'recursos_humanos.views.obtenerOtrosIngresos',
+                           name='obtener-otros-ingresos',
+                       ),
+                       url(
+                           r'^verRolGlobal/(?P<pk>\d+)/$',
+                           'recursos_humanos.views.verRolGlobal',
+                           name='ver-rol-global',
+                       ),
+                       url(
+                           r'^verRolGlobalQuincenal/(?P<pk>\d+)/$',
+                           'recursos_humanos.views.verRolGlobalQuincenal',
+                           name='ver-rol-global-quincenal',
+                       ),
+
+                       url(
+                           r'^verRolBanco/(?P<pk>\d+)/$',
+                           'recursos_humanos.views.verRolBanco',
+                           name='ver-rol-banco',
+                       ),
+
+                       url(
+                           r'^eliminarDetalleOtrosIngreso/$',
+                           'recursos_humanos.views.eliminarDetalleOtrosIngresoView',
+                           name='eliminar-detalle-otros-ingreso',
+                       ),
+                       url(
+                           r'^eliminarDetalleOtrosEgreso/$',
+                           'recursos_humanos.views.eliminarDetalleOtrosEgresoView',
+                           name='eliminar-detalle-otros-egreso',
+                       ),
+                       url(
+                           r'^eliminarDetalleDias/$',
+                           'recursos_humanos.views.eliminarDetalleDiasView',
+                           name='eliminar-detalle-dias',
+                       ),
+
+                       url(
+                           r'^diasNoTrabajados/$',
+                           'recursos_humanos.views.DiasTrabajadosView',
+                           name='dias-trabajados-list',
+                       ),
+
+                       url(
+                           r'^obtenerEmpleadosDias/$',
+                           'recursos_humanos.views.obtenerEmpleadosDias',
+                           name='obtener-empleados-dias',
+                       ),
+                       url(
+                           r'^horasExtras/$',
+                           'recursos_humanos.views.HorasExtrasView',
+                           name='horas-extras-list',
+                       ),
+
+                       url(
+                           r'^obtenerEmpleadosHorasExtras/$',
+                           'recursos_humanos.views.obtenerEmpleadosHorasExtras',
+                           name='obtener-empleados-horas-extras',
+                       ),
+
+                       url(
+                           r'^tipo-solicitud/$',
+                           'recursos_humanos.views.tipoSolicitudView',
+                           name='tipo-solicitud',
+                       ),
+                       url(
+                           r'^create-tipo-solicitud/$',
+                           'recursos_humanos.views.createTipoSolicitud',
+                           name='create-tipo-solicitud',
+                       ),
+                       url(
+                           r'^solicitudes/$',
+                           'recursos_humanos.views.solicitudLisView',
+                           name='solicitudes',
+                       ),
+                       url(
+                           r'^create-solicitud/$',
+                           'recursos_humanos.views.createSolicitud',
+                           name='create-solicitud',
+                       ),
+                       url(
+                           r'^update-solicitud/$',
+                           'recursos_humanos.views.updateSolicitud',
+                           name='update-solicitud',
+                       ),
+                       url(
+                           r'^diasFeriados/$',
+                           'recursos_humanos.views.DiasFeriadosListView',
+                           name='dias-feriados-list',
+                       ),
+
+                       url(
+                           r'^diasFeriados/(?P<pk>\d+)/editar/$',
+                           DiasFeriadosUpdateView.as_view(),
+                           name='dias-feriados-update',
+                       ),
+                       url(
+                           r'^diasFeriados/new$',
+                           'recursos_humanos.views.DiasFeriadosNuevoView',
+                           name='dias-feriados-nuevo',
+                       ),
+                        url(
+                             r'^verRolProvision/(?P<pk>\d+)/$',
+                             'recursos_humanos.views.verProvision',
+                             name='ver-rol-provision',
+                        ),
+                       url(
+                           r'^mostrar_ingresos/$',
+                           'recursos_humanos.views.MostrarIngresosView',
+                           name='mostrar_ingresos',
+                       ),
+                       url(
+                           r'^guardarIngresos/$',
+                           'recursos_humanos.views.guardarIngresosView',
+                           name='guardar_ingresos',
+                       ),
+                        url(
+                           r'^guardarEgresos/$',
+                           'recursos_humanos.views.guardarEgresosView',
+                           name='guardar_egresos',
+                       ),
+                       url(
+                           r'^eliminarDetalleIngreso/$',
+                           'recursos_humanos.views.eliminarDetalleIngresoView',
+                           name='eliminar-detalle-ingreso',
+                       ),
+                       url(
+                           r'^eliminarDetalleEgreso/$',
+                           'recursos_humanos.views.eliminarDetalleEgresoView',
+                           name='eliminar-detalle-egreso',
+                       ),
+                        url(
+                           r'^obtenerIngresos/$',
+                           'recursos_humanos.views.obtenerIngresos',
+                           name='obtener-ingresos',
+                       ),
+
+                       url(
+                           r'^analisisprestamo/$',
+                           'recursos_humanos.views.AnalisisPrestamosListView',
+                           name='analisis-prestamo-list',
+                       ),
+                       url(
+                           r'^analisisprestamo/nuevo$',
+                           'recursos_humanos.views.AnalisisPrestamoCreateView',
+                           name='analisis-prestamo-create',
+                       ),
+
+                       url(
+                           r'^analisisprestamo/(?P<pk>\d+)/editar/$',
+                           'recursos_humanos.views.AnalisisPrestamoUpdateView',
+                           name='analisis-prestamo-update',
+                       ),
+
+                       url(
+                           r'^obtenerEmpleadoAnalisis/$',
+                           'recursos_humanos.views.obtenerEmpleadoAnalisis',
+                           name='obtener-empleado-analisis',
+                       ),
+                        url(
+                           r'^imprimirAnalisis/(?P<pk>\d+)/$',
+                           'recursos_humanos.views.AnalisisPrestamoImprimir',
+                           name='analisis-prestamo-imprimir',
+                       ),
+                         url(
+                           r'^imprimirPrestamo/(?P<pk>\d+)/$',
+                           'recursos_humanos.views.SolicitudPrestamoImprimir',
+                           name='prestamo-imprimir',
+                       ),
+                       url(
+                           r'^tipo_ingreso_egreso/$',
+                           'recursos_humanos.views.TipoIngresoEgresoListView',
+                           name='tipo-ingreso-egreso',
+                       ),
+
+                       url(
+                           r'^tipo_ingreso_egreso/nuevo$',
+                           'recursos_humanos.views.TipoIngresoEgresoCreateView',
+                           name='tipo-ingreso-egreso-create',
+                       ),
+
+                       url(
+                           r'^tipo_ingreso_egreso/(?P<pk>\d+)/editar/$',
+                           'recursos_humanos.views.TipoIngresoEgresoUpdateView',
+                           name='tipo-ingreso-egreso-update',
+                       ),
+                       url(
+                           r'^mostrar_analisis_prestamo/$',
+                           'recursos_humanos.views.MostrarAnalisisPrestamoView',
+                           name='mostrar_analisis',
+                       ),
+
+                       url(
+                           r'^liquidacionLaboral/$',
+                           'recursos_humanos.views.liquidacionLaboralListView',
+                           name='liquidacion -laboral-list',
+                       ),
+                       url(
+                           r'^liquidacionLaboral/nuevo$',
+                           'recursos_humanos.views.liquidacionLaboralCreateView',
+                           name='liquidacion-laboral-create',
+                       ),
+url(
+                           r'^obtenerEmpleadoLiquidacion/$',
+                           'recursos_humanos.views.obtenerEmpleadoLiquidacion',
+                           name='obtener-empleado-liquidacion',
+                       ),
+                       url(
+                           r'^LiquidacionLaboralImprimir/(?P<pk>\d+)/$',
+                           'recursos_humanos.views.LiquidacionLaboralImprimir',
+                           name='liquidacion-laboral-imprimir',
+                       ),
+
+ url(
+                           r'^LiquidacionVacaciones/$',
+                           'recursos_humanos.views.liquidacionVacacionesListView',
+                           name='liquidacion -vacaciones-list',
+                       ),
+                       url(
+                           r'^LiquidacionVacaciones/nuevo$',
+                           'recursos_humanos.views.liquidacionVacacionesCreateView',
+                           name='liquidacion-vacaciones-create',
+                       ),
+
+                       url(
+                           r'^LiquidacionVacacionesImprimir/(?P<pk>\d+)/$',
+                           'recursos_humanos.views.LiquidacionVacacionesImprimir',
+                           name='liquidacion-vacaciones-imprimir',
+                       ),
+url(
+                           r'^obtenerEmpleadoLiquidacionVacaciones/$',
+                           'recursos_humanos.views.obtenerEmpleadoLiquidacionVacaciones',
+                           name='obtener-empleado-liquidacion-vacaciones',
+                       ),
+
+url(
+                           r'^SolicitudImprimir/(?P<pk>\d+)/$',
+                           'recursos_humanos.views.SolicitudImprimir',
+                           name='solicitud-prueba-imprimir',
+                       ),
+
+                       url(
+                           r'^vacaciones/$',
+                           'recursos_humanos.views.VacacionesListView',
+                           name='vacaciones-list',
+                       ),
+
+                       url(
+                           r'^vacaciones/(?P<pk>\d+)/editar/$',
+                           VacacionesUpdateView.as_view(),
+                           name='vacaciones-update',
+                       ),
+                       url(
+                           r'^vacaciones/new$',
+                           'recursos_humanos.views.VacacionesNuevoView',
+                           name='vacaciones-nuevo',
+                       ),
+
+url(
+                           r'^contabilizacionRol/(?P<pk>\d+)/$',
+                           'recursos_humanos.views.ContabilizacionRolView',
+                           name='contabilizaion-rol',
+                       ),
+
+                       url(
+                           r'^RolesPagoItemsTipoIngresoEgreso/$',
+                           'recursos_humanos.views.RolesPagoItemsTipoIngresoEgresoListView',
+                           name='roles-pago-cuentas-contables-tipo-ingreso-egreso-list',
+                       ),
+
+                       url(
+                           r'^RolesPagoItemsTipoIngresoEgresoCreateView/$',
+                           RolesPagoItemsTipoIngresoEgresoCreateView.as_view(),
+                           name='roles-pago-cuentas-contables-tipo-ingreso-egreso-create',
+                       ),
+
+url(
+                           r'^RolesPagoItemsTipoIngresoEgresoUpdateView/(?P<pk>\d+)/editar/$',
+                           'recursos_humanos.views.RolesPagoItemsTipoIngresoEgresoUpdateView',
+                           name='roles-pago-cuentas-contables-tipo-ingreso-egreso-update',
+                       ),
+url(
+                           r'^plantilla_rrhh/eliminar/$',
+                            'recursos_humanos.views.eliminarPlantilla',
+                           name='plantillas-eliminar',
+                       ),
+
+url(
+                           r'^plantilla_rrhh/quitar/$',
+                            'recursos_humanos.views.quitarPlantillasRol',
+                           name='rol-plantillas-quitar',
+                       ),
+
+url(
+                           r'^obtenerEmpleadosMensual/$',
+                           'recursos_humanos.views.obtenerEmpleadosMensual',
+                           name='obtener-empleados-mensual',
+                       ),
+
+                       url(
+                           r'^roles_pago/config$',
+                           'recursos_humanos.views.RolesPagoConfiguracionesView',
+                           name='roles-pago-configuraciones-list',
+                       ),
+
+url(
+                           r'^guardarRolesConfiguracionView/$',
+                           'recursos_humanos.views.guardarRolesConfiguracionView',
+                           name='guardar-roles-configuracion',
+                       ),
+                       url(
+                           r'^roles_pago/config_cuentas$',
+                           'recursos_humanos.views.RolesPagoConfiguracionesCuentaView',
+                           name='roles-pago-configuraciones-cuentas-list',
+                       ),
+
+url(
+                           r'^guardarCuentasContablesConfiguracionesView/$',
+                           'recursos_humanos.views.guardarCuentasContablesConfiguracionesView',
+                           name='guardar-cuentas-contables-configuraciones',
+                       ),
+
+                       url(
+                           r'^imprimirRolIndividual/(?P<idrol>\d+)/(?P<iddepartamento>\d+)/$',
+                           'recursos_humanos.views.imprimirRolIndividual',
+                           name='recursos-humanos-imprimir-rol-individual',
+                       ),
+
+url(
+                           r'^verRolGlobalActualizado/(?P<pk>\d+)/$',
+                           'recursos_humanos.views.verRolGlobalActualizado',
+                           name='recursos-humanos-ver-rol-global-actualizado',
+                       ),
+
+
+url(
+                           r'^indexMenuImprimirIndividual/(?P<pk>\d+)/$',
+                           'recursos_humanos.views.indexMenuImprimirIndividual',
+                           name='recursos-humanos-index-imprimir-inidividual',
+                       ),
+ url(
+                           r'^deuda_empleado/$',
+                           'recursos_humanos.views.DeudaEmpleadoListView',
+                           name='deuda-empleado-list',
+                       ),
+  url(
+                           r'^deuda_empleado/nuevo$',
+                           'recursos_humanos.views.DeudaEmpleadoCreateview',
+                           name='deuda-empleado-create',
+                       ),
+  
+  url(
+                           r'^deudaEmpleadoEliminar/(?P<pk>\d+)/$',
+                           'recursos_humanos.views.deudaEmpleadoEliminarByPkView',
+                           name='recursos-humanos-deuda-empleado-eliminar',
+                       ),
+  
+   url(
+                           r'^imprimirComprobanteDeuda/(?P<pk>\d+)/$',
+                           'recursos_humanos.views.imprimirComprobanteDeuda',
+                           name='recursos-humanos-deuda-empleado-imprimir',
+                       ),
+  
+  
+   url(
+                           r'^pagar_deuda_empleado/$',
+                           'recursos_humanos.views.PagoDeudaEmpleadoListView',
+                           name='pago-deuda-empleado-list',
+                       ),
+  url(
+                           r'^pagar_deuda_empleado/nuevo$',
+                           'recursos_humanos.views.PagodeDeudaEmpleadoCreateview',
+                           name='pago-deuda-empleado-create',
+                       ),
+  
+   url(
+                           r'^verRoldePagoPrevio/(?P<pk>\d+)/(?P<ck>\d+)/$',
+                           'recursos_humanos.views.verRolGlobalPrevio',
+                           name='ver-rol-pago-previo',
+                       ),
+   
+   
+   url(
+		r'^sueldosUnificados/$',
+		'recursos_humanos.views.SueldosUnificadosListView',
+		name='sueldos-list',
+	),
+	url(
+		r'^sueldosUnificados/nuevo$',
+		SueldosUnificadosCreateView.as_view(),
+		name='sueldos-create',
+	),
+	url(
+		r'^sueldosUnificados/(?P<pk>\d+)/editar/$',
+		SueldosUnificadosUpdateView.as_view(),
+		name='sueldos-update',
+	),
+    url(
+                           r'^eliminarTipoRol/$',
+                           'recursos_humanos.views.eliminarTipoRol',
+                           name='eliminar-tipo-rol',
+                       ),
+    url(
+                           r'^eliminarTipoRolView/$',
+                           'recursos_humanos.views.eliminarTipoRolView',
+                           name='eliminar-tipo-rol-list',
+                       ),
+
+                       )

@@ -1,0 +1,762 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block css %}
+    {{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+{% block section_title %} Retenciones {% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+    <style>
+        .panel-border {
+            border: 1px solid #ddd !important;
+        }
+
+        .form-group {
+            margin-bottom: 0px !important;
+        }
+
+        .panel-border {
+            border: 1px solid #ddd !important
+        }
+    </style>
+    <div class="row">
+        <!-- begin col-6 -->
+        <div class="col-md-12">
+            <form class="form-horizontal" method="post" action="{% url "movimiento-crear" %}">
+                {% csrf_token %}
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                               data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                <i class="fa fa-plus-circle pull-right"></i>
+                                Datos generales
+                            </a>
+                        </h3>
+                    </div>
+                    <div id="collapseOne" aria-expanded="true" id="collapseOne" class="panel-collapse collapse in">
+                        <div class="panel-body panel-border">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Fecha de emisión</label>
+                                <div class="col-sm-3">
+                                    <input class="form-control" type="text" name="retencion-fecha-emision">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Cliente</label>
+                                <div class="col-sm-5">
+                                    <div class="input-group add-on">
+                                        <input type="hidden" name="cliente-id"/>
+                                        <input class="form-control" placeholder="..." name="cliente-descripcion"
+                                               type="text">
+                                        <div class="input-group-btn">
+                                            <a class="btn btn-inverse" data-toggle="modal"
+                                               data-target="#modal-cliente">
+                                                <i class=" glyphicon glyphicon-search icon-white"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Número de documento</label>
+                                <div class="col-sm-2">
+                                    <input class="form-control" type="text" placeholder="Establecimiento"
+                                           name="documento-establecimiento" required>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input class="form-control" type="text" placeholder="Punto de emisión"
+                                           name="documento-punto" required>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input class="form-control" type="text" placeholder="Secuencial"
+                                           name="documento-secuencial" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Autorización</label>
+                                <div class="col-sm-3">
+                                    <input class="form-control" type="text" name="retencion-autorizacion">
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="tabla-retencion">
+                                    <thead style="background-color: #ccd0d4">
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Concepto</th>
+                                        <th>Base imponible</th>
+                                        <th>% retención</th>
+                                        <th>Valor retenido</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button style="margin-left: 1%;" type="button" class="btn btn-inverse" data-toggle="modal"
+                                    data-target="#modal-retencion-fuente">
+                                <i class="fa fa-plus-circle"></i>
+                                Agregar
+                            </button>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <div class="col-sm-8">
+                                        <br>
+                                        <label class="col-sm-2 control-label">Drescripción</label>
+                                        <div class="col-sm-8">
+                                            <textarea class="form-control" name="descripcion_retencion"
+                                                      rows="5"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label class="col-sm-6 control-label">Subtotal 12%</label>
+                                            <div class="col-sm-6">
+                                                <input type="number" class="form-control" name="subtotal12"
+                                                       placeholder="0.00" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-6 control-label">Subtotal 0%</label>
+                                            <div class="col-sm-6">
+                                                <input type="number" class="form-control" name="subtotal0"
+                                                       placeholder="0.00" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-6 control-label">IVA</label>
+                                            <div class="col-sm-6">
+                                                <input type="number" class="form-control" name="iva" placeholder="0.00"
+                                                       disabled>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-6 control-label">Total</label>
+                                            <div class="col-sm-6">
+                                                <input type="number" class="form-control" name="total"
+                                                       placeholder="0.00" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-inverse"><i class="fa fa-save"></i> Guardar</button>
+            </form>
+        </div>
+    </div>
+    <!-- Modal Cliente-->
+    <div class="modal fade bs-example-modal-lg" id="modal-cliente">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cliente</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-cliente">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Ruc</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for cliente  in clientes %}
+                                <tr>
+                                    <td>{{ cliente.codigo_cliente }}</td>
+                                    <td>{{ cliente.nombre_cliente }}</td>
+                                    <td>{{ cliente.ruc }}</td>
+                                    <td onclick="cargar_persona('{{ cliente.id_cliente }}','{{ cliente.nombre_cliente }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Proveedor-->
+    <div class="modal fade bs-example-modal-lg" id="modal-proveedor">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Proveedor</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-proveedor">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Ruc</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for proveedor  in proveedores %}
+                                <tr>
+                                    <td>{{ proveedor.codigo_proveedor }}</td>
+                                    <td>{{ proveedor.nombre_proveedor }}</td>
+                                    <td>{{ proveedor.ruc }}</td>
+                                    <td onclick="cargar_proveedor('{{ proveedor.proveedor_id }}','{{ proveedor.nombre_proveedor }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Bodega-->
+    <div class="modal fade bs-example-modal-lg" id="modal-bodega">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Bodega</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-bodega">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Direccion</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for bodega  in bodegas %}
+                                <tr>
+                                    <td>{{ bodega.codigo_bodega }}</td>
+                                    <td>{{ bodega.nombre }}</td>
+                                    <td>{{ bodega.direccion1 }}</td>
+                                    <td onclick="cargar_bodega('{{ bodega.id }}','{{ bodega.nombre }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Producto Item-->
+    <div class="modal fade bs-example-modal-lg" id="modal-item">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Producto</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2" width="100%" id="tabla-item">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for producto  in productos %}
+                                <tr>
+                                    <td>{{ producto.codigo_producto }}</td>
+                                    <td>{{ producto.descripcion_producto }}</td>
+                                    <td>{{ producto.precio1 }}</td>
+                                    <td onclick="cargar_producto('{{ producto.producto_id }}','{{ producto.descripcion_producto }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Retencion fuente-->
+    <div class="modal fade bs-example-modal-lg" id="modal-retencion-fuente">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Retención en la fuente</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-retencion-fuente">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Porcentaje</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for retencion_fuente  in retenciones_fuente %}
+                                <tr>
+                                    <td>{{ retencion_fuente.codigo }}</td>
+                                    <td>{{ retencion_fuente.descripcion }}</td>
+                                    <td>{{ retencion_fuente.porcentaje }}</td>
+                                    <td onclick="cargar_retencion('{{ retencion_fuente.id }}','{{ retencion_fuente.codigo }}','{{ retencion_fuente.descripcion }}','{{ retencion_fuente.porcentaje }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Retencion iva-->
+    <div class="modal fade bs-example-modal-lg" id="modal-retencion-iva">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Retención en IVA</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-retencion-iva">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Porcentaje</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for retencion_iva  in retenciones_iva %}
+                                <tr>
+                                    <td>{{ retencion_iva.codigo }}</td>
+                                    <td>{{ retencion_iva.descripcion }}</td>
+                                    <td>{{ retencion_iva.porcentaje }}</td>
+                                    <td onclick="cargar_producto('{{ producto.producto_id }}','{{ producto.descripcion_producto }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Orden Compra-->
+    <div class="modal fade bs-example-modal-lg" id="modal-orden-compra">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Ordenes de compra</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-orden-compra">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Número</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Plan Cuenta-->
+    <div class="modal fade bs-example-modal-lg" id="modal-plan-cuenta">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Plan de cuenta</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-plan-cuenta">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Acción</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for cuenta  in cuentas %}
+                                <tr>
+                                    <td>{{ cuenta.codigo_plan }}</td>
+                                    <td>{{ cuenta.nombre_plan }}</td>
+                                    <td onclick="cargar_plan_cuenta('{{ cuenta.plan_id }}','{{ cuenta.nombre_plan }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Forma de pago-->
+    <div class="modal fade bs-example-modal-lg" id="modal-forma-pago">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Formas de pago</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-forma-pago">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Direccion</th>
+                                <th>Acción</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for forma_pago  in formas_pago %}
+                                <tr>
+                                    <td>{{ forma_pago.codigo }}</td>
+                                    <td>{{ forma_pago.descripcion }}</td>
+                                    <td onclick="cargar_forma_pago('{{ forma_pago.id }}','{{ forma_pago.codigo }}', '{{ forma_pago.descripcion }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/data-table.js' %}"></script>
+
+    <script>
+        $('#fecha_emision').datepicker({todayHighlight: true, autoclose: true});
+        $('#fecha_emision').val(getFechaHoy());
+        $('#fecha_entrega').datepicker({todayHighlight: true, autoclose: true});
+        $('#fecha_entrega').val(getFechaHoy());
+        $('input[name="retencion-fecha-emision"]').datepicker({todayHighlight: true, autoclose: true});
+        $('input[name="retencion-fecha-emision"]').val(getFechaHoy());
+
+        function getFechaHoy() {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear();
+
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+            today = dd + '/' + mm + '/' + yyyy;
+            return today;
+        }
+
+        $(document).ready(function () {
+            $('#tabla-cliente').DataTable();
+            $('#tabla-proveedor').DataTable();
+            $('#tabla-bodega').DataTable();
+            $('#tabla-producto').DataTable();
+            $('#tabla-item').DataTable();
+            $('#tabla-retencion-fuente').DataTable();
+            $('#tabla-retencion-iva').DataTable();
+            $('#tabla-orden-compra').DataTable();
+            $('#tabla-plan-cuenta').DataTable();
+            $('#tabla-forma-pago').DataTable();
+
+            $("select[name='tipo_documento']").change(function () {
+                if ($(this).val() == "2") {//Transf
+                    $('.mostrar-cheque').attr('style', 'display: none;');
+                    $('.mostrar-transf').removeAttr('style')
+                }
+                if ($(this).val() == "1") {
+                    $('.mostrar-transf').attr('style', 'display: none;');
+                    $('.mostrar-cheque').removeAttr('style')
+                }
+            });
+            $('#agregar-item').click(function () {
+                var row = get_item();
+                $('#tabla-productos tbody').append(row);
+            });
+        });
+
+        function get_item() {
+            var columna1 = "<td class='eliminar'><a class='btn btn-danger remove-field-secuencia'><i class='glyphicon glyphicon-trash icon-white'></i></a></td>";
+            var columna2 = "<td><input type='text' class='form-control' name='secuencia-inicio'></td>";
+            var columna3 = "<td>" +
+                    "<div class='form-group'>" +
+                    "<div class='input-group add-on'>" +
+                    "<input id='producto-descripcion' class='form-control' type='text' placeholder='...'>" +
+                    "<input id='producto-id' type='hidden' name='producto'/>" +
+                    "<div class='input-group-btn'>" +
+                    "<a class='btn btn-inverse' data-toggle='modal' data-target='#modal-item'>" +
+                    "<i class=' glyphicon glyphicon-search icon-white'></i>" +
+                    "</a>" +
+                    "</div>" +
+                    "</div>" +
+                    "</div>" +
+                    "</td>";
+            var columna4 = "<td><input type='text' class='form-control' name='secuencia-inicio'></td>";
+            var columna5 = "<td><input type='text' class='form-control' name='' placeholder='0.00' disabled></td>";
+            var columna6 = "<td><input type='text' class='form-control' name='' placeholder='0.00' disabled></td>";
+            var item = "<tr>" + columna1 + columna2 + columna3 + columna4 + columna5 + columna6 + "</tr>";
+            return item;
+        }
+
+        function cargar_persona(id, nombre) {
+            $('input[name="cliente-id"]').val(id);
+            $('input[name="cliente-descripcion"]').val(nombre);
+            $('#modal-cliente').modal('toggle');
+
+        }
+
+        function cargar_plan_cuenta(id, nombre) {
+            $('input[name="plan-cuenta-id"]').val(id);
+            $('input[name="plan-cuenta-descripcion"]').val(nombre);
+            $('#modal-plan-cuenta').modal('toggle');
+        }
+
+        function cargar_proveedor(id, descripcion) {
+            $('input[name="proveedor-id"]').val(id);
+            $('input[name="proveedor-descripcion"]').val(descripcion);
+            $("#modal-proveedor").modal('toggle');
+            $("#tabla-orden-compra tbody tr").remove();
+            $.ajax({
+                type: "POST",
+                url: "{% url "consultar-orden-compra" %}",
+                data: {'id': id, csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()},
+                success: function (response) {
+                    var orden = '';
+                    var ordenes = '';
+                    for (var i = 0; i < response.length; i++) {
+                        orden = '<tr>' +
+                                    '<td>' + response[i][0] + '</td>' +
+                                    '<td>' + response[i][1] + '</td>' +
+                                    '<td>' + response[i][2] + '</td>' +
+                                    '<td onclick="cargar_item_oc(' + response[i][0] + ',' + response[i][1] + ')">' +
+                                        '<a class="btn btn-inverse remove_fields">' +
+                                            '<i class=" glyphicon glyphicon-plus icon-white"></i>' +
+                                        '</a>' +
+                                    '</td>' +
+                                '</tr>';
+                        ordenes = ordenes + orden;
+                    }
+                    $('#tabla-orden-compra tbody').append(ordenes);
+                },
+                error: function (response) {
+                    alert(response);
+                }
+            });
+        }
+
+        function cargar_bodega(id, nombre) {
+            $('#bodega_id').val(id);
+            $('#bodega').val(nombre);
+            $("#modal-bodega").modal('toggle');
+        }
+
+        function cargar_producto(id, nombre) {
+            $('#producto-id').val(id);
+            $('#producto-descripcion').val(nombre);
+            $("#modal-item").modal('toggle');
+        }
+
+        function cargar_item_oc(id, descripcion) {
+            $('input[name="order-compra-id"]').val(id);
+            $('input[name="order-compra-descripcion"]').val(descripcion);
+            $("#modal-orden-compra").modal('toggle');
+            $("#tabla-productos tbody tr").remove();
+            $.ajax({
+                type: "POST",
+                url: "{% url "consultar-items-orden" %}",
+                data: {'id': id, csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()},
+                success: function (response) {
+                    var item = '';
+                    var items = '';
+                    var subtotal12 = 0;
+                    for (var i = 0; i < response.length; i++) {
+                        subtotal12 = subtotal12 + response[i][6];
+                        item = '<tr>' +
+                                '<td class="eliminar">' +
+                                '<a class="btn btn-danger remove-field-secuencia">' +
+                                '<i class="glyphicon glyphicon-trash icon-white"></i>' +
+                                '</a>' +
+                                '</td>' +
+                                '<td><input type="text" class="form-control" name="cantidad" value="' + response[i][3] + '" /></td>' +
+                                '<td>' +
+                                '<div class="form-group">' +
+                                '<div class="input-group add-on">' +
+                                '<input class="form-control" type="text" value="' + response[i][4] + '" />' +
+                                '<input type="hidden" name="producto"/>' +
+                                '<div class="input-group-btn">' +
+                                '<a class="btn btn-inverse" data-toggle="modal" data-target="#modal-item">' +
+                                '<i class=" glyphicon glyphicon-search icon-white"></i>' +
+                                '</a>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>' +
+                                '</td>' +
+                                '<td><input type="text" class="form-control" name=""></td>' +
+                                '<td><input type="text" class="form-control" name="" value="' + response[i][5] + '" disabled></td>' +
+                                '<td><input type="text" class="form-control" name="" value="' + response[i][6] + '" disabled></td>' +
+                                '</tr>';
+                        items = items + item;
+                    }
+                    $('#tabla-productos tbody').append(items);
+                    calcular_totales(subtotal12);
+                },
+                error: function (response) {
+                    alert(response);
+                }
+            });
+        }
+
+        function calcular_totales(subtotal12) {
+            var iva = (subtotal12 * 14) / 100
+            var total = subtotal12 + iva;
+            $('input[name="subtotal12"]').attr('value', parseFloat(subtotal12).toFixed(2));
+            //$('input[name="subtotal0"]').attr('value', parseFloat(subtotal12);
+            $('input[name="iva"]').attr('value', parseFloat(iva).toFixed(2));
+            //$('input[name="ice"]').attr('value', subtotal12);
+            $('input[name="total"]').attr('value', parseFloat(total).toFixed(2));
+        }
+
+        function cargar_forma_pago(id, codigo, descripcion) {
+            var forma_pago =
+                    '<tr>' +
+                    '<td>' + codigo + '</td>' +
+                    '<td>' + descripcion + '</td>' +
+                    '<td class="eliminar">' +
+                    '<a class="btn btn-danger remove-field-secuencia">' +
+                    '<i class="glyphicon glyphicon-trash icon-white"></i>' +
+                    '</a>' +
+                    '</td>' +
+                    '<tr>';
+            $('#tabla-documento-forma-pago tbody').append(forma_pago);
+            $('#modal-forma-pago').modal('toggle');
+        }
+
+        function cargar_retencion(id, codigo, descripcion, porcentaje) {
+            var retencion =
+                    '<tr>' +
+                    '<td>' + codigo + '</td>' +
+                    '<td>' + descripcion + '</td>' +
+                    '<td><input type="text" class="form-control" name=""></td>' +
+                    '<td>' + porcentaje + '</td>' +
+                    '<td></td>' +
+                    '<td class="eliminar">' +
+                    '<a class="btn btn-danger remove-field-secuencia">' +
+                    '<i class="glyphicon glyphicon-trash icon-white"></i>' +
+                    '</a>' +
+                    '</td>' +
+                    '<tr>';
+            $('#tabla-retencion tbody').append(retencion);
+            $('#modal-retencion-fuente').modal('toggle');
+        }
+
+        $(document).on("click", ".eliminar", function () {
+            var parent = $(this).parent();
+            $(parent).remove();
+        });
+
+    </script>
+
+{% endblock %}
+

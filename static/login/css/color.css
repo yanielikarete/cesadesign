@@ -1,0 +1,153 @@
+.menu-color, .menu-color li{min-width: 39px;}
+.color{
+	width: 35px;
+	height: 32px;
+	display: block;
+	margin: 2px;
+	cursor: pointer;
+}
+.color.blue{ background-color: #0866C8}
+.color.red{ background-color: #FA3031}
+.color.green{ background-color: #43C83C}
+.color.violet{ background-color: #932AB6}
+.color.orange{ background-color: #F88529}
+
+.navbar-toggle {
+    border: 1px solid #fff;
+    border-radius: 0;
+}
+.navbar-toggle .icon-bar {
+    background-color: #fff;
+}
+.navbar{
+    border: none;
+}
+/* ---- Admin blue theme ---- */
+body.blue .navbar,.form-login .header {
+    /*border-bottom: 1px solid #3473A9;*/
+    background-color: #4690d1;
+}
+body.blue .navbar-brand:hover,
+body.blue .navbar-brand:focus,
+body.blue .toggle-menu:hover,
+body.blue .toggle-menu:focus,
+body.blue .toggle-menu.active,
+body.blue .dropdown-menu li > a:hover,
+body.blue .dropdown-menu .active > a,
+body.blue .dropdown-menu .active > a:hover,
+body.blue .nav-list > .active > a,
+body.blue .nav-list > .active > a:hover,
+body.blue .navbar .nav > li > a:hover,
+body.blue .navbar .nav > li > a:active,
+body.blue .navbar .nav > li > a:focus,
+body.blue .navbar .nav .active > a,
+body.blue .navbar .nav .active > a:hover,
+body.blue .nav .open > a,
+body.blue .nav .open > a:hover,
+body.blue .nav .open > a:focus{
+    background-color: #3473A9;
+}
+
+/* ---- Admin red theme ---- */
+body.red .navbar {
+    border-bottom: 1px solid #A31C1D;
+    background-color: #FA3031;
+}
+body.red .navbar-brand:hover,
+body.red .navbar-brand:focus,
+body.red .toggle-menu:hover,
+body.red .toggle-menu:focus,
+body.red .toggle-menu.active,
+body.red .dropdown-menu li > a:hover,
+body.red .dropdown-menu .active > a,
+body.red .dropdown-menu .active > a:hover,
+body.red .nav-list > .active > a,
+body.red .nav-list > .active > a:hover,
+body.red .navbar .nav > li > a:hover,
+body.red .navbar .nav > li > a:active,
+body.red .navbar .nav > li > a:focus,
+body.red .navbar .nav .active > a,
+body.red .navbar .nav .active > a:hover,
+body.red .nav .open > a,
+body.red .nav .open > a:hover,
+body.red .nav .open > a:focus{
+    background-color: #A31C1D;
+}
+
+/* ---- Admin green theme ---- */
+body.green .navbar {
+    border-bottom: 1px solid #267222 ;
+    background-color: #43C83C;
+}
+body.green .navbar-brand:hover,
+body.green .navbar-brand:focus,
+body.green .toggle-menu:hover,
+body.green .toggle-menu:focus,
+body.green .toggle-menu.active,
+body.green .dropdown-menu li > a:hover,
+body.green .dropdown-menu .active > a,
+body.green .dropdown-menu .active > a:hover,
+body.green .nav-list > .active > a,
+body.green .nav-list > .active > a:hover,
+body.green .navbar .nav > li > a:hover,
+body.green .navbar .nav > li > a:active,
+body.green .navbar .nav > li > a:focus,
+body.green .navbar .nav .active > a,
+body.green .navbar .nav .active > a:hover,
+body.green .nav .open > a,
+body.green .nav .open > a:hover,
+body.green .nav .open > a:focus{
+    background-color: #267222 ;
+}
+
+/* ---- Admin violet theme ---- */
+body.violet .navbar {
+    border-bottom: 1px solid #531668 ;
+    background-color: #932AB6;
+}
+body.violet .navbar-brand:hover,
+body.violet .navbar-brand:focus,
+body.violet .toggle-menu:hover,
+body.violet .toggle-menu:focus,
+body.violet .toggle-menu.active,
+body.violet .dropdown-menu li > a:hover,
+body.violet .dropdown-menu .active > a,
+body.violet .dropdown-menu .active > a:hover,
+body.violet .nav-list > .active > a,
+body.violet .nav-list > .active > a:hover,
+body.violet .navbar .nav > li > a:hover,
+body.violet .navbar .nav > li > a:active,
+body.violet .navbar .nav > li > a:focus,
+body.violet .navbar .nav .active > a,
+body.violet .navbar .nav .active > a:hover,
+body.violet .nav .open > a,
+body.violet .nav .open > a:hover,
+body.violet .nav .open > a:focus{
+    background-color: #531668 ;
+}
+
+/* ---- Admin orange theme ---- */
+body.orange .navbar {
+    border-bottom: 1px solid #B9601A ;
+    background-color: #F88529;
+}
+body.orange .navbar-brand:hover,
+.navbar-brand:focus,
+body.orange .toggle-menu:hover,
+body.orange .toggle-menu:focus,
+body.orange .toggle-menu.active,
+body.orange .dropdown-menu li > a:hover,
+body.orange .dropdown-menu .active > a,
+body.orange .dropdown-menu .active > a:hover,
+body.orange .nav-list > .active > a,
+body.orange .nav-list > .active > a:hover,
+body.orange .navbar .nav > li > a:hover,
+body.orange .navbar .nav > li > a:active,
+body.orange .navbar .nav > li > a:focus,
+body.orange .navbar .nav .active > a,
+body.orange .navbar .nav .active > a:hover,
+body.orange .nav .open > a,
+body.orange .nav .open > a:hover,
+body.orange .nav .open > a:focus{
+    background-color: #B9601A ;
+}

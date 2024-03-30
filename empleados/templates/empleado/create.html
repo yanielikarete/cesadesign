@@ -1,0 +1,1140 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+        <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css'%}" rel="stylesheet" />
+  <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css'%}" rel="stylesheet" />
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css'%}" rel="stylesheet"/>
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css'%}" rel="stylesheet"/>
+<link rel="stylesheet" href="{% static 'color_admin/assets/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css'%}" />
+<link rel="stylesheet" href="{% static 'color_admin/assets/plugins/bootstrap-daterangepicker/daterangepicker.css'%}" />
+
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Empleado{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+  <style>
+       .panel-border{border: 1px solid #ddd !important}
+       .form-ajust .form-group{margin-bottom: 0px !important}
+      input[type="text"],select,input[type="number"]
+      {
+
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    box-shadow: none;
+    font-size: 12px;
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+       }
+
+
+
+    </style>
+{%if mensaje %}
+<div class="alert alert-success alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        {{ mensaje}}
+                    </div>
+{% endif %}
+   <form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+      {{ form.title.errors }}
+<div class="row">
+                <!-- begin col-6 -->
+      <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Nuevo Empledo</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-10">
+                            <div>
+
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                  <li role="presentation" class="active"><a href="#principales" aria-controls="principales" role="tab" data-toggle="tab">Datos Personales</a></li>
+                                  <li role="presentation"><a href="#receta" aria-controls="receta" role="tab" data-toggle="tab">Actividades</a></li>
+                                  <li role="presentation"><a href="#movimientos" aria-controls="movimientos" role="tab" data-toggle="tab">Forma Pago</a></li>
+                                  <li role="presentation"><a href="#presupuesto" aria-controls="presupuesto" role="tab" data-toggle="tab">Jubilacion</a></li>
+                                  <li role="presentation"><a href="#costo" aria-controls="costo" role="tab" data-toggle="tab">Impuesto a la Renta</a></li>
+                                  <li role="presentation"><a href="#codigo" aria-controls="codigo" role="tab" data-toggle="tab">Otros Datos</a></li>
+                                  <li role="presentation"><a href="#foto" aria-controls="foto" role="tab" data-toggle="tab">Foto</a></li>
+                                </ul>
+
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade in active" id="principales">
+                                        <div class="row">
+
+                                            <div class="panel panel-default panel-border">
+                                                <div class="panel-heading">Id del Registro</div>
+                                                <div class="panel-body">
+
+                                                          <div class="col-md-6">
+                                                            <label for="exampleInputName2">C&oacute;digo</label>
+                                                              {% bootstrap_field form.codigo_empleado show_label=False %}
+
+                                                         </div>
+                                                          <div class="col-md-6">
+                                                            <label for="exampleInputName2">C&oacute;digo Reloj</label>
+                                                              {% bootstrap_field form.codigo_reloj show_label=False %}
+
+                                                         </div>
+
+                                                          <div class="col-md-6">
+                                                            <label for="exampleInputEmail2">Nombre</label>
+                                                          {% bootstrap_field form.nombre_empleado show_label=False %}
+
+                                                          </div>
+
+                                                          <div class="col-md-6">
+                                                            <label for="exampleInputEmail2">Fecha Nacimiento</label>
+                                                          {% bootstrap_field form.fecha_nacimiento show_label=False %}
+
+                                                          </div>
+                                                             <div class="col-md-6">
+                                                            <label for="exampleInputName2">Sexo</label>
+                                                              {% bootstrap_field form.sexo show_label=False %}
+
+                                                         </div>
+                                                         <div class="col-md-6">
+                                                            <label for="exampleInputName2">Estado Civil</label>
+                                                              {% bootstrap_field form.estado_civil show_label=False %}
+
+                                                         </div>
+
+
+                                                          <div class="col-md-6">
+                                                            <label for="exampleInputEmail2">Tipo  Documento</label>
+                                                          {% bootstrap_field form.tipo_documento show_label=False %}
+
+                                                          </div>
+                                                           <div class="col-md-6">
+                                                            <label for="exampleInputEmail2">Cedula</label>
+                                                          {% bootstrap_field form.cedula_empleado show_label=False %}
+
+                                                          </div>
+                                                           <div class="col-md-6">
+                                                            <label for="exampleInputEmail2">Pais </label>
+                                                          {% bootstrap_field form.pais show_label=False %}
+
+                                                          </div>
+
+                                                            <div class="col-md-6">
+                                                            <label for="exampleInputEmail2">Cargas Familiares</label>
+                                                          {% bootstrap_field form.cargas_familiares show_label=False %}
+
+                                                          </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-7">
+                                                    <div class="panel panel-default panel-border">
+                                                            <div class="panel-heading">Domicilio</div>
+                                                            <div class="panel-body">
+
+                                                                <div class="form-horizontal">
+                                                                    <div class="form-group">
+                                                                         <label for="inputEmail3" class="col-sm-3 control-label">Direccion</label>
+
+                                                                         <div class="col-sm-6">
+                                                                      {% bootstrap_field form.direccion show_label=False %}
+
+
+                                                                         </div>
+                                                                     </div>
+                                                                    <div class="form-group">
+                                                                         <label for="inputEmail3" class="col-sm-3 control-label">Telefono</label>
+
+                                                                         <div class="col-sm-6">
+                                                                    {% bootstrap_field form.telefono show_label=False %}
+
+                                                                         </div>
+                                                                     </div>
+                                                                    <div class="form-group">
+                                                                         <label for="inputEmail3" class="col-sm-3 control-label">Provincia</label>
+
+                                                                         <div class="col-sm-6">
+                                                                    {% bootstrap_field form.provincia show_label=False %}
+                                                                         </div>
+                                                                     </div>
+                                                                    <div class="form-group">
+                                                                         <label for="inputEmail3" class="col-sm-3 control-label">Ciudad</label>
+
+                                                                         <div class="col-sm-6">
+                                                                    {% bootstrap_field form.ciudad show_label=False %}
+                                                                         </div>
+                                                                    </div>
+
+                                                                </div>
+
+
+                                                            </div>
+                                                    </div>
+
+
+
+                                            </div>
+
+                                        </div>
+
+
+
+                                    </div>
+                                     <div role="tabpanel" class="tab-pane fade" id="receta">
+
+                                        <div class="row">
+                                            <div class="panel panel-default panel-border">
+                                                <!-- Default panel contents -->
+                                                <div class="panel-heading">
+                      <div class="panel-group" id="accordion">
+                        <div class="panel panel-inverse overflow-hidden">
+                          <div class="panel-heading">
+                            <h3 class="panel-title">
+                              <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true">
+                                  <i class="fa fa-plus-circle pull-right"></i>
+                                  Datos para la empresa
+                                </a>
+                              </h3>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in" aria-expanded="true">
+                              <div class="panel-body">
+                                                    <div class="col-md-4">
+                                                              <label for="inputEmail3" >Local</label>
+                                                                                  {% bootstrap_field form.puntos_venta  show_label=False %}
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                              <label for="inputEmail3" >Departamento</label>
+                                                                                  {% bootstrap_field form.departamento show_label=False %}
+                                                    </div>
+                                   <div class="col-md-4">
+                                                              <label for="inputEmail3" >Area</label>
+                                                                                  {% bootstrap_field form.areas show_label=False %}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                              <label for="inputEmail3" >Cargo</label>
+                                                                    {% bootstrap_field form.tipo_empleado show_label=False %}
+                                                          </div>
+                                                          <div class="col-md-6">
+                                                              <label for="inputEmail3" >Tipo Contrato</label>
+                                                                                  {% bootstrap_field form.tipo_contrato show_label=False %}
+                                                          </div>
+
+                                           <div class="col-md-6">
+                                                              <label for="inputEmail3" >Fecha de Inicio</label>
+                                                                                  {% bootstrap_field form.fecha_ini show_label=False %}
+                                                          </div>
+                                                           <div class="col-md-6">
+                                                              <label for="inputEmail3" >Fecha de Ingreso</label>
+                                                                                  {% bootstrap_field form.fecha_ini_reconocida show_label=False %}
+                                                          </div>
+                                                             <div class="col-md-6">
+                                                              <label for="inputEmail3" >Fecha Fin</label>
+                                                                                  {% bootstrap_field form.fecha_fin show_label=False %}
+                                                          </div>
+
+
+
+
+                                                           <div class="col-md-6">
+                                                              <label for="inputEmail3" >Horas Mensual</label>
+                                                                                  {% bootstrap_field form.horas_trabajo_mensual show_label=False %}
+                                                          </div>
+                                                                 <div class="col-md-6">
+                                                              <label for="inputEmail3" >Relacion Laboral</label>
+                                                                    {% bootstrap_field form.relacion_laboral show_label=False %}
+                                                          </div>
+                                                               <div class="col-md-6">
+                                                              <label for="inputEmail3" >Tipo de remuneracion</label>
+                                                                    {% bootstrap_field form.tipo_remuneracion show_label=False %}
+                                                          </div>
+                                                                <div class="col-md-6">
+                                                              <label for="inputEmail3" >Codigo sectorial IESS</label>
+                                                                    {% bootstrap_field form.codigo_sectorial_iess show_label=False %}
+                                                          </div>
+                                                     <div class="col-md-6">
+                                                              <label for="inputEmail3" >&nbsp;</label>
+                                                                                  {% bootstrap_field form.discapacidad show_label=False %}
+                                                          </div>
+                                                     <div class="col-md-6">
+                                                              <label for="inputEmail3" >&nbsp;</label>
+                                                                                  {% bootstrap_field form.activo show_label=False %}
+                                                          </div>
+                                            <hr>
+
+
+                                      </div>
+                            </div>
+                             </div>
+
+                                     <div class="panel panel-inverse" data-sortable-id="table-basic-7">
+                                                              <div class="panel-heading">
+                                                                  <div class="panel-heading-btn">
+                                                                      <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+
+                                                                      <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+
+                                                                  </div>
+                                                                  <h4 class="panel-title"><i class="fa fa-users"></i>Configuraciones Generales</h4>
+                                                              </div>
+                                                              <div class="panel-body">
+
+                                                                      <div class="table-responsive">
+
+
+                                                                                                   <div class="col-md-6">
+                                                                                                      <label for="inputEmail3" ></label>
+                                                                                                            {% bootstrap_field form.acumular_fondo_reserva show_label=False %}
+                                                                                                  </div>
+
+                                                                                              <div class="col-md-6">
+                                                                                                      <label for="inputEmail3" ></label>
+                                                                                                            {% bootstrap_field form.acumular_decimo_tercero show_label=False %}
+                                                                                                  </div>
+                                                                                                   <div class="col-md-6">
+                                                                                                      <label for="inputEmail3" > </label>
+                                                                                                            {% bootstrap_field form.acumular_decimo_cuarto show_label=False %}
+                                                                                                  </div>
+
+                                                                                                <div class="col-md-6">
+                                                                                                      <label for="inputEmail3" ></label>
+                                                                                                            {% bootstrap_field form.extension_conyugal show_label=False %}
+                                                                                                  </div>
+                                                                                                  <div class="col-md-6">
+                                                                                                      <label for="inputEmail3" ></label>
+                                                                                                            {% bootstrap_field form.acumular_iess_asumido show_label=False %}
+                                                                                                  </div>
+                                                                                                   <div class="col-md-6">
+                                                                                                      <label for="inputEmail3" ></label>
+                                                                                                            {% bootstrap_field form.asumir_impuesto_renta show_label=False %}
+                                                                                                  </div>
+
+
+                                                                      </div>
+                                                             </div>
+                                                </div>
+
+            </div>
+
+
+
+          </div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+
+                                    <div role="tabpanel" class="tab-pane fade" id="movimientos">
+                                    <div class="row">
+                                    <div class="panel panel-default panel-border">
+                                                <!-- Default panel contents -->
+                                    <div class="panel-heading"></div>
+                                    <div class="panel-body">
+                                      <div class="panel panel-inverse" data-sortable-id="table-basic-7">
+                                                  <div class="panel-heading">
+                                                      <div class="panel-heading-btn">
+                                                          <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+
+                                                          <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+
+                                                      </div>
+                                                      <h4 class="panel-title"><i class="fa fa-users"></i>Configuraciones Pago</h4>
+                                                  </div>
+                                    <div class="panel-body">
+
+                                          <div class="table-responsive">
+                                                                        <div class="col-md-6">
+                                                                          <label for="inputEmail3" >Grupo pago</label>
+                                                                               {% bootstrap_field form.grupo_pago show_label=False %}
+                                                                      </div>
+                                                                       <div class="col-md-6">
+                                                                          <label for="inputEmail3" >Forma pago</label>
+                                                                               {% bootstrap_field form.forma_pago_empleado show_label=False %}
+                                                                      </div>
+                                                                       <div class="col-md-6">
+                                                                          <label for="inputEmail3" >Pagar con</label>
+                                                                                              {% bootstrap_field form.banco show_label=False %}
+                                                                      </div>
+                                                                         <div class="col-md-6">
+                                                                          <label for="inputEmail3" >Tipo Cuenta</label>
+                                                                                {% bootstrap_field form.tipo_cuenta show_label=False %}
+                                                                      </div>
+
+                                                                       <div class="col-md-6">
+                                                                          <label for="inputEmail3" >Cuenta Bancaria</label>
+                                                                                {% bootstrap_field form.cuenta_contable show_label=False %}
+                                                                      </div>
+                                                                      <div class="col-md-8">
+                                                                          <label for="inputEmail3" >Nota</label>
+                                                                                {% bootstrap_field form.nota show_label=False %}
+                                                                      </div>
+
+
+                                          </div>
+
+
+                                    </div>
+                                          </div>
+                                                </div>
+
+
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="presupuesto">
+                                        <div class="row">
+
+                                            <div class="panel panel-default panel-border">
+                                                <div class="panel-heading"></div>
+                                                <div class="panel-body">
+
+                                                    <div class="col-md-6">
+                                                      <label for="exampleInputName2">Situacion Previsional</label>
+                                                       {% bootstrap_field form.situacion_previsional show_label=False %}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                      <label for="exampleInputEmail2">IESS</label>
+                                                       {% bootstrap_field form.iess show_label=False %}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                      <label for="exampleInputName2">Numero Afiliacion</label>
+                                                       {% bootstrap_field form.numero_afiliacion show_label=False %}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                      <label for="exampleInputEmail2">Sociedad Medica</label>
+                                                       {% bootstrap_field form.sociedad_medica show_label=False %}
+                                                    </div>
+                                                  <div class="col-md-6">
+                                                      <label for="exampleInputEmail2">Numero Sociedad Medica</label>
+                                                       {% bootstrap_field form.numero_sociedad_medica show_label=False %}
+                                                    </div>
+                                                      <div class="col-md-6">
+                                                      <label for="exampleInputEmail2">Impuesto a la Renta a cargo del Empleador</label>
+                                                       {% bootstrap_field form.impuesto_renta_cargo_empleador show_label=False %}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+
+
+
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="costo">
+                                     <div class="row">
+
+                                            <div class="panel panel-default panel-border">
+                                                <div class="panel-heading">Impuesto a la Renta</div>
+                                                <div class="panel-body">
+
+                                                    <div class="col-md-6">
+                                                      <label for="exampleInputName2">Gasto Vivienda</label>
+                                                       {% bootstrap_field form.gastos_vivienda show_label=False %}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                      <label for="exampleInputEmail2">Gasto Educacion</label>
+                                                       {% bootstrap_field form.gastos_educacion show_label=False %}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                      <label for="exampleInputName2">Gasto Salud</label>
+                                                       {% bootstrap_field form.gastos_salud show_label=False %}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                      <label for="exampleInputEmail2">Gasto Alimentacion</label>
+                                                       {% bootstrap_field form.gastos_alimentacion show_label=False %}
+                                                    </div>
+                                                  <div class="col-md-6">
+                                                      <label for="exampleInputEmail2">Gasto Vestimenta</label>
+                                                       {% bootstrap_field form.gastos_vestimenta show_label=False %}
+                                                    </div>
+                                                      <div class="col-md-6">
+                                                      <label for="exampleInputEmail2">Rebaja Especial por discapacidad</label>
+                                                       {% bootstrap_field form.rebajada_discapacidad show_label=False %}
+                                                    </div>
+                                                      <div class="col-md-6">
+                                                      <label for="exampleInputEmail2">Rebaja Especial por Tercera edad</label>
+                                                       {% bootstrap_field form.rebajas_tercera_edad show_label=False %}
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="codigo">
+                                      <div style="padding-left: 0px; padding-right: 0px;" class="panel-body">
+
+                                              <ul class="nav nav-tabs">
+
+                                                  <li class="active">
+                                                      <a aria-expanded="true" data-toggle="tab" href="#ingresosproyectados"><b>Ingresos Proyectados</b></a>
+                                                  </li>
+                                                   <li>
+                                                      <a aria-expanded="true" data-toggle="tab" href="#egresosproyectados"><b>Egresos</b></a>
+                                                  </li>
+                                                 <!--  <li>
+                                                      <a aria-expanded="true" data-toggle="tab" href="#centroscostosproyectos"><b>Centros de Costos</b></a>
+                                                  </li>
+                                                  <li>
+                                                      <a aria-expanded="true" data-toggle="tab" href="#tab_contratos"><b>Contratos</b></a>
+                                                  </li>
+                                                  <li>
+                                                      <a aria-expanded="true" data-toggle="tab" href="#saldosiniciales"><b>Saldos Iniciales</b></a>
+                                                  </li> -->
+                                              </ul>
+                            <!--/ tab -->
+                            <!-- tab content -->
+                                <div class="tab-content panel">
+                                  <div id="ingresosproyectados" class="tab-pane active">
+
+                                        <div class="row">
+                                            <div class="panel panel-default panel-border">
+                                                <!-- Default panel contents -->
+                                                <div class="panel-heading">Otros Ingresos</div>
+                                                <div class="panel-body" style="overflow-x: scroll;">
+
+
+                                                <!-- Table -->
+                                                <table class="table2 table-striped table-bordered"  id="tabla" style="table-layout: fixed;min-width:500px">
+                                                <thead>
+                                                  <tr>
+                                                   <th width="40px"></th>
+                                                        <th width="160px;" class="text-center">Tipo</th>
+                                                        <th class="text-center">Valor Mensual</th>
+                                                        <th class="text-center">Valor Diario</th>
+                                                        <th class="text-center">Nombre</th>
+                                                        <th class="text-center">Deducible</th>
+                                                        <th class="text-center">Afecta Aport.</th>
+                                                  </tr>
+                                                </thead>
+                                                  <tbody>
+                                                    {% if detalle %}
+                                                    {% for kit  in detalle %}
+
+                                                  <tr>
+                                                    <td class="eliminar"><a class="btn btn-danger remove_fields" onclick="eliminarIngresos({{ kit.id }})">
+                                                        <i class=" glyphicon glyphicon-trash icon-white"></i>
+                                                      </a>
+                                                    </td>
+                                                     <td ><select name="tipo_kits{{ forloop.counter }}" id="tipo_kits{{ forloop.counter }}">
+                                                         {% for am  in tipos %}
+                                                           <option value="{{ am.id }}"
+                                                           {% if kit.tipo_ingreso_egreso_empleado_id == am.id %}
+                                                           selected="selected"
+                                                           {% endif %}
+                                                           > {{ am.nombre }}</option>
+                                                        {% endfor %}
+                                                     </select>
+
+
+                                                    <input type="hidden" class="form-control" id="id_detalle{{ forloop.counter }}" name="id_detalle{{ forloop.counter }}" value="{{ kit.id }}"/>
+
+
+                                                   </td>
+                                                    <td><input type="text" class="form-control" id="valor_mensual_kits{{ forloop.counter }}" name="valor_mensual_kits{{ forloop.counter }}" value="{{ kit.valor_mensual }}" onkeyup="mostrarValorDiario({{ forloop.counter }})"></td>
+                                                    <td><input type="text" class="form-control" id="valor_diario_kits{{ forloop.counter }}" name="valor_diario_kits{{ forloop.counter }}" value="{{ kit.valor_diario }}" readonly="readonly"></td>
+                                                      <td><input type="text" class="form-control" id="nombre_kits{{ forloop.counter }}" name="nombre_kits{{ forloop.counter }}"  value="{{ kit.nombre }}"></td>
+
+                                                     <td>
+                                                       <input type="checkbox" id="deducible_kits{{ forloop.counter }}" name="deducible_kits{{ forloop.counter }}"  {% if kit.deducible == True %}
+                                                           checked="checked"
+                                                           {% endif %}/>                                                    </td>
+                                                    <td>
+                                                       <input type="checkbox" id="aportacion_kits{{ forloop.counter }}" name="aportacion_kits{{ forloop.counter }}" {% if kit.aportaciones == True %}
+                                                           checked="checked"
+                                                           {% endif %} />
+                                                    </td>
+
+
+                                                  </tr>
+                                                        {% endfor %}
+                                                   {% else %}
+
+                                                     <tr>
+                                                     <td class="eliminar"><a class="btn btn-danger remove_fields">
+                                                        <i class=" glyphicon glyphicon-trash icon-white"></i>
+                                                      </a>
+                                                    </td>
+
+                                                       <td ><select name="tipo_kits1" id="tipo_kits1">
+                                                         {% for am  in tipos %}
+                                                           <option value="{{ am.id }}"> {{ am.nombre }}</option>
+                                                        {% endfor %}
+                                                     </select>
+                                                    </td>
+                                                    <td>
+                                                    <input type="text" class="form-control" id="valor_mensual_kits1" name="valor_mensual_kits1" onkeyup="mostrarValorDiario(1)" />
+                                                    </td>
+
+                                                    <td><input type="text" class="form-control" id="valor_diario_kits1" name="valor_diario_kits1" readonly="readonly" />
+                                                    </td>
+                                                    <td><input type="text" class="form-control" id="nombre_kits1" name="nombre_kits1" />
+                                                    </td>
+                                                    <td>
+                                                       <input type="checkbox"  id="deducible_kits1" name="deducible_kits1"  />
+                                                    </td>
+                                                                                                        <td>
+                                                       <input type="checkbox" id="aportacion_kits1" name="aportacion_kits1" />
+                                                    </td>
+                                                  </tr>
+{% endif %}
+                                                   </tbody>
+
+                                                </table>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <p class="text-center">
+                                             <button type="button" class="btn btn-primary btn-lg" id="add">Agregar</button>
+
+
+                                        </p>
+
+                              </div>
+
+<!-- tOTROS EGRESOS -->
+       <div id="egresosproyectados" class="tab-pane active">
+
+                                        <div class="row">
+                                            <div class="panel panel-default panel-border">
+                                                <!-- Default panel contents -->
+                                                <div class="panel-heading">Otros Egresos</div>
+                                                <div class="panel-body" style="overflow-x: scroll;">
+
+
+                                                <!-- Table -->
+                                                <table class="table2 table-striped table-bordered"  id="etabla" style="table-layout: fixed;min-width:500px">
+                                                <thead>
+                                                  <tr>
+                                                   <th width="40px"></th>
+                                                        <th width="160px;" class="text-center">Tipo</th>
+                                                        <th class="text-center">Valor Mensual</th>
+                                                        <th class="text-center">Valor Diario</th>
+                                                        <th class="text-center">Nombre</th>
+                                                        <th class="text-center">Deducible</th>
+                                                        <th class="text-center">Afecta Aport.</th>
+                                                  </tr>
+                                                </thead>
+                                                  <tbody>
+                                                    {% if edetalle %}
+                                                    {% for ekit  in edetalle %}
+
+                                                  <tr>
+                                                    <td class="egreso_eliminar"><a class="btn btn-danger remove_fields" onclick="eliminarEgresos({{ ekit.id }})">
+                                                        <i class=" glyphicon glyphicon-trash icon-white"></i>
+                                                      </a>
+                                                    </td>
+                                                     <td ><select name="etipo_kits{{ forloop.counter }}" id="etipo_kits{{ forloop.counter }}">
+                                                         {% for am  in etipos %}
+                                                           <option value="{{ am.id }}"
+                                                           {% if ekit.tipo_ingreso_egreso_empleado_id == am.id %}
+                                                           selected="selected"
+                                                           {% endif %}
+                                                           > {{ am.nombre }}</option>
+                                                        {% endfor %}
+                                                     </select>
+
+
+                                                    <input type="hidden" class="form-control" id="eid_detalle{{ forloop.counter }}" name="eid_detalle{{ forloop.counter }}" value="{{ ekit.id }}"/>
+
+
+                                                   </td>
+                                                    <td><input type="text" class="form-control" id="evalor_mensual_kits{{ forloop.counter }}" name="evalor_mensual_kits{{ forloop.counter }}" value="{{ ekit.valor_mensual }}" onkeyup="mostrarEgresoValorDiario({{ forloop.counter }})"></td>
+                                                    <td><input type="text" class="form-control" id="evalor_diario_kits{{ forloop.counter }}" name="evalor_diario_kits{{ forloop.counter }}" value="{{ ekit.valor_diario }}" readonly="readonly"></td>
+                                                      <td><input type="text" class="form-control" id="enombre_kits{{ forloop.counter }}" name="enombre_kits{{ forloop.counter }}"  value="{{ ekit.nombre }}"></td>
+
+                                                     <td>
+                                                       <input type="checkbox" id="ededucible_kits{{ forloop.counter }}" name="ededucible_kits{{ forloop.counter }}"  {% if ekit.deducible == True %}
+                                                           checked="checked"
+                                                           {% endif %}/>                                                    </td>
+                                                    <td>
+                                                       <input type="checkbox" id="eaportacion_kits{{ forloop.counter }}" name="eaportacion_kits{{ forloop.counter }}" {% if ekit.aportaciones == True %}
+                                                           checked="checked"
+                                                           {% endif %} />
+                                                    </td>
+
+
+                                                  </tr>
+                                                        {% endfor %}
+                                                   {% else %}
+
+                                                     <tr>
+                                                     <td class="egreso_eliminar"><a class="btn btn-danger remove_fields">
+                                                        <i class=" glyphicon glyphicon-trash icon-white"></i>
+                                                      </a>
+                                                    </td>
+
+                                                       <td ><select name="etipo_kits1" id="etipo_kits1">
+                                                         {% for am  in etipos %}
+                                                           <option value="{{ am.id }}"> {{ am.nombre }}</option>
+                                                        {% endfor %}
+                                                     </select>
+                                                    </td>
+                                                    <td>
+                                                    <input type="text" class="form-control" id="evalor_mensual_kits1" name="evalor_mensual_kits1" onkeyup="mostrarEgresoValorDiario(1)" />
+                                                    </td>
+
+                                                    <td><input type="text" class="form-control" id="evalor_diario_kits1" name="evalor_diario_kits1" readonly="readonly" />
+                                                    </td>
+                                                    <td><input type="text" class="form-control" id="enombre_kits1" name="enombre_kits1" />
+                                                    </td>
+                                                    <td>
+                                                       <input type="checkbox"  id="ededucible_kits1" name="ededucible_kits1"  />
+                                                    </td>
+                                                                                                        <td>
+                                                       <input type="checkbox" id="eaportacion_kits1" name="eaportacion_kits1" />
+                                                    </td>
+                                                  </tr>
+{% endif %}
+                                                   </tbody>
+
+                                                </table>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <p class="text-center">
+                                             <button type="button" class="btn btn-primary btn-lg" id="eadd">Agregar</button>
+
+
+                                        </p>
+
+                              </div>
+
+
+
+</div>
+                                    </div></div>
+                                    <div role="tabpanel" class="tab-pane fade" id="foto">
+                                        <div class="row">
+
+                                            <div class="panel panel-default panel-border">
+                                                <div class="panel-heading">Foto</div>
+                                                <div class="panel-body">
+
+                                                    <div class="col-md-4">
+                                                      <label for="exampleInputName2">Imagen</label>
+                                                       {% bootstrap_field form.imagen show_label=False %}
+                                                   </div>
+
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                          </div>
+                    </div>
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                  <a href="#" class="thumbnail">
+                                       {% if form.imagen.value != "" %}
+                                   <img src="/media/{{ form.imagen.value}}" alt="logo producto">
+                                    {% else %}
+                                    <img src="/media/imagenes/producto/logo-producto.svg" alt="logo producto">
+                                    {% endif %}
+                                  </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+     <p class="text-center">
+            {% if detalle %}
+<input type="hidden" name="columnas_receta" id="columnas_receta" value="{{ detalle|length }}" />
+{% else %}
+<input type="hidden" name="columnas_receta" id="columnas_receta" value="1" />
+
+{% endif %}
+
+
+ {% if edetalle %}
+<input type="hidden" name="ecolumnas_receta" id="ecolumnas_receta" value="{{ edetalle|length }}" />
+{% else %}
+<input type="hidden" name="ecolumnas_receta" id="ecolumnas_receta" value="1" />
+
+{% endif %}
+
+
+                                    <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+                                            <a class="default btn btn-link" href="/empleados/empleado"><button type="button" class="btn btn-primary btn-lg">  Regresar</button></a>
+                                        </p>
+
+
+
+                            </form>
+
+</div>
+            </div>
+        </div>
+
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+
+
+
+<script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/data-table.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/inbox.demo.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-daterangepicker/moment.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-daterangepicker/daterangepicker.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/tools.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/censea.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<!-- ================== END PAGE LEVEL JS ================== -->
+<script>
+  $(document).ready(function() {
+    // App.init();
+    $('#tabla2').DataTable();
+    cambiarFormato();
+                     $("#id_nombre_empleado").attr('required', true);
+                 $("#id_cedula_empleado").attr('required', true);
+                 
+                     $("select[name='tipo_remuneracion']").change(function () {
+                         // alert('netro0');
+                         // alert($(this).val());
+                if ($(this).val() == "2") {//Transf
+                   $('#id_horas_trabajo_mensual').attr("required", "true");
+                }else{
+                         $('#id_horas_trabajo_mensual').removeAttr('required');
+
+                }
+               
+            });
+
+
+  });
+</script>
+<script>
+    $(document).ready(function() {
+             $('#id_fecha_ini').datepicker({todayHighlight: true, autoclose: true,format: 'yyyy-mm-dd'});
+             $('#id_fecha_fin').datepicker({todayHighlight: true, autoclose: true,format: 'yyyy-mm-dd'});
+             $('#id_fecha_ini_reconocida').datepicker({todayHighlight: true, autoclose: true,format: 'yyyy-mm-dd'});
+             $('#id_fecha_nacimiento').datepicker({todayHighlight: true, autoclose: true,format: 'yyyy-mm-dd'});
+
+        //$('#id_fecha_ini').datepicker({todayHighlight:true,autoclose:true});
+        //
+        //$('#id_fecha_fin').datepicker({todayHighlight:true,autoclose:true});
+        //$('#id_fecha_ini_reconocida').datepicker({todayHighlight:true,autoclose:true});
+        //
+        //$('#id_fecha_nacimiento').datepicker({todayHighlight:true,autoclose:true});
+
+
+//         $('#id_fecha_ini').datepicker({todayHighlight: true, autoclose: true, format: 'yyyy-mm-dd'});
+//        $("#id_fecha_ini").datepicker('setDate', new Date());
+//
+//         $('#id_fecha_fin').datepicker({todayHighlight: true, autoclose: true, format: 'yyyy-mm-dd'});
+//        $("#id_fecha_fin").datepicker('setDate', new Date());
+//  $('#id_fecha_ini_reconocida').datepicker({todayHighlight: true, autoclose: true, format: 'yyyy-mm-dd'});
+//        $("#id_fecha_ini_reconocida").datepicker('setDate', new Date());
+//$('#id_fecha_nacimiento').datepicker({todayHighlight: true, autoclose: true, format: 'yyyy-mm-dd'});
+//        $("#id_fecha_nacimiento").datepicker('setDate', new Date());
+
+
+
+
+  $(".parsley-errors-list").css('display','none');
+      $('#id_codigo_empleado').each(function(){
+  $(this).attr('readonly','readonly');
+});
+      var codigo_producto=$('#id_codigo_empleado').val();
+      //alert(codigo_producto);
+      if(codigo_producto==""){
+      	 $.ajax({
+                url: "/config/obtenerSecuencial/", // the endpoint
+                type : "POST", // http method
+                data : { id : 'empleados','csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+                 $('#id_codigo_empleado').val('000'+data);
+
+                },
+                error: function(){
+
+                },
+              });
+      }
+
+
+    });
+
+
+ function mostrarValorDiario(data){
+      var valor=$('#valor_mensual_kits'+data).val();
+      valor=valor/30;
+       $('#valor_diario_kits'+data).val(valor);
+
+    }
+ function mostrarEgresoValorDiario(data){
+      var valor=$('#evalor_mensual_kits'+data).val();
+      valor=valor/30;
+       $('#evalor_diario_kits'+data).val(valor);
+
+    }
+       function cambiarFormato(){
+      var num_recetas=$('#columnas_receta').val();
+      //alert(num_recetas);
+      var total=0;
+      var costo1=0;
+      var subt=0;
+      var porc_descu=0;
+      var iva=0;
+      var r_total=0;
+      var r_subtotal=0;
+      var total=0;
+var porcentaje_iva=0;
+      var i;
+
+
+
+      for (i = 1; i <= num_recetas; i++) {
+        costo1= $('#valor_mensual_kits'+i).val();
+
+        costo1 = costo1.toString().replace(/\,/g,'.');
+        $('#valor_mensual_kits'+i).val(costo1);
+        subt = $('#valor_diario_kits'+i).val();
+        subt = subt.toString().replace(/\,/g,'.');
+        $('#valor_diario_kits'+i).val(subt);
+
+
+      }
+      }
+ function eliminarIngresos(data){
+         $.ajax({
+                url: "/empleados/eliminarIngresos/", // the endpoint
+                type : "POST", // http method
+                data : { id : data,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+                alert("Se elimino con exito");
+
+                },
+                error: function(){
+
+                },
+              });
+    }
+
+     function eliminarEgresos(data){
+         $.ajax({
+                url: "/empleados/eliminarEgresos/", // the endpoint
+                type : "POST", // http method
+                data : { id : data,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+                alert("Se elimino con exito");
+
+                },
+                error: function(){
+
+                },
+              });
+    }
+
+    function cerrar(){
+       $(".modal").modal('toggle');
+    }
+
+    function cargarCodigoProducto(id,codigo,descripcion,medida,costo){
+      var fila=$('#id_fila_cambiar').val();
+         $('#id_kits'+fila).val(id);
+         costo = costo.toString().replace(/\,/g,'.');
+
+
+        $('#codigo_kits'+fila).val(codigo);
+         $('#nombre_kits'+fila).val(descripcion);
+           $('#medida_kits'+fila).val(medida);
+         $('#costo_kits'+fila).val(costo);
+   $('#total_kits'+fila).val('');
+          $('#cantidad_kits'+fila).val('');
+          cerrar();
+
+    }
+    function actualizarCosto(data){
+      var cantidad=$('#cantidad_kits'+data).val();
+      var costo= $('#costo_kits'+data).val();
+     var medida= $('#medida_kits'+data).val();
+
+
+       var valor=parseFloat(parseFloat(cantidad)*parseFloat(costo)).toFixed(2);
+
+      //  alert(data);
+      // alert(costo);
+      // alert(valor);
+      $('#total_kits'+data).val(valor);
+      actualizarTotal();
+    }
+    function actualizarTotal(){
+      var num_recetas=$('#columnas_receta').val();
+      var total=0;
+      var cantidad=0;
+      var i;
+      //alert(' BNUM RECETS'+num_recetas);
+      for (i = 1; i <= num_recetas; i++) {
+
+        if ($('#total_kits'+i).length){
+            cantidad=$('#total_kits'+i).val();
+            total=parseFloat(total)+parseFloat(cantidad);
+          }
+
+
+      }
+
+      $('#total').val(total);
+    }
+</script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        /**
+         * Funcion para añadir una nueva columna en la tabla
+         */
+        $("#add").click(function(){
+            // Obtenemos el numero de filas (td) que tiene la primera columna
+            // (tr) del id "tabla"
+            var num_recetas=$('#columnas_receta').val();
+            num_recetas=parseInt(num_recetas)+1;
+
+            var tds=$("#tabla tr:first td").length;
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla tr").length;
+            var nuevaFila='<tr><td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+                nuevaFila+='<td><select class="form-control" id="tipo_kits'+num_recetas+'" name="tipo_kits'+num_recetas+'"> ';
+                                    {% for am  in tipos %}
+                      nuevaFila+='<option value="{{ am.id }}"> {{ am.nombre }}</option>';
+
+                                  {% endfor %}
+              nuevaFila+='</select></td>';
+                nuevaFila+='<td><input type="text" class="form-control" id="valor_mensual_kits'+num_recetas+'" name="valor_mensual_kits'+num_recetas+'" onkeyup="mostrarValorDiario('+num_recetas+')" value=""></td>';
+                  nuevaFila+='<td><input type="text" class="form-control" id="valor_diario_kits'+num_recetas+'" name="valor_diario_kits'+num_recetas+'" readonly="readonly"></td>';
+                 nuevaFila+='<td><input type="text" class="form-control" id="nombre_kits'+num_recetas+'" name="nombre_kits'+num_recetas+'" value=""></td>';
+
+ nuevaFila+='<td><input type="checkbox" id="deducible_kits'+num_recetas+'" name="deducible_kits'+num_recetas+'" ></td>';
+                  nuevaFila+='<td><input type="checkbox" id="aportacion_kits'+num_recetas+'" name="aportacion_kits'+num_recetas+'" ></td>';
+
+                nuevaFila+='</tr>';
+
+              $('#columnas_receta').val(num_recetas);
+            // for(var i=0;i<tds;i++){
+            //     // añadimos las columnas
+            //     nuevaFila+="<td>columna "+(i+1)+" Añadida con jquery</td>";
+            // }
+           // nuevaFila+="<td>"+(trs+1)+" columnas";
+            // nuevaFila+="</tr>";
+            $("#tabla").append(nuevaFila);
+        });
+
+
+
+
+   $("#eadd").click(function(){
+            // Obtenemos el numero de filas (td) que tiene la primera columna
+            // (tr) del id "tabla"
+            var num_recetas=$('#ecolumnas_receta').val();
+            num_recetas=parseInt(num_recetas)+1;
+
+            var tds=$("#etabla tr:first td").length;
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#etabla tr").length;
+            var nuevaFila='<tr><td  class="egreso_eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+                nuevaFila+='<td><select class="form-control" id="etipo_kits'+num_recetas+'" name="etipo_kits'+num_recetas+'"> ';
+                                    {% for am  in etipos %}
+                      nuevaFila+='<option value="{{ am.id }}"> {{ am.nombre }}</option>';
+
+                                  {% endfor %}
+              nuevaFila+='</select></td>';
+                nuevaFila+='<td><input type="text" class="form-control" id="evalor_mensual_kits'+num_recetas+'" name="evalor_mensual_kits'+num_recetas+'" onkeyup="mostrarEgresoValorDiario('+num_recetas+')" value=""></td>';
+                  nuevaFila+='<td><input type="text" class="form-control" id="evalor_diario_kits'+num_recetas+'" name="evalor_diario_kits'+num_recetas+'" readonly="readonly"></td>';
+                 nuevaFila+='<td><input type="text" class="form-control" id="enombre_kits'+num_recetas+'" name="enombre_kits'+num_recetas+'" value=""></td>';
+
+ nuevaFila+='<td><input type="checkbox" id="ededucible_kits'+num_recetas+'" name="ededucible_kits'+num_recetas+'" ></td>';
+                  nuevaFila+='<td><input type="checkbox" id="eaportacion_kits'+num_recetas+'" name="eaportacion_kits'+num_recetas+'" ></td>';
+
+                nuevaFila+='</tr>';
+
+              $('#ecolumnas_receta').val(num_recetas);
+            // for(var i=0;i<tds;i++){
+            //     // añadimos las columnas
+            //     nuevaFila+="<td>columna "+(i+1)+" Añadida con jquery</td>";
+            // }
+           // nuevaFila+="<td>"+(trs+1)+" columnas";
+            // nuevaFila+="</tr>";
+            $("#etabla").append(nuevaFila);
+        });
+
+
+
+
+        /**
+         * Funcion para eliminar la ultima columna de la tabla.
+         * Si unicamente queda una columna, esta no sera eliminada
+         */
+        $("#del").click(function(){
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla tr").length;
+            if(trs>1)
+            {
+                // Eliminamos la ultima columna
+                $("#tabla tr:last").remove();
+            }
+        });
+
+
+
+        $(document).on("click",".eliminar",function(){
+            var parent = $(this).parent();
+  $(parent).remove();
+   actualizarTotal();
+          });
+
+
+        $(document).on("click",".egreso_eliminar",function(){
+            var parent = $(this).parent();
+  $(parent).remove();
+   actualizarTotal();
+          });
+
+    });
+    </script>
+{% endblock %}

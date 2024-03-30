@@ -1,0 +1,35 @@
+		<!-- begin #sidebar -->
+		<div id="sidebar" class="sidebar">
+			<!-- begin sidebar scrollbar -->
+			<div data-scrollbar="true" data-height="100%">
+				<!-- begin sidebar user -->
+				<ul class="nav">
+					<li class="nav-profile">
+						<div class="info">
+							{{ user.first_name }} {{ user.last_name }}
+							<small>{{ user.empleado.tipo }}</small>
+						</div>
+					</li>
+				</ul>
+				<!-- end sidebar user -->
+
+				<!-- begin sidebar nav -->
+				<ul class="nav">
+					<li class="nav-header">Navegacion</li>
+					{% include "login/menu.html" %}
+					
+
+					<li><a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify">
+					<i class="fa fa-angle-double-left"></i>
+					</a>
+					</li>
+					
+				</ul>
+				<!-- end sidebar nav -->
+			
+			</div>
+			<!-- end sidebar scrollbar -->
+		</div>
+		<div class="sidebar-bg"></div>
+		<!-- end #sidebar -->
+		

@@ -1,0 +1,378 @@
+
+<form class="form-horizontal" action="/recursos_humanos/guardarIngresos/" name="ingresosForm" method="POST" id="registrar_ing">{% csrf_token %}
+    <input type="hidden" value="" name="tipo_guardar_ingreso" id="tipo_ingreso_id">
+    <input type="hidden" value="" name="quincena" id="quincena_id">
+    <input type="hidden" value="" name="mes" id="mes_id">
+    <input type="hidden" value="" name="anio" id="anio_id">
+    <input type="hidden" value="RPQ" name="tipo_rol" id="tipo_rol_id">
+    <input type="hidden" value="None" name="tipo_contrato_persona" id="tipo_contrato_persona">
+    <input type="hidden" value="{{ sueldo.valor_mensual |stringformat:"f" }}" name="sueldo" id="sueldo">
+    <input type="hidden" value="{{ empleados.empleado_id}}" name="empleado_id" id="empleado_id">
+
+	<div class="alert alert-danger hide" id="msj_error_ingresos"></div>
+
+	<div class="panel panel-default">
+	    <div class="panel-heading">
+	        <h3 class="panel-title"><i class="ico-user mr5"></i>Datos del Empleado</h3>
+	    </div>
+	    <div class="panel-body">
+	        <div class="row">
+				<strong class="col-md-2 col-sm-2"> Nombre: &nbsp;</strong>
+				<div class="col-md-10 col-sm-10">{{ empleados.nombre_empleado}}</div>
+			</div>
+			<div class="row">
+				<strong class="col-md-2 col-sm-2"> Cédula: </strong>
+				<div class="col-md-4 col-sm-4">{{ empleados.cedula_empleado}}</div>
+				<strong class="col-md-3 col-sm-3"> Fecha de Ingreso:</strong>
+				<div class="col-md-3 col-sm-3">{{ empleados.fecha_ini}}</div>
+			</div>
+       <div class="row">
+        <strong class="col-md-2 col-sm-2"> Sueldo: </strong>
+        <div class="col-md-4 col-sm-4">{{ sueldo.valor_mensual }}</div>
+        <strong class="col-md-3 col-sm-3"></strong>
+        <div class="col-md-3 col-sm-3"></div>
+      </div>
+	    </div>
+	</div>
+
+	<div class="panel panel-default-grey">
+	    <div class="panel-heading">
+	        <h3 class="panel-title">Detalles Ingresos </h3>
+	    </div>
+	    <div class="panel-body">
+	        <div class="ingresos">
+				<table style="background-color: white" class="table table-bordered" id="tabla_otros_ingresos">
+					<thead>
+						<tr>
+							<th width="25px"></th>
+							<th width="1px" class="id_ingreso" style="display: none;"></th>
+							<th><b>Tipo</b></th>
+							<th><b>Nombre</b></th>
+              <th width="80px"> <b>Horas</b></th>
+							<th width="80px"><b>Valor</b></th>
+
+							<!-- <th><b>Deducible</b></th>
+							<th><b>Afecta Aportaciones</b></th> -->
+
+						</tr>
+					</thead>
+					<tbody id="tdetalle_ingreso">
+
+                                                  {% if detalle %}
+                                                    {% for kit  in detalle %}
+
+                                                  <tr>
+                                                    <td class="eliminar"><a class="btn btn-danger remove_fields" onclick="eliminar({{kit.id}})">
+                                                        <i class=" glyphicon glyphicon-trash icon-white"></i>
+                                                      </a>
+                                                    </td>
+                                                     <td ><select name="tipos_kits{{ forloop.counter }}" id="tipos_kits{{ forloop.counter }}" onchange="cambiarHorasExtras({{ forloop.counter }})">
+                                                         {% for am  in tipos %}
+                                                           <option value="{{ am.id }}"
+                                                           {% if kit.tipo_ingreso_egreso_empleado_id == am.id %}
+                                                           selected="selected"
+                                                           {% endif %}
+                                                           > {{ am.nombre }}</option>
+                                                        {% endfor %}
+                                                     </select>
+                                                    </td>
+                                                    <td>
+                                                    <input type="hidden" class="form-control" id="id_detalle{{ forloop.counter }}" name="id_detalle{{ forloop.counter }}" value="{{ kit.id }}"/>
+                                                    <input type="text" class="form-control" id="nombre_kits{{ forloop.counter }}" name="nombre_kits{{ forloop.counter }}" value="{{ kit.nombre }}"/>
+                                                 </td>
+
+                                                 <td >
+                                                 {% if kit.horas %}
+                                                 <input type="text" class="form-control" id="horas_kits{{ forloop.counter }}" name="horas_kits{{ forloop.counter }}" value="{{ kit.horas |stringformat:"f" }}"  onkeyup="actualizarValorHoras({{ forloop.counter }})"/>
+                                                 {%  else %}
+
+                                                 <input type="text" class="form-control" id="horas_kits{{ forloop.counter }}" name="horas_kits{{ forloop.counter }}" value="{{ kit.horas |stringformat:"f" }}" style="display:none"  onkeyup="actualizarValorHoras({{ forloop.counter }})"/>
+                                                 {%  endif %}
+
+                                                 </td>
+                                                    <td><input type="text" class="form-control" id="valor_kits{{ forloop.counter }}" name="valor_kits{{ forloop.counter }}" value="{{ kit.valor |stringformat:"f" }}"/></td>
+
+                                                     <!-- <td>
+                                                       <input type="checkbox" id="deducible_kits{{ forloop.counter }}" name="deducible_kits{{ forloop.counter }}"  {% if kit.deducible == True %}
+                                                           checked="checked"
+                                                           {% endif %}/>                                                    </td>
+                                                    <td>
+                                                       <input type="checkbox" id="aportaciones_kits{{ forloop.counter }}" name="aportaciones_kits{{ forloop.counter }}" {% if kit.aportaciones == True %}
+                                                           checked="checked"
+                                                           {% endif %} />
+                                                    </td>
+ -->
+
+                                                  </tr>
+                                                        {% endfor %}
+                                                   {% else %}
+                          <tr>
+                                                    <td class="eliminar"><a class="btn btn-danger remove_fields">
+                                                        <i class=" glyphicon glyphicon-trash icon-white"></i>
+                                                      </a>
+                                                    </td>
+
+                                                       <td ><select name="tipos_kits1" id="tipos_kits1" onchange="cambiarHorasExtras(1)">
+                                                         {% for am  in tipos %}
+                                                           <option value="{{ am.id }}"> {{ am.nombre }}</option>
+                                                        {% endfor %}
+                                                     </select>
+                                                    </td>
+                                                  <td>
+
+                                                    <input type="text" class="form-control" id="nombre_kits1" name="nombre_kits1" />
+                                                 </td>
+                                                  <td >
+                                                 <input type="text" class="form-control" id="horas_kits1" name="horas_kits1" style="display:none" onkeyup="actualizarValorHoras(1)" value="0" />
+                                                 </td>
+
+                                                    <td><input type="text" class="form-control" id="valor_kits1" name="valor_kits1" /></td>
+
+                                                    <!--  <td>
+                                                       <input type="checkbox" id="deducible_kits1" name="deducible_kits1"/>
+                                                     </td>
+                                                    <td>
+                                                       <input type="checkbox" id="aportaciones_kits1" name="aportaciones_kits1" />
+                                                    </td>
+ -->
+                                                  </tr>
+
+                                                   {% endif %}
+
+
+					</tbody>
+				</table>
+				<br>
+				 <p class="text-center">
+                                             <button type="button" class="btn btn-primary btn-lg" id="add">Agregar Ingreso</button>
+
+
+                                        </p>
+<input type="hidden" name="empleado_otro_ingreso" id="empleado_otro_ingreso" value="{{ empleados.empleado_id}}" />
+<input type="hidden" name="fila" id="fila" value="{{ fila }}" />
+
+				 {% if detalle %}
+<input type="hidden" name="columnas_receta_otros_ingresos" id="columnas_receta_otros_ingresos" value="{{ detalle|length }}" />
+{% else %}
+<input type="hidden" name="columnas_receta_otros_ingresos" id="columnas_receta_otros_ingresos" value="1" />
+
+{% endif %}
+
+			</div>
+	    </div>
+	</div>
+                                    <button type="submit" class="btn btn-primary btn-lg" id="btn_guardar_ingresos"><i class="fa fa-cog"></i> Guardar</button>
+
+
+</form>
+				 </div>
+							                </div>
+							            </div>
+							        </div>
+							    </div>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        /**
+         * Funcion parnueva columna en la tabla
+         */
+        $("#add").click(function(){
+            // Obtenemos el numero de filas (td) que tiene la primera columna
+            // (tr) del id "tabla"
+            var num_recetas=$('#columnas_receta_otros_ingresos').val();
+            num_recetas=parseInt(num_recetas)+1;
+
+            var tds=$("#tabla_otros_ingresos tr:first td").length;
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla_otros_ingresos tr").length;
+            var nuevaFila='<tr><td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+             nuevaFila+='<td><select class="form-control" id="tipos_kits'+num_recetas+'" name="tipos_kits'+num_recetas+'" onchange="cambiarHorasExtras('+num_recetas+')"> ';
+                                    {% for am  in tipos %}
+                      nuevaFila+='<option value="{{ am.id }}"> {{ am.nombre }}</option>';
+
+                                  {% endfor %}
+              nuevaFila+='</select></td>';
+
+                nuevaFila+='<td><input type="text"  class="form-control" id="nombre_kits'+num_recetas+'" name="nombre_kits'+num_recetas+'" ></td>';
+               nuevaFila+='<td><input type="text"  class="form-control" id="horas_kits'+num_recetas+'" name="horas_kits'+num_recetas+'" style="display:none" onkeyup="actualizarValorHoras('+num_recetas+')" ></td>';
+
+                nuevaFila+='<td><input type="text"  class="form-control" id="valor_kits'+num_recetas+'" name="valor_kits'+num_recetas+'" ></td>';
+                  //nuevaFila+='<td><input type="checkbox" id="deducible_kits'+num_recetas+'" name="deducible_kits'+num_recetas+'" ></td>';
+                 // nuevaFila+='<td><input type="checkbox" id="aportaciones_kits'+num_recetas+'" name="aportaciones_kits'+num_recetas+'" ></td>';
+                nuevaFila+='</tr>';
+
+              $('#columnas_receta_otros_ingresos').val(num_recetas);
+            // for(var i=0;i<tds;i++){
+
+            //     nuevaFila+="<td>columna "+(i+1)+" on jquery</td>";
+            // }
+            // //
+            // nuevaFila+="<td>"+(trs+1)+" columnas";
+            // nuevaFila+="</tr>";
+            $("#tabla_otros_ingresos").append(nuevaFila);
+        });
+
+        /**
+         * Funcion para eliminar la ultima columna de la tabla.
+         * Si unicamente queda una columna, esta no sera eliminada
+         */
+        $("#del").click(function(){
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla_otros_ingresos tr").length;
+            if(trs>1)
+            {
+                // Eliminamos la ultima columna
+                $("#tabla_otros_ingresos tr:last").remove();
+            }
+        });
+
+
+        $(document).on("click",".eliminar",function(){
+            var parent = $(this).parent();
+  $(parent).remove();
+          });
+
+    });
+    </script>
+    <script>
+            $(function() {
+                $("#registrar_ing").on("submit", function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                        url: $(this).attr("action"),
+                        type: 'POST',
+                        data: $(this).serialize(),
+                        beforeSend: function() {
+                            $("#message").html("sending...");
+                        },
+                        success: function(data) {
+                            $("#message").hide();
+                            $("#response").html(data);
+
+                              actualizarOtrosIngresos();
+                              $("#dlgIngreso").modal('toggle');
+                        }
+                    });
+                });
+            });
+  function actualizarOtrosIngresos(){
+      var num_recetas=$('#columnas_receta_otros_ingresos').val();
+      var fila=$('#fila').val();
+      var total=0;
+      var cantidad=0;
+      var descuento=0;
+      var porcentaje_descuento=0;
+      var totalidad=0;
+      var i;
+       var mes = $('#id_mes').val();
+            var quincena = $('#id_quincena').val();
+            var anio = $('#id_anio').val();
+            var empleado_id = $('#empleado_id').val();
+ var parametros = {
+                'mes': mes,
+                'anio': anio,
+                'quincena':quincena,
+                'fila':fila,
+                'empleado_id':empleado_id,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+
+            }
+       $.ajax({
+                    url: "/recursos_humanos/obtenerIngresos/",
+                    type: "POST",
+                    async: true,
+                    data: parametros,
+                    success: function(data){
+                       $('#id_pago_'+fila+'_total').val(data);
+		        $('#id_ingreso_'+fila+'_total').val(data);
+
+                    },
+
+                });
+      // for (i = 1; i <= num_recetas; i++) {
+      //    if ($('#valor_kits'+i).val()){
+      //      cantidad=$('#valor_kits'+i).val();
+      //       total=parseFloat(total)+parseFloat(cantidad);
+
+      //     }
+
+
+
+      // }
+      // $('#id_pago_'+fila+'_otros_ingresos').val((total).toFixed(2));
+      actualizarTotal();
+
+
+    }
+    function cambiarHorasExtras(i){
+
+var tipos=$('#tipos_kits'+i).val();
+var txt = $('#tipos_kits'+i+' option:selected').text();
+
+          if (tipos==5 || tipos==25  || tipos==26  ){
+            $("#horas_kits"+i).css("display", "block");
+            $("#nombre_kits"+i).val(txt);
+            actualizarValorHoras(i);
+
+            }else{
+               $("#horas_kits"+i).css("display", "none");
+
+              $("#horas_kits"+i).val('0');
+            }
+
+
+
+    }
+ function actualizarValorHoras(i){
+
+var tipos=$('#tipos_kits'+i).val();
+var horas=parseFloat($('#horas_kits'+i).val());
+var sueldo=parseFloat($('#sueldo').val());
+var total=0;
+
+          if (tipos==5 ){
+            total=(sueldo/240)*1.5*horas;
+
+            }
+             if (tipos==25  ){
+           total=(sueldo/240)*2*horas;
+
+            }
+            if (tipos==26){
+           total=((sueldo/240)+((sueldo/240)*0.25))*horas;
+
+            }
+            $("#valor_kits"+i).val(total);
+
+    }
+
+     function eliminar(id){
+                var fila=id
+
+
+
+            var parametros = {
+                'id':fila,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+
+            }
+
+            $.ajax({
+                    url: "/recursos_humanos/eliminarDetalleIngreso/",
+                    type: "POST",
+                    async: true,
+                    data: parametros,
+                    success: function(data){
+                        alert('Se elimino satisfactoriamente');
+
+                        actualizarOtrosIngresos();
+                    },
+                    complete: function(){
+                    }
+                });
+    }
+
+        </script>

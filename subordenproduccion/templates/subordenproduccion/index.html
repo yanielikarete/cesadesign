@@ -1,0 +1,17 @@
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+{% load staticfiles %}
+
+{% block css %}
+{{ block.super }}
+{% endblock %}
+
+{% block section_title %}Ordenes de Compra{% endblock %}
+{% block section_subtitle %}
+<br />
+ <div class="email-btn-row hidden-xs">
+                        <a href="{% url 'ordenescompra-create' %}" class="btn btn-sm btn-success"><i class="fa fa-plus m-r-5"></i> Nueva Orden</a>
+                    </div>
+
+                    {% endblock %}

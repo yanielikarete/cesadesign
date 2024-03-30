@@ -1,0 +1,18 @@
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+
+
+{% block list-add %}
+
+
+{% endblock %}
+
+{% block section_title %}Tripo Luga{% endblock %}
+{% block section_subtitle %}
+<br />
+ <div class="email-btn-row hidden-xs">
+                        <a href="{% url "tipolugar-create" %}" class="btn btn-sm btn-success"><i class="fa fa-plus m-r-5"></i> Nuevo Lugar</a>
+                    </div>
+
+                    {% endblock %}

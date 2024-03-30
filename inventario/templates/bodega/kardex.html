@@ -1,0 +1,91 @@
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+{% load staticfiles %}
+
+{% block css %}
+{{ block.super }}
+{% endblock %}
+
+{% block section_title %}Bodega de {{ bodega.nombre}}{% endblock %}
+{% block section_subtitle %}
+<br />
+ <div class="email-btn-row hidden-xs">
+
+                    </div>
+
+                    {% endblock %}
+
+{% block content %}
+				<!-- begin col-12 -->
+				<div class="col-md-12">
+					<!-- begin panel -->
+					<div class="panel panel-inverse">
+						<div class="panel-heading">
+							<div class="panel-heading-btn">
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+							</div>
+							<h4 class="panel-title">Kardex</h4>
+						</div>
+						<div class="panel-body">
+							<div class="table-responsive">
+								<table id="data-table" class="table table-striped table-bordered">
+									<thead>
+										<tr>
+											<th>Fecha</th>
+											<th>Producto</th>
+											<th>Bodega</th>
+											<th>cantidad</th>
+											<th>Descripcion</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for k  in kardex %}
+											<tr>
+												<td> {% if k.fecha_ingreso %}
+
+												 {{ k.fecha_ingreso }}
+												 {% else %}
+												 {{ k.fecha_egreso }}
+
+												 {% endif %}
+												 </td>
+
+												<td>{{ k.producto }}</td>
+												<td>{{ k.bodega }}</td>
+												<td>{{ k.cantidad }}</td>
+												<td>{{ k.descripcion }}</td>
+
+
+											</tr >
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+
+
+
+						</div>
+					</div>
+					<!-- end panel -->
+
+					<!-- #modal-dialog -->
+
+				</div>
+				<!-- end col-12 -->
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+
+	{% if form.errors or form_mode == "update" %}
+	<script type="text/javascript">
+		$( document ).ready(function() {
+		    $(".modal").modal('toggle');
+		});
+
+	</script>
+	{% endif %}
+{% endblock %}

@@ -1,0 +1,163 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>REQUISICION - MUEDIRSA</title>
+</head>
+<style>
+     .head{
+        width: 100%;
+        text-align: center;
+        font-size: 12pt;
+
+    }
+
+    #detail{
+        width: 100%;
+     font-size: 12pt;
+     letter-spacing: 2px
+    }
+
+    .contenido{
+        width: 100%;
+        padding: 2px 0;
+        font-size: 12pt;
+        letter-spacing: 2px;
+
+    }
+
+    .contenido td{
+        padding: 1px 0px;
+                text-align: center;
+        letter-spacing: 2px;
+        font-size: 10pt;
+    }
+    .foot table td{
+        letter-spacing: 2px;
+        font-size: 12pt;
+    }
+    .valores{
+            text-align: right !important;
+        padding: 0px 5px;
+       font-size: 12pt;
+        margin: 0;
+    }
+
+    .foot{
+        text-align: center;
+        letter-spacing: 2px;
+    }
+    h1{
+        line-height: 1px;
+        width: 700px;
+        text-align: center;
+        font-size: 12pt;
+        letter-spacing: 2px;
+    }
+    h3{
+        line-height: 2px;
+        letter-spacing: 2px;
+    }
+
+    .foot{
+        text-align: left;
+        letter-spacing: 2px;
+        width: 100%;
+        font-size: 7pt;
+    }
+   .borde-tabla{
+       border: 1px solid black;
+   }
+
+</style>
+
+<body>
+    <div class="head" style="width: 100%">
+        <b> MUEDIRSA-REQUISICIÓN - EGRESO POR CONSUMO DE PRODUCCI&Oacute;N NO.{{ordenegreso.codigo}} </b>
+    </div>
+    <div id="detail" >
+   <b>ORDEN:</b>
+
+                    <span>{{ordenegreso.codigo}}</span>
+                    <br>
+                    <b>FECHA:</b>
+
+                    <span>{{ordenegreso.fecha |date:'d-m-Y H:i'}}</span>
+                    <br>
+        <b>CONCEPTO:</b>
+
+                    <span>{{ordenegreso.concepto_orden_egreso}}</span>
+                    <!--<br>
+                    <b>OP:</b>
+
+                    <span>{{ordenegreso.orden_produccion_codigo}}</span>-->
+         <br>
+                    <b>BOD INTERNA:</b>
+
+                    <span>{{ordenegreso.bodega}}</span>
+
+   </div>
+    <div class="contenido">
+        <br>
+        <br>
+        <table id="datatable" border="0" style="font-size:11px; margin-bottom: 8px;  font-family: 'Lucida Console'" cellpadding="0" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                   <th class="borde-tabla" style="width: 100px">AREAS</th>
+                   <th class="borde-tabla" style="width: 70px">OP</th>
+                   <th class="borde-tabla" style="width: 80px">ITEM.</th>
+                   <th class="borde-tabla" > DESCRIPCION</th>
+                   <th class="borde-tabla" style="width: 80px">UNID.</th>
+                   <th class="borde-tabla" style="width: 70px">COST.</th>
+                   <th class="borde-tabla" style="width: 70px">SUBT.</th>
+                </tr>
+            </thead>
+            <tbody>
+                 {% if detalle %}
+                                                    {% for kit  in detalle %}
+    <tr>
+         <td style=" text-align: left;">  {{ kit.areas.descripcion | default_if_none:'' }}</td>
+                                                   <td>
+                                                    {% if kit.op %}
+                                                    {{ kit.orden_produccion_receta.suborden_produccion.orden_produccion.tipo| default_if_none:''}}-{{ kit.orden_produccion_receta.suborden_produccion.orden_produccion.codigo | default_if_none:'' }}
+                                                   {% endif %}</td>
+
+                                                    <td style=" text-align: left;">
+                                                        {{ kit.producto.codigo_producto | default_if_none:'' }} </td>
+                                                    <td style=" text-align: left;">{{ kit.producto.descripcion_producto |truncatechars:100 }}</td>
+                                                    <td class="valores">{{ kit.cantidad |floatformat:2  }} {{ kit.unidad_medida }}</td>
+                                                    <td class="valores">{{ kit.precio_compra |floatformat:2  }}</td>
+                                                    <td class="valores">{{ kit.total |floatformat:2  }}</td>
+                                                  </tr>
+
+                         {% endfor %}
+                         {% else %}
+                          {% endif %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5" ></td><td><b>TOTAL</b></td><td class="valores">{{ordenegreso.subtotal |floatformat:2 }}</td>
+                </tr>
+            </tfoot>
+        </table>
+
+    </div>
+    <div class="foot" style="font-size: 10pt;">
+        <br>
+        <pre>
+
+       <table border="0"  width="100%">
+
+            <tr><td colspan="2">ELABORADO POR </td>  <td colspan="2">REVISADO POR </td> <td colspan="2">RECIBIDO POR </td></tr>
+       <tr> <td colspan="2">___________________ </td>  <td colspan="2">___________________  </td>  <td colspan="2">___________________  </td> </tr>
+     <tr><td colspan="2">{{ordenegreso.created_by}}   </td>  <td colspan="2">  </td>  <td colspan="2"> </td>  </tr>
+    </table>
+        </pre>
+    </div>
+</body>
+<div class="noPrint">
+        <a download="orden_egreso.xls" href="#" onclick="return ExcellentExport.excel(this, 'detalle', 'Sheet Name Here');"><button type="button" class="btn btn-primary btn-lg">  Exportar</button></a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+	{% load staticfiles %}
+	<!-- ================== BEGIN BASE JS ================== -->
+	<script src="{% static 'color_admin/assets/plugins/jquery-1.8.2/jquery-1.8.2.min.js' %}"></script>
+	<script src="{% static 'color_admin/assets/plugins/jquery-ui-1.10.4/ui/minified/jquery-ui.min.js' %}"></script>
+	<script src="{% static 'color_admin/assets/plugins/bootstrap-3.2.0/js/bootstrap.min.js' %}"></script>
+	<script src="{% static 'color_admin/assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+	<script src="{% static 'color_admin/assets/plugins/jquery-cookie/jquery.cookie.js' %}"></script>
+
+	<script src="{% static 'color_admin/assets/plugins/jquery-jvectormap/jquery-jvectormap-1.2.2.min.js' %}"></script>
+	<script src="{% static 'color_admin/assets/plugins/jquery-jvectormap/jquery-jvectormap-world-merc-en.js' %}"></script>
+	<script src="{% static 'color_admin/assets/plugins/bootstrap-calendar/js/bootstrap_calendar.min.js' %}"></script>
+	
+	<script src="{% static 'color_admin/assets/plugins/gritter/js/jquery.gritter.js' %}"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js"></script>
+    <script src="{% static 'color_admin/assets/plugins/nvd3/build/nv.d3.js' %}"></script>
+	<script src="{% static 'color_admin/assets/js/chart-d3.demo.min.js' %}"></script>
+
+	<script src="{% static 'color_admin/assets/js/dashboard-v2.min.js' %}"></script>
+	
+	<script src="{% static 'color_admin/assets/plugins/sparkline/jquery.sparkline.js' %}"></script>
+	
+	<script src="{% static 'color_admin/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script>
+	<script src="{% static 'color_admin/assets/js/dashboard.min.js' %}"></script>
+	<script src="{% static 'login/js/configuraciones.js' %}" type="text/javascript"></script>
+	<script src="{% static 'color_admin/assets/plugins/select2/select2.js' %}"></script>
+	<script src="{% static 'color_admin/assets/plugins/masked-input/masked-input.js' %}"></script>
+	<script src="{% static 'color_admin/assets/plugins/masked-input/mask-money.js' %}"></script>
+	<script src="{% static 'color_admin/assets/plugins/masked-input/NumeroALetras.js' %}"></script>
+
+	<script src="{% static 'color_admin/assets/plugins/DataTables/DataTables/js/jquery.dataTables.js' %}"></script>
+	<script src="{% static 'color_admin/assets/plugins/DataTables/DataTables/js/dataTables.bootstrap.min.js' %}"></script>
+	<script src="{% static 'color_admin/assets/plugins/DataTables/Buttons/js/dataTables.buttons.min.js' %}"></script>
+	<script src="{% static 'color_admin/assets/plugins/DataTables/Buttons/js/buttons.bootstrap.min.js' %}"></script>
+	<script src="{% static 'color_admin/assets/plugins/DataTables/Buttons/js/buttons.flash.min.js' %}"></script>
+	<script src="{% static 'color_admin/assets/plugins/DataTables/JSZip/jszip.min.js' %}"></script>
+	<script src="{% static 'color_admin/assets/plugins/DataTables/pdfmake/build/pdfmake.min.js' %}"></script>
+	<script src="{% static 'color_admin/assets/plugins/DataTables/pdfmake/build/vfs_fonts.js' %}"></script>
+	<script src="{% static 'color_admin/assets/plugins/DataTables/Buttons/js/buttons.html5.min.js' %}"></script>
+	<script src="{% static 'color_admin/assets/plugins/DataTables/Buttons/js/buttons.print.min.js' %}"></script>
+	<script src="{% static 'color_admin/assets/plugins/DataTables/Responsive/js/dataTables.responsive.min.js' %}"></script>
+
+    <script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+
+
+
+	<!-- ================== END PAGE LEVEL JS ================== -->
+
+	<script>
+		$(document).ready(function() {
+			App.init();
+			Dashboard.init();
+			$('select').select2();
+			ChartNvd3.init();
+		});
+	</script>

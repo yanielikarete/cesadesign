@@ -1,0 +1,171 @@
+{% load staticfiles %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+</head>
+<style>
+    body{
+        font-family: "Courier New", Courier, monospace;
+    }
+     .head{
+        width: 100%;
+        text-align: center;
+
+    }
+
+    #detail{
+        width: 100%;
+     font-size: 9pt;
+     letter-spacing: 2px
+    }
+
+    .contenido{
+        width: 100%;
+        padding: 1px 0;
+        font-size: 12pt;
+        letter-spacing: 2px;
+        position: absolute;
+        left:40px;
+
+    }
+
+    .contenido td{
+        padding: 0.5px 0px;
+                text-align: center;
+        letter-spacing: 2px;
+        font-size: 8pt;
+    }
+    .foot table td{
+        letter-spacing: 2px;
+        font-size: 12pt;
+    }
+    .valores{
+        text-align: right;
+        padding: 0px 5px;
+       font-size: 12pt;
+        margin: 0;
+    }
+
+    .foot{
+        text-align: center;
+        letter-spacing: 2px;
+    }
+    h1{
+        line-height: 1px;
+        width: 700px;
+        text-align: center;
+        font-size: 12pt;
+        letter-spacing: 2px;
+    }
+    h3{
+        line-height: 2px;
+        letter-spacing: 2px;
+    }
+
+    .foot{
+        text-align: left;
+        letter-spacing: 2px;
+        width: 100%;
+        font-size: 7pt;
+    }
+
+</style>
+<script src="{% static 'color_admin/assets/plugins/jquery-1.8.2/jquery-1.8.2.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/masked-input/NumeroALetras.js' %}"></script>
+<body>
+    <br />
+    <div class="contenido">
+            <table border="0" style="font-size:12px; font-weight: bold; font-family: 'Lucida Console';top:13px;position: relative;" cellpadding="0" cellspacing="0" width="100%">
+            <tbody style="padding-top: 10px; margin: 0px; letter-spacing: 2px " >
+                          <tr>
+                           <td width="1%"></td> <td width="53%" style="text-align: left">&nbsp;  {{ beneficiario}}</td>
+                            <td style="width:40%; text-align: left; left:15px;position: relative;">{{ movimiento.monto_cheque  |floatformat:2}}</td>
+
+                          </tr>
+
+                           </tbody>
+
+        </table>
+            <br />
+        <table border="0" style="font-size:14px;font-weight: bold; font-family: 'Lucida Console'; margin-top: -2px;" cellpadding="0" cellspacing="0" width="100%">
+            <tbody style="padding-top: 30px; margin: 0px; letter-spacing: 2px " >
+             <tr>
+                             <td width="1%"></td> <td width="90%" style="text-align: left"> <br>&nbsp; <span id="cantidad_letras" style="width: 100%"></span></td>
+                            <td style="width:10%; text-align: left;"></td>
+
+                          </tr>
+
+            </tbody>
+
+        </table>
+        <br /> <br />
+        <table border="0" style="font-size:14px;font-weight: bold; font-family: 'Lucida Console'" cellpadding="0" cellspacing="0" width="100%">
+            <tbody style="padding-top: 10px; margin: 0px; letter-spacing: 2px " >
+
+                          <tr><td width="25%" style="text-align: left" > <br> GUAYAQUIL, {{ movimiento.fecha_cheque | date:'Y-m-d' }}</td>
+                            <td style="width:60%; text-align: left;"></td>
+                          </tr>
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+    
+    
+ </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js"></script>
+<script>
+var doc = new jsPDF();
+var specialElementHandlers = {
+    '#editor': function (element, renderer) {
+        return true;
+    }
+};
+    $(document).ready(function () {
+        $("#cantidad_letras").text(NumeroALetras({{movimiento.monto_cheque}}));
+                $("#cantidad_letras2").text(NumeroALetras({{movimiento.monto_cheque}}));
+
+   
+        window.print();
+        var source = window.document.getElementsByTagName("body")[0];
+    //    doc.fromHTML(source, 20, 20, {
+    //    'width': 880,
+    //        'elementHandlers': specialElementHandlers
+    //});
+    doc.setFontSize(10);
+    
+    doc.setFont("times", "bold");
+    var beneficiario='{{ beneficiario}}';
+    //doc.text(26, 23.49, beneficiario );
+    doc.text(26, 22.5, beneficiario );
+    var monto='{{ movimiento.monto_cheque  |floatformat:2}}';
+    
+    //doc.text(132.9, 23.49,monto );
+    doc.text(132.9, 22.5,monto );
+    //doc.text(26, 28.8,  NumeroALetras({{movimiento.monto_cheque}}));
+    doc.text(26, 28.2,  NumeroALetras({{movimiento.monto_cheque}}));
+    var fecha_escrita="GUAYAQUIL,   "+"{{ movimiento.fecha_cheque | date:'Y-m-d' }}";
+    //doc.text(19, 41.2, fecha_escrita);
+    doc.text(19, 40.8, fecha_escrita);
+    
+      var nombre_cheque='cheque_'+'{{ movimiento.numero_cheque}}'+'.pdf';
+      doc.save(nombre_cheque);
+      
+      
+    });
+
+</script>
+<script>
+    
+
+
+
+</script>
+</html>
+
+
+

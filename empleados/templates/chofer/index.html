@@ -1,0 +1,19 @@
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+{% load staticfiles %}
+
+{% block css %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL STYLE TABLE================== -->
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Choferes{% endblock %}
+{% block section_subtitle %}
+<br />
+ <div class="email-btn-row hidden-xs">
+                        <a href="{% url 'chofer-create' %}" class="btn btn-sm btn-success"><i class="fa fa-plus m-r-5"></i> Nuevo Chofer</a>
+                    </div>
+
+                    {% endblock %}

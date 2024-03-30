@@ -1,0 +1,152 @@
+
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+{% load staticfiles %}
+
+{% block css %}
+{{ block.super }}
+{% endblock %}
+
+{% block section_title %}ATS{% endblock %}
+{% block section_subtitle %}
+<br />
+<style type="text/css">
+	table td{
+		padding: 2px;
+	}
+	table th{
+		padding: 2px;
+	}
+</style>
+<div class="email-btn-row hidden-xs">
+</div>
+
+{% endblock %}
+
+{% block content %}
+<!-- begin col-12 -->
+<div class="col-md-12">
+    <!-- begin panel -->
+    <div class="panel panel-inverse">
+        <div class="panel-heading">
+            <div class="panel-heading-btn">
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+            </div>
+            <h4 class="panel-title">Anexo Transaccional:</h4>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+
+
+                <div class="col-md-4">
+                    <label for="mes">Mes:</label>
+                    <select name="mes" id="mes" class="form-control">
+                        <option value='1'>Enero</option>
+                        <option value='2'>Febrero</option>
+                        <option value='3'>Marzo</option>
+                        <option value='4'>Abril</option>
+                        <option value='5'>Mayo</option>
+                        <option value='6'>Junio</option>
+                        <option value='7'>Julio</option>
+                        <option value='8'>Agosto</option>
+                        <option value='9'>Septiembre</option>
+                        <option value='10'>Octubre</option>
+                        <option value='11'>Noviembre</option>
+                        <option value='12'>Diciembre</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="anio">Año:</label>
+                    <select name="anio" id="anio" class="form-control">
+
+                    </select>
+                </div>
+                <a class="default btn btn-link"  onclick="generar()"> <button type="button" class="btn btn-primary btn-lg">  Consultar</button> </a>
+                <a class="btn btn-default buttons-copy buttons-html5" tabindex="0" aria-controls="tabla" download="reporte_factura_proveedores.xls" href="#" onclick="return ExcellentExport.excel(this, 'tabla', 'Sheet Name Here');"><span>EXCEL</span></a>
+
+                <h2>Resultados</h2>
+                <div class="row" style="width:140%!important">
+                    <div class="panel panel-default panel-border">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading"></div>
+                        <div class="panel-body" style="overflow-x: scroll;" id="valor">
+
+
+                        </div>
+                    </div>
+					
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<!-- end col-12 -->
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="{% static 'color_admin/assets/js/inbox.demo.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-daterangepicker/moment.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-daterangepicker/daterangepicker.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/tools.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/censea.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+
+<script src="{% static 'color_admin/assets/js/exportFile.js' %}" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+    $(function() {
+        var max = new Date().getFullYear(),
+        min = max - 10;
+
+        for (var i = min; i<=max; i++){
+            var opt = document.createElement('option');
+            opt.value = i;
+            opt.innerHTML = i;
+            $('#anio').append(opt);
+        }
+        $('#anio').val(max).change();
+        $('#mes').val(new Date().getMonth()).change();
+    });
+
+
+	function generar(){
+		debugger
+		var mes=$("#mes").val();
+		var anio=$("#anio").val();
+		var url = '/ats/generar?mes='+mes+'&anio='+anio;
+        window.location.replace(url);
+        /*
+          $.ajax({
+                url: "/ats/generar/", // the endpoint
+                type : "GET", // http method
+                data : { mes : mes,anio : anio,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+                //$("#tabla tbody tr").remove();
+
+                },
+                error: function(){
+                 
+                },
+              });*/
+    }
+	</script>
+<!-- ================== END PAGE LEVEL JS ================== -->
+{% if form.errors or form_mode == "update" %}
+<script type="text/javascript">
+		$( document ).ready(function() {
+		    $(".modal").modal('toggle');
+		});
+	
+	</script>
+{% endif %}
+{% endblock %}
+

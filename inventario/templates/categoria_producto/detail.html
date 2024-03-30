@@ -1,0 +1,15 @@
+{% extends "login/base-detail.html" %}
+{% load extra_filters %}
+
+{% block breadcrumbs %}
+    {{ block.super }} » <a href="{% url "categoria-producto-list" %}">{{verbose_name}}</a> » Detalle
+{% endblock %}
+
+{% block back-list %}
+{% url "categoria-producto-list" %}
+{% endblock %}
+
+{% block detail-url-edit %}
+{% url "categoria-producto-update" object.id %}
+{% endblock %}
+

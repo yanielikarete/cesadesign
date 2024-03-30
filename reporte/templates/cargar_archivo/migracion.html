@@ -1,0 +1,99 @@
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+{% load staticfiles %}
+
+{% block css %}
+{{ block.super }}
+{% endblock %}
+
+{% block section_title %}Subir Migracion {% endblock %}
+{% block section_subtitle %}
+<br />
+<style type="text/css">
+	table td{
+		padding: 2px;
+	}
+	table th{
+		padding: 2px;
+	}
+</style>
+  <form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+
+ <div class="email-btn-row hidden-xs">
+                    </div>
+
+                    {% endblock %}
+
+{% block content %}
+				<!-- begin col-12 -->
+<div class="email-btn-row hidden-xs">
+                 </div>
+				<div class="col-md-12">
+					<!-- begin panel -->
+					<div class="panel panel-inverse">
+						<div class="panel-heading">
+
+							<h4 class="panel-title">Migracion</h4>
+						</div>
+						<div class="panel-body">
+							<div class="table-responsive">
+
+					<div class="col-md-4">
+                                                      <label for="exampleInputName2">Archivo</label>
+                                                      <input type="file" name="archivo" id="archivo">
+
+                                                   </div>
+
+
+				</div>
+				</div>
+				</div>
+				</div>
+				                                    <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+
+				</form>
+				<!-- end col-12 -->
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+
+    
+	    <script src="{% static 'color_admin/assets/js/exportFile.js' %}" type="text/javascript"></script>
+
+	<script type="text/javascript">
+
+
+	function consultar(){
+		var vendedor=$("#vendedor").val();
+		var fechainicial=$("#fechainicial").val();
+		var fechafin=$("#fechafin").val();
+
+          $.ajax({
+                url: "/reporte/obtenerCuentasCobrar/", // the endpoint
+                type : "POST", // http method
+                data : { vendedor : vendedor,fechainicial : fechainicial,fechafin : fechafin,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+                $("#detalle tbody tr").remove();
+                  $("#detalle").append(data);
+                },
+                error: function(){
+
+                },
+              });
+    }
+	</script>
+	<!-- ================== END PAGE LEVEL JS ================== -->
+	{% if form.errors or form_mode == "update" %}
+	<script type="text/javascript">
+		$( document ).ready(function() {
+		    $(".modal").modal('toggle');
+		});
+
+	</script>
+	{% endif %}
+{% endblock %}
+
+

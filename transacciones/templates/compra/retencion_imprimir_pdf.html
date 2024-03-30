@@ -1,0 +1,250 @@
+{% load staticfiles %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+</head>
+<style>
+
+    .head {
+        width: 100%;
+        text-align: left;
+        font-size: 7pt;
+        font-weight: bold;
+
+    }
+
+    #detail {
+        width: 100%;
+        font-size: 7pt;
+        font-weight: bold;
+    }
+
+    .contenido {
+        width: 100%;
+        font-size: 7pt;
+        font-weight: bold;
+    }
+
+    .contenido td {
+        text-align: right;
+        font-size: 7pt;
+    }
+
+    .foot {
+        text-align: center;
+        font-size: 7pt;
+    }
+    table{
+        border: hidden !important;
+    }
+
+
+</style>
+<script src="{% static 'color_admin/assets/plugins/jquery-1.8.2/jquery-1.8.2.min.js' %}"></script>
+<body>
+<div class="head">
+    <br> 
+    <table border="0" cellspacing="0" cellpadding="0" id="head_inf" >
+        <tbody>
+        <tr>
+            <td width="20">&nbsp;&nbsp;&nbsp;</td><td width="80" style=¨white-space:nowrap;¨>{{documento.proveedor.nombre_proveedor|truncatechars:45}}</td>
+            <td width="20">&nbsp;&nbsp;&nbsp;</td><td></td>
+        </tr>
+        <tr>
+            <td></td><td style="font-size: 7pt;">{{documento.proveedor.ruc | default_if_none:''}}</td>
+            <td></td><td style="text-align:center">{{retencion.fecha_emision | date:'Y-m-d'}}</td>
+        </tr>
+        <tr>
+            <td></td><td style=¨¨>{{documento.proveedor.direccion1 | default_if_none:''|truncatechars:43}}</td>
+            <td></td><td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{documento.tipo_provision}}</td>
+        </tr>
+        <tr>
+            <td></td><td></td>
+            <td></td><td style="text-align:center;font-size: 7pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{documento.establecimiento}}-{{documento.punto_emision}}-{{documento.secuencial}}</td>
+        </tr>
+</tbody>
+    </table>
+
+
+</div>
+ <br/><br/>
+
+
+<div class="contenido">
+    <table border="0" id="detalle">
+        <tbody>
+        {% if detalle %}
+        {% for kit in detalle %}
+        <tr>
+            <td style="text-align:center" width="50">{{ retencion.fecha_emision |date:'Y' }}</td>
+            <td style="text-align:center" width="100">$ {{ kit.base_imponible | floatformat:2 }}</td>
+            {% if kit.retencion_detalle.tipo_retencion_id == 1%}
+            <td style="text-align:center">RENTA</td>
+            {% elif kit.retencion_detalle.tipo_retencion_id == 2 %}
+            <td style="text-align:center">IVA</td>
+            {% endif %}
+            <td style="text-align:center">{{ kit.retencion_detalle.codigo}}</td>
+            <td style="text-align:center">{{ kit.porcentaje_retencion}}%</td>
+            <td style="text-align:center">$ {{ kit.valor_retenido | floatformat:2 }}</td>
+
+        </tr>
+
+        {% endfor %}
+        {% for i in rango %}
+        <tr><td colspan="6"></td></tr>
+        {% endfor %}
+        <tr><td colspan="6"></td></tr>
+        </tbody>
+        </table>
+        <table border="0" id="detalle2">>
+        <tr>
+            <td style="text-align:center"  width="50">&nbsp;&nbsp;</td>
+            <td style="text-align:center"></td>
+            <td style="text-align:center"></td>
+            <td style="text-align:center"></td>
+            <td style="text-align:center"></td>
+             <td style="text-align:center"></td>
+            <td style="text-align:center"></td>
+            <td style="text-align:center"></td>
+            <td style="text-align:center"></td>
+            <td style="text-align:center"></td>
+            <td style="text-align:center"></td>
+           
+             <td style="text-align:center"></td>
+            <td style="text-align:center"></td>
+            <td style="text-align:center"></td> <td style="text-align:center"></td>
+            <td style="text-align:center"></td>
+            <td style="text-align:center"></td>
+             <td style="text-align:center"></td>
+            <td style="text-align:center"></td>
+            <td style="text-align:center"></td>
+            
+            <td style="text-align:center">$ {{ total | floatformat:2 }}</td>
+
+        </tr>
+        {% else %}
+        {% endif %}
+        </tbody>
+
+    </table>
+
+</div>
+
+
+</body>
+<script src="{% static 'color_admin/assets/js/script_autotable.js' %}"></script>
+
+
+<script>
+    var doc = new jsPDF('p', 'pt', 'letter')
+var specialElementHandlers = {
+    '#editor': function (element, renderer) {
+        return true;
+    }
+    
+};
+
+
+ 
+ var res = doc.autoTableHtmlToJson(document.getElementById("head_inf"));
+
+  doc.autoTable(res.columns, res.data, {
+    startY: 120.4,
+    startX: 110,
+      theme: "plain",
+      styles: {
+        fontStyle: 'bold',
+      font: "helvetica",
+    //    fontSize: 12,
+    //    // overflow: "linebreak",
+       rowHeight: 18.1,
+    //cellPadding: 2,
+    
+
+    //    halign: "left"
+     },
+     columnStyles: {
+        0: {
+           columnWidth:36,
+              
+                 
+                }, 
+                1: {
+                    
+               columnWidth:300,
+                
+                }, 
+                
+                
+            }
+  });
+  
+  var res2 = doc.autoTableHtmlToJson(document.getElementById("detalle"));
+
+  doc.autoTable(res2.columns, res2.data, {
+    startY: 230.5,
+      theme: "plain",
+      styles: {
+      fontStyle: 'bold',
+            font: "helvetica",
+
+    //    fontSize: 12,
+    //    // overflow: "linebreak",
+    //    rowHeight: 8,
+    //cellPadding: 2,
+    rowHeight: 18.1,
+     halign: "center",
+
+    //    halign: "left"
+     }
+  });
+  
+  
+   var res2 = doc.autoTableHtmlToJson(document.getElementById("detalle"));
+
+  doc.autoTable(res2.columns, res2.data, {
+    startY: 230.5,
+    
+      theme: "plain",
+      styles: {
+      font: "helvetica",
+      fontStyle: 'bold',
+    //    fontSize: 12,
+    //    // overflow: "linebreak",
+    //    rowHeight: 8,
+    //cellPadding: 2,
+    rowHeight: 18.1,
+     halign: "center",
+
+    //    halign: "left"
+     }
+  }); var res3 = doc.autoTableHtmlToJson(document.getElementById("detalle2"));
+
+  doc.autoTable(res3.columns, res3.data, {
+    startY: 325.5,
+      theme: "plain",
+      styles: {
+      font: "helvetica",
+      fontStyle: 'bold',
+    //    fontSize: 12,
+    //    // overflow: "linebreak",
+    //    rowHeight: 8,
+    //cellPadding: 2,
+    rowHeight: 18.1,
+     halign: "center",
+
+    //    halign: "left"
+     }
+  });
+          var factura="{{documento.establecimiento}}"+"-"+"{{documento.punto_emision}}"+"-"+"{{documento.secuencial}}";
+ 
+    
+      var nombre_cheque='retencion_factura'+factura+'.pdf';
+      doc.save(nombre_cheque);  
+
+</script></html>
+
+
+

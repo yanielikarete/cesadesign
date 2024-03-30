@@ -1,0 +1,159 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>MUEDIRSA S.A. RUC 0992128372001</title>
+</head>
+<style>
+    
+    .head{
+        width: 100%;
+        text-align: center;
+        
+    }
+    
+    .details{
+        width: 100%;
+        padding: 2px 0;
+        
+    }
+    .contenido{
+        width: 100%;
+        padding: 2px 0;
+        
+    }
+    
+    td{
+        text-align: left;
+        padding: 3px 5px;
+    }
+    .header{
+        text-align: center;
+        padding: 3px 5px;
+        background-color: #EEEEEE;
+    }
+    
+    .foot{
+        text-align: center;
+    }
+    
+      
+    @page {
+        /*size: a4 landscape;*/
+        margin: 1cm;
+        
+    }
+    
+    
+</style>
+<body>
+    <div class="head">
+      
+    </div>
+    <div class="details">
+        <table border="0">
+            <tr>
+                <th style="text-align:left">Cliente</th><td colspan="2"> {{proforma.cliente}} </td><td></td><th style="text-align:left">Fecha</th><td colspan="2"> {{proforma.fecha}} </td>
+            </tr>
+            <tr>
+                <th style="text-align:left">Direccion de entrega</th><td colspan="2"> {{proforma.direccion_entrega}} </td><td></td><th style="text-align:left">Razón Social</th><td colspan="2">  </td>
+            </tr>
+            <tr>
+                <th style="text-align:left">Correo</th><td colspan="2"> {{proforma.cliente.email1}} </td><td></td><th style="text-align:left">RUC</th><td colspan="2"> {{proforma.cliente.ruc}} </td>
+            </tr>
+            <tr>
+                <th style="text-align:left">Teléfono</th><td colspan="2"> {{proforma.cliente.telefono1}} </td><td></td><th style="text-align:left"></th><td colspan="2"> </td>
+            </tr>
+<tr>
+                <th style="text-align:left">Referencia</th><td colspan="2"> {{proforma.vendedor}} </td><td></td><th ></th><td colspan="2">  </td>
+            </tr>
+           
+        </table>
+        <br>
+    </div>
+    <div class="contenido">
+        
+        <table border="1">
+         <tr>
+                <th colspan="7">PROFORMA No. {{proforma.abreviatura_codigo }}-{{proforma.codigo }}-2016 </th>
+            </tr>
+            <tr>
+                <th>CANTIDAD</th><th colspan="2">DESCRIPCION</th><th colspan="2">DETALLE</th><th>Valor Unit</th><th>Total</th>
+            </tr>
+             </table>
+        <table border="0">
+             {% for a  in ambiente %}
+             <tr >
+                <td colspan="7"><b> {{ a.1 }}</b></td>
+            </tr>
+
+                         {% for r  in row %}
+                             {% if a.0 == r.0 %}
+                                <tr>
+
+                                    <td>{{ r.2 }}</td><td colspan="2">{{ r.1 }}</td><td colspan="2">{{ r.5 }}</td><td style="text-align:right">{{ r.3 }}</td><td style="text-align:right">{{ r.4 }}</td>
+                                </tr>
+                                {% endif %} 
+                           {% endfor %} 
+             
+             {% endfor %} 
+             <tr>
+
+                <td colspan="5"></td><th style="text-align:left">Subtotal</th><td style="text-align:right">${{ proforma.subtotal }}</td>
+                                </tr>
+        <tr>
+
+                <td colspan="5"></td><th style="text-align:left">Descuento {{ proforma.porcentaje_descuento }}</th><td style="text-align:right">${{ proforma.descuento }}</td>
+                                </tr>
+            <tr>
+
+                <td colspan="5"></td><th style="text-align:left">IVA {{ proforma.porcentaje_iva }}%</th><td style="text-align:right">${{ proforma.iva }}</td>
+                                </tr>
+                                <tr>
+
+                <td colspan="5"></td><th style="text-align:left">Total</th><td style="text-align:right">${{ proforma.total }}</td>
+                                </tr>
+        </table>
+        <table>
+         <tr>
+
+                <td colspan="7"><b>En este precio no están incluídos los valores por vidrios, cerraduras y trabajos de albañilería (con puertas y pasamanos)</b></td>
+                                </tr>
+                                 <tr>
+
+                <td colspan="7">En caso de aprobar PROFORMA girar cheque a nombre de MUEDIRSA S.A.</td>
+                                </tr>
+                <tr>
+
+                <td colspan="7">FORMA DE PAGO: {{ proforma.forma_pago }}</td>
+                                </tr>
+                <tr>
+
+                <td colspan="7">FACTURACION: Desde la confirmación del pedido, el cliente deberá proporcionar TODA la información necesaria para la facturación. Factura detallará los ítems adquiridos.</td>
+                                </tr>
+            <tr><td colspan="7">TODO CAMBIO en especificaciones, incrementará el valor del trabajo. </tr>
+             <tr><td colspan="7">TIEMPO DE ENTREGA: 12 semanas desde la acreditación del anticipo.</tr>
+             <tr><td colspan="7">Los precios del mobiliario incluyen transporte dentro del perímetro urbano. Traslados fuera de la ciudad tienen un costo adicional por transporte, MATERIALES DE EMPAQUE y cargadores</tr>
+                <tr><td colspan="7">La entrega de muebles, que involucren equipos de música, TV cine en casa contemplan un solo día para su instalación dentro del costo del mueble. Cualquier traslado adicional tendrá un costo de $190,00 por día </tr>
+                 <tr><td colspan="7">En aquellas entregas de muebles en edificios donde no se permita la subida de muebles o no se pueda subir por las escaleras o los ascensores, el cliente deberá asummir los costos de contratar una pateca y el personal que realice dicha operación. </tr>
+                  <tr><td colspan="7"><b>ESTA PROFORMA TIENE UNA VALIDEZ DE 30 DÍAS.</b></tr>
+        </table>
+    </div>
+    <div class="foot">
+        <br><br><br>
+        <table>
+          
+                <tr>
+                   <td style="text-align:center">____________________</td> <td>&nbsp;</td> <td>&nbsp;</td><td style="text-align:center">___________________</td>
+                </tr>
+                <tr>
+                     <td  style="text-align:center">Firma vendedor</td><td>&nbsp;</td> <td>&nbsp;</td><td  style="text-align:center"> Firma cliente</td>
+                </tr>
+            </tbody>
+            
+        </table>
+    </div>
+   
+</body>
+</html>

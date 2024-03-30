@@ -1,0 +1,489 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Rol de Pago{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+  <style>
+       .panel-border{border: 1px solid #ddd !important}
+       .form-ajust .form-group{margin-bottom: 0px !important}
+      input[type="text"],select,input[type="number"]
+      {
+
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    box-shadow: none;
+    font-size: 12px;
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+       }
+
+
+
+    </style>
+
+<div class="panel panel-inverse panel-border">
+			    <div class="panel-heading">
+			        <div class="panel-heading-btn">
+			            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+			            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+			            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+			        </div>
+			        <h4 class="panel-title">&nbsp;   </h4>
+			    </div>
+			    <div class="panel-body">
+					<div class="tab-border" >
+
+					  <!-- Nav tabs -->
+					  <ul class="nav nav-tabs" role="tablist">
+						<li role="presentation" class="active"><a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a></li>
+						<li role="presentation" ><a href="{% url 'roles-pago-configuraciones-cuentas-list' %}">Cuentas Contables</a></li>
+						<!--<li role="presentation"><a href="#departamentos" aria-controls="departamentos" role="tab" data-toggle="tab">Departamentos</a></li>-->
+						<!--<li role="presentation"><a href="#cargos" aria-controls="cargos" role="tab" data-toggle="tab">Cargos</a></li>-->
+
+					  </ul>
+
+					  <!-- Tab panes -->
+					  <div class="tab-content">
+						<div role="tabpanel" class="tab-pane active" id="generales">
+							<div class="panel panel-default">
+							  <div class="panel-heading">
+								<h3 class="panel-title">Pago Roles</h3>
+							  </div>
+							  <div class="panel-body">
+							  <form class="form-horizontal" id="formPagoRoles" action="{% url 'guardar-roles-configuracion' %}" method="POST" enctype="multipart/form-data" onsubmit=""> {% csrf_token %}
+								 <div class="table-responsive">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th>Tipo</th>
+												<th>Configuracion</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+
+												<td>
+													<div class="checkbox">
+													  <label>
+														<input type="checkbox" name="mensual" value="True"
+														{% if roles_pago.mensual %}
+                                                            checked="checked"
+                                                          {% endif %}   />
+															Mensual
+													  </label>
+													</div>
+												</td>
+												<td>
+
+													<label for="textinput" class="col-md-3 control-label">Día de Pago:</label>
+													<div class="col-md-2">
+														<input class="form-control input-sm text-right" id="id_dia_pago" name="dia_pago" size="3" type="text" value="{{ roles_pago.dia_pago}}">
+													</div>
+													<label for="textinput" class="col-md-5 control_label_contif">Día del mes en que se generan los pagos</label>
+
+												</td>
+
+											</tr>
+											<tr>
+
+												<td>
+													 <label>
+														<input type="checkbox"  value="True" name="quincenal"
+														{% if roles_pago.quincenal %}
+                                                            checked="checked"
+                                                          {% endif %}> Quincenal
+
+													  </label>
+												</td>
+												<td>
+
+
+														<label for="textinput" class="col-md-3 control-label "> % Primera Quincena:</label>
+														<div class="col-md-2">
+															<input class="form-control input-sm text-right" id="id_porcentaje_quincena" name="porcentaje_primera_quincena" size="3" type="text" value="{{ roles_pago.porcentaje_primera_quincena}}">
+
+														</div>
+														<label for="textinput" class="col-md-5 control_label_contif">Porcentaje Permitido : 20% - 60%</label>
+
+
+												</td>
+
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<h4><b>Sueldos Basicos Unificados</b></h4>
+								<hr>
+								<div class="table-responsive">
+									<table class="table table-bordered table-hover">
+										<thead>
+											<tr style="background-color:#F5F5F5">
+												<td class="text-center"><b>Año</b></td>
+												<td class="text-center"><b>Valor Mensual</b></td>
+											</tr>
+										</thead>
+										<tbody>
+										{% for su  in sueldos_unificados %}
+											<tr>
+												<td class="text-center">{{ su.anio }}</td>
+												<td class="text-center">{{ su.sueldo }}</td>
+											</tr>
+										{% endfor %}
+
+										</tbody>
+									</table>
+								</div>
+								<br>
+								<h4><b>Configuración IESS</b></h4>
+								<hr>
+								<table>
+									<tbody>
+										<tr>
+											<td class="col-md-3 col-sm-3">
+												<label class="col-md-2 col-sm-2 control-label">IESS:</label>
+												<div class="col-md-4 col-sm-2">
+													<select class="select-input form-control input-sm text-right" id="id_porcentaje_iess" name="porcentaje_iess">
+													<option value="0.0935"
+													{% if roles_pago.porcentaje_iess == 0.0935 %}
+                                                            selected="selected"
+                                                          {% endif %}
+													>9.35%</option>
+													<option value="0.0945" {% if roles_pago.porcentaje_iess == 0.0945 %}
+                                                            selected="selected"
+                                                          {% endif %} >9.45%</option>
+													</select>
+
+												</div>
+											</td>
+											<td class="col-md-3 col-sm-3">
+												<label class="col-md-4 col-sm-3 control-label">Extensión Conyugal IESS:</label>
+												<div class="col-md-3 col-sm-2">
+													<input class="form-control input-sm text-right" id="id_porcentaje_ext_conyugal" name="porcentaje_ext_conyugal" size="3" type="text" value="{{ roles_pago.extension_conyugal_iess}}">
+
+												</div>%
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<br>
+								<h4><b>Configuración Banco</b></h4>
+								<hr>
+								<div class="form-group">
+									<label class="col-md-2 col-sm-2 control-label">Cuenta Bancaria:</label>
+									<div class="col-md-4 col-sm-4">
+									<div class="input-group">
+<select name="cuenta_bancaria_rrhh">
+
+										{% for b  in banco %}
+	<option value="{{ b.id}}" {% if roles_pago.banco_id == b.id %}
+                                                            selected="selected"
+                                                          {% endif %} >{{ b.nombre}}</option>
+{% endfor %}
+</select>
+									<!-- <input class="object-description form-control input-sm ui-autocomplete-input" type="text" value="" placeholder="···" size="30" data_id="id_cuenta_bancaria_rrhh" autocomplete="off"><span class="input-group-addon object-button btn btn-default input-sm" style="cursor:pointer;" type="button"><i class="glyphicon glyphicon-search"></i></span></div><input autocompletar="True" class="object-hidden form-control" descfield="nombre" dlgtitle="Seleccionar Cuenta Bancaria" dlgurl="/sistema/banco/cuenta_bancaria/seleccionar/" getobjectbydesc="" getobjectbyid="CuentaBancaria.getById" id="id_cuenta_bancaria_rrhh" name="cuenta_bancaria_rrhh" size="30" type="hidden" value="1421"> -->
+										</div>
+									</div>
+								<br>
+								<br>
+								</div>
+
+									  <div class="text-right panel-footer">
+											<button id="btn_guardar_generales" class="btn btn-success" type="submit">
+												<span class="glyphicon glyphicon-floppy-disk"></span>
+												Guardar
+											</button>
+										</div>
+										</form>
+							  </div>
+
+							</div>
+
+						</div>
+
+
+
+
+
+					  </div>
+
+					</div>
+
+			    </div>
+
+			</div>
+
+     <p class="text-center">
+
+                                   <!--  <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button> -->
+                                         <!--    <a class="default btn btn-link" href="/inventario/producto"><button type="button" class="btn btn-primary btn-lg">  Regresar</button></a> -->
+                                        </p>
+<!--  <p class="text-right m-b-0">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-cog"></i> Guardar</button>
+                                </p>
+                                <a class="default btn btn-link" href="/inventario/producto">
+      <i class="fa fa-times"></i> Regresar
+    </a> -->
+                            </form>
+
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script src="https://swisnl.github.io/jQuery-contextMenu/dist/jquery.contextMenu.js" type="text/javascript"></script>
+
+<script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+<!-- ================== END PAGE LEVEL JS ================== -->
+<script>
+ function guardarCargo(){
+       var id_cargo=$("#id_cargo").val();
+   	var nombre=$("#nombreCargo").val();
+   	var salario=$("#salario_min_sectorial").val();
+
+          $.ajax({
+                url: "/recursos_humanos/guardarCargo/", // the endpoint
+                type : "POST", // http method
+                data : { id_cargo : id_cargo,nombre : nombre,salario_min_sectorial : salario,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+                  alert("Se  agrego satisfactoriamente")
+                },
+                error: function(){
+
+                },
+              });
+    }
+
+    $(document).ready(function() {
+        cambiarFormato();
+      $('#id_codigo_producto').each(function(){
+  $(this).attr('readonly','readonly');
+
+
+
+		$.contextMenu({
+	        selector: '.centroCargo',
+	        trigger: 'left',
+	        callback: function(key, opt) {
+	            handleContextMenu(key, opt.$trigger);
+	        },
+	        items: {
+
+		            "modificarCargo": {name: "Modificar", icon: "edit"},
+
+
+		            "eliminarCargo": {name: "Eliminar", icon: "delete"},
+
+	        }
+	    });
+
+
+
+});
+      var codigo_producto=$('#id_codigo_producto').val();
+      //alert(codigo_producto);
+      if(codigo_producto==""){
+         $.ajax({
+                url: "/config/obtenerSecuencial/", // the endpoint
+                type : "POST", // http method
+                data : { id : 'producto','csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+                 $('#id_codigo_producto').val('000'+data);
+
+                },
+                error: function(){
+
+                },
+              });
+      }
+
+
+    });
+</script>
+
+<script type="text/javascript">
+  function handleContextMenu(action, el, pos)
+    {
+        $('#dlgCentroDep button').unbind();
+        $('#dlgCentroCargo button').unbind();
+        $('#formCargo')[0].reset();
+        $('#formDepartamento')[0].reset();
+        switch (action) {
+            case "agregarDep": {
+                $('#titulo_ventana_dep').html('Agregar Departamento');
+
+                $('#btn_guardar_dep').click(function(){
+                    agregarDepartamento();
+                    $("#dlgCentroDep").modal('hide');
+                    $('#formDepartamento')[0].reset();
+                });
+                $('#dlgCentroDep').modal();
+                $('#nombre').focus();
+
+                break;
+            }
+            case "modificarDep": {
+                $('#nombre').val(el.attr('desc'));
+                $('#titulo_ventana_dep').html('Modificar Departamento');
+                $('#btn_guardar_dep').click(function(){
+                    var nombre_mod = $('#nombre').val();
+                    modificarDepartamento(el.attr('id'), nombre_mod,el);
+                    $("#dlgCentroDep").modal('hide');
+                    $('#formDepartamento')[0].reset();
+                });
+
+                $('#dlgCentroDep').modal();
+                $('#nombre').focus();
+                break;
+            }
+            case "eliminarDep": {
+                var msg = '¿Esta seguro que desea eliminar el Departamento: ';
+                msg = msg + el.attr('desc') + '?<br /><br />';
+                showConfirm('Eliminar Departamento', msg, function() {
+                    eliminarDepartamento(el);
+                });
+                break;
+            }
+            case "agregarCargo": {
+                $('#titulo_ventana_cargo').html('Agregar Cargo');
+                $('#btn_guardar_cargo').click(function(){
+                    agregarCargo(el);
+                    $('#formCargo')[0].reset();
+                    $("#dlgCentroCargo").modal('hide');
+                });
+
+                $('#dlgCentroCargo').modal();
+                $('#nombre').focus();
+                break;
+            }
+            case "modificarCargo": {
+                $('#nombreCargo').val(el.attr('desc'));
+                $('#titulo_ventana_cargo').html('Modificar Cargo');
+                $('#salario_min_sectorial').val(el.attr('data-salario'));
+                $('#salario_mayorado').val(el.attr('data-mayorado'));
+                $('#btn_guardar_cargo').click(function(){
+                    var nombre_mod = $('#nombreCargo').val();
+                    var salario_min_sectorial = $('#salario_min_sectorial').val();
+                    var salario_mayorado = $('#salario_mayorado').val();
+                    modificarCargo(el.attr('id'), nombre_mod,salario_min_sectorial,salario_mayorado, el);
+                    $('#formCargo')[0].reset();
+                    $("#dlgCentroCargo").modal('hide');
+                });
+
+                $('#dlgCentroCargo').modal();
+                $('#nombreCargo').focus();
+                break;
+            }
+            case "eliminarCargo": {
+                var msg = '¿Esta seguro que desea eliminar el Cargo: ';
+                msg = msg + el.attr('desc') + '?<br /><br />';
+                showConfirm('Eliminar Cargo', msg, function() {
+                    eliminarCargo(el);
+                });
+                break;
+            }
+        }
+    }
+
+  $(document).ready(
+    function(){
+      var codigo=$("#id_codigo_cliente").val();
+    //alert(codigo);
+      $.ajax({
+        url:'/config/obtenerSecuencial/',
+        type: "POST",
+        data: {id:'cliente'},
+        success: function(data){
+          $("#id_codigo_cliente").val('000'+data);
+        }
+      });
+    }
+    );
+   $(function() {
+        $.contextMenu({
+            selector: '.centroCargo',
+            callback: function(key, options) {
+                var m = "clicked: " + key;
+                window.console && console.log(m) || alert(m);
+            },
+            items: {
+                "edit": {name: "Edit", icon: "edit"},
+                "cut": {name: "Cut", icon: "cut"},
+               copy: {name: "Copy", icon: "copy"},
+                "paste": {name: "Paste", icon: "paste"},
+                "delete": {name: "Delete", icon: "delete"},
+                "sep1": "---------",
+                "quit": {name: "Quit", icon: function(){
+                    return 'context-menu-icon context-menu-icon-quit';
+                }}
+            }
+        });
+
+        $('.centroCargo').on('click', function(e){
+            console.log('clicked', this);
+        })
+    });
+   function mostrarListaCargo(data){
+   	alert(data)
+   	$("#"+data).css("display", "block");
+   }
+   function cargarCargo(id,nombre,sueldo,padre){
+   	$("#id_cargo").val(id);
+   	$("#nombreCargo").val(nombre);
+   	$("#padre_id_cargo").val(padre);
+
+
+   	var sueldos = sueldo.toString().replace(/\,/g,'.');
+
+   	$("#salario_min_sectorial").val(sueldos);
+   }
+    function cargarDepartamento(id,nombre){
+   	$("#id_departamento").val(id);
+   	$("#nombre_departamento").val(nombre);
+
+   }
+    function cambiarFormato(){
+      var num_recetas=0;
+      var total=0;
+      var costo1=0;
+      var subt=0;
+      var i;
+        num_recetas= $('#id_porcentaje_quincena').val();
+        num_recetas = num_recetas.toString().replace(/\,/g,'.');
+        $('#id_porcentaje_quincena').val(num_recetas);
+        costo1=$('#id_porcentaje_ext_conyugal').val();
+        costo1 = costo1.toString().replace(/\,/g,'.');
+$('#id_porcentaje_ext_conyugal').val(costo1);
+      //alert(' BNUM RECETS'+num_recetas);
+
+
+    }
+
+
+</script>
+{% endblock %}

@@ -1,0 +1,910 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+<link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css'%}" rel="stylesheet" />
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css'%}" rel="stylesheet" />
+<!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Proforma{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+<style>
+.panel-border{border: 1px solid #ddd !important}
+.form-ajust .form-group{margin-bottom: 0px !important}
+input[type="text"],select,input[type="number"]
+{
+
+  border: 1px solid #ccd0d4;
+  border-radius: 3px;
+  box-shadow: none;
+  font-size: 12px;
+  display: block;
+  width: 100%;
+  height: 34px;
+  padding: 6px 12px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+}
+
+.table2 {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+  display:table}
+
+  .table2>tbody>tr>td, .table2>tbody>tr>th, .table2>tfoot>tr>td, .table2>tfoot>tr>th, .table2>thead>tr>td, .table2>thead>tr>th {
+    border-color: #e2e7eb;
+    padding: 10px 15px;
+  }
+</style>
+
+<form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+	{{ proforma_form.title.errors }}
+	<!-- begin row -->
+	<div class="row">
+	<!-- begin col-6 -->
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Proforma</h3>
+			</div>
+        <div class="panel-body">
+			<!-- Nav tabs -->
+			<!-- Tab panes -->
+			<div class="tab-content">
+				<div role="tabpanel" class="tab-pane fade in active" id="principales">
+				<!--INICIO ORDEN PRODUCCION-->
+				<div class="row">
+					<div class="col-md-12">
+						<div class="panel panel-default panel-border">
+							<div class="panel-heading">Informacion de la Proforma</div>
+								<div class="panel-body">
+									<div class="col-md-4">
+										<label for="id_fecha">Fecha</label>
+										{% bootstrap_field proforma_form.fecha show_label=False%}
+									</div>
+								<div class="col-md-4">
+									<label for="id_codigo">Tipo de Documento</label>
+                            {% bootstrap_field proforma_form.tipo_registro_documento show_label=False %}
+                            {% bootstrap_field proforma_form.tipo_documento show_label=False %}
+                          </div>
+                          <div class="col-md-4 dispro">
+                            <label for="id_numero_documento">Numero Documento</label>
+                            {% bootstrap_field proforma_form.numero_documento show_label=False %}
+
+                          </div>
+                          <div class="col-md-4">
+                            <label for="id_cliente">Cliente</label>
+                            {% bootstrap_field proforma_form.cliente show_label=False %}
+
+                          </div>
+                          <div class="col-md-4 dispro">
+                            <label for="id_referencia">Referencia</label>
+                            {% bootstrap_field proforma_form.referencia show_label=False %}
+
+                          </div>
+                          <div class="col-md-4 discli">
+                            <label for="id_vendedor">Vendedor</label>
+                            {% bootstrap_field proforma_form.vendedor show_label=False %}
+
+                          </div>
+                          <div class="col-md-4">
+                            <label for="id_vencimiento">Vencimiento(D&iacute;as)</label>
+                            {% bootstrap_field proforma_form.vencimiento show_label=False %}
+
+                          </div>
+                          <div class="col-md-4">
+                            <label for="id_proyecto">Proyecto</label>
+                            {% bootstrap_field proforma_form.proyecto show_label=False %}
+
+                          </div>
+                          <div class="col-md-4">
+                            <label for="id_atencion">Atencion</label>
+                            {% bootstrap_field proforma_form.atencion show_label=False %}
+
+                          </div>
+                          <div class="col-md-4">
+                            <label for="id_forma_de_pago">Forma de Pago</label>
+                            {% bootstrap_field proforma_form.forma_de_pago show_label=False %}
+
+                          </div>
+                          <div class="col-md-4">
+                            <label for="id_garantia">Garantia</label>
+                            {% bootstrap_field proforma_form.garantia show_label=False %}
+
+                          </div>
+                          <div class="col-md-4">
+                            {% bootstrap_field proforma_form.activo show_label=False %}
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+          <div class="row">
+            <div class="col-md-12">
+			
+              <div class="panel panel-default panel-border">
+                <!-- Default panel contents -->
+                <div class="panel-heading">Productos</div>
+                <div class="panel-body">
+                  <div class="col-md-4">
+                    <label for="id_bodega">Bodega:</label>
+                    {% bootstrap_field proforma_form.bodega show_label=False %}
+                  </div>
+
+                </div>
+
+                <!-- Table -->
+                <table class="table2 table-striped table-bordered" id="tabla" >
+                  <tr>
+                    <th></th>
+                    <th>Cantidad</th>
+                    <th>Producto</th>
+                    <th>Centro de Costo</th>
+                    <th>Unidad</th>
+                    <th>Precio U.</th>
+                    <th>Ret. IR</th>
+                    <th>Ret. IVA</th>
+                    <th class="discli">&#37; Descuento</th>
+                    <th class="discli">Descuento</th>
+                    <th>Subtotal</th>
+                  </tr>
+
+                  <tr>
+                    <td class="eliminar">
+                    	<a class="btn btn-danger remove_fields">
+                    		<i class=" glyphicon glyphicon-trash icon-white"></i>
+                    	</a>
+                    </td>
+                    <td><input class="form-control" type="number" required="required" id="cantidad_kits1" name="cantidad_kits1" oninput="actualizarTotal()" min="0" /></td>
+                    <td>
+                    	<input type="hidden" class="form-control" id="id_producto_kits1" name="id_producto_kits1"/>
+                    	<input required="required" type="text" class="form-control" id="producto_kits1" name="producto_kits1" onfocus="mostrarProductos(1)" readonly="readonly"></td>
+                    <td>
+                    	<input type="hidden" class="form-control" id="id_centro_kits1" name="id_centro_kits1"/>
+                    	<input required="required" type="text" class="form-control" id="centro_kits1" name="centro_kits1" onfocus="mostrarCentros(1,1)" readonly="readonly">
+                    </td>
+                    <td><input required="required" type="text" class="form-control" id="unidad_kits1" name="unidad_kits1" readonly="readonly"></td>
+                    <td><input class="form-control" required="required" id="precio_kits1" name="precio_kits1" readonly="readonly" /></td>
+                    <td>
+                      <input type="hidden" class="form-control" id="id_retir_kits1" name="id_retir_kits1"/>
+                      <input type="text" class="form-control" id="retir_kits1" name="retir_kits1" onfocus="mostrarRetIR(1)" readonly="readonly">
+                    </td>
+                    <td>
+                      <input type="hidden" class="form-control" id="id_retiva_kits1" name="id_retiva_kits1"/>
+                      <input type="text" class="form-control" id="retiva_kits1" name="retiva_kits1" onfocus="mostrarRetIVA(1)" readonly="readonly">
+                    </td>
+                    <td class="discli"><input class="form-control" type="number" required="required" id="dscto_kits1" name="dscto_kits1" oninput="actualizarTotal()" min="0" max="100" value="0"/></td>
+                    <td class="discli"><input type="text" class="form-control" id="descuento_kits1" name="descuento_kits1"  required="required" readonly="readonly" value="0"/></td>
+                    <td><input type="text" class="form-control" id="subtotal_kits1" name="subtotal_kits1"  required="required" readonly="readonly" value="0"/></td>
+                  </tr>
+               </table>
+               <p class="text-center">
+                <button type="button" class="btn btn-primary btn-lg" id="add">Agregar</button>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+              <div class="panel panel-default panel-border">
+                <!-- Default panel contents -->
+                <div class="panel-heading">Cuentas</div>
+                <div class="panel-body">
+
+                <!-- Table -->
+                <table class="table2 table-striped table-bordered" id="tablacuentas" >
+                  <tr>
+                    <th></th>
+                    <th>Cantidad</th>
+                    <th>Cuenta</th>
+                    <th>Centro de Costo</th>
+                    <th>Valor U.</th>
+                    <th>IVA</th>
+                    <th>&#37; ICE</th>
+                    <th>Ret. IR</th>
+                    <th>Ret. IVA</th>
+                    <th class="discli">&#37; Descuento</th>
+                    <th class="discli">Descuento</th>
+                    <th>Subtotal</th>
+                  </tr>
+
+                  <tr>
+                    <td class="eliminar">
+                      <a class="btn btn-danger remove_fields">
+                        <i class=" glyphicon glyphicon-trash icon-white"></i>
+                      </a>
+                    </td>
+                    <td><input class="form-control" type="number" required="required" id="cantidad_cuenta1" name="cantidad_cuenta1" oninput="actualizarTotal()" min="0" /></td>
+                    <td>
+                      <input type="hidden" class="form-control" id="id_cuenta_cuenta1" name="id_cuenta_cuenta1"/>
+                      <input required="required" type="text" class="form-control" id="cuenta_cuenta1" name="cuenta_cuenta1" onfocus="mostrarCuentas(1)" readonly="readonly"></td>
+                    <td>
+                      <input type="hidden" class="form-control" id="id_centro_cuenta1" name="id_centro_cuenta1"/>
+                      <input required="required" type="text" class="form-control" id="centro_cuenta1" name="centro_cuenta1" onfocus="mostrarCentros(1,2)" readonly="readonly">
+                    </td>
+                    <td><input class="form-control" step="0.01" required="required" id="precio_cuenta1" name="precio_cuenta1" oninput="actualizarTotal()" data-parsley-type="number"/></td>
+                    <td>
+                      <input class="form-control" type="number" required="required" id="iva_cuenta1" name="iva_cuenta1" oninput="actualizarTotal()" step="12" min="0" max="12" value="0"/>
+                    </td>
+                    <td><input class="form-control" type="number" required="required" id="ice_cuenta1" name="ice_cuenta1" min="0" max="300" value="0"/></td>
+                    <td>
+                      <input type="hidden" class="form-control" id="id_retir_cuenta1" name="id_retir_cuenta1"/>
+                      <input type="text" class="form-control" id="retir_cuenta1" name="retir_cuenta1" onfocus="mostrarRetIR(1)" readonly="readonly">
+                    </td>
+                    <td>
+                      <input type="hidden" class="form-control" id="id_retiva_cuenta1" name="id_retiva_cuenta1"/>
+                      <input type="text" class="form-control" id="retiva_cuenta1" name="retiva_cuenta1" onfocus="mostrarRetIVA(1)" readonly="readonly">
+                    </td>
+                    <td class="discli"><input class="form-control" type="number" required="required" id="dscto_cuenta1" name="dscto_cuenta1" oninput="actualizarTotal()" min="0" max="100" value="0"/></td>
+                    <td class="discli"><input type="text" class="form-control" id="descuento_cuenta1" name="descuento_cuenta1" readonly="readonly" value="0" /></td>
+                    <td><input type="text" class="form-control" id="subtotal_cuenta1" name="subtotal_cuenta1"  required="required" readonly="readonly" value="0"/></td>
+                  </tr>
+               </table>
+               <p class="text-center">
+                <button type="button" class="btn btn-primary btn-lg" id="addcuenta">Agregar</button>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+         <div class="row">
+           <div class="col-md-12">
+            <div class="col-md-9">
+              <label for="id_descripcion" >Descripci&oacute;on: </label>
+                <div>
+                  {% bootstrap_field proforma_form.descripcion show_label=False %}
+                </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="subtotal" >Subtotal 12&#37;:</label>
+                <div>
+                  <input type="text" id="subtotal12" name="subtotal12" readonly="readonly" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="subtotal" >Subtotal 0&#37;:</label>
+                <div>
+                  <input type="text" id="subtotal0" name="subtotal0" readonly="readonly" />
+                </div>
+              </div>
+			  <div class="form-group">
+                <label for="descuento" >Descuento:</label>
+                <div>
+                  <input type="text" id="descuento" name="descuento" readonly="readonly" />
+                </div>
+              </div>
+			  <div class="form-group">
+                <label for="iva" >IVA:</label>
+                <div>
+                  <input type="text" id="iva" name="iva" readonly="readonly" />
+                </div>
+              </div>
+			  <div class="form-group">
+                <label for="total" >Total:</label>
+                <div>
+                  <input type="text" id="total" name="total" readonly="readonly" />
+                </div>
+              </div>
+            </div>
+           </div>
+         </div>
+       </div>
+
+     </div>
+
+
+
+     <!--FIN ORDEN PRODUCCION-->
+   </div>
+
+
+ </div>
+
+</div>
+</div>
+                   <!--      <div class="col-md-2">
+                            <div class="row">
+                             
+                    <p class="text-center">
+                    <button type="button" class="btn btn-success btn-block">Agregar <i class=" glyphicon glyphicon-plus icon-white"></i></button>
+                    </p>
+                    <p class="text-center">
+                    <button type="button" class="btn btn-danger btn-block">Eliminar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+                    </p>
+                    <p class="text-center">
+                    <button type="button" class="btn btn-default btn-block">Buscar <i class=" glyphicon glyphicon-search icon-white"></i></button>
+                    </p>
+                    <p class="text-center">
+                    <button type="button" class="btn btn-default btn-block">Imprimir <i class=" glyphicon glyphicon-print icon-white"></i></button>
+                    </p>
+                              
+                            </div>
+                            
+                          </div> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p class="text-center">
+
+                    <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i>Guardar</button>
+                    <a class="default btn btn-link" href="/transacciones/proforma/"><button type="button" class="btn btn-primary btn-lg">Regresar</button></a>
+                  </p>
+<!--  <p class="text-right m-b-0">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-cog"></i> Guardar</button>
+                                </p>
+                                <a class="default btn btn-link" href="/inventario/producto">
+      <i class="fa fa-times"></i> Regresar
+    </a> -->
+    <input type="hidden" name="columnas_receta" id="columnas_receta" value="1" />
+
+    <input type="hidden" name="columnas_cuenta" id="columnas_cuenta" value="1" />
+
+    <input type="hidden" name="id_fila_cambiar" id="id_fila_cambiar" value="" />
+
+    <input type="hidden" name="id_tabla_cambiar" id="id_tabla_cambiar" value="" />
+
+
+  </form>
+  <div class="modal fade" id="modal-dialog-cuenta">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="panel-body">
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered" id="tabla_cuenta">
+              <thead>
+                <tr>
+                  <td></td>
+                  <th>Codigo</th>
+                  <th>Nombre</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for cuenta  in cuentas %}
+                <tr>
+                  <td  onclick="cargarCodigoCuenta('{{ cuenta.plan_id }}','{{ cuenta.nombre_plan }}')"><a class="btn btn-danger remove_fields">
+                    <i class=" glyphicon glyphicon-plus icon-white"></i>
+                  </a></td><td>{{ cuenta.codigo_plan }}</td>
+                  <td>{{ cuenta.nombre_plan }}</td>
+                </tr >
+                {% endfor %} 
+
+              </tbody>
+            </table>
+          </div>
+          <button type="button" onclick="cerrarCuentas()" class="btn btn-danger btn-block">Cerrar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modal-dialog-producto">
+  	<div class="modal-dialog">
+  		<div class="modal-content">
+  			<div class="panel-body">
+  				<div class="table-responsive">
+  					<table class="table table-striped table-bordered" id="tabla_producto">
+  						<thead>
+  							<tr>
+  								<td></td>
+  								<th>Codigo</th>
+  								<th>Nombre</th>
+								<th>Precio</th>
+								<th>Unidad</th>
+  							</tr>
+  						</thead>
+  						<tbody>
+  							{% for producto  in productos %}
+  							<tr>
+  								<td  onclick="cargarCodigoProducto('{{ producto.producto_id }}','{{ producto.descripcion_producto }}','{{ producto.precio1 }}', '{{ producto.unidad }}')"><a class="btn btn-danger remove_fields">
+  									<i class=" glyphicon glyphicon-plus icon-white"></i>
+  								</a></td><td>{{ producto.codigo_producto }}</td>
+  								<td>{{ producto.descripcion_producto }}</td>
+                  <td>{{ producto.precio1 }}</td>
+                  <td>{{ producto.unidad }}</td>
+  							</tr >
+  							{% endfor %} 
+
+  						</tbody>
+  					</table>
+  				</div>
+  				<button type="button" onclick="cerrarProductos()" class="btn btn-danger btn-block">Cerrar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+
+
+  			</div>
+  		</div>
+  	</div>
+  </div>
+  <div class="modal fade" id="modal-dialog-centro">
+  	<div class="modal-dialog">
+  		<div class="modal-content">
+  			<div class="panel-body">
+  				<div class="table-responsive">
+  					<table class="table table-striped table-bordered" id="tabla_centro">
+  						<thead>
+  							<tr>
+  								<td></td>
+  								<th>Centro</th>
+
+  							</tr>
+  						</thead>
+  						<tbody>
+  							{% for centro  in centros %}
+  							<tr>
+  								<td  onclick="cargarCodigoCentro('{{ centro.centro_id }}','{{ centro.nombre_centro }}')"><a class="btn btn-danger remove_fields">
+  									<i class=" glyphicon glyphicon-plus icon-white"></i>
+  								</a></td>
+  								<td>{{ centro.nombre_centro }}</td>
+  							</tr >
+  							{% endfor %} 
+
+  						</tbody>
+  					</table>
+  				</div>
+  				<button type="button" onclick="cerrarCentros()" class="btn btn-danger btn-block">Cerrar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+
+
+  			</div>
+  		</div>
+  	</div>
+  </div>
+  <div class="modal fade" id="modal-dialog-retiva">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="panel-body">
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered" id="tabla_retiva">
+              <thead>
+                <tr>
+                  <td></td>
+                  <th>Codigo</th>
+                  <th>Descripcion</th>
+                  <th>Porcentaje</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for ret in retiva %}
+                <tr>
+                  <td  onclick="cargarCodigoRetIva('{{ ret.retencion_id }}','{{ ret.codigo }}')"><a class="btn btn-danger remove_fields">
+                    <i class=" glyphicon glyphicon-plus icon-white"></i>
+                  </a></td><td>{{ ret.codigo }}</td>
+                  <td>{{ ret.descripcion }}</td>
+                  <td>{{ ret.porcentaje }}</td>
+                </tr >
+                {% endfor %} 
+
+              </tbody>
+            </table>
+          </div>
+          <button type="button" onclick="cerrarRetIVA()" class="btn btn-danger btn-block">Cerrar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modal-dialog-retir">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="panel-body">
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered" id="tabla_retir">
+              <thead>
+                <tr>
+                  <td></td>
+                  <th>Codigo</th>
+                  <th>Descripcion</th>
+                  <th>Porcentaje</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for ret in retir %}
+                <tr>
+                  <td  onclick="cargarCodigoRetIR('{{ ret.retencion_id }}','{{ ret.codigo }}')"><a class="btn btn-danger remove_fields">
+                    <i class=" glyphicon glyphicon-plus icon-white"></i>
+                  </a></td><td>{{ ret.codigo }}</td>
+                  <td>{{ ret.descripcion }}</td>
+                  <td>{{ ret.porcentaje }}</td>
+                </tr >
+                {% endfor %} 
+
+              </tbody>
+            </table>
+          </div>
+          <button type="button" onclick="cerrarRetIR()" class="btn btn-danger btn-block">Cerrar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+
+  {% block javascript %}
+  {{ block.super }}
+  <!-- ================== BEGIN PAGE LEVEL JS ================== -->
+  <script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+  <script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+  <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+  <!--<script src="{% static 'color_admin/assets/js/bootstrap-datepicker.js' %}"></script>-->
+
+  
+  <script>
+  // $(document).ready(function() {
+  // 	$('#id_codigo').attr('readonly','readonly');
+  // 	$('#id_fecha').datepicker({todayHighlight:true,autoclose:true});
+  // 	$('#id_fecha').datepicker('option', {dateFormat: 'yy/mm/dd'});
+  // 	$.ajax({
+  //               url: "/config/obtenerSecuencial/", // the endpoint
+  //               type : "POST", // http method
+  //               data : { id : 'proformac','csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+  //               success:function(data){
+  //               	cod=('000000' + data).substr(-6);
+
+  //               	$('#id_codigo').val(cod);
+  //                 $('#id_codigo').attr('readonly','readonly');
+
+  //               },
+  //               error: function(xhr, ajaxOptions, thrownError){
+  //               	alert( "Escoja una empresa");
+  //               },
+  //           });
+  // });
+
+  </script>
+  <script>
+  $(document).ready(function() {
+    // App.init();
+    $('.table').DataTable();
+    FormWizardValidation.init();
+  });
+  </script>
+  <script>
+  $(document).ready(function() {
+  	$('#id_codigo_producto').each(function(){
+  		$(this).attr('readonly','readonly');
+  	});
+  	$('#id_created_by').each(function(){
+  		$(this).attr('readonly','readonly');
+  	});
+  	$('#id_updated_by').each(function(){
+  		$(this).attr('readonly','readonly');
+  	});
+  	$('#id_created_at').each(function(){
+  		$(this).attr('readonly','readonly');
+  	});
+  	$('#id_updated_at').each(function(){
+  		$(this).attr('readonly','readonly');
+  	});
+  });
+function mostrarCuentas(data){
+ $('#id_fila_cambiar').val(data);
+ $("#modal-dialog-cuenta").modal('toggle');
+}
+function mostrarProductos(data){
+ $('#id_fila_cambiar').val(data);
+ $("#modal-dialog-producto").modal('toggle');
+}
+function mostrarCentros(data, tabla){
+ $('#id_fila_cambiar').val(data);
+ $('#id_tabla_cambiar').val(tabla);
+ $("#modal-dialog-centro").modal('toggle');
+}
+function mostrarRetIVA(data, tabla){
+ $('#id_fila_cambiar').val(data);
+ $('#id_tabla_cambiar').val(tabla);
+ $("#modal-dialog-retiva").modal('toggle');
+}
+function mostrarRetIR(data, tabla){
+ $('#id_fila_cambiar').val(data);
+ $('#id_tabla_cambiar').val(tabla);
+ $("#modal-dialog-retir").modal('toggle');
+}
+function cerrarCentros(){
+ $("#modal-dialog-centro").modal('toggle');
+}
+function cerrarProductos(){
+ $("#modal-dialog-producto").modal('toggle');
+}
+function cerrarCuentas(){
+ $("#modal-dialog-cuenta").modal('toggle');
+}
+function cerrarRetIR(){
+ $("#modal-dialog-retir").modal('toggle');
+}
+function cerrarRetIVA(){
+ $("#modal-dialog-retiva").modal('toggle');
+}
+function cargarCodigoProducto(id,nombre,precio,unidad){
+  var fila=$('#id_fila_cambiar').val();
+  $('#id_producto_kits'+fila).val(id);
+  $('#producto_kits'+fila).val(nombre);
+  $('#precio_kits'+fila).val(precio);
+  $('#unidad_kits'+fila).val(unidad);
+  cerrarProductos();
+  actualizarTotal();
+}
+function cargarCodigoCentro(id,nombre){
+  var t=$('#id_tabla_cambiar').val()
+  var fila=$('#id_fila_cambiar').val();
+  if (t==1){
+    $('#id_centro_kits'+fila).val(id);
+    $('#centro_kits'+fila).val(nombre);
+  }
+  else if (t==2){
+     $('#id_centro_cuenta'+fila).val(id);
+     $('#centro_cuenta'+fila).val(nombre);
+  }
+  cerrarCentros();
+}
+function cargarCodigoRetIR(id,nombre){
+  var t=$('#id_tabla_cambiar').val()
+  var fila=$('#id_fila_cambiar').val();
+  if (t==1){
+    $('#id_retir_kits'+fila).val(id);
+    $('#retir_kits'+fila).val(nombre);
+  }
+  else if (t==2){
+     $('#id_retir_cuenta'+fila).val(id);
+     $('#retir_cuenta'+fila).val(nombre);
+  }
+  cerrarRetIR();
+}
+function cargarCodigoRetIVA(id,nombre){
+  var t=$('#id_tabla_cambiar').val()
+  var fila=$('#id_fila_cambiar').val();
+  if (t==1){
+    $('#id_retiva_kits'+fila).val(id);
+    $('#retiva_kits'+fila).val(nombre);
+  }
+  else if (t==2){
+     $('#id_retiva_cuenta'+fila).val(id);
+     $('#retiva_cuenta'+fila).val(nombre);
+  }
+  cerrarRetIVA();
+}
+function cargarCodigoCuenta(id,nombre,precio,unidad){
+  var fila=$('#id_fila_cambiar').val();
+  $('#id_cuenta_cuenta'+fila).val(id);
+  $('#cuenta_cuenta'+fila).val(nombre);
+  cerrarCuentas();
+}
+function actualizarTotal(){
+	var num_recetas=$('#columnas_receta').val();
+  var num_cuentas=$('#columnas_cuenta').val();
+	var total=0;
+	var subtotal=0;
+  var subzero=0;
+	var iva=0;
+	var desc=0;
+	var i;
+	//alert(' BNUM RECETS'+num_recetas);
+	for (i = 1; i <= num_recetas; i++) {
+    try {
+      var c=0;
+      if ($.isNumeric($('#cantidad_kits'+i).val())) {
+        c = parseInt($('#cantidad_kits'+i).val())
+      }
+      var p = 0;
+      if ($('#precio_kits'+i).val()!="") {
+        p = parseFloat($('#precio_kits'+i).val());
+      }
+      var d = 0;
+      if ($.isNumeric($('#dscto_kits'+i).val())) {
+        d = parseInt($('#dscto_kits'+i).val())*0.01*p*c;
+      }
+      var sub = c*p-d;
+      $('#descuento_kits'+i).val(d);
+      $('#subtotal_kits'+i).val(sub);
+      //iva 12
+      subtotal+=sub;
+      desc+=d;
+    }
+    catch(err) {
+
+    }
+    
+  }
+  for (i = 1; i <= num_cuentas; i++){
+    try{
+      var c=0;
+      if ($.isNumeric($('#cantidad_cuenta'+i).val())) {
+        c = parseInt($('#cantidad_cuenta'+i).val())
+      }
+      var p = 0;
+      if ($.isNumeric($('#precio_cuenta'+i).val())) {
+        p = parseFloat($('#precio_cuenta'+i).val());
+      }
+      var d = 0;
+      if ($.isNumeric($('#dscto_cuenta'+i).val())) {
+        d = parseInt($('#dscto_cuenta'+i).val())*0.01*p*c;
+      }
+      var sub = c*p-d;
+      $('#descuento_cuenta'+i).val(d);
+      $('#subtotal_cuenta'+i).val(sub);
+      var tipoiva = 0;
+      if ($.isNumeric($('#iva_cuenta'+i).val())) {
+        tipoiva = parseInt($('#iva_cuenta'+i).val());
+      }
+      if (tipoiva==0) {
+        subzero+=sub;
+      }
+      else{
+        subtotal+=sub;
+      }
+      
+      desc+=d; 
+    }
+    catch(err){
+
+    }
+  }
+
+  iva=subtotal*0.12;
+  total=subtotal+subzero+iva;
+  $('#subtotal12').val(subtotal);
+  $('#subtotal0').val(subzero);
+  $('#descuento').val(desc);
+  $('#iva').val(iva);
+  $('#total').val(total);
+}
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+  /**
+  * Funcion para añadir una nueva fila en la tabla
+  */
+  $("#add").click(function(){
+    // Obtenemos el numero de filas (td) que tiene la primera columna
+    // (tr) del id "tabla"
+            var num_recetas=$('#columnas_receta').val();
+            num_recetas=parseInt(num_recetas)+1;
+
+            var tds=$("#tabla tr:first td").length;
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla tr").length;
+            var nuevaFila='<tr><td class="eliminar"><a class="btn btn-danger remove_fields"><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+            nuevaFila+='<td><input class="form-control" type="number" required="required" id="cantidad_kits'+num_recetas+'" name="cantidad_kits'+num_recetas+'" oninput="actualizarTotal()" min="0" /></td>'
+            nuevaFila+='<td><input type="hidden" class="form-control" id="id_producto_kits'+num_recetas+'" name="id_producto_kits'+num_recetas+'"/><input required="required" type="text" class="form-control" id="producto_kits'+num_recetas+'" name="producto_kits'+num_recetas+'" onfocus="mostrarProductos(1)" readonly="readonly"></td>'
+            nuevaFila+='<td><input type="hidden" class="form-control" id="id_centro_kits'+num_recetas+'" name="id_centro_kits'+num_recetas+'"/><input required="required" type="text" class="form-control" id="centro_kits'+num_recetas+'" name="centro_kits'+num_recetas+'" onfocus="mostrarCentros('+num_recetas+',1)" readonly="readonly"></td>'
+            nuevaFila+='<td><input required="required" type="text" class="form-control" id="unidad_kits'+num_recetas+'" name="unidad_kits'+num_recetas+'" readonly="readonly"></td>'
+            nuevaFila+='<td><input class="form-control" required="required" id="precio_kits'+num_recetas+'" name="precio_kits'+num_recetas+'" readonly="readonly" /></td>'
+            nuevaFila+='<td><input type="hidden" class="form-control" id="id_retir_kits'+num_recetas+'" name="id_retir_kits'+num_recetas+'"/><input type="text" class="form-control" id="retir_kits'+num_recetas+'" name="retir_kits'+num_recetas+'" onfocus="mostrarRetIR(1)" readonly="readonly"></td>'
+            nuevaFila+='<td><input type="hidden" class="form-control" id="id_retiva_kits'+num_recetas+'" name="id_retiva_kits'+num_recetas+'"/><input type="text" class="form-control" id="retiva_kits'+num_recetas+'" name="retiva_kits'+num_recetas+'" onfocus="mostrarRetIVA(1)" readonly="readonly"></td>'
+            nuevaFila+='<td class="discli"><input class="form-control" type="number" required="required" id="dscto_kits'+num_recetas+'" name="dscto_kits'+num_recetas+'" oninput="actualizarTotal()" min="0" max="100" value="0"/></td>'
+            nuevaFila+='<td class="discli"><input type="text" class="form-control" id="descuento_kits'+num_recetas+'" name="descuento_kits'+num_recetas+'"  required="required" readonly="readonly" value="0"/></td>'
+            nuevaFila+='<td><input type="text" class="form-control" id="subtotal_kits'+num_recetas+'" name="subtotal_kits'+num_recetas+'"  required="required" readonly="readonly" value="0"/></td></tr>'
+            // for(var i=0;i<tds;i++){
+            //     // añadimos las columnas
+            //     nuevaFila+="<td>columna "+(i+1)+" Añadida con jquery</td>";
+            // }
+            // // Añadimos una columna con el numero total de columnas.
+            // // Añadimos uno al total, ya que cuando cargamos los valores para la
+            // // columna, todavia no esta añadida
+            // nuevaFila+="<td>"+(trs+1)+" columnas";
+            // nuevaFila+="</tr>";
+            $("#tabla").append(nuevaFila);
+          });
+$("#addcuenta").click(function(){
+  // Obtenemos el numero de filas (td) que tiene la primera columna
+            // (tr) del id "tabla"
+            var num_cuentas=$('#columnas_cuenta').val();
+            num_cuentas=parseInt(num_cuentas)+1;
+
+            var tds=$("#tablacuentas tr:first td").length;
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tablacuentas tr").length;
+
+            var nuevaFila='<tr><td class="eliminar"><a class="btn btn-danger remove_fields"><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>'
+            nuevaFila+='<td><input class="form-control" type="number" required="required" id="cantidad_cuenta'+num_cuentas+'" name="cantidad_cuenta'+num_cuentas+'" oninput="actualizarTotal()" min="0" /></td>'
+            nuevaFila+='<td><input type="hidden" class="form-control" id="id_cuenta_cuenta'+num_cuentas+'" name="id_cuenta_cuenta'+num_cuentas+'"/><input required="required" type="text" class="form-control" id="cuenta_cuenta'+num_cuentas+'" name="cuenta_cuenta'+num_cuentas+'" onfocus="mostrarCuentas(1)" readonly="readonly"></td>'
+            nuevaFila+='<td><input type="hidden" class="form-control" id="id_centro_cuenta'+num_cuentas+'" name="id_centro_cuenta'+num_cuentas+'"/><input required="required" type="text" class="form-control" id="centro_cuenta'+num_cuentas+'" name="centro_cuenta'+num_cuentas+'" onfocus="mostrarCentros('+num_cuentas+',2)" readonly="readonly"></td>'
+            nuevaFila+='<td><input class="form-control" type="number" step="0.0'+num_cuentas+'" required="required" id="precio_cuenta'+num_cuentas+'" name="precio_cuenta'+num_cuentas+'" oninput="actualizarTotal()"/></td>'
+            nuevaFila+='<td><input class="form-control" type="number" required="required" id="iva_cuenta'+num_cuentas+'" name="iva_cuenta'+num_cuentas+'" oninput="actualizarTotal()" step="12" min="0" max="12" value="0"/></td>'
+            nuevaFila+='<td><input class="form-control" type="number" required="required" id="ice_cuenta'+num_cuentas+'" name="ice_cuenta'+num_cuentas+'" min="0" max="100" value="0"/></td>'
+            nuevaFila+='<td><input type="hidden" class="form-control" id="id_retir_cuenta'+num_cuentas+'" name="id_retir_cuenta'+num_cuentas+'"/><input type="text" class="form-control" id="retir_cuenta'+num_cuentas+'" name="retir_cuenta'+num_cuentas+'" onfocus="mostrarRetIR(1)" readonly="readonly"></td>'
+            nuevaFila+='<td><input type="hidden" class="form-control" id="id_retiva_cuenta'+num_cuentas+'" name="id_retiva_cuenta'+num_cuentas+'"/><input type="text" class="form-control" id="retiva_cuenta'+num_cuentas+'" name="retiva_cuenta'+num_cuentas+'" onfocus="mostrarRetIVA(1)" readonly="readonly"></td>'
+            nuevaFila+='<td class="discli"><input class="form-control" type="number" required="required" id="dscto_cuenta'+num_cuentas+'" name="dscto_cuenta'+num_cuentas+'" oninput="actualizarTotal()" min="0" max="100" value="0"/></td>'
+            nuevaFila+='<td class="discli"><input type="text" class="form-control" id="descuento_cuenta'+num_cuentas+'" name="descuento_cuenta'+num_cuentas+'" readonly="readonly" value="0" /></td>'
+            nuevaFila+='<td><input type="text" class="form-control" id="subtotal_cuenta'+num_cuentas+'" name="subtotal_cuenta'+num_cuentas+'"  required="required" readonly="readonly" value="0" /></td></tr>'
+
+            $('#columnas_cuenta').val(num_cuentas);
+            // for(var i=0;i<tds;i++){
+            //     // añadimos las columnas
+            //     nuevaFila+="<td>columna "+(i+1)+" Añadida con jquery</td>";
+            // }
+            // // Añadimos una columna con el numero total de columnas.
+            // // Añadimos uno al total, ya que cuando cargamos los valores para la
+            // // columna, todavia no esta añadida
+            // nuevaFila+="<td>"+(trs+1)+" columnas";
+            // nuevaFila+="</tr>";
+            $("#tablacuentas").append(nuevaFila);
+          });
+
+  $("#id_tipo_registro_documento").change(function(){
+    var tipo=$("#id_tipo_registro_documento").val()
+    if (parseInt(tipo)==1) {
+      disCliente();
+    }else
+    {
+      disProveedor();
+    }
+});
+
+
+        /**
+         * Funcion para eliminar la ultima columna de la tabla.
+         * Si unicamente queda una columna, esta no sera eliminada
+         */
+         $("#del").click(function(){
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla tr").length;
+            if(trs>1)
+            {
+                // Eliminamos la ultima columna
+                $("#tabla tr:last").remove();
+              }
+            });
+
+
+         $(document).on("click",".eliminar",function(){
+          var parent = $(this).parent();
+          $(parent).remove();
+        });
+
+       });
+
+function disCliente(){
+  $(".discli").show();
+  $(".dispro").hide();
+  num_recetas=parseInt($("#columnas_receta").val());
+  for (var i = 1; i <= num_recetas; i++) {
+    $("#producto_kits"+i).val("");
+    $("#id_producto_kits"+i).val("");
+    $("#precio_kits"+i).val("");
+    $("#precio_kits"+i).attr("readonly","readonly");
+  };
+}
+function disProveedor(){
+  $(".discli").hide();
+  $(".dispro").show();
+  num_recetas=parseInt($("#columnas_receta").val());
+  for (var i = 1; i <= num_recetas; i++) {
+    $("#producto_kits"+i).val("");
+    $("#id_producto_kits"+i).val("");
+    $("#precio_kits"+i).val("");
+    $("#precio_kits"+i).removeAttr("readonly");
+  };
+  num_cuentas=parseInt($("#columnas_cuenta").val());
+  for (var i = 1; i <= num_cuentas; i++) {
+    $("#descuento_cuenta"+i).val("0");
+    $("#dscto_cuenta"+i).val("0");
+  };
+}
+</script>
+{% endblock %}                                                                                                                                                                                                                                                                

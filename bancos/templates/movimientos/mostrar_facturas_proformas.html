@@ -1,0 +1,108 @@
+
+    <input type="hidden" value="{{fila}}" name="fila_id" id="fila_id">
+
+	<div class="alert alert-danger hide" id="msj_error_ingresos"></div>
+
+
+	<div class="panel panel-default-grey">
+	    <div class="panel-heading">
+	        <h3 class="panel-title">Detalles de Documentos </h3>
+	    </div>
+	    <div class="panel-body">
+	        <div class="ingresos">
+				<table style="background-color: white" class="table table-bordered" id="tabla_otros_ingresos">
+					<thead>
+						<tr>
+							  <th></th>
+                             <th style="text-align: center">Codigo</th>
+                                    <th style="text-align: center">Fecha Emisión</th>
+                                    <th style="text-align: center">Establecimiento</th>
+                                    <th style="text-align: center">Subtotal</th>
+                                    <th style="text-align: center">Iva</th>
+                                    <th style="text-align: center">Total</th>
+									{% if tipo != "PR" %}
+                                        <th style="text-align: center">Retencion</th>
+									{% endif %}
+                                    <th style="text-align: center">Cant.Abonada</th>
+									<th style="text-align: center">NC. Bancaria</th>
+						</tr>
+					</thead>
+					<tbody id="tdetalle_ingreso">
+                        {% if ro %}
+                            {% for r  in ro %}
+													
+                                {% if tipo == "PR" %}
+                                    {% if r.6 > r.11 %}
+                                        <tr>
+										    <td class=""><a class="btn btn-danger add_fields" onclick="agregar('{{r.0}}','{{r.1}}','{{r.2}}','{{r.3}}','{{r.4}}','{{r.5}}','{{r.6}}','{{r.7}}','{{r.8}}','{{r.9}}','{{r.10}}','{{tipo}}','{{ r.12 }}')"><i class=" glyphicon glyphicon-plus icon-white"></i></a></td>
+											<td>{{r.2}} {{r.3}} </td>
+											<td >{{r.1}}</td>
+											<td >{{r.8}}</td>
+											<td >{{r.4}}</td>
+											<td >{{r.5}}</td>
+											<td >{{r.6}} </td>
+											{% if tipo != "PR" %}
+											    <td >{{r.10 | default_if_none:'0'}}</td>
+                                            {% endif %}
+											{% if r.7 %}
+											    <td >{{r.7}}</td>
+                                            {% else %}
+											    <td >0.00</td>
+											{% endif %}
+	                                        <td >{{r.12 | default_if_none:'0'}} </td>
+                                        </tr>
+                                                    
+                                    {% endif %}
+                                {% else %}
+                                    {% if r.6 > r.7  %}
+                                        <tr>
+                                            <td class=""><a class="btn btn-danger add_fields" onclick="agregar('{{r.0}}','{{r.1}}','{{r.2}}','{{r.3}}','{{r.4}}','{{r.5}}','{{r.6}}','{{r.7}}','{{r.8}}','{{r.9}}','{{r.10}}','{{tipo}}','{{r.12}}')"><i class=" glyphicon glyphicon-plus icon-white"></i></a></td>
+                                            <td>{{r.2}} {{r.3}} </td>
+                                            <td >{{r.1}}</td>
+                                            <td >{{r.8}}</td>
+                                            <td >{{r.4}}</td>
+                                            <td >{{r.5}}</td>
+                                            <td >{{r.6}} </td>
+                                            {% if tipo != "PR" %}
+                                                <td >{{r.10 | default_if_none:'0'}}</td>
+                                            {% endif %}
+                                            {% if r.7 %}
+                                                <td >{{r.7}}</td>
+                                            {% else %}
+                                                <td >0.00</td>
+                                            {% endif %}
+                                            <td >{{r.12 | default_if_none:'0'}} </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+					</tbody>
+				</table>
+				<br>
+
+
+<input type="hidden" name="fila" id="fila" value="{{ fila }}" />
+
+
+
+			</div>
+	    </div>
+	</div>
+
+
+
+</form>
+				 </div>
+							                </div>
+							            </div>
+							        </div>
+							    </div>
+
+
+
+
+
+    <script>
+
+        </script>

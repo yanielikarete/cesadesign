@@ -1,0 +1,263 @@
+
+<form class="form-horizontal" action="" name="egresosForm" method="POST" id="registrar_eg">
+    <input type="hidden" value="" name="tipo_guardar_ingreso" id="tipo_ingreso_id">
+    <input type="hidden" value="" name="quincena" id="quincena_id">
+    <input type="hidden" value="" name="mes" id="mes_id">
+    <input type="hidden" value="" name="anio" id="anio_id">
+    <input type="hidden" value="RPQ" name="tipo_rol" id="tipo_rol_id">
+    <input type="hidden" value="None" name="tipo_contrato_persona" id="tipo_contrato_persona">
+
+	<div class="alert alert-danger hide" id="msj_error_ingresos"></div>
+
+	<div class="panel panel-default">
+	    <div class="panel-heading">
+	        <h3 class="panel-title"><i class="ico-user mr5"></i>Datos del Empleado</h3>
+	    </div>
+	    <div class="panel-body">
+	        <div class="row">
+				<strong class="col-md-2 col-sm-2"> Nombre: &nbsp;</strong>
+				<div class="col-md-10 col-sm-10">{{ empleados.nombre_empleado}}</div>
+			</div>
+			<div class="row">
+				<strong class="col-md-2 col-sm-2"> Cedula: </strong>
+				<div class="col-md-4 col-sm-4">{{ empleados.cedula_empleado}}</div>
+				<strong class="col-md-3 col-sm-3"> Fecha de Ingreso:</strong>
+				<div class="col-md-3 col-sm-3">{{ empleados.fecha_ini}}</div>
+			</div>
+	    </div>
+	</div>
+
+	<div class="panel panel-default-grey">
+	    <div class="panel-heading">
+	        <h3 class="panel-title">Detalles </h3>
+	    </div>
+	    <div class="panel-body">
+	        <div class="ingresos">
+				<table style="background-color: white" class="table table-bordered" id="tabla_otros_egresos">
+					<thead>
+						<tr>
+							<th width="25px"></th>
+							<th width="1px" class="id_ingreso" style="display: none;"></th>
+							<th>Fecha</th>
+											<th>Empleado</th>
+											<th>Departamento</th>
+                            <th>Plazo</th>
+											<th>Monto Solicitado</th>
+                                            <th>Monto Disponible</th>
+											<th>Motivo</th>
+						</tr>
+					</thead>
+					<tbody id="tdetalle_ingreso">
+
+                                                  {% if detalle %}
+                                                    {% for r  in detalle %}
+											<tr>
+                                                <td class="seleccionar"><a class="btn btn-danger remove_fields" onclick="seleccionar('{{r.id}}','{{r.plazo_solicitar}}','{{r.monto_solicitado}}','{{r.motivo_anticipo}}');">
+                                                        <i class=" glyphicon glyphicon-add icon-white"></i>
+                                                      </a>
+                                                    </td>
+												<td>{{ r.fecha }}</td>
+												<td>{{ r.empleado }}</td>
+                                                <td>{{ r.departamento }}</td>
+                                                <td>{{ r.plazo_solicitar }}</td>
+<td>{{ r.monto_solicitado }}</td>
+<td>{{ r.monto_disponible_descuento }}</td>
+
+<td>{{ r.motivo_anticipo }}</td>
+
+											</tr >
+										{% endfor %}
+
+
+                                                   {% endif %}
+
+
+					</tbody>
+				</table>
+				<br>
+
+
+			</div>
+	    </div>
+	</div>
+
+
+<!-- 	<div style="border-color:#F5F7F7; background-color:#F5F7F7" class="text-right panel-footer">
+		<a href="javascript:void(0);" id="btn_guardar_ingresos" class="btn btn-success btn-sm">
+			<span class="glyphicon glyphicon-floppy-disk"></span>
+			Guardar
+		</a>
+	</div> -->
+</form>
+				 </div>
+							                </div>
+							            </div>
+							        </div>
+							    </div>
+
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        /**
+         * Funcion parnueva columna en la tabla
+         */
+        $("#add").click(function(){
+            // Obtenemos el numero de filas (td) que tiene la primera columna
+            // (tr) del id "tabla"
+            var num_recetas=$('#columnas_receta_otros_egresos').val();
+            num_recetas=parseInt(num_recetas)+1;
+            //alert(num_recetas);
+
+            var tds=$("#tabla_otros_egresos tr:first td").length;
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla_otros_egresos tr").length;
+            var nuevaFila='<tr><td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+             nuevaFila+='<td><select class="form-control" id="tipos_kits'+num_recetas+'" name="tipos_kits'+num_recetas+'"> ';
+                                    {% for am  in tipos %}
+                      nuevaFila+='<option value="{{ am.id }}"> {{ am.nombre }}</option>';
+
+                                  {% endfor %}
+              nuevaFila+='</select></td>';
+
+                nuevaFila+='<td><input type="text"  class="form-control" id="nombre_kits'+num_recetas+'" name="nombre_kits'+num_recetas+'" ></td>';
+                nuevaFila+='<td><input type="text"  class="form-control" id="valor_kits'+num_recetas+'" name="valor_kits'+num_recetas+'" ></td>';
+                  nuevaFila+='<td><input type="checkbox" id="memo_kits'+num_recetas+'" name="memo_kits'+num_recetas+'" ></td>';
+
+                nuevaFila+='</tr>';
+
+              $('#columnas_receta_otros_egresos').val(num_recetas);
+            // for(var i=0;i<tds;i++){
+
+            //     nuevaFila+="<td>columna "+(i+1)+" on jquery</td>";
+            // }
+            // //
+            // nuevaFila+="<td>"+(trs+1)+" columnas";
+            // nuevaFila+="</tr>";
+            $("#tabla_otros_egresos").append(nuevaFila);
+        });
+
+        /**
+         * Funcion para eliminar la ultima columna de la tabla.
+         * Si unicamente queda una columna, esta no sera eliminada
+         */
+        $("#del").click(function(){
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla_otros_egresos tr").length;
+            if(trs>1)
+            {
+                // Eliminamos la ultima columna
+                $("#tabla_otros_egresos tr:last").remove();
+            }
+        });
+
+
+        $(document).on("click",".eliminar",function(){
+            var parent = $(this).parent();
+  $(parent).remove();
+          });
+
+    });
+    </script>
+    <script>
+            $(function() {
+                $("#registrar_eg").on("submit", function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                        url: $(this).attr("action"),
+                        type: 'POST',
+                        data: $(this).serialize(),
+                        beforeSend: function() {
+                            $("#message").html("sending...");
+                        },
+                        success: function(data) {
+                            $("#message").hide();
+                            $("#response").html(data);
+
+                              actualizarOtrosEgresos();
+                              $("#dlgEgreso").modal('toggle');
+                        }
+                    });
+                });
+            });
+  function actualizarOtrosEgresos(){
+      var num_recetas=$('#columnas_receta_otros_egresos').val();
+      var fila=$('#fila').val();
+      var total=0;
+      var cantidad=0;
+      var descuento=0;
+      var porcentaje_descuento=0;
+      var totalidad=0;
+      var i;
+
+      for (i = 1; i <= num_recetas; i++) {
+            if ($('#valor_kits'+i).val()){
+           cantidad=$('#valor_kits'+i).val();
+            total=parseFloat(total)+parseFloat(cantidad);
+
+          }
+
+
+      }
+      $('#id_pago_'+fila+'_otros_egresos').val((total).toFixed(2));
+actualizarTotal();
+
+    }
+
+        function seleccionar(id,plazo, monto,motivo){
+                var fila=id
+             $('#id_concepto').val(motivo);
+            $('#total_real').val(monto);
+
+            $('#plazo').val(plazo);
+            var mens=parseFloat(monto)/parseFloat(plazo);
+            $('#valor_mensual').val(mens);
+
+            var trs=$("#tabla tbody tr").length;
+            if(trs>1)
+            {
+                // Eliminamos la ultima columna
+                $("#tabla tbody tr").remove();
+            }
+            var prestamo=0;
+            var nuevaFila='';
+            nuevaFila += '<tr>';
+                nuevaFila += '<td colspan="2">SALDO DE DEUDA ANTERIOR</td>';
+              nuevaFila += '<td></td>';
+                nuevaFila += '<td><input type="text"  class="form-control" id="saldo_deuda_anterior" name="saldo_deuda_anterior" value="'+ prestamo +'" ></td>';
+                nuevaFila += '<td></td></tr>';
+            nuevaFila += '<tr>';
+             nuevaFila += '<td></td>';
+            nuevaFila += '<td></td>';
+                nuevaFila += '<td><input type="text"  class="form-control" id="monto_cuota_detalle" name="monto_cuota_detalle"  value="'+ monto +'"></td>';
+            var total=parseFloat(monto)+parseFloat(prestamo);
+                nuevaFila += '<td><input type="text"  class="form-control" id="total_pagar_detalle" name="total_pagar_detalle"  value="'+ total +'" ></td>';
+                nuevaFila += '</tr>';
+            for (i=1;i<=plazo;i++) {
+                nuevaFila += '<tr>';
+                nuevaFila += '<td><input type="date"  class="form-control fecha" id="fecha_kits' + i + '" name="fecha_kits' + i + '" ></td>';
+                nuevaFila += '<td><input type="text"  class="form-control fecha" id="abono_kits' + i + '" name="abono_kits' + i + '" ></td>';
+                nuevaFila += '<td><input type="text"  class="form-control fecha" id="cuota_kits' + i + '" name="cuota_kits' + i + '" value="' + i + '"  readonly="readonly"></td>';
+                nuevaFila += '<td><input type="text"  class="form-control fecha" id="saldo_kits' + i + '" name="saldo_kits' + i + '" ></td>';
+                nuevaFila += '<td><select class="form-control" id="descuento_kits' + i + '" name="descuento_kits' + i + '"> ';
+
+                nuevaFila += '<option value="NOMINA"> NOMINA</option>';
+                nuevaFila += '<option value="DECIMO TERCERO"> DECIMO TERCERO</option>';
+                nuevaFila += '<option value="DECIMO CUARTO"> DECIMO CUARTO</option>';
+                nuevaFila += '<option value="VACACIONES">  VACACIONES</option>';
+
+
+                nuevaFila += '</select></td>';
+                nuevaFila += '</tr>';
+            }
+              $("#tabla tbody").append(nuevaFila);
+              $('#columnas_receta').val(i);
+             $("#id_analisis_prestamo").val(id);
+
+ $('#dlgEgreso').modal();
+
+
+    }
+        </script>

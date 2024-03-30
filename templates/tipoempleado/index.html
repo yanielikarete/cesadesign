@@ -1,0 +1,20 @@
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+{% load staticfiles %}
+
+{% block css %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL STYLE TABLE================== -->
+    <link href="{% static 'color_admin/assets/plugins/DataTables-1.9.4/css/data-table.css' %}" rel="stylesheet" />
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Tipos de Empleado{% endblock %}
+{% block section_subtitle %}
+<br />
+ <div class="email-btn-row hidden-xs">
+                        <a href="{% url "tipoempleado-create" %}" class="btn btn-sm btn-success"><i class="fa fa-plus m-r-5"></i>Nuevo Tipo</a>
+                    </div>
+
+                    {% endblock %}

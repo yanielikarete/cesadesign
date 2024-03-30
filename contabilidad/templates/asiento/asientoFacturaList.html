@@ -1,0 +1,118 @@
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+{% load staticfiles %}
+
+{% block css %}
+{{ block.super }}
+{% endblock %}
+
+{% block section_title %}Edicion de Cheques  {% endblock %}
+{% block section_subtitle %}
+<br />
+
+
+                    {% endblock %}
+
+{% block content %}
+				<!-- begin col-12 -->
+				<div class="col-md-12">
+					<!-- begin panel -->
+					<div class="panel panel-inverse">
+						<div class="panel-heading">
+							<div class="panel-heading-btn">
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+							</div>
+							<h4 class="panel-title"></h4>
+						</div>
+						<div class="panel-body">
+							<div class="table-responsive">
+								<table id="data-table" class="table table-striped table-bordered">
+									<thead>
+										<tr>
+											<th>Tipo</th>
+											<th>Código</th>
+											<th>Fecha</th>
+											<th>Glosa</th>
+                                            <th>Paguese a</th>
+                                            <th>Descripcion</th>
+											 <th>Monto</th>
+											<th>Acción</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for r  in asientos %}
+
+											<tr>
+												<td> {{ r.12 }}</td>
+												<td> {{ r.1 }}</td>
+                                                <td>{{ r.2 | date:'Y-m-d' }}</td>
+												<td>{{ r.3 }}</td>
+                                                <td>{{ r.11 }}</td>
+												
+                                                <td>{{ r.10 }}</td>
+												<td>{{ r.13}}</td>
+												<td>
+													{% if r.14 %}
+			{% else %}
+													<a href="{% url 'asiento-relacionar-facturas' r.0  %}">
+														<button type="button" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i>
+														</button>
+													</a>
+																{% endif %}
+
+												</td>
+											</tr >
+
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+</div>
+
+
+
+						</div>
+					</div>
+					<!-- end panel -->
+
+					<!-- #modal-dialog -->
+
+				</div>
+				<!-- end col-12 -->
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+
+
+	<script type="text/javascript">
+
+
+	function detalledeCompra(id){
+          $.ajax({
+                url: "/config/obtenerDetalleCompra/", // the endpoint
+                type : "POST", // http method
+                data : { id : id,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+
+                  $("#detalle tr").remove();
+
+                  $("#detalle").append(data);
+                },
+                error: function(){
+
+                },
+              });
+    }
+	</script>
+	{% if form.errors or form_mode == "update" %}
+	<script type="text/javascript">
+		$( document ).ready(function() {
+		    $(".modal").modal('toggle');
+		});
+	</script>
+
+	{% endif %}
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+{% block list-add %}
+    <a href="{% url 'lote-create' %}" class="btn btn-primary pull-right">
+    	<i class="fa fa-plus"></i>
+        Agregar {{verbose_name}}
+    </a>
+{% endblock %}

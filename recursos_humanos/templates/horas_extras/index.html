@@ -1,0 +1,698 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    # -*- coding: UTF8 -*-
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+        <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css'%}" rel="stylesheet" />
+  <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css'%}" rel="stylesheet" />
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Horas Extras{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+
+            <!-- begin row -->
+           <style>
+       .panel-border{border: 1px solid #ddd !important}
+       .form-ajust .form-group{margin-bottom: 0px !important}
+      input[type="text"],select,input[type="number"]
+      {
+
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    box-shadow: none;
+    font-size: 12px;
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+       }
+
+ .table2 {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+      display:table}
+
+.table2>tbody>tr>td, .table2>tbody>tr>th, .table2>tfoot>tr>td, .table2>tfoot>tr>th {
+    border-color: #e2e7eb;
+    padding: 1px 0px;
+}
+    
+ .table2>thead>tr>td, .table2>thead>tr>th {
+    border-color: #e2e7eb;
+    padding: 10px 5px;
+}
+    </style>
+<form class="form-horizontal" method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+			    	<!-- INICIO PANEL DE BUSQUEDA -->
+					<div class="panel-group" id="accordion">
+						<div class="panel panel-inverse overflow-hidden">
+							<div class="panel-heading">
+								<h3 class="panel-title">
+									<a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true">
+									    <i class="fa fa-plus-circle pull-right"></i> 
+										B&uacute;squeda
+									</a>
+								</h3>
+							</div>
+							<div id="collapseOne" class="panel-collapse collapse in" aria-expanded="true">
+								<div class="panel-body">
+                    				
+				                        <div class="form-group">
+				                            <label class="col-md-1 col-sm-1 control-label"> A&ntilde;o: </label>
+				                            <div class="col-md-4 col-sm-4">
+																												
+														<select class="select-input form-control input-sm" id="id_anio" name="anio">
+																										{% for a in anio %}
+																										<option value="{{a.nombre}}">{{a.nombre}}</option>
+																										{% endfor %}
+																										</select>
+													 </div>
+				                                
+				                            <label class="col-md-1 col-sm-1 control-label"> Mes: </label>
+				                            <div class="col-md-4 col-sm-4">
+														<select class="select-input form-control input-sm" id="id_mes" name="mes">
+												<option value="1">Enero</option>
+												<option value="2">Febrero</option>
+												<option value="3">Marzo</option>
+												<option value="4" selected="selected">Abril</option>
+												<option value="5">Mayo</option>
+												<option value="6">Junio</option>
+												<option value="7">Julio</option>
+												<option value="8">Agosto</option>
+												<option value="9">Septiembre</option>
+												<option value="10">Octubre</option>
+												<option value="11">Noviembre</option>
+												<option value="12">Diciembre</option>
+												</select></div>
+				                            
+				                            
+				                                <!--<label class="col-md-1 col-sm-1 control-label"> Tipo: </label>-->
+				                                <!--<div class="col-md-2 col-sm-2"><select class="form-control input-sm" id="id_quincena" name="quincena" style="width: 160px">-->
+												<!--<option value="1Q" selected="selected">Primera Quincena</option>-->
+												<!--<option value="2Q">Segunda Quincena</option>-->
+												<!--</select>-->
+												<!--</div>-->
+				             <!--  <label class="col-md-1 col-sm-1 control-label"> Fecha: </label>
+                                                <div class="col-md-3 col-sm-3">
+                                                 <input  class="form-control" type="date" name="fecha" id="fecha" />
+
+
+                                                     </div>-->
+				                        </div>
+                                         <div class="form-group">
+
+
+                                                 <label class="col-md-1 col-sm-1 control-label"> Empleado: </label>
+                                                <div class="col-md-4 col-sm-4">
+                                                <select name="empleado" id="empleado" class="select-input form-control input-sm" >
+                                                <option value="0"> Seleccione</option>
+                                                         {% for am  in empleados %}
+                                                           <option value="{{ am.empleado_id }}"> {{ am.nombre_empleado }}</option>
+                                                        {% endfor %}
+                                                     </select>
+                                                </div>
+
+
+
+
+                                                 <label class="col-md-1 col-sm-1 control-label"> Area: </label>
+                                                <div class="col-md-4 col-sm-4">
+                                                <select name="departamento" id="departamento" class="select-input form-control input-sm" >
+                                                 <option value="0"> Seleccione</option>
+                                                         {% for dep  in departamentos %}
+                                                           <option value="{{ dep.id }}"> {{ dep.nombre }}</option>
+                                                        {% endfor %}
+                                                     </select>
+                                                     </div>
+
+
+                                        </div>
+
+			                        <hr>
+			                        <div class="pull-right">
+
+			                                <button type="button" class="btn btn-primary mb5" onclick="javascript:seleccionarEmpleados();">
+			                                    <i class="ico-files"></i> Consultar
+			                                </button>
+
+			                        </div>
+
+			                	</div>
+							</div>
+						</div>
+
+
+
+					</div>
+
+
+
+					<!--- PLANTILLA -->
+
+
+
+				    <!-- fin del panel de -->
+					<!-- inicio del detalle -->
+
+
+			        <!-- begin panel -->
+	                    <div class="panel panel-inverse" data-sortable-id="table-basic-7">
+	                        <div class="panel-heading">
+	                            <div class="panel-heading-btn">
+	                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+
+	                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+
+	                            </div>
+	                            <h4 class="panel-title"><i class="fa fa-users"></i>Empleados</h4>
+	                        </div>
+	                        <div class="panel-body">
+
+								<div class="table-responsive">
+									<table class="table" id="tabla" style="table-layout: fixed;min-width:500px">
+										<thead>
+											<tr>
+		                                        <th class="text-center" width="20px;">#</th>
+                                                <th class="text-center" width="200px;">Empleado</th>
+                                                <th class="text-center" width="150px;">Tipo</th>
+<!--                                                <th class="text-center" width="100px;">Fecha</th>
+-->                                                <th class="text-center" width="90px;">Horas/Dias</th>
+                                                <th class="text-center" width="90px;">Valor</th>
+                                                <th class="text-center" width="90px;">Pagar</th>
+
+		                                    </tr>
+										</thead>
+										<tbody >
+
+
+                                </tbody>
+									</table>
+								</div>
+								<!-- inicio boton guardar-->
+								<div class="text-right panel-footer">
+						        	 <button type="submit" class="btn btn-primary btn-lg" id="btn_guardar_ingresos"><i class="fa fa-cog"></i> Guardar</button>
+
+
+						        </div>
+								<!-- fin boton guardar -->
+
+
+							</div>
+						</div>
+	                    <!-- end panel -->
+
+
+					<!-- fin del detalle -->
+
+
+				</form>
+				    <!-- fin del form -->
+				    	<!-- inicio modal otros ingresos-->
+
+
+
+
+
+
+
+
+
+		{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script src="https://swisnl.github.io/jQuery-contextMenu/dist/jquery.contextMenu.js" type="text/javascript"></script>
+
+<script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>	<!-- ================== END BASE JS ================== -->
+
+
+	<script>
+		var mas = false;
+		$(document).ready(function() {
+			//App.init();
+			//Dashboard.init();
+			$("#datepicker-default").datepicker({todayHighlight:!0});
+               $("#fecha").datepicker({todayHighlight:!0});
+
+			$("#btn_guardar_ingresos").click(function(){
+
+
+			});
+		});
+
+
+		function seleccionarEmpleados(){
+            var mes = $('#id_mes').val();
+            var quincena = $('#id_quincena').val();
+            var anio = $('#id_anio').val();
+             var empleado = $('#empleado').val();
+            var departamento = $('#departamento').val();
+             var fecha = $('#fecha').val();
+
+            var parametros = {
+                'mes': mes,
+                'anio': anio,
+                'quincena':quincena,
+                 'empleado': empleado,
+                'departamento': departamento,
+                'fecha':fecha,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+
+            }
+          $.ajax({
+                url: "/recursos_humanos/obtenerEmpleadosHorasExtras/", // the endpoint
+                type : "POST", // http method
+                data: parametros,
+                success:function(data){
+
+                  $("#tabla tbody tr").remove();
+                   $(parent).remove();
+                  alert("Consultando");
+                  $("#tabla tbody").append(data);
+
+                },
+                error: function(){
+
+                },
+              });
+    }
+
+
+
+
+   function ingresos_ad(prefix){
+            $("#id_popup_ingresos").html("<b>Ingresos Adicionales</b>");
+            var id_txt_otros_ingresos = $('#id_empleado'+prefix).val();
+            var mes = $('#id_mes').val();
+            var quincena = $('#id_quincena').val();
+            var anio = $('#id_anio').val();
+            var tipo_contrato_persona = $('#tipo_contrato_persona').val();
+
+            var fila=prefix
+            
+
+
+            var parametros = {
+                'mes': mes,
+                'anio': anio,
+                'quincena':quincena,
+                'tipo_contrato_persona': tipo_contrato_persona,
+                'id_txt_otros_ingresos':id_txt_otros_ingresos,
+                'fila':fila,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+                
+            }
+
+            $.ajax({
+                    url: "/recursos_humanos/mostrar_otros_ingresos/",
+                    type: "POST",
+                    async: true,
+                    data: parametros,
+                    success: function(data){
+                        $('#contenido_dlgIngreso').html(data);
+                        
+                        mes = $('#id_mes').val();
+                        quincena = $('#id_quincena').val();
+                        anio = $('#id_anio').val();
+                        
+                            $('#mes_id').val(mes);
+                            $('#quincena_id').val(quincena);
+                            $('#anio_id').val(anio);
+                            $('#tipo_ingreso_id').val('');
+                            var meses = $('input[id$="-mes_ingreso"]');
+                            for(var i=0;i<meses.length;i++) {
+                                meses[i].value = mes;
+                            }
+                            var anios = $('input[id$="-anio_ingreso"]');
+                            for(var i=0;i<anios.length;i++) {
+                                anios[i].value = anio;
+                            }
+                            var quincenas = $('input[id$="-quincena_ingreso"]');
+                            for(var i=0;i<quincenas.length;i++) {
+                                if(quincena == '1Q'){
+                                    quincenas[i].value = "P";    
+                                }else{
+                                    quincenas[i].value = "S";
+                                }
+                            }
+                        
+                    },
+                    complete: function(){
+                       $("#btn_guardar_ingresos").show();
+                    }
+                });
+            $('#dlgIngreso').modal();
+        }
+
+        function egresos_ad(prefix){
+            $("#id_popup_egresos").html("<b>Egresos Adicionales</b>");
+            var id_txt_otros_egresos = $('#id_empleado'+prefix).val();
+            var mes = $('#id_mes').val();
+            var quincena = $('#id_quincena').val();
+            var anio = $('#id_anio').val();
+            var tipo_contrato_persona = $('#tipo_contrato_persona').val();
+            var fila=prefix
+            
+
+
+            var parametros = {
+                'mes': mes,
+                'anio': anio,
+                'quincena':quincena,
+                'tipo_contrato_persona': tipo_contrato_persona,
+                'id_txt_otros_egresos':id_txt_otros_egresos,
+                'fila':fila,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+                
+            }
+
+            $.ajax({
+                    url: "/recursos_humanos/mostrar_otros_egresos/",
+                    type: "POST",
+                    async: true,
+                    data: parametros,
+                    success: function(data){
+                        $('#contenido_dlgEgreso').html(data);
+                        
+                        mes = $('#id_mes').val();
+                        quincena = $('#id_quincena').val();
+                        anio = $('#id_anio').val();
+                        
+                            $('#mes_id').val(mes);
+                            $('#quincena_id').val(quincena);
+                            $('#anio_id').val(anio);
+                            $('#tipo_ingreso_id').val('');
+                            var meses = $('input[id$="-mes_ingreso"]');
+                            for(var i=0;i<meses.length;i++) {
+                                meses[i].value = mes;
+                            }
+                            var anios = $('input[id$="-anio_ingreso"]');
+                            for(var i=0;i<anios.length;i++) {
+                                anios[i].value = anio;
+                            }
+                            var quincenas = $('input[id$="-quincena_ingreso"]');
+                            for(var i=0;i<quincenas.length;i++) {
+                                if(quincena == '1Q'){
+                                    quincenas[i].value = "P";    
+                                }else{
+                                    quincenas[i].value = "S";
+                                }
+                            }
+                        
+                    },
+                    complete: function(){
+                       $("#btn_guardar_egresos").show();
+                    }
+                });
+            $('#dlgEgreso').modal();
+        }
+
+
+function egresos(prefix){
+            $("#id_popup_egresos").html("<b>Egresos</b>");
+            var id_txt_otros_egresos = $('#id_empleado'+prefix).val();
+            var mes = $('#id_mes').val();
+            var quincena = $('#id_quincena').val();
+            var anio = $('#id_anio').val();
+            var tipo_contrato_persona = $('#tipo_contrato_persona').val();
+            var fila=prefix
+            
+
+
+            var parametros = {
+                'mes': mes,
+                'anio': anio,
+                'quincena':quincena,
+                'tipo_contrato_persona': tipo_contrato_persona,
+                'id_txt_otros_egresos':id_txt_otros_egresos,
+                'fila':fila,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+                
+            }
+
+            $.ajax({
+                    url: "/recursos_humanos/mostrar_egresos/",
+                    type: "POST",
+                    async: true,
+                    data: parametros,
+                    success: function(data){
+                        $('#contenido_dlgEgreso').html(data);
+                        
+                        mes = $('#id_mes').val();
+                        quincena = $('#id_quincena').val();
+                        anio = $('#id_anio').val();
+                        
+                            $('#mes_id').val(mes);
+                            $('#quincena_id').val(quincena);
+                            $('#anio_id').val(anio);
+                            $('#tipo_ingreso_id').val('');
+                            var meses = $('input[id$="-mes_ingreso"]');
+                            for(var i=0;i<meses.length;i++) {
+                                meses[i].value = mes;
+                            }
+                            var anios = $('input[id$="-anio_ingreso"]');
+                            for(var i=0;i<anios.length;i++) {
+                                anios[i].value = anio;
+                            }
+                            var quincenas = $('input[id$="-quincena_ingreso"]');
+                            for(var i=0;i<quincenas.length;i++) {
+                                if(quincena == '1Q'){
+                                    quincenas[i].value = "P";    
+                                }else{
+                                    quincenas[i].value = "S";
+                                }
+                            }
+                        
+                    },
+                    complete: function(){
+                      // $("#btn_guardar_egresos").show();
+                    }
+                });
+            $('#dlgEgreso').modal();
+        }
+
+
+function ingresos(prefix){
+            $("#id_popup_egresos").html("<b>Egresos</b>");
+            var id_txt_otros_egresos = $('#id_empleado'+prefix).val();
+            var mes = $('#id_mes').val();
+            var quincena = $('#id_quincena').val();
+            var anio = $('#id_anio').val();
+            var tipo_contrato_persona = $('#tipo_contrato_persona').val();
+            var fila=prefix
+            
+
+
+            var parametros = {
+                'mes': mes,
+                'anio': anio,
+                'quincena':quincena,
+                'tipo_contrato_persona': tipo_contrato_persona,
+                'id_txt_otros_egresos':id_txt_otros_egresos,
+                'fila':fila,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+                
+            }
+
+            $.ajax({
+                    url: "/recursos_humanos/mostrar_ingresos/",
+                    type: "POST",
+                    async: true,
+                    data: parametros,
+                    success: function(data){
+                        $('#contenido_dlgIngreso').html(data);
+                        
+                        mes = $('#id_mes').val();
+                        quincena = $('#id_quincena').val();
+                        anio = $('#id_anio').val();
+                        
+                            $('#mes_id').val(mes);
+                            $('#quincena_id').val(quincena);
+                            $('#anio_id').val(anio);
+                            $('#tipo_ingreso_id').val('');
+                            var meses = $('input[id$="-mes_ingreso"]');
+                            for(var i=0;i<meses.length;i++) {
+                                meses[i].value = mes;
+                            }
+                            var anios = $('input[id$="-anio_ingreso"]');
+                            for(var i=0;i<anios.length;i++) {
+                                anios[i].value = anio;
+                            }
+                            var quincenas = $('input[id$="-quincena_ingreso"]');
+                            for(var i=0;i<quincenas.length;i++) {
+                                if(quincena == '1Q'){
+                                    quincenas[i].value = "P";    
+                                }else{
+                                    quincenas[i].value = "S";
+                                }
+                            }
+                        
+                    },
+                    complete: function(){
+                      // $("#btn_guardar_egresos").show();
+                    }
+                });
+            $('#dlgIngreso').modal();
+        }
+
+
+
+
+
+
+    function dias_ad(prefix){
+            $("#id_popup_dias").html("<b>Dias No Laborados</b>");
+            var id_txt_otros_dias = $('#id_empleado'+prefix).val();
+            var mes = $('#id_mes').val();
+            var quincena = $('#id_quincena').val();
+            var anio = $('#id_anio').val();
+            var tipo_contrato_persona = $('#tipo_contrato_persona').val();
+            var fila=prefix
+            
+
+
+            var parametros = {
+                'mes': mes,
+                'anio': anio,
+                'quincena':quincena,
+                'tipo_contrato_persona': tipo_contrato_persona,
+                'id_txt_otros_dias':id_txt_otros_dias,
+                'fila':fila,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+                
+            }
+
+            $.ajax({
+                    url: "/recursos_humanos/mostrar_dias/",
+                    type: "POST",
+                    async: true,
+                    data: parametros,
+                    success: function(data){
+                        $('#contenido_dlgDias').html(data);
+                        
+                        mes = $('#id_mes').val();
+                        quincena = $('#id_quincena').val();
+                        anio = $('#id_anio').val();
+                        
+                            $('#mes_id').val(mes);
+                            $('#quincena_id').val(quincena);
+                            $('#anio_id').val(anio);
+                            $('#tipo_ingreso_id').val('');
+                            var meses = $('input[id$="-mes_ingreso"]');
+                            for(var i=0;i<meses.length;i++) {
+                                meses[i].value = mes;
+                            }
+                            var anios = $('input[id$="-anio_ingreso"]');
+                            for(var i=0;i<anios.length;i++) {
+                                anios[i].value = anio;
+                            }
+                            var quincenas = $('input[id$="-quincena_ingreso"]');
+                            for(var i=0;i<quincenas.length;i++) {
+                                if(quincena == '1Q'){
+                                    quincenas[i].value = "P";    
+                                }else{
+                                    quincenas[i].value = "S";
+                                }
+                            }
+                        
+                    },
+                    complete: function(){
+                       $("#btn_guardar_dias").show();
+                    }
+                });
+            $('#dlgDias').modal();
+        }
+
+function actualizarTotal(){
+    var num_recetas=$('#columnas_receta_roles').val();
+      var total=0;
+      var cantidad=0;
+      
+      var ingresos=0;
+      var otros_ingresos=0;
+      var egresos=0;
+      var otros_egresos=0;
+      var total_ingresos=0;
+      var total_otros_ingresos=0;
+      var total_egresos=0;
+      var total_otros_egresos=0;
+      var total_recibir=0;
+      var total_dias=0;
+      var i;
+      alert('Guardando...');
+      for (i = 1; i <= num_recetas; i++) {
+
+        if ($('#id_pago_'+i+'_total').length){
+            ingresos=$('#id_pago_'+i+'_total').val();
+            otros_ingresos=$('#id_pago_'+i+'_otros_ingresos').val();
+            egresos=$('#id_pago_'+i+'_total_egresos').val();
+            otros_egresos=$('#id_pago_'+i+'_otros_egresos').val();
+           
+            //alert(total_dias);
+            if ($('#id_pago_'+i+'_dias_valor').length){
+ total_dias=$('#id_pago_'+i+'_dias_valor').val();
+            }else{
+total_dias=0;
+            }
+        
+            total=parseFloat(ingresos)+parseFloat(otros_ingresos)-parseFloat(egresos)-parseFloat(otros_egresos)-parseFloat(total_dias);
+           //alert(total);
+            $('#id_pago_'+i+'_valor_a_recibir').val((total).toFixed(2));
+            total_recibir+=total;
+          }
+        
+         
+      }
+  
+
+}
+
+function calcular(fila,sueldo){
+
+	var tipos=$('#tipo'+fila).val();
+var horas=parseFloat($('#hora'+fila).val());
+var sueldo=parseFloat(sueldo);
+var total=0;
+//alert(tipos);
+
+              if (tipos==5 ){
+            total=(sueldo/240)*1.5*horas;
+
+            }
+             if (tipos==25  ){
+           total=(sueldo/240)*2*horas;
+
+            }
+            if (tipos==26){
+           total=((sueldo/240)+((sueldo/240)*0.25))*horas;
+
+            }
+           // alert(total);
+            $("#valor"+fila).val((total).toFixed(2));
+
+}
+
+	</script>
+{% endblock %}                            
+

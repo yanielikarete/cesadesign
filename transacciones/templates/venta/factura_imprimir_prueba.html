@@ -1,0 +1,352 @@
+<!doctype html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<style>
+
+    body{
+        font-size:11px; font-weight: bold; font-family: 'Lucida Console';
+        padding: 0 25px;
+    }
+    .head{
+        width: 100%;
+        text-align: left;
+        padding-top: 1px;
+
+    }
+
+    #detail{
+        width: 100%;
+    }
+
+    .contenido{
+        width: 100%;
+    }
+
+    .datos td{
+        height: 29px;
+    }
+    .foot table td{
+    }
+    .valores{
+       font-size: 11px;
+
+    }
+
+    .foot{
+        text-align: center;
+    }
+    h1{
+        line-height: 1px;
+        width: 700px;
+        text-align: center;
+        font-size: 11pt;
+        letter-spacing: 2px;
+    }
+    h3{
+        line-height: 2px;
+        letter-spacing: 2px;
+    }
+
+    .foot{
+        text-align: left;
+        letter-spacing: 2px;
+        width: 100%;
+        font-size: 7pt;
+    }
+    .ajustar{
+white-space: pre; /* CSS 2.0 */
+white-space: pre-wrap; /* CSS 2.1 */
+white-space: pre-line; /* CSS 3.0 */
+white-space: -pre-wrap; /* Opera 4-6 */
+white-space: -o-pre-wrap; /* Opera 7 */
+white-space: -moz-pre-wrap; /* Mozilla */
+white-space: -hp-pre-wrap; /* HP */
+word-wrap: break-word; /* IE 5+ */
+}
+@font-face {
+font-family: 'Arial';
+src: url('arial.ttf') format('truetype');
+}
+
+</style>
+<script src="{% static 'color_admin/assets/plugins/jquery-1.8.2/jquery-1.8.2.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/masked-input/NumeroALetras.js' %}"></script>
+
+
+<body>
+
+<div class="head">
+    <br />
+    <br />
+    <br />
+<br />
+    <table id="head_inf">
+<tr>
+            <td style="width:57px">&nbsp;&nbsp;&nbsp;</td><td width="550" style="text-align: left;"></td>
+            <td></td><td></td>
+        </tr>
+        <tr>
+            <td style="width:57px">&nbsp;&nbsp;&nbsp;</td><td width="550" style="text-align: left;">{{documento.fecha_emision | date:'Y-m-d'}}</td>
+            <td></td><td></td>
+        </tr>
+        <tr>
+            {% if documento.razon_social %}
+            <td></td><td style="text-align: left;" >{{documento.razon_social.nombre}}</td>
+            {% else %}
+            <td></td><td style="text-align: left;">{{documento.cliente.nombre_cliente}}</td>
+            {% endif %}
+            <td></td><td style="text-align: left;">{{documento.ruc}}</td>
+        </tr>
+        <tr>
+            <td></td><td style="text-align: left;" >{{documento.direccion | default_if_none:''}}</td>
+            <td></td><td style="text-align: left;">{{documento.telefono | default_if_none:''}}</td>
+        </tr>
+
+
+    </table>
+
+
+
+</div>
+
+<br /><br /><br />
+<div class="contenido">
+    <table border="0" width="100%" class="datos" id="detalle">
+        <thead> <tr>
+            <td style="text-align:center;width:45px" > </td>
+            <td  width="580" style="text-align:left"  class="ajustar"></td>
+            <td style="text-align:right" width="100"> &nbsp;</td>
+            <td style="text-align:right" width="100"> </td>
+        </tr></thead>
+        <tbody>
+        {% if detalle %}
+        {% for kit in detalle %}
+        <tr>
+            <td style="text-align:center;width:45px" >{{ kit.cantidad | floatformat:2 }} </td>
+            <td  width="580" style="text-align:left"  class="ajustar">{{ kit.descripcion}}</td>
+            <td style="text-align:right" width="100"> {{ kit.base_iva | floatformat:2}}&nbsp;</td>
+            <td style="text-align:right" width="100"> {{ kit.subtotal | floatformat:2 }}&nbsp;&nbsp;</td>
+        </tr>
+
+        {% endfor %}
+        {% for i in rango %}
+        <tr><td colspan="4">&nbsp;</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <div style="">&nbsp;</div>
+    <table border="0" class="footer" width="100%" id="detalle2">
+        <tbody>
+        
+        <tr>
+            <td style="text-align:center">&nbsp;</td>
+            <td style="text-align:center;" colspan="3"></td>
+            <td style="text-align:right">{{ documento.subtotal | floatformat:2 }}</td>
+
+        </tr>
+        <tr>
+            <td style="text-align:center">&nbsp;</td>
+            <td style="text-align:center" colspan="3"></td>
+            <td style="text-align:right">{{ documento.descuento | floatformat:2 }}</td>
+
+        </tr>
+         <tr>
+            <td style="text-align:center">&nbsp;</td>
+            <td style="text-align:left;width:775px !important" >{{ documento.total_en_letras | default_if_none:'' }}</td>
+            <td style="text-align:center">&nbsp;</td>
+             <td style="text-align:center">&nbsp;</td>
+             <td style="text-align:center">&nbsp;</td>
+
+        </tr>
+        <tr>
+            <td style="text-align:center">&nbsp;</td>
+            <td style="text-align:center" colspan="3"></td>
+            <td style="text-align:right">{{ documento.valor_iva | floatformat:2 }}</td>
+
+        </tr>
+        <tr>
+            <td style="text-align:center">&nbsp;</td>
+            <td style="text-align:center" colspan="3"></td>
+            <td style="text-align:right">{{ documento.total | floatformat:2 }}</td>
+
+        </tr>
+        {% else %}
+        {% endif %}
+        </tbody>
+
+    </table>
+
+</div>
+
+
+</body>
+<script src="{% static 'color_admin/assets/js/script_autotable.js' %}"></script>
+<script>
+
+    $(document).ready(function () {
+
+      
+ var doc = new jsPDF('p', 'pt', 'a4')
+var specialElementHandlers = {
+    '#editor': function (element, renderer) {
+        return true;
+    }
+    
+};
+
+
+ var res = doc.autoTableHtmlToJson(document.getElementById("head_inf"));
+
+  doc.autoTable(res.columns, res.data, {
+    startY: 117.9,
+    startX: 110,
+      theme: "plain",
+      styles: {
+        fontStyle: 'bold',
+      font: "helvetica",
+    //    fontSize: 12,
+    //    // overflow: "linebreak",
+       rowHeight: 18.6,
+    //cellPadding: 2,
+    
+
+    //    halign: "left"
+     },
+      columnStyles: {
+                0: {halign: 'left',
+                columnWidth:60 ,
+                
+                }, 
+                1: {
+                    columnWidth:300 ,
+                    halign: 'left',
+                    fontSize: 8,
+                },
+                2: {
+                   columnWidth:35,
+                    halign: 'left', 
+                },
+                3: {
+                    columnWidth:100 ,
+                    halign: 'left', 
+                },
+    }
+  });
+  
+  var res2 = doc.autoTableHtmlToJson(document.getElementById("detalle"));
+
+  doc.autoTable(res2.columns, res2.data, {
+    startY: 235.5,
+      theme: "plain",
+      
+      styles: {
+      fontStyle: 'bold',
+       font: "helvetica",
+         //   font: "times",
+
+    //    fontSize: 12,
+    //    // overflow: "linebreak",
+    //    rowHeight: 8,
+    //cellPadding: 2,
+    rowHeight: 18.1,
+
+      
+     
+     },
+     columnStyles: {
+                0: {
+                    halign: 'center',
+                columnWidth:53 ,
+                // font: "times",
+                 font: "helvetica",
+                }, 
+                1: {
+                    columnWidth:330 ,
+                    halign: 'left',
+                    font: "helvetica",
+                },
+                2: {
+                   columnWidth:60,
+                    halign: 'right',
+                     //font: "times",
+                     font: "helvetica",
+                },
+                3: {
+                    columnWidth:82 ,
+                    halign: 'right',
+                     //font: "times",
+                     font: "helvetica",
+                },
+                
+            }
+     
+  });
+  
+  
+  var res3 = doc.autoTableHtmlToJson(document.getElementById("detalle2"));
+
+  doc.autoTable(res3.columns, res3.data, {
+    startY: 680.5,
+     startX: 110,
+      theme: "plain",
+      styles: {
+      //font: "times",
+       font: "times",
+      fontStyle: 'bold',
+    //    fontSize: 12,
+    //    // overflow: "linebreak",
+    //    rowHeight: 8,
+    //cellPadding: 2,
+    rowHeight: 18.1,
+     halign: "right",
+
+    //    halign: "left"
+     },
+     columnStyles: {
+        0: {halign: 'left',
+               columnWidth:75,  
+                 //font: "times",
+                 font: "times",
+                 
+                }, 
+                1: {halign: 'left',
+                font: "helvetica",
+                
+                }, 
+                2: {
+                    halign: 'right',
+                     font: "times",
+                },
+                3: {
+                   columnWidth:60,
+                    halign: 'right',
+                    font: "times",
+                },
+                4: {
+                    columnWidth:60 ,
+                    halign: 'right',
+                    font: "times",
+                },
+                5: {
+                   
+                    font: "times",
+                },
+            }
+  });
+  
+          var factura="FA{{documento.establecimiento}}"+"-"+"{{documento.punto_emision}}"+"-"+"{{documento.secuencial}}";
+ 
+    
+      var nombre_cheque='FA'+factura+'.pdf';
+      doc.save(nombre_cheque); 
+  window.print();
+        
+        
+    });
+</script>
+</html>
+

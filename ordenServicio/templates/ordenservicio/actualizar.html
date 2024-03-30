@@ -1,0 +1,349 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+<link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css'%}" rel="stylesheet" />
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css'%}" rel="stylesheet" />
+<!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block breadcrumb %}Sucursal {{ sucursal.nombre }}{% endblock %}
+{% block section_title %}Ordenes de Servicio{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+
+<!-- begin row -->
+<style>
+.panel-border{border: 1px solid #ddd !important}
+.form-ajust .form-group{margin-bottom: 0px !important}
+input[type="text"],select,input[type="number"]
+{
+
+  border: 1px solid #ccd0d4;
+  border-radius: 3px;
+  box-shadow: none;
+  font-size: 12px;
+  display: block;
+  width: 100%;
+  height: 34px;
+  padding: 6px 12px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+}
+
+.table2 {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+  display:table}
+
+  .table2>tbody>tr>td, .table2>tbody>tr>th, .table2>tfoot>tr>td, .table2>tfoot>tr>th, .table2>thead>tr>td, .table2>thead>tr>th {
+    border-color: #e2e7eb;
+    padding: 10px 15px;
+  }
+
+
+  </style>
+
+  <div class="row">
+    <!-- begin col-6 -->
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+         <form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+
+          <h3 class="panel-title">Ordenes de Servicio</h3>
+        </div>
+        <div class="panel-body">
+          <div class="col-md-9">
+            <div>
+
+              <!-- Nav tabs -->
+              <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#principales" aria-controls="principales" role="tab" data-toggle="tab">Principales</a></li>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div role="tabpanel" class="tab-pane fade in active" id="principales">
+    <div class="row">
+
+      <div class="panel panel-default panel-border">
+        <div class="panel-heading">Datos de la Orden</div>
+        <div class="panel-body">
+
+          <div class="col-md-4">
+            <label for="id_nro_orden">N&uacute;mero Orden</label>
+            {% bootstrap_field form.nro_orden show_label=False %}
+
+          </div>
+          <div class="col-md-4">
+            <label for="id_ciudad">Ciudad</label>
+            {% bootstrap_field form.ciudad show_label=False %}
+
+          </div>
+          <div class="col-md-4">
+            <label for="id_fecha">Fecha </label>
+            {% bootstrap_field form.fecha show_label=False %}
+
+          </div>
+          <div class="col-md-4">
+            <label for="id_cliente">Cliente</label>
+            {% bootstrap_field form.cliente show_label=False %}
+
+
+          </div>
+          <div class="col-md-8">
+            <label for="id_direccion">Direccion</label>
+            {% bootstrap_field form.direccion show_label=False %}
+          </div>
+          <div class="col-md-6">
+            <label for="id_objeto_orden">Objeto de la Orden</label>
+            {% bootstrap_field form.objeto_orden show_label=False %}
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="row">
+
+      <div class="panel panel-default panel-border">
+        <div class="panel-heading"> </div>
+        <div class="panel-body">
+
+          
+
+          <div class="col-md-3">
+            <label for="id_hora_salida_fabrica">Hora salida F&aacute;brica</label>
+            {% bootstrap_field form.hora_salida_fabrica show_label=False %}
+          </div>
+
+          <div class="col-md-3">
+            <label for="id_hora_llegada_obra">Hora llegada Obra </label>
+            {% bootstrap_field form.hora_llegada_obra show_label=False %}
+          </div>
+          <div class="col-md-3">
+            <label for="id_hora_salida_obra">Hora salida Obra</label>
+            {% bootstrap_field form.hora_salida_obra show_label=False %}
+          </div>
+          <div class="col-md-3">
+            <label for="id_hora_llegada_fabrica">Hora llegada F&aacute;brica</label>
+            {% bootstrap_field form.hora_llegada_fabrica show_label=False %}
+
+          </div>
+          <div class="col-md-12">
+            <label for="id_novedades">Novedades</label>
+            {% bootstrap_field form.novedades show_label=False %}
+
+          </div>
+          <div class="col-md-4">
+            <label for="id_pedido">Pedido  </label>
+            {% bootstrap_field form.pedido show_label=False %}
+          </div>
+          <div class="col-md-4">
+            <label for="id_orden_produccion">OP </label>
+            {% bootstrap_field form.orden_produccion show_label=False %}
+          </div>
+          <div class="col-md-4">
+            <label for="id_guia_remision">Guia Remision</label>
+            {% bootstrap_field form.guia_remision show_label=False %}
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+
+      <div class="panel panel-default panel-border">
+        <div class="panel-heading"> </div>
+        <div class="panel-body">
+          <div class="col-md-12">
+            <label for="id_reporte_visita">Reporte Visita </label>
+            {% bootstrap_field form.reporte_visita show_label=False %}
+
+          </div>
+          <div class="col-md-12">
+            <label for="id_trabajos_realizar">Trabajos a Realizar </label>
+            {% bootstrap_field form.trabajos_realizar show_label=False %}
+
+          </div>
+          <div class="col-md-12">
+            <label for="id_observaciones">Observaciones </label>
+            {% bootstrap_field form.observaciones show_label=False %}
+
+          </div>
+          <div class="col-md-4">
+            <label for="id_maestros_responsables">Maestros responsables </label>
+            {% bootstrap_field form.maestros_responsables show_label=False %}
+
+          </div>
+          <div class="col-md-4">
+            <label for="id_maestro_encargado">Maestro encargado </label>
+            {% bootstrap_field form.maestro_encargado show_label=False %}
+
+                  </div>
+      </div>
+
+    </div>
+
+    
+
+    </div>
+
+
+
+
+  </div>
+
+  <div role="tabpanel" class="tab-pane fade" id="costo">..
+
+  </div>
+  
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<p class="text-center">
+
+  <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+  <a class="default btn btn-link" href="/ordenServicio/ordenservicio"><button type="button" class="btn btn-primary btn-lg">  Regresar</button></a>
+</p>
+{% if kits %}
+<input type="hidden" name="columnas_receta" id="columnas_receta" value="{{ kits|length }}" />
+{% else %}
+<input type="hidden" name="columnas_receta" id="columnas_receta" value="1" />
+
+{% endif %}
+<input type="hidden" name="id_fila_cambiar" id="id_fila_cambiar" value="" />
+<input type="hidden" name="product_id" id="product_id" value="{{ producto_form.producto_id.value}}" />
+
+
+
+<!--  <p class="text-right m-b-0">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-cog"></i> Guardar</button>
+                                </p>
+                                <a class="default btn btn-link" href="/inventario/producto">
+      <i class="fa fa-times"></i> Regresar
+    </a> -->
+  </form>
+  <div class="modal fade" id="modal-dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+       <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered" id="tabla">
+            <thead>
+              <tr>
+                <td></td>
+                <th>Codigo</th>
+                <th>Nombre</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              {% for producto  in productos %}
+              <tr>
+                <td  onclick="cargarCodigoProducto('{{ producto.producto_id }}','{{ producto.codigo_producto }}','{{ producto.descripcion_producto }}','{{ producto.medida }}','{{ producto.costo }}')"><a class="btn btn-danger remove_fields">
+                  <i class=" glyphicon glyphicon-plus icon-white"></i>
+                </a></td><td>{{ producto.codigo_producto }}</td>
+                <td>{{ producto.descripcion_producto }}</td>
+              </tr >
+              {% endfor %} 
+
+            </tbody>
+          </table>
+        </div>
+        <button type="button" onclick="cerrar()" class="btn btn-danger btn-block">Cerrar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+
+
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+
+  {% block javascript %}
+  {{ block.super }}
+  <!-- ================== BEGIN PAGE LEVEL JS ================== -->
+  <script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+  <script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<!-- <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+--><script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+<!-- ================== END PAGE LEVEL JS ================== -->
+<script>
+    // $(document).ready(function() {
+    //     App.init();
+    //     FormWizardValidation.init();
+    // });
+</script>
+
+<script>
+$(document).ready(function() {
+  $('#id_nro_orden').each(function(){
+    $(this).attr('readonly','readonly');
+  });
+  
+  var codigo=$("#id_nro_orden").val().length ;
+  if(codigo < 1){
+    $.ajax({
+      url: "/config/obtenerSecuencial/", // the endpoint
+      type : "POST", // http method
+      data : { id : 'ordenServicio','csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+      success:function(data){
+        $('#id_nro_orden').val('00'+data);
+      },
+      error: function(){
+      },
+    });
+  }
+  else{
+    // alert(codigo);
+  }
+  $('#id_fecha').datepicker({todayHighlight:true,autoclose:true});
+  $('#id_fecha').datepicker('option', {dateFormat: 'dd/mm/yyyy'});
+  var codigo_reunion=$("#id_reunion_codigo").val();
+  $("#id_reunion_codigo").focusout(function(){
+    codigo_reunion=$("#id_reunion_codigo").val();
+    $.ajax({
+      url: "/config/obtenerReunion/", // the endpoint
+      type : "POST", // http method
+      data : { id : codigo_reunion,'csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+      success:function(data){
+        $('#id_cliente option[value='+data['cliente']+']').attr('selected','selected');
+        $('#id_vendedor option[value='+data['vendedor']+']').attr('selected','selected');
+      },
+      error: function(){
+      },
+    });
+  });
+});
+</script>
+<script>
+function mostrarProductos(data){
+ $('#id_fila_cambiar').val(data);
+ $(".modal").modal('toggle');
+}
+function cerrar(){
+ $(".modal").modal('toggle');
+}
+</script>
+    
+{% endblock %}                                                                                                                                                                                                                                                                

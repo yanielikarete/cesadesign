@@ -1,0 +1,509 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+<link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css'%}" rel="stylesheet" />
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css'%}" rel="stylesheet" />
+<!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Asiento Contable{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+<style>
+.panel-border{border: 1px solid #ddd !important}
+.form-ajust .form-group{margin-bottom: 0px !important}
+input[type="text"],select,input[type="number"]
+{
+
+  border: 1px solid #ccd0d4;
+  border-radius: 3px;
+  box-shadow: none;
+  font-size: 12px;
+  display: block;
+  width: 100%;
+  height: 34px;
+  padding: 6px 12px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+}
+
+.table2 {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+  display:table}
+
+  .table2>tbody>tr>td, .table2>tbody>tr>th, .table2>tfoot>tr>td, .table2>tfoot>tr>th, .table2>thead>tr>td, .table2>thead>tr>th {
+    border-color: #e2e7eb;
+    padding: 10px 15px;
+  }
+    .btn {
+    padding: 6px 6px !important;}
+  </style>
+
+
+  <form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data" id="asiento-form"> {% csrf_token %}
+   {{ asiento_form.title.errors }}
+   <!-- begin row -->
+   <div class="row">
+    <!-- begin col-6 -->
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Asiento</h3>
+        </div>
+        <div class="panel-body">
+              <!-- Nav tabs -->
+
+              <!-- Tab panes -->
+              <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade in active" id="principales">
+                  <!--INICIO ORDEN PRODUCCION-->
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="panel panel-default panel-border">
+                        <div class="panel-heading">Informacion del Asiento</div>
+                        <div class="panel-body">
+
+                          
+                          <div class="col-md-4">
+                            <label>Fecha</label>
+                            {% bootstrap_field asiento_form.fecha show_label=False%}
+                          </div>
+                          <div class="col-md-4">
+                            <label>Codigo Asiento</label>
+                            {% bootstrap_field asiento_form.codigo_asiento show_label=False %}
+
+                          </div>
+                          <div class="col-md-4">
+                            <label>Glosa</label>
+                            {% bootstrap_field asiento_form.glosa show_label=False %}
+
+                          </div>
+                          <div class="col-md-4">
+                            {% bootstrap_field asiento_form.gasto_no_deducible show_label=False %}
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+          <div class="row">
+            <div class="col-md-12">
+              <div class="panel panel-default panel-border">
+                <!-- Default panel contents -->
+                <div class="panel-heading">ASIENTO DETALLE</div>
+                <div class="panel-body">
+
+                </div>
+
+                <!-- Table -->
+                <table class="table2 table-striped table-bordered" id="tabla" >
+                  <tr>
+                    <th></th>
+                    <th style="width:180px">Cuenta</th>
+                    <th>Debe</th>
+                    <th>Haber</th>
+                    <th style="width:130px">Centro de Costo</th>
+                      <th>Concepto</th>
+                  </tr>
+                  {% if detalle %}
+                  {% for kit in detalle %}
+
+                  <tr>
+                    <td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>
+                    <td>
+                      <input type="hidden" class="form-control" id="id_detalle{{forloop.counter}}" name="id_detalle{{forloop.counter}}" value="{{kit.detalle_id}}" readonly="readonly"/>
+                    	<input type="hidden" class="form-control" id="id_cuenta_kits{{forloop.counter}}" name="id_cuenta_kits{{forloop.counter}}" value="{{kit.cuenta.plan_id}}" readonly="readonly"/>
+                    	<div class="input-group add-on"><input required="required" type="text" class="form-control" id="cuenta_kits{{forloop.counter}}" name="cuenta_kits{{forloop.counter}}" readonly="readonly" value="{{kit.cuenta.nombre_plan}}" onfocus="mostrarCuentas({{forloop.counter}})" />
+                    <div class="input-group-btn">
+                                            <a class="btn btn-inverse" data-toggle="modal"
+                                               data-target=".bd-example-modal-lg" onclick="mostrarCuentas({{forloop.counter}})">
+                                                <i class=" glyphicon glyphicon-search icon-white"></i>
+                                            </a>
+                                        </div></div></td>
+                    <td><div class="input-group"><span class="input-group-addon">$</span><input type="text" class="form-control mask_float" required="required" id="debe_kits{{forloop.counter}}" name="debe_kits{{forloop.counter}}" oninput="actualizarTotal()" value="{{kit.debe}}" title="Debe"/></div></td>
+                    <td><div class="input-group"><span class="input-group-addon">$</span><input type="text" class="form-control mask_float" required="required" id="haber_kits{{forloop.counter}}" name="haber_kits{{forloop.counter}}" oninput="actualizarTotal()" value="{{kit.haber}}" title="Haber" /></div></td>
+                    <td>
+                      {% if kit.centro_costo_id  %}
+                    	<input type="hidden" class="form-control" id="id_centro_kits{{forloop.counter}}" name="id_centro_kits{{forloop.counter}}" value="{{kit.centro_costo.centro_id}}" readonly="readonly" required/>
+                      {% else %}
+                          <input type="hidden" class="form-control" id="id_centro_kits{{forloop.counter}}" name="id_centro_kits{{forloop.counter}}" value="0" readonly="readonly" required/>
+                        {% endif %}
+                    	<div class="input-group add-on">
+                        <input
+                      required="required" type="text" class="form-control" id="centro_kits{{forloop.counter}}" name="centro_kits{{forloop.counter}}"
+                      readonly="readonly" value="{{kit.centro_costo.nombre_centro }}"  onfocus="mostrarCentros({{forloop.counter}})" />
+                            <div class="input-group-btn">
+                                            <a class="btn btn-inverse" data-toggle="modal"
+                                               data-target=".bd-example-modal-lg" onclick="mostrarCentros({{forloop.counter}})">
+                                                <i class=" glyphicon glyphicon-search icon-white"></i>
+                                            </a>
+                                        </div></div>
+                    </td>
+                     <td>
+
+                    	<input  type="text" class="form-control" id="concepto_kits{{forloop.counter}}" name="concepto_kits{{forloop.counter}}" value="{{kit.concepto}}" />
+                    </td>
+                  </tr>
+                  {% endfor %}
+                  {% endif %}
+                  <tfoot>
+                  	<td></td>
+                    <td></td>
+                  	<th>
+                  		<div class="input-group"><span class="input-group-addon">$</span><input type="text" class="form-control mask_float" id="total_debe" name="total_debe"  required="required" readonly="readonly" /></div>
+                  	</th>
+                  	<th>
+                  		<div class="input-group"><span class="input-group-addon">$</span><input type="text" class="form-control mask_float" id="total_haber" name="total_haber"  required="required" readonly="readonly" /></div>
+                  	</th>
+                  	<td></td>
+                  	<td></td>
+                  </tfoot>              
+               </table>
+                 <p class="text-center">
+                         <button type="button" class="btn btn-default btn-lg" id="add"><i class="fa fa-plus"></i> Agregar</button>
+
+
+                    </p>
+                 
+              </div>
+           </div>
+         </div>
+       </div>
+
+     </div>
+
+
+
+     <!--FIN ORDEN PRODUCCION-->
+   </div>
+
+
+ </div>
+
+</div>
+</div>
+
+
+                  <p class="text-center">
+
+                    <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+                    <a class="default btn btn-link" href="/contabilidad/asiento/"><button type="button" class="btn btn-primary btn-lg">  Regresar</button></a>
+                  </p>
+<!--  <p class="text-right m-b-0">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-cog"></i> Guardar</button>
+                                </p>
+                                <a class="default btn btn-link" href="/inventario/producto">
+      <i class="fa fa-times"></i> Regresar
+    </a> -->
+    <input type="hidden" name="columnas_receta" id="columnas_receta" value="{{ detalle|length }}" />
+
+    <input type="hidden" name="id_fila_cambiar" id="id_fila_cambiar" value="" />
+
+
+  </form>
+ <div class="modal fade" id="modal-dialog-cuenta">
+  	<div class="modal-dialog">
+  		<div class="modal-content">
+  			<div class="panel-body">
+  				<div class="table-responsive">
+  					<table class="table table-striped table-bordered" id="tabla_cuenta" style="width:100%;">
+  						<thead>
+  							<tr>
+  								<td></td>
+  								<th>Codigo</th>
+  								<th>Nombre</th>
+
+  							</tr>
+  						</thead>
+  						<tbody>
+  							{% for cuenta  in cuentas %}
+  							<tr>
+  								<td  onclick="cargarCodigoCuenta('{{ cuenta.plan_id }}','{{ cuenta.nombre_plan }}')"><a class="btn btn-danger remove_fields">
+  									<i class=" glyphicon glyphicon-plus icon-white"></i>
+  								</a></td><td>{{ cuenta.codigo_plan }}</td>
+  								<td>{{ cuenta.nombre_plan }}</td>
+  							</tr >
+  							{% endfor %}
+
+  						</tbody>
+  					</table>
+  				</div>
+  				<button type="button" onclick="cerrarCuentas()" class="btn btn-danger btn-block">Cerrar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+
+
+  			</div>
+  		</div>
+  	</div>
+  </div>
+  <div class="modal fade" id="modal-dialog-centro">
+  	<div class="modal-dialog">
+  		<div class="modal-content">
+  			<div class="panel-body">
+  				<div class="table-responsive">
+  					<table class="table table-striped table-bordered" id="tabla_centro" style="width:100%;">
+  						<thead>
+  							<tr>
+  								<tr>
+  								<td></td>
+  								<th>Centro</th>
+                  <th>SubCentro</th>
+
+  							</tr>
+
+  						</thead>
+  						<tbody>
+  							{% for centro  in centros %}
+  							<tr>
+  								<td  onclick="cargarCodigoCentro('{{ centro.centro_id }}','{{ centro.nombre_centro }}')"><a class="btn btn-danger remove_fields">
+  									<i class=" glyphicon glyphicon-plus icon-white"></i>
+  								</a></td>
+  								<td>
+                    {% if centro.padre %}
+									{{ centro.padre | default_if_none:"" }}
+									{% else %}
+										{{ centro.nombre_centro }}
+									{% endif %}
+                    </td>
+                  <td>
+                    {% if centro.padre %}
+{{ centro.nombre_centro }}					
+									{% endif %}
+                    </td>
+                  
+  							</tr >
+  							{% endfor %}
+
+  						</tbody>
+  					</table>
+  				</div>
+  				<button type="button" onclick="cerrarCentros()" class="btn btn-danger btn-block">Cerrar <i class=" glyphicon glyphicon-trash icon-white"></i></button>
+
+
+  			</div>
+  		</div>
+  	</div>
+  </div>
+
+  {% endblock %}
+
+  {% block javascript %}
+  {{ block.super }}
+  <!-- ================== BEGIN PAGE LEVEL JS ================== -->
+  <script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+  <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+  <script src="{% static 'color_admin/assets/js/bootstrap-datepicker.js' %}"></script>
+
+  
+  <script>
+  $(document).ready(function() {
+  	$('#id_codigo_asiento').attr('readonly','readonly');
+  	$('#id_fecha').datepicker({todayHighlight:true,autoclose:true,format: 'yyyy-mm-dd'});
+
+  });
+
+  </script>
+  <script>
+  $(document).ready(function() {
+    // App.init();
+    $('.table').DataTable();
+    FormWizardValidation.init();
+  });
+  </script>
+  <script>
+  $(document).ready(function() {
+  	$('#id_codigo_producto').each(function(){
+  		$(this).attr('readonly','readonly');
+  	});
+  	$('#id_created_by').each(function(){
+  		$(this).attr('readonly','readonly');
+  	});
+  	$('#id_updated_by').each(function(){
+  		$(this).attr('readonly','readonly');
+  	});
+  	$('#id_created_at').each(function(){
+  		$(this).attr('readonly','readonly');
+  	});
+  	$('#id_updated_at').each(function(){
+  		$(this).attr('readonly','readonly');
+  	});
+    actualizarTotal();
+
+       $("#add").click(function(){
+            // Obtenemos el numero de filas (td) que tiene la primera columna
+            // (tr) del id "tabla"
+            var num_recetas=$('#columnas_receta').val();
+            num_recetas=parseInt(num_recetas)+1;
+
+            var tds=$("#tabla tr:first td").length;
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla tr").length;
+            var nuevaFila='<tr><td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+            nuevaFila+='<td><input type="hidden" required="required" class="form-control" id="id_cuenta_kits'+num_recetas+'" name="id_cuenta_kits'+num_recetas+'"> ';
+            nuevaFila+='<div class="input-group add-on"><input type="text" required="required" class="form-control" id="cuenta_kits'+num_recetas+'" name="cuenta_kits'+num_recetas+'" onfocus="mostrarCuentas('+num_recetas+')" readonly="readonly"><div class="input-group-btn"> <a class="btn btn-inverse" data-toggle="modal" data-target=".bd-example-modal-lg" onclick="mostrarCuentas('+num_recetas+')"><i class=" glyphicon glyphicon-search icon-white"></i></a></div></td>';
+            nuevaFila+='<td><div class="input-group"><span class="input-group-addon">$</span><input class="form-control mask_float" required="required" id="debe_kits'+num_recetas+'" name="debe_kits'+num_recetas+'" onkeyup="actualizarTotal()"  title="Debe"></td></div>';
+            nuevaFila+='<td><div class="input-group"><span class="input-group-addon">$</span><input class="form-control mask_float" required="required" id="haber_kits'+num_recetas+'" name="haber_kits'+num_recetas+'" onkeyup="actualizarTotal()"  title="Haber"></td></div>';
+            nuevaFila+='<td><input type="hidden" class="form-control" id="id_centro_kits'+num_recetas+'" name="id_centro_kits'+num_recetas+'" value="0"> ';
+            nuevaFila+='<div class="input-group add-on"><input type="text" required="required" class="form-control" id="centro_kits'+num_recetas+'" name="centro_kits'+num_recetas+'" onfocus="mostrarCentros('+num_recetas+')" readonly="readonly"><div class="input-group-btn"><a class="btn btn-inverse" data-toggle="modal" data-target=".bd-example-modal-lg" onclick="mostrarCentros('+num_recetas+')"> <i class=" glyphicon glyphicon-search icon-white"></i></a></div></td>';
+             nuevaFila+='<td><input type="text"  class="form-control" id="concepto_kits'+num_recetas+'" name="concepto_kits'+num_recetas+'"> ';
+            nuevaFila+='</tr>';
+            $('#columnas_receta').val(num_recetas);
+             // for(var i=0;i<tds;i++){
+            //     // añadimos las columnas
+            //     nuevaFila+="<td>columna "+(i+1)+" Añadida con jquery</td>";
+            // }
+            // // Añadimos una columna con el numero total de columnas.
+            // // Añadimos uno al total, ya que cuando cargamos los valores para la
+            // // columna, todavia no esta añadida
+            // nuevaFila+="<td>"+(trs+1)+" columnas";
+            // nuevaFila+="</tr>";
+            $("#tabla").append(nuevaFila);
+             $(".mask_float").maskMoney({thousands:'', decimal:'.', allowZero: true});
+
+          });
+
+         $("#del").click(function(){
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla tr").length;
+            if(trs>1)
+            {
+                // Eliminamos la ultima columna
+                $("#tabla tr:last").remove();
+              }
+
+               actualizarTotal();
+            });
+
+
+         $(document).on("click",".eliminar",function(){
+            var parent = $(this).parent();
+            $(parent).remove();
+             actualizarTotal();
+        });
+
+
+  });
+function mostrarCuentas(data){
+ $('#id_fila_cambiar').val(data);
+ $("#modal-dialog-cuenta").modal('toggle');
+}
+function mostrarCentros(data){
+ $('#id_fila_cambiar').val(data);
+ $("#modal-dialog-centro").modal('toggle');
+}
+function cerrarCentros(){
+ $("#modal-dialog-centro").modal('toggle');
+}
+function cerrarCuentas(){
+ $("#modal-dialog-cuenta").modal('toggle');
+}
+
+function cargarCodigoCuenta(id,nombre){
+  var fila=$('#id_fila_cambiar').val();
+  $('#id_cuenta_kits'+fila).val(id);
+  $('#cuenta_kits'+fila).val(nombre);
+  cerrarCuentas();
+}
+function cargarCodigoCentro(id,nombre){
+  var fila=$('#id_fila_cambiar').val();
+  $('#id_centro_kits'+fila).val(id);
+  $('#centro_kits'+fila).val(nombre);
+  cerrarCentros();
+}
+function actualizarTotal(){
+	var num_recetas=$('#columnas_receta').val();
+	var totaldebe=0;
+	var totalhaber=0;
+	var deb=0;
+	var hab=0;
+	var i;
+
+	var d=document.getElementById('total_debe')
+	var h=document.getElementById('total_haber')
+	//alert(' BNUM RECETS'+num_recetas);
+	for (i = 1; i <= num_recetas; i++) {
+    var hab=$('#haber_kits'+i).val();
+
+      if ( $('#haber_kits'+i).length ) {
+           hab=hab.replace(/,/g,'.');
+      }
+    var deb=$('#debe_kits'+i).val();
+        if ( $('#debe_kits'+i).length ) {
+            deb=deb.replace(/,/g,'.');
+        }
+
+
+
+		if ($.isNumeric(hab)){
+			totalhaber=parseFloat(totalhaber)+parseFloat(hab);
+		}
+		if ($.isNumeric(deb)){
+			totaldebe=parseFloat(totaldebe)+parseFloat(deb);
+		}
+	}
+
+	totaldebe = totaldebe.toFixed(2);
+    totalhaber = totalhaber.toFixed(2);
+
+	if ($.isNumeric(totalhaber)) {
+		$('#total_haber').val(totalhaber);
+	};
+	$('#total_debe').val(totaldebe);
+	if (totaldebe!=totalhaber){
+		d.setAttribute("aria-invalid", "true");
+		h.setAttribute("aria-invalid", "true");
+	}else{
+		d.setAttribute("aria-invalid", "false");
+		h.setAttribute("aria-invalid", "false");
+	}
+
+}
+
+
+         $( "#asiento-form" ).submit(function( event ) {
+
+            total_haber = $('#total_haber').val();
+            total_debe =$('#total_debe').val();
+            if(total_haber == total_debe){
+                var num_recetas=$('#columnas_receta').val();
+                for (i = 1; i <= num_recetas; i++) {
+                    if ($('#id_cuenta_kits'+i).val()==""){
+                       alert("Faltan cuentas por ingresar.");
+                        event.preventDefault();
+                        break;
+                    }
+                    var c=$('#id_centro_kits'+i).val();
+                    //alert(c);
+                     if ($('#id_centro_kits'+i).val()=="0"){
+                       alert("Faltan centros de costos por ingresar.");
+                        event.preventDefault();
+                        
+                    }
+	            }
+
+            }else{
+                alert("Los totales deben ser iguales");
+                event.preventDefault();
+            }
+
+        });
+</script>
+{% endblock %}                                                                                                                                                                                                                                                                

@@ -1,0 +1,187 @@
+
+<!doctype html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<style>
+    
+       .panel-border{border: 1px solid #ddd !important}
+       .form-ajust .form-group{margin-bottom: 0px !important}
+      input[type="text"],select,input[type="number"]
+      {
+
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    box-shadow: none;
+    font-size: 12px;
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+       }
+
+ .table2 {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+      display:table}
+
+.table2>tbody>tr>td, .table2>tbody>tr>th, .table2>tfoot>tr>td, .table2>tfoot>tr>th {
+    border-color: #e2e7eb;
+    padding: 1px 0px;
+}
+    
+ .table2>thead>tr>td, .table2>thead>tr>th {
+    border-color: #e2e7eb;
+    padding: 10px 5px;
+}
+    </style>
+<body>
+  <div class="row">
+                <!-- begin col-6 -->
+      <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                       
+                       <h4 class="panel-title"> SubOrden RECETA
+                         {% if subop.reproceso %}
+                         REPROCESO
+                         {% endif %}</h4>
+                       <br />
+                        <b>SUBOP# &nbsp;{{ subop.secuencia }}  &nbsp; &nbsp; &nbsp;{{ subop.areas.descripcion }}</b> 
+                       <br />{{ subop.orden_produccion.tipo}} &nbsp;{{ subop.orden_produccion.codigo }} <br />
+							 <b>Fecha:</b>&nbsp; {{ subop.orden_produccion.fecha }} &nbsp;&nbsp;&nbsp;&nbsp;
+							<b> Cliente:</b>&nbsp;{{ subop.orden_produccion.cliente.nombre_cliente }}<br />
+							 <b>Descripci&oacute;n:</b>&nbsp;{{ subop.orden_produccion.descripcion }}<br />
+							 <b>Detalle:</b>&nbsp;{{ subop.orden_produccion.detalle }}<br />
+							 <b>Cantidad:</b>&nbsp;{{ subop.orden_produccion.cantidad }}<br />
+
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <div>
+
+                                <!-- Nav tabs -->
+                                  RECETA
+<!--                                     <li role="presentation"><a href="#costo" aria-controls="costo" role="tab" data-toggle="tab">Costos y Precios</a></li>
+ -->                                  
+                                 
+                               
+                              
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade in active" id="principales">
+                                                                           
+                                    
+                                      
+                                   
+                                        
+                                        <div class="row" style="">
+                                            <div class="panel panel-default panel-border">
+                                                <!-- Default panel contents -->
+                                                <div class="panel-heading"></div>
+                                                <div class="panel-body">
+                                                  
+                                                
+                                              
+                                                <!-- Table -->
+                                                <table class="table2 table-striped table-bordered"  id="tabla">
+                                              <thead>
+                                                  <tr>
+                                                       <th width="50px">Otros Costos</th>
+                                                    <th width="200px">Materiales</th>
+                                                     <th>Cantidad</th>
+
+                                                    <th >Unidad medida</th>
+                                                    <th >Costo</th>
+                                                    <th>Total</th>
+                                                  
+                                                  </tr>
+                                                </thead>
+                                                  <tbody>
+                                                    
+                                                  
+                                                  {% if suborden %}
+                                                    {% for kit  in suborden %}
+
+                                                  <tr>
+                                                   
+                                                     <td>   
+                                                        {% if kit.otros_costos %}
+                                                            SI
+                                                          {% endif %}   </td>
+
+                                                      
+                                                    <td> 
+                                                          {% if kit.otros_costos %}
+                                                         {{ kit.nombre}}
+                                                         {% else %}
+                                                        {{ kit.producto.descripcion_producto}}
+                                                         {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {{ kit.cantidad }}</td>
+                                                    <td>
+                                                        {{ kit.medida }}</td>
+
+                                                    <td>
+                                                        {{ kit.costo }}
+                                                    </td>
+                                               
+                                                    <td>
+                                                        {{ kit.total }}
+                                                    </td>
+                                                  </tr>
+                                                        {% endfor %} 
+                      
+                                                   {% endif %}
+                                                   </tbody>
+                                                
+                                                  <tfoot>
+                                                    
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <th>Total:</th>
+                                                    <th>{{subop.costo_materiales }}</th>
+                                                  
+                                                  
+                                                  </tfoot>
+                                                </table>
+                                            
+                                                
+                                                
+                                                </div>
+                                        </div></div>
+                                      
+                                                 
+
+
+
+
+                                    </div>
+                                    
+                                    
+                                </div>
+                              
+                            </div>
+                        </div>
+                        
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+     
+    
+</body>
+</html>
+                                                                                                                                                                                                                                                         

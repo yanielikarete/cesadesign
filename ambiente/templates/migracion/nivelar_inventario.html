@@ -1,0 +1,44 @@
+{% extends "login/base-list.html" %}
+{% load extra_filters %}
+
+{% load staticfiles %}
+
+{% block css %}
+{{ block.super }}
+{% endblock %}
+
+{% block section_title %}Nivelar Inventario {% endblock %}
+{% block section_subtitle %}
+<br />
+<style type="text/css">
+	table td{
+		padding: 2px;
+	}
+	table th{
+		padding: 2px;
+	}
+</style>
+
+{{ texto|safe|escape }}
+                         {{ html |safe }}
+                    <!--    <p>TABLA</p>
+                    {{ html }}-->
+                        <!--{% autoescape off %}{{ html }}{% endautoescape %}-->
+</div>
+
+
+                </div>
+				</form>
+				<!-- end col-12 -->
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+
+
+	</script>
+
+{% endblock %}
+
+

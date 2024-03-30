@@ -1,0 +1,160 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>REQUISICION - MUEDIRSA</title>
+</head>
+<style>
+    
+    .head{
+        width: 100%;
+        text-align: center;
+        font-size: 9pt;
+
+        
+    }
+    
+    #detail{
+        width: 100%;
+       font-size: 9pt;
+
+     
+    }
+    
+    .contenido{
+        width: 100%;
+        padding: 0px 0;
+        font-size: 9pt;
+        
+    }
+    
+    .contenido td{
+        text-align: right;
+        font-size: 9pt !important;
+        padding: 1px 2px
+    }
+    
+    .foot{
+        text-align: center;
+        font-size: 9pt;
+    }
+    @page { 
+        size: 21.5cm 14cm;
+        /*size: a5 landscape;*/
+        margin: 1cm;
+        
+    }
+     .borde-tabla{
+       border: 1px solid black;
+       padding-top: 1px
+   }
+</style>
+<body>
+    <div class="head" style="width: 100%">
+        <b> MUEDIRSA-REQUISICION - EGRESO POR CONSUMO DE PRODUCCI&Oacute;N NO.{{ordenegreso.codigo}} </b>
+    </div>
+    <div id="detail" >
+        <table width="250" border="0">
+             <tr>
+                <td width="80">
+                    <b>ORDEN:</b>
+                </td>
+                <td width="170">
+                    <span>{{ordenegreso.codigo}}</span>
+                </td>
+            </tr>
+              <tr>
+                <td>
+                    <b>FECHA:</b>
+                </td>
+                <td>
+                    <span>{{ordenegreso.fecha |date:'d-m-Y H:i'}}</span>
+                </td>
+            </tr>
+         
+            <tr>
+                <td >
+                    <b>CONCEPTO:</b>
+                </td>
+                <td >
+                    <span>{{ordenegreso.concepto_orden_egreso}}</span>
+                </td>
+            </tr>
+             
+            <tr>
+                <td >
+                    <b>BOD INTERNA:</b>
+                </td>
+                <td >
+                    <span>{{ordenegreso.bodega}}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="contenido">
+      
+        <table border="0">
+            <thead>
+                <tr>
+                    <th class="borde-tabla" style="width: 100px">AREA</th>
+                    <th class="borde-tabla" style="width: 90px">OP</th>
+                    <th class="borde-tabla" style="width:60px ">ITEMS</th>
+                    <th class="borde-tabla" > DESCRIPCION</th>
+                    <th class="borde-tabla" style="width:80px ">UNIDADES</th>
+                    <th class="borde-tabla" style="width:60px ">COSTO</th>
+                    <th class="borde-tabla" style="width:80px ">SUBTOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                 {% if detalle %}
+                                                    {% for kit  in detalle %}
+    <tr>
+                                                   <td style="text-align: left">  {{ kit.areas.descripcion }}</td>
+                                                   <td style="text-align: left">
+                                                    {% if kit.op %}
+                                                    {{ kit.orden_produccion_receta.suborden_produccion.orden_produccion.tipo }}-{{ kit.orden_produccion_receta.suborden_produccion.orden_produccion.codigo }}
+                                                   {% endif %}</td>
+                                                    <td>  {{ kit.producto.codigo_producto }}</td>
+                                                    <td style="text-align: left">{{ kit.producto.descripcion_producto }}</td>
+                                                    <td>{{ kit.cantidad |floatformat:2  }} {{ kit.unidad_medida }}</td>
+                                                    <td>{{ kit.precio_compra |floatformat:2  }}</td>
+                                                    <td>{{ kit.total |floatformat:2  }}</td>
+                                                    
+                                                  </tr>
+
+                         {% endfor %}
+                         {% else %}
+                          {% endif %}
+            </tbody>
+            <tfoot> 
+                <tr>
+                    <td colspan="3" ></td><td><b>TOTAL</b></td><td>{{ordenegreso.subtotal |floatformat:2 }}</td>
+                </tr>
+            </tfoot>
+        </table>
+        
+    </div>
+    <div class="foot">
+        <br><br><br>
+        <table>
+            <tr>
+                    <td>ELABORADO POR</td><td>REVISADO POR</td><td>RECIBIDO POR</td>
+                </tr>
+                 <tr>
+                    <td>&nbsp;</td><td> &nbsp;</td><td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>___________________</td><td> ___________________</td><td>___________________</td>
+                </tr>
+                <tr>
+                    <td>{{ordenegreso.created_by}}</td><td> </td><td></td>
+                </tr>
+            </tbody>
+            
+        </table>
+    </div>
+   
+   
+</body>
+</html>

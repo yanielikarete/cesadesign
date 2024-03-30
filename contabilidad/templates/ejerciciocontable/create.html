@@ -1,0 +1,57 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+<link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css'%}" rel="stylesheet" />
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css'%}" rel="stylesheet" />
+<!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block breadcrumbs %}
+    {{ block.super }} » <a href="{% url "ejerciciocontable-list" %}">{{verbose_name}}</a> » Nuevo
+{% endblock %}
+
+
+{% block form-actions %}
+<div id="form-actions" class="clearfix">
+    <div class="form-actions pull-left ">
+        <button type="submit" class="default btn btn-success">
+            <i class="fa fa-floppy-o"></i> Guardar
+        </button>
+        <!--<input type="submit" class="default btn btn-info" name="_addanother" value="Grabar y añadir otro">-->
+        <a class="default btn btn-link" href="{{ url_cancel }}">
+            <i class="fa fa-times"></i> Regresar        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+  {{ block.super }}
+  <!-- ================== BEGIN PAGE LEVEL JS ================== -->
+  <script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+  <script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<!-- <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+--><script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+<!-- ================== END PAGE LEVEL JS ================== -->
+<script>
+$(document).ready(function() {
+	$('#id_fecha_inicio').datepicker({todayHighlight:true,autoclose:true});
+	$('#id_fecha_inicio').datepicker('option', {dateFormat: 'dd/mm/yyyy'});
+	$('#id_fecha_fin').datepicker({todayHighlight:true,autoclose:true});
+	$('#id_fecha_fin').datepicker('option', {dateFormat: 'dd/mm/yyyy'});
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,130 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>PEDIDO - MUEDIRSA</title>
+</head>
+<style>
+{% block style %}
+    .head{
+        width: 100%;
+        text-align: center;
+        font-size: 11pt;
+
+    }
+
+    .details{
+        width: 100%;
+        padding: 2px 0;
+        font-size: 11pt;
+
+    }
+    .contenido{
+        width: 100%;
+        padding: 2px 0;
+        font-size: 11pt;
+
+    }
+
+    td{
+        text-align: left;
+        padding: 3px 5px;
+        font-size: 11pt;
+    }
+    th{
+        text-align: center;
+        padding: 3px 5px;
+        background-color: #EEEEEE;
+        font-size: 11pt;
+    }
+
+    .foot{
+        text-align: center;
+        font-size: 11pt;
+    }
+
+
+    @page {
+        /*size: a4 landscape;*/
+        margin: 0.5cm;
+        font-size: 11pt;
+        @frame footer {
+    		-pdf-frame-content: footerContent;
+    		bottom: 0.5cm;
+    		margin-left: 1cm;
+    		margin-right: 1cm;
+    		height: 1cm;
+		}
+
+    }
+
+{%endblock%}
+
+</style>
+<body>
+    <div class="head">
+
+    </div>
+    <div class="details">
+         <table><tr><td COLSPAN="3" style="text-align: center">  <img src="{{ media_root }}imagenes/general/cesa_logo.jpg" alt="logo producto" width="200px" height="100px" style="float:left"></td></tr></table>
+
+        <table border="1">
+            <tr>
+                <th>Cliente</th><td colspan="3"> {{pedido.cliente}} </td><th colspan="2">PEDIDO</th>
+            </tr>
+            <tr>
+                <th>Vendedor</th><td colspan="3"> {{pedido.vendedor}}</td><th>N&uacute;mero</th><td>{{pedido.codigo}}</td>
+            </tr>
+             <tr>
+                <th>Fecha entrega</th><td>{{pedido.fechaentrega |date:"d/m/Y"}}</td><th>Proforma</th><td>{{pedido.abreviatura_codigo}}-{{pedido.proforma_codigo}}</td><th>Fecha</th><td>{{pedido.fecha |date:"d/m/Y"}}</td>
+            </tr>
+        </table>
+        <br>
+    </div>
+    <div class="contenido">
+
+        <table border="1">
+            <tr>
+                <th>Cant.</th><th>Cod.</th><th>#OP</th><th colspan="5">DESCRIPCION</th>
+            </tr>
+             {% for a  in ambiente %}
+             <tr >
+                <td colspan="7"><b>AMBIENTE: {{ a.1 }}</b></td>
+            </tr>
+
+                         {% for r  in row %}
+                             {% if a.0 == r.0 %}
+                                <tr>
+
+                                    <td>{{ r.2 }}</td><td>{{ r.5 }}</td>
+                                    <td>
+                                        {% if r.8 %}
+                                        {{ r.8 }}
+                                        {% endif %}
+                                    </td>
+                                    <td colspan="5">{{ r.1 }}:{{ r.6 }}
+                                    <div style="width:100%;text-align:center">
+                                         {% if r.7 %}
+                                   <img src="{{ media_root }}{{ r.7 }}" alt="logo producto" width="272px" height="181px">
+{% else %}
+                             <img src="{{ media_root }}{{ r.9}}" alt="logo producto" width="272px" height="181px">
+                                        {% endif %}
+                                    </div></td>
+                                </tr>
+                                {% endif %}
+                           {% endfor %}
+
+             {% endfor %}
+
+
+        </table>
+
+    </div>
+<div id="footerContent">
+
+        Page <pdf:pagenumber><pdf:pagecount>
+
+</div>
+</body>
+</html>

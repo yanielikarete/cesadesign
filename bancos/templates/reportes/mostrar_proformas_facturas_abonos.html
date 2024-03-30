@@ -1,0 +1,621 @@
+<style>
+	padding: 6px 6px !important;}
+  
+          .bold-option{font-weight: bolder;}
+
+</style>
+<form id="formulario" class="form-horizontal" method="post">
+	                {% csrf_token %}
+
+    <input type="hidden" value="{{ proforma_id}}" name="proforma_id" id="proforma_id">
+    <input type="hidden" value="{{ abonos.id}}" name="id" id="id">
+	<input type="hidden" value="{{ abonos.movimiento.cliente_id}}" name="persona_id" id="persona_id">
+   
+   <div class="alert alert-danger hide" id="msj_error_ingresos"></div>
+	
+	<div class="panel panel-default">
+	    <div class="panel-heading">
+	        <h3 class="panel-title"><i class="ico-user mr5"></i>Datos del Movimiento</h3>
+	    </div>
+	    <div class="panel-body">
+	        <div class="row">
+				<strong class="col-md-2 col-sm-2"> Fecha: &nbsp;</strong>
+				<div class="col-md-10 col-sm-10">{{ abonos.movimiento.fecha_emision}}</div>
+			</div>
+			<div class="row">
+				<strong class="col-md-2 col-sm-2"> Tipo: </strong>
+				<div class="col-md-4 col-sm-4">{{ abonos.movimiento.tipo_documento}}</div>
+				<strong class="col-md-3 col-sm-3"> No. Comprobante:</strong>
+				<div class="col-md-3 col-sm-3">{{ abonos.movimiento.numero_comprobante}}</div>
+			</div>
+       <div class="row">
+        <strong class="col-md-2 col-sm-2"> Cliente: </strong>
+        <div class="col-md-4 col-sm-4">{{ abonos.movimiento.paguese_a  }}</div>
+        <strong class="col-md-3 col-sm-3">Cantidad Abonada</strong>
+        <div class="col-md-3 col-sm-3">{{ abonos.abono}}</div>
+		<input type="hidden" name="abono_referencial" id="abono_referencial" value="{{ abonos.abono}}">
+		                <input type="hidden" name="columnas_receta" id="columnas_receta" value="1" />
+
+      </div>
+       <div class="row">
+        <strong class="col-md-2 col-sm-2"> Fecha del Abono: </strong>
+        <div class="col-md-4 col-sm-4"><input id="fecha_abono" class="form-control" type="date"
+                                               name="fecha_abono" required></div>
+        	    </div>
+	</div>
+    
+	
+	 <div class="panel panel-inverse panel-with-tabs">
+                    <div class="panel-heading p-0">
+                        <!-- begin nav-tabs -->
+                        <ul class="nav nav-tabs nav-tabs-inverse">
+                            <li class="active"><a href="#nav-tab-1" data-toggle="tab">Facturas</a></li>
+                            <li class=""><a href="#nav-tab-2" data-toggle="tab">Asiento</a></li>
+                        </ul>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade active in" id="nav-tab-1">
+                            <br>
+                            <table style="background-color: white" class="table table-bordered" id="tabla_otros_ingresos">
+					<thead>
+						<tr>
+							<th width="25px"></th>
+							<th><b>Factura</b></th>
+							<th><b>Cant.x Abonar</b></th>
+							 <th width="120px"> <b>Abono</b></th></th>
+							
+						</tr>
+					</thead>
+					<tbody id="tdetalle_ingreso">
+
+                   
+                          <tr>
+                                                    <td class="eliminar"><a class="btn btn-danger remove_fields">
+                                                        <i class=" glyphicon glyphicon-trash icon-white"></i>
+                                                      </a>
+                                                    </td>
+
+                                                       <td ><select name="factura_kits1" id="factura_kits1"  class="form-control" onchange="cambiarFactura(1)">
+													   <option value="">SELECCIONE FACTURA</option>
+
+                                                         {% for am  in facturas %}
+                                                           <option value="{{ am.0 }}" data-total="{{ am.6 }}"
+														   data-abono="{{ am.7 }}" data-retencion="{{ am.10 }}" > {{ am.2 }}-{{ am.8 }}-{{ am.3 }}|{{ am.13 }}</option>
+                                                        {% endfor %}
+                                                     </select>
+                                                    </td>
+                                                  <td >
+                                                 <input type="text" class="form-control" id="cantidad_abonada_kits1" name="cantidad_abonada_kits1"  value="0"  readonly/>
+                                                 </td>
+                                                  <td >
+                                                 <input type="text" class="form-control" id="abono_kits1" name="abono_kits1" onkeyup="actualizarValor()" value="0" />
+                                                 </td>
+
+                                            
+                                                  </tr>
+
+
+						
+					</tbody>
+					<tfoot>
+                                                  <td></td> 
+												<td></td>
+                                                    <th>Total:</th>
+                                                     <td><input type="text" class="form-control" id="id_montoa" name="id_montoa"/></td>
+
+                                                                                   </tfoot>
+				</table>
+
+<p class="text-right">
+                                                      <button type="button" class="btn btn-default btn-lg" id="add"><i class="fa fa-plus"></i>Agregar</button>
+
+
+                                                 </p>
+
+
+                        </div>
+                        <div class="tab-pane fade" id="nav-tab-2">
+                            <table class="table table-bordered" id="tabla-asiento">
+                                <thead style="background-color: #ccd0d4">
+                                <tr>
+                                    <th style="display:none;">Id</th>
+                                    <th style="text-align: center; width: 5%;">Acción</th>
+                                    <th style="text-align: center">Código</th>
+                                    <th style="text-align: center">Cuenta</th>
+                                    <th style="text-align: center; width: 15%;">Debe</th>
+                                    <th style="text-align: center; width: 15%;">Haber</th>
+                                    <th style="text-align: center">Centro de Costos</th>
+	                <th style="text-align: center">Concepto</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td><input type="hidden" id="total-debe-asiento" name="total-debe-asiento"  />
+	                <input type="hidden" id="total-haber-asiento" name="total-haber-asiento" /></td>
+                                    <td></td>
+
+                                    <td><strong>TOTAL:</strong></td>
+                                    <td align="right" name="asiento-total-debe"><strong>0.00</strong></td>
+                                    <td align="right" name="asiento-total-haber"><strong>0.00</strong></td><td></td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                            <!--<button id="agregar-asiento" style="margin-left: 1%;" type="button" class="btn btn-inverse">
+                                    <i class="fa fa-plus-circle"></i>Agregar
+                            </button>-->
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+
+               
+	
+                                    <button type="submit" class="btn btn-primary btn-lg" id="btn_guardar_ingresos"><i class="fa fa-cog"></i> Guardar</button>
+
+	
+</form>
+				 </div>
+							                </div>
+							            </div>
+							        </div>
+							    </div>
+
+                        
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        /**
+         * Funcion parnueva columna en la tabla
+         */
+        $("#add").click(function(){
+            // Obtenemos el numero de filas (td) que tiene la primera columna
+            // (tr) del id "tabla"
+            var num_recetas=$('#columnas_receta').val();
+            num_recetas=parseInt(num_recetas)+1;
+
+            var tds=$("#tabla_otros_ingresos tr:first td").length;
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla_otros_ingresos tr").length;
+            var nuevaFila='<tr><td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+		
+             nuevaFila+='<td><select class="form-control" id="factura_kits'+num_recetas+'" name="factura_kits'+num_recetas+'" onchange="cambiarFactura('+num_recetas+')"> <option value="">SELECCIONE FACTURA</option> ';
+                                    {% for am  in facturas %}
+                      nuevaFila+='<option value="{{ am.0}}" data-total="{{ am.6 }}" data-abono="{{ am.7 }}" data-retencion="{{ am.10 }}"> {{ am.2 }}-{{ am.8 }}-{{ am.3 }}| {{ am.13 }}</option>';
+                 
+                                  {% endfor %} 
+              nuevaFila+='</select></td>';
+                nuevaFila+='  <td ><input type="text" class="form-control" id="cantidad_abonada_kits'+num_recetas+'" name="cantidad_abonada_kits'+num_recetas+'"  value="0"  readonly/></td>';
+                
+                nuevaFila+='<td><input type="text"  class="form-control" id="abono_kits'+num_recetas+'" name="abono_kits'+num_recetas+'"  onkeyup="actualizarValor()" ></td>';
+                 
+                nuevaFila+='</tr>';
+
+              $('#columnas_receta').val(num_recetas);
+            // for(var i=0;i<tds;i++){
+           
+            //     nuevaFila+="<td>columna "+(i+1)+" on jquery</td>";
+            // }
+            // // 
+            // nuevaFila+="<td>"+(trs+1)+" columnas";
+            // nuevaFila+="</tr>";
+            $("#tabla_otros_ingresos").append(nuevaFila);
+        });
+ 
+        /**
+         * Funcion para eliminar la ultima columna de la tabla.
+         * Si unicamente queda una columna, esta no sera eliminada
+         */
+        $("#del").click(function(){
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs=$("#tabla_otros_ingresos tr").length;
+            if(trs>1)
+            {
+                // Eliminamos la ultima columna
+                $("#tabla_otros_ingresos tr:last").remove();
+				
+            }
+			
+        });
+
+
+        $(document).on("click",".eliminar",function(){
+            var parent = $(this).parent();
+  $(parent).remove();
+  actualizarValor();
+          });
+
+    });
+    </script>
+    <script>
+				   $('#formulario').submit(function (event) {
+					var asientos = JSON.stringify(get_array_asientos());
+            
+            var total_debe=$('#total-debe-asiento').val();
+            var total_haber=$('#total-haber-asiento').val();
+			
+
+			if (total_debe==total_haber){
+				 var data = $(this).serialize() +'&arreglo_asientos=' + asientos+'&total_debe=' + total_debe+'&total_haber=' + total_haber;
+                   console.log(data);
+            event.preventDefault();
+                add_div();
+            $.ajax({
+							type: "POST",
+							url: "{% url 'guardar-proformas-abonos-facturas' %}",
+							data: data,
+							success: function (response) {
+								//alert("Guardar");
+							   document.location.href = '/bancos/proformas_reemplazo_abono/{{proforma_id}}/abonar/';
+							},
+							error: function (response) {
+			
+								console.log(response);
+							}
+						});
+				   
+                 
+				}else{
+					 alert('Verifique lo asientos generados antes de guardar');
+                return false;
+				}
+			});
+			
+            $(function() {
+				agregar_asiento();
+		});
+			
+ function cambiarFactura(index){
+	var selected = $('#factura_kits'+index).find('option:selected');
+            if (selected.val() != "") {
+
+                var id = selected.data('id');
+                var totalf = selected.data('total');
+				var ret = selected.data('retencion');
+				var ab = selected.data('abono');
+				if (totalf=='None'){
+					totalf=0;
+				}
+				if (ret=='None'){
+					ret=0;
+				}
+				if (ab=='None'){
+					ab=0;
+				}
+				total=totalf-ab-ret;
+				total=total.toFixed(2);
+				
+				$('#cantidad_abonada_kits'+index).val(total);
+				var abono=$('#abono_kits'+index).val();
+				//alert(abono);
+				if (total<abono){
+					alert('El abono no puede exceder a la cantidad que falta por abonar');
+					$('#abono_kits'+index).val(0);
+				}
+                
+            }
+	}
+	            
+				
+
+ function actualizarValor(){
+ var suma=0;
+            var id=0;
+             var num_recetas=$('#columnas_receta').val();
+			 var abono_referencial=$('#abono_referencial').val();
+			 var saldo_factura=0;
+             var i;
+              var total=0;
+          // alert(num_recetas);
+      for (i = 1; i <= num_recetas; i++) {
+
+        if ($('#abono_kits'+i).length){
+            cantidad=$('#abono_kits'+i).val();
+			saldo_factura=$('#cantidad_abonada_kits'+i).val();
+			//alert(cantidad);
+			//alert(saldo_factura);
+			if (parseFloat(cantidad)>parseFloat(saldo_factura)){
+				alert("No puede abonar mas de la cantidad permitida");
+				$('#abono_kits'+i).val(0);
+			}
+			if (cantidad==""){
+				total=parseFloat(total)
+			}else{
+				            total=parseFloat(total)+parseFloat(cantidad);
+
+			}
+
+          }
+
+
+      }
+	  //alert(total);
+	  
+	  if(abono_referencial<total){
+		alert("Verifique los abonos ingresados debido a que superan al abono ya registrado");
+				for (i = 1; i <= num_recetas; i++) {
+		
+				if ($('#abono_kits'+i).length){
+					$('#abono_kits'+i).val(0);
+		             $('#id_montoa').val(0);
+				  }
+		
+		
+			  }
+	  }else{
+			    $('#id_montoa').val(total.toFixed(2));
+
+	  }
+		
+
+
+    
+	
+	
+	   $('#tabla-asiento tbody tr').each(function () {
+                    var row = $(this).closest('tr');
+                    var id = $('input[name="tipo"]', row).val();
+
+                         
+                                     if (id=="haber"){
+                                        // alert(id);
+                                                 $('input[name="asiento-haber"]', row).val(total.toFixed(2));
+                                      }else{
+                                                     $('input[name="asiento-debe"]', row).val(total.toFixed(2));
+                                                  //   alert("fgfg");
+                                        }
+
+            });
+          //  actualizar_monto_asiento();
+		  calcular_totales_asiento();
+	}
+ function agregar_asiento(){
+	 var persona=$('#persona_id').val();
+	             $('#tabla-asiento tbody').html("");
+
+				 
+				 
+            $.ajax({
+                type: "POST",
+                url: "{% url 'consultar_plan_cuentas_personas_bancos' %}",
+                data: {
+                    'banco': 0,
+                    'tipo': 2,
+                    'persona': persona,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function (response) {
+                    for (var i = 0; i < response.length; i++) {
+                        cargarasiento(response[i][0], response[i][1], response[i][2],0,0,'haber',0,'P');
+
+
+                    }
+                },
+                error: function (response) {
+                    alert("Se generaron los asientos.");
+                    console.log(response);
+                }
+            });
+			
+			
+            $.ajax({
+                type: "POST",
+                url: "{% url 'consultar_plan_cuentas_personas_bancos' %}",
+                data: {
+                    'banco': 0,
+                    'tipo': 3,
+                    'persona': persona,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function (response) {
+                    for (var i = 0; i < response.length; i++) {
+                        cargarasiento(response[i][0], response[i][1], response[i][2],0,0,'debe',0,'P');
+
+
+                    }
+                },
+                error: function (response) {
+                    alert("Se generaron los asientos.");
+                    console.log(response);
+                }
+            });
+ }
+  function cargarasiento(plan_id, codigo, descripcion, debe, haber,tipo,subtipo,estado) {
+            var asiento = '';
+            var descrip = '';
+            descrip=$('#descripcion').val() ;
+           // alert(tipo);
+            asiento =
+                    '<tr class="asiento-row" >' +
+                        '<td name="asiento-plan-cuenta-id" style="display:none;">' + plan_id + '</td>' ;
+              //asiento +=  '<td class="eliminar">' +
+              //              '<a class="btn btn-danger remove-field-secuencia">' +
+              //                  '<i class="glyphicon glyphicon-trash icon-white"></i>' +
+              //              '</a><input type="hidden" value="'+estado+'" name="estado" id="estado"/><input type="hidden" value="'+tipo+'" name="tipo" id="tipo"/><input type="hidden" value="'+subtipo+'" name="subtipo" id="subtipo"/' +
+              //          '</td>';
+						
+						asiento +=  '<td>' +
+                            '<input type="hidden" value="'+estado+'" name="estado" id="estado"/><input type="hidden" value="'+tipo+'" name="tipo" id="tipo"/><input type="hidden" value="'+subtipo+'" name="subtipo" id="subtipo"/' +
+                        '</td>';
+                  asiento +='<td name="asiento-codigo">' + codigo + '</td>' +
+                        '<td>' +
+                            '<div class="input-group add-on">' +
+                                '<input class="form-control" type="text" name="asiento-plan-cuenta-descripcion" value="'+descripcion+'"   readonly>' +
+                                '<div class="input-group-btn">' +
+                                    '<a class="btn btn-inverse" data-toggle="modal" data-target="#modal-plan-cuenta">' +
+                                        '<i class="glyphicon glyphicon-search icon-white"></i>' +
+                                    '</a>' +
+                                '</div>' +
+                            '</div>' +
+                        '</td>' +
+                        '<td>' +
+                            '<input style="text-align: right;" class="form-control" type="number" step="0.01" name="asiento-debe" value="0" onkeyup="actualizar_monto_asiento()">' +
+                        '</td>' +
+                        '<td align="right" >' +
+                            '<input style="text-align: right;" class="form-control" type="number" step="0.01" name="asiento-haber" value="0" onkeyup="actualizar_monto_asiento()">' +
+                        '</td>' +
+	      '<td>'+
+                        '<select name="id_centro_kits" id="id_centro_kits" class="form-control">';
+                        
+                                            {% for centro  in centros %}
+                                           {% if centro.padre %}
+                                            asiento +='<option value="{{centro.centro_id}}" ';
+                                            var c='{{centro.centro_id}}';
+                                            var cd='{{centros_defecto.centro_id}}';
+                                            if ( c==cd ){
+                                                asiento +='selected';
+                                            }
+                                            asiento+='>{{centro.nombre_centro}}';
+                                            asiento+='</option>';
+                                            
+                                          {% else %}
+                                                    asiento +='<option value="{{centro.centro_id}}" style="font-weight: bolder"';
+                                                      var c='{{centro.centro_id}}';
+                                                      var cd='{{centros_defecto.centro_id}}';
+                                                      if ( c==cd ){
+                                                          asiento +='selected';
+                                                      }
+                                                      asiento+='>{{centro.nombre_centro}}';
+                                                      asiento+='</option>';
+			{% endif %}
+                                                    {% endfor %}
+
+                                   asiento+='</td>'+
+                            '<td><textarea style="text-align: right;" class="form-control"  name="concepto-asiento"  >'+descrip+'</textarea>' +
+                        '</td>' +
+                    '</tr>';
+            $('#tabla-asiento tbody').append(asiento);
+            actualizar_monto_asiento();
+            //numero_asiento++;
+        }
+
+        $('#agregar-asiento').click(function () {
+            cargarasiento('','','',0,0,'');
+        });
+
+        $('#tabla-asiento').on('change', 'input', function () {
+            calcular_totales_asiento();
+        });
+		
+		   function actualizar_monto_asiento(){
+            var suma_debe=0;
+              var suma_haber=0;
+              var suma=0;
+            var id=0;
+           
+suma=$('#id_montoa').val();
+ var debe = 0;
+              var haber = 0;
+              var total_proforma=0;
+
+              var total_factura=0;
+              var ab=0;
+
+             $('#tabla-asiento tbody tr').each(function () {
+                    var row = $(this).closest('tr');
+                    var id = $('input[name="tipo"]', row).val();
+					if (id=="haber"){
+                        var num_recetas=$('#columnas_receta').val();
+                        var i;
+                        var total=0;
+                        //alert(num_recetas);
+                        total_factura=0;
+                      var cantidad=0;
+                              for (i = 1; i <= num_recetas; i++) {
+
+                                cantidad=0;
+
+                                
+                                    cantidad=$('#abono_kits'+i).val();
+
+                                    total_factura=parseFloat(total_factura)+parseFloat(cantidad);
+
+                                  
+                                   
+
+
+                              }
+                              
+                                   $('input[name="asiento-haber"]', row).val(total_factura);
+
+                                  
+
+
+                      }else{
+                              
+                                  $('input[name="asiento-debe"]', row).val(suma);
+                            
+
+                          }
+ 
+
+  debe = $('input[name="asiento-debe"]', row).val();
+              haber = $('input[name="asiento-haber"]', row).val();
+
+  suma_debe= parseFloat(suma_debe)  +parseFloat(debe);
+             suma_haber= parseFloat(suma_haber)  +parseFloat(haber);
+
+            });
+
+
+
+
+
+            $('td[name="asiento-total-debe"]').text(suma_debe);
+             $('td[name="asiento-total-haber"]').text(suma_haber);
+             $('input[name="total-debe-asiento"]').val(suma_debe);
+             $('input[name="total-haber-asiento"]').val(suma_haber);
+
+
+        }
+ function calcular_totales_asiento() {
+            var suma_debe = 0;
+            var suma_haber = 0;
+            $('#tabla-asiento tbody tr').each(function () {
+                var row = $(this).closest('tr');
+                var debe = $('input[name="asiento-debe"]', row).val();
+                var haber = $('input[name="asiento-haber"]', row).val();
+                suma_debe = +suma_debe + +debe;
+                suma_haber = +suma_haber + +haber;
+            });
+            $('td[name="asiento-total-debe"]').text(parseFloat(suma_debe).toFixed(2));
+            $('td[name="asiento-total-haber"]').text(parseFloat(suma_haber).toFixed(2));
+             $('input[name="total-debe-asiento"]').val(suma_debe.toFixed(2));
+             $('input[name="total-haber-asiento"]').val(suma_haber.toFixed(2));
+        }
+ function get_array_asientos() {
+            var asientos = [];
+            $('#tabla-asiento tbody tr').each(function () {
+                var row = $(this).closest('tr');
+                var id = $('td[name="asiento-plan-cuenta-id"]', row).text();
+                var codigo = $('td[name="asiento-codigo"]', row).text();
+                var cuenta = $('input[name="asiento-plan-cuenta-descripcion"]', row).val();
+                var debe = $('input[name="asiento-debe"]', row).val();
+                var haber = $('input[name="asiento-haber"]', row).val();
+                var concepto = $('textarea[name="concepto-asiento"]', row).val();
+                var tipo = $('input[name="estado"]', row).val();
+                var subtipo = $('input[name="subtipo"]', row).val();
+                var centro = $('select[name="id_centro_kits"]', row).val();
+                var asiento = {"id_plancuenta": id, "codigo": codigo, "cuenta": cuenta, "debe": debe, "haber": haber, "concepto": concepto, "tipo": tipo, "subtipo": subtipo,"centro":centro};
+                
+                asientos.push(asiento);
+            });
+            return asientos;
+        }
+		function add_div() {
+            var div_externo = $('<div id="div-consultando" style="width: 100%; height: 100%; background-color: #191a1b; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1050; opacity: 0.8">');
+            var div_interno = $('<div class="progress progress-striped active" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, 50%); width: 50%">');
+            var progress = $('<div class="progress-bar progress-bar-inverse" style="width: 100%">Guardando...</div>');
+
+            div_interno.append(progress);
+            div_externo.append(div_interno);
+
+            div_externo.appendTo($('body'));
+
+        }
+
+
+        </script>

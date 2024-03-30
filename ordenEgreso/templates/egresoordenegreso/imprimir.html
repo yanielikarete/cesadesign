@@ -1,0 +1,159 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>ORDEN DE EGRESO - MUEDIRSA</title>
+</head>
+<style>
+
+    .head{
+        width: 100%;
+        text-align: center;
+        font-size: 9pt;
+
+
+    }
+
+    #detail{
+        width: 100%;
+       font-size: 9pt;
+
+
+    }
+
+    .contenido{
+        width: 100%;
+        padding: 2px 0;
+        font-size: 9pt;
+
+    }
+
+    .contenido td{
+        text-align: right;
+        font-size: 9pt;
+        padding: 3px 5px
+    }
+
+    .foot{
+        text-align: center;
+        font-size: 9pt;
+    }
+    @page {
+       size: 21.5cm 14cm;
+        margin: 1cm;
+
+    }
+
+
+</style>
+<body>
+    <div class="head">
+        <b>MUEDIRSA<br>
+        ORDEN DE EGRESO</b>
+    </div>
+    {% if egresopororden %}
+    <div id="detail" >
+
+        <table width="250">
+             <tr>
+                <td width="80">
+                    <b>ORDEN:</b>
+                </td>
+                <td width="170">
+                    <span>{{egresopororden.codigo}}</span>
+                </td>
+            </tr>
+              <tr>
+                <td>
+                    <b>FECHA:</b>
+                </td>
+                <td>
+                    <span>{{egresopororden.fecha | date:'d-m-Y H:i'}}</span>
+                </td>
+            </tr>
+
+            <tr>
+                <td >
+                    <b>CONCEPTO:</b>
+                </td>
+                <td >
+                    <span>{{ordenegreso.notas}}</span>
+                </td>
+            </tr>
+             <tr>
+                <td width="200px">
+                    <b>REQUISICION:</b>
+                </td>
+                <td >
+                    <span>{{ordenegreso.codigo}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td >
+                    <b>BOD INTERNA:</b>
+                </td>
+                <td >
+                    <span>{{ordenegreso.bodega}}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="contenido">
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ITEMS</th><th width="250px"> DESCRIPCION</th><th>UNIDADES</th><th>COSTO</th><th>SUBTOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                 {% if detalle %}
+                                                    {% for kit  in detalle %}
+    <tr>
+
+                                                    <td>  {{ kit.producto.codigo_producto }}</td>
+                                                    <td>{{ kit.producto.descripcion_producto }}</td>
+                                                    <td>{{ kit.cantidad |floatformat:2  }} {{ kit.unidad_medida }}</td>
+                                                    <td>{{ kit.precio_compra |floatformat:2  }}</td>
+                                                    <td>{{ kit.total |floatformat:2  }}</td>
+
+                                                  </tr>
+
+                         {% endfor %}
+                         {% else %}
+                          {% endif %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" ></td><td><b>TOTAL</b></td><td>{{ordenegreso.subtotal |floatformat:2 }}</td>
+                </tr>
+            </tfoot>
+        </table>
+
+    </div>
+    <div class="foot">
+        <br><br><br>
+        <table>
+            <tr>
+                    <td>ELABORADO POR</td><td>REVISADO POR</td><td>APROBADO POR</td>
+                </tr>
+                 <tr>
+                    <td>&nbsp;</td><td> &nbsp;</td><td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>___________________</td><td> ___________________</td><td>___________________</td>
+                </tr>
+                <tr>
+                    <td>{{ordenegreso.created_by}}</td><td> FIRMA 2</td><td>FIRMA 3</td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+    {% else %}
+    <div>No tiene Orden de Egreso</div>
+   {% endif %}
+
+</body>
+</html>
+

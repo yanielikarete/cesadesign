@@ -1,0 +1,174 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet" />
+        <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css'%}" rel="stylesheet" />
+  <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css'%}" rel="stylesheet" />
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Forma de Pago Empleado{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+
+            <!-- begin row -->
+           <style>
+       .panel-border{border: 1px solid #ddd !important}
+       .form-ajust .form-group{margin-bottom: 0px !important}
+      input[type="text"],select,input[type="number"]
+      {
+
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    box-shadow: none;
+    font-size: 12px;
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+       }
+
+ .table2 {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+      display:table}
+
+.table2>tbody>tr>td, .table2>tbody>tr>th, .table2>tfoot>tr>td, .table2>tfoot>tr>th {
+    border-color: #e2e7eb;
+    padding: 1px 0px;
+}
+
+ .table2>thead>tr>td, .table2>thead>tr>th {
+    border-color: #e2e7eb;
+    padding: 10px 5px;
+}
+#id_abreviatura_codigo{
+    width:50px;
+  }
+
+    </style>
+  <form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+   {{ form.title.errors }}
+        <div class="row">
+                <!-- begin col-6 -->
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+
+                        <h3 class="panel-title">Forma de Pago Empleado </h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12">
+
+                            <div class="row">
+
+                                            <div class="panel panel-default panel-border">
+                                                <div class="panel-heading">Id del Registro</div>
+                                                <div class="panel-body">
+
+                                                    <div class="col-md-4">
+                                                      <label for="exampleInputName2">C&oacute;digo:</label>
+                                                     {% bootstrap_field form.codigo show_label=False %}
+
+                                                   </div>
+                                                    <div class="col-md-8">
+                                                      <label for="exampleInputName2">Nombre:</label>
+                                                     {% bootstrap_field form.nombre show_label=False %}
+
+                                                   </div>
+
+                                                    <div class="col-md-8">
+                                                      <label for="exampleInputEmail2">Activo</label>
+                                                     {% bootstrap_field form.activo show_label=False %}
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+
+
+           <p class="text-center">
+
+                                    <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-save"></i> Guardar</button>
+                                            <a class="default btn btn-link" href="/config/forma_pago_empleado/"><button type="button" class="btn btn-primary btn-lg">  Regresar</button></a>
+
+
+
+
+  </form>
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/data-table.js' %}"></script>
+
+<script>
+  $(document).ready(function() {
+    // App.init();
+    $('#tabla2').DataTable();
+    $('#tabla3').DataTable();
+
+$('#id_fecha_nacimiento').datepicker({todayHighlight:true,autoclose:true});
+      $('#id_fechapedido').datepicker({todayHighlight:true,autoclose:true});
+
+  });
+</script>
+
+<script>
+    $(document).ready(function() {
+
+
+      $('#id_codigo').each(function(){
+  $(this).attr('readonly','readonly');
+});
+      var cod= $('#id_codigo').val();
+      if(cod==""){
+          $.ajax({
+                url: "/config/obtenerSecuencial/", // the endpoint
+                type : "POST", // http method
+                data : { id : 'forma_pago_empleado','csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+                 $('#id_codigo').val('00'+data);
+
+                },
+                error: function(){
+
+                },
+              });
+      }
+
+    });
+</script>
+{% endblock %}

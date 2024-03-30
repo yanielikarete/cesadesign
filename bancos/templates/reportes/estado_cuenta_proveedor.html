@@ -1,0 +1,291 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+    {{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}ESTADO DE CUENTA PROVEEDOR{% endblock %}
+{% block content %}
+
+    <!-- begin row -->
+    <style>
+        .panel-border {
+            border: 1px solid #ddd !important
+        }
+
+        .form-ajust .form-group {
+            margin-bottom: 0px !important
+        }
+
+        input[type="text"], select, input[type="number"] {
+            border: 1px solid #ccd0d4;
+            border-radius: 3px;
+            box-shadow: none;
+            font-size: 12px;
+            height: 34px;
+            padding: 6px 12px;
+            line-height: 1.42857143;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+        }
+
+        .table2 {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 20px;
+            display: table
+        }
+
+        .table2 > tbody > tr > td, .table2 > tbody > tr > th, .table2 > tfoot > tr > td, .table2 > tfoot > tr > th {
+            border-color: #e2e7eb;
+            padding: 1px 0px;
+        }
+
+        .table2 > thead > tr > td, .table2 > thead > tr > th {
+            border-color: #e2e7eb;
+            padding: 10px 5px;
+        }
+    </style>
+
+
+    <div id="busqueda_libro_diario">
+        <div class="panel-heading">
+            <form id="form_consultar_reporte" name='consulta_reporte' method="post"
+                  action="{% url 'consulta-cuenta-proveedor' %}" class="form-horizontal">
+                {% csrf_token %}
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                               data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                <i class="fa fa-plus-circle pull-right"></i>
+                                Búsqueda
+                            </a>
+                        </h3>
+                    </div>
+                    <div id="collapseOne" aria-expanded="true" id="collapseOne" class="panel-collapse collapse in">
+                        <div class="panel-body panel-border">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Proveedor:</label>
+
+                                <div class="col-sm-4">
+                                    <select id="proveedor" class="form-control" name="proveedor">
+                                        <option value="0" selected>SELECCIONE PROVEEDOR</option>
+                                        {% for p  in proveedores %}
+                                            <option value={{ p.proveedor_id }}>{{ p.codigo_proveedor }} - {{ p.nombre_proveedor }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <label class="col-sm-1 control-label" for="fecha_desde">Desde:</label>
+
+                                <div class="col-sm-2">
+                                    <input id="fecha_desde" type="text" class="form-control" name="fecha_desde">
+                                </div>
+                                <label class="col-sm-1 control-label" for="fecha_hasta">Hasta:</label>
+
+                                <div class="col-sm-2">
+                                    <input id="fecha_hasta" type="text" class="form-control" name="fecha_hasta">
+                                </div>
+                            </div>
+
+
+                            <div class="col-sm-12" style="text-align: center">
+                                <button id="bt_consultar" type="submit" class="btn btn-inverse">
+                                    Consultar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                           data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                            <i class="fa fa-plus-circle pull-right"></i>
+                            Estado de cuenta <span name="proveedor-header"></span>
+                        </a>
+                    </h3>
+                </div>
+                <div id="collapseTwo" aria-expanded="true" id="collapseTwo" class="panel-collapse collapse in">
+                    <div id="body_panel_reporte" class="panel-body panel-border">
+                        <div class="table-responsive">
+                            <table id="estado-table" class="table table-striped table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>TP</th>
+                                    <th>NUMERO</th>
+                                    <th>FECHA</th>
+                                    <th>CHEQUE</th>
+                                    <th>FACTURA</th>
+                                    <th>VENCIDO</th>
+                                    <th>DEBITOS</th>
+                                    <th>CREDITOS</th>
+                                    <th>SALDO</th>
+                                    <th>CONCEPTO</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('#estado-table').DataTable({dom: 'Brt',buttons: ['excel','pdf', 'print'],ordering: false,iDisplayLength: -1});
+
+
+            $('#fecha_desde').datepicker({todayHighlight: true, autoclose: true});
+            $('#fecha_hasta').datepicker({todayHighlight: true, autoclose: true});
+            $('#fecha_desde').val(getFechaHoy());
+            $('#fecha_hasta').val(getFechaHoy());
+
+
+            $('#bt_consultar').on('click', function (event) {
+                event.preventDefault();
+                add_div();
+                var metodo = $('#form_consultar_reporte').attr('method');
+                var url = $('#form_consultar_reporte').attr('action');
+                var data = $('#form_consultar_reporte').serialize();
+                $.ajax({
+                    type: metodo,
+                    url: url,
+                    data: data,
+                    success: function (response) {
+                        $('#div-consultando').remove();
+                        $('#body_panel_reporte').empty();
+                        if (response.length == 1) {
+                            add_tabla(response)
+                        }
+                        else {
+                            var lista_asientos = [];
+                            var asiento_anterior = response[0];
+                            lista_asientos.push(asiento_anterior);
+                            for (var i = 1; i < response.length; i++) {
+                                var asiento = response[i];
+                                if (asiento_anterior[0] == asiento[0]) {
+                                    lista_asientos.push(asiento);
+                                    asiento_anterior = asiento;
+                                    if (i + 1 == response.length) {
+                                        add_tabla(lista_asientos);
+                                    }
+                                }
+                                else {
+                                    add_tabla(lista_asientos);
+                                    lista_asientos = [];
+                                    lista_asientos.push(asiento);
+                                    asiento_anterior = asiento;
+                                    if (i + 1 == response.length) {
+                                        add_tabla(lista_asientos);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        $('#estado-table').DataTable({dom: 'Brt',buttons: ['excel','pdf', 'print'],ordering: false,iDisplayLength: -1});
+
+                    },
+                    error: function (response) {
+                    }
+                });
+                return false;
+            });
+
+        });
+
+        function add_tabla(asientos) {
+            var debe = 0, haber = 0;
+            var asiento = asientos[0]
+            var divexterior = $('<div class="form-group">');
+            var table = $('<table class="table table-bordered table-asiento">');
+            var table_head = $('<thead style="background-color: #EEEEEE"><tr><th style="text-align: center"><b>Cuenta</b></th><th style="text-align: center"><b>Debe</b></th><th style="text-align: center"><b>Haber</b></th><th style="text-align: center"><b>Centro de costo</b></th><th style="text-align: center"><b>Proyecto</b></th></tr></thead>');
+            var tbody = $('<tbody>');
+            var filaFecha_codigo = $('<tr><td align="center"> - - ' + asiento[1] + ' - - <br/>' + asiento[0] + '</td><td></td><td></td><td></td><td></td></tr>');
+            tbody.append(filaFecha_codigo);
+            for (var i = 0; i < asientos.length; i++) {
+                var cuentas = asientos[i];
+                var ccostos = cuentas[9];
+                if(ccostos == null){
+                    ccostos="";
+                }
+                var fila = $('<tr><td>' + cuentas[7] + ' - ' + cuentas[6] + '</td><td align="right">$' + parseFloat(cuentas[3]).toFixed(2) + '</td><td align="right">$' +  parseFloat(cuentas[4]).toFixed(2) + '</td><td align="center">' + ccostos + '</td><td></td> </tr>');
+                debe = debe + parseFloat(cuentas[3]);
+                haber = haber + parseFloat(cuentas[4]);
+                tbody.append(fila);
+            }
+            var fila_glosa = $('<tr><td><b>Glosa:</b> ' + asiento[8] + '</td><td></td><td></td><td></td><td></td></tr>');
+            var filaTotal = $('<tr><td align="right"><b>TOTAL</b></td><td align="right">$' + parseFloat(debe).toFixed(2) + '</td><td align="right">$' + parseFloat(haber).toFixed(2) + '</td><td></td><td></td></tr>');
+            tbody.append(fila_glosa);
+            tbody.append(filaTotal);
+            table.append(table_head);
+            table.append(tbody);
+            divexterior.append(table);
+            divexterior.append($('<hr>'));
+            divexterior.appendTo($('#body_panel_reporte'));
+        }
+
+        function add_div() {
+            var div_externo = $('<div id="div-consultando" style="width: 100%; height: 100%; background-color: #191a1b; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1050; opacity: 0.8">');
+            var div_interno = $('<div class="progress progress-striped active" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, 50%); width: 50%">');
+            var progress = $('<div class="progress-bar progress-bar-inverse" style="width: 100%">Consultando...</div>');
+
+            div_interno.append(progress);
+            div_externo.append(div_interno);
+
+            div_externo.appendTo($('body'));
+
+        }
+
+        function getFechaHoy() {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear();
+
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+            today = dd + '/' + mm + '/' + yyyy;
+            return today;
+        }
+
+
+    </script>
+
+{% endblock %}

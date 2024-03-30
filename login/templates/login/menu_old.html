@@ -1,0 +1,288 @@
+{% load extra_tags %}
+{% load static from staticfiles %}
+<!-- Menu -->
+
+<li>
+    <a href="/login/inicio">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-dashboard"></i>
+        <span>Panel de Control</span>
+    </a>
+</li>
+{% if user.is_authenticated %}
+    <li class="has-sub">
+        {% for r in menu %}
+            <a href="javascript:;">
+                <b class="caret pull-right"></b>
+                <span>{{ r.1 }}</span>
+            </a>
+            <ul class="sub-menu">
+                {% for s in submenu %}
+                    {% if s.0 == r.4 %}
+                        <li><a href="/{{ s.2 }}">{{ s.1 }}</a></li>
+
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </li>
+        {% if user.is_superuser %}
+
+
+            <li class="has-sub">
+                <a href="javascript:;">
+                    <b class="caret pull-right"></b>
+                    <i class="fa fa-cubes"></i>
+                    <span>Inventario</span>
+                </a>
+                <ul class="sub-menu">
+                    <li><a href="{% url 'producto-list' %}">Producto</a></li>
+
+                    <li><a href="{% url 'bodega-list' %}">Bodega</a></li>
+                    <li><a href="/inventario/productoenbodega/1/">Productos en Bodega</a></li>
+                    <li><a href="{% url 'kardex-list' %}">Kardex</a></li>
+                    <li><a href="{% url 'ordenescompra-list' %}">Ordenes de Compra</a></li>
+                    <li><a href="{% url 'ordenescompra-list-aprobada' %}">Aprobacion de Ordenes de Compra </a></li>
+                    <li><a href="{% url 'compraslocales-list' %}">Compras Locales </a></li>
+                    <li><a href="{% url 'ordeningreso-list' %}">Ordenes de Ingreso</a></li>
+                    <li><a href="{% url 'ordeningreso-list-aprobada' %}">Aprobacion de Ordenes de Ingreso </a></li>
+                    <li><a href="{% url 'ordenegreso-list' %}">Ordenes de Egreso</a></li>
+                    <li><a href="{% url 'ordenegreso-list-aprobada' %}">Aprobacion de Ordenes de Egreso </a></li>
+                    <li><a href="{% url 'egresoordenegreso-list' %}">Egreso por Orden de Egreso </a></li>
+
+                    <li class="has-sub">
+                        <a href="javascript:;">
+                            <b class="caret pull-right"></b>
+                            <i class="fa fa-archive"></i>
+                            <span>Configuracion</span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li><a href="{% url 'tipo-producto-list' %}">Tipo Productos</a></li>
+                            <li><a href="{% url 'categoria-producto-list' %}">Grupo</a></li>
+                            <li><a href="{% url 'subcategoria-producto-list' %}">SubGrupo</a></li>
+                            <li><a href="{% url 'linea-list' %}">Linea</a></li>
+                            <!--                                 <li><a href="{% url "unidades-list" %}">Unidades</a></li>
+ -->                                </ul>
+
+                </ul>
+            </li>
+
+            <li class="has-sub">
+                <a href="javascript:;">
+                    <b class="caret pull-right"></b>
+                    <i class="fa fa-users"></i>
+                    <span>Recursos Humanos</span>
+                </a>
+                <ul class="sub-menu">
+                    <li><a href="{% url 'empleado-list' %}">Empleados</a></li>
+                    <li><a href="{% url 'departamento-list' %}">Departmento</a></li>
+                    <li><a href="{% url 'tipoempleado-list' %}">Cargo de Empleado</a></li>
+                    <li><a href="{% url 'roles-pago-list' %}">Rol de Pago-Configuraciones</a></li>
+                    <li><a href="{% url 'rol-cuenta-contable-list' %}">Rol de Pago-Cuentas Contables</a></li>
+                    <li><a href="{% url 'generar-roles-pago-list' %}">Generar Rol de Pago</a></li>
+                    <li><a href="{% url 'consultar-roles-pago-list' %}">Consultar Rol de Pago</a></li>
+
+                </ul>
+            </li>
+            <li class="has-sub">
+                <a href="javascript:;">
+                    <b class="caret pull-right"></b>
+                    <i class="fa fa-gears"></i>
+                    <span>Produccion</span>
+                </a>
+                <ul class="sub-menu">
+                    <li><a href="{% url 'reunion-list' %}">Reunion</a></li>
+                    <li><a href="{% url 'imagenesreunion-list' %}">Subir Render</a></li>
+                    <li><a href="{% url 'cotizacion-bodega-list' %}">Cotizacion Bodega</a></li>
+                    <li><a href="{% url 'cotizacionproforma-list' %}">Cotizacion Proforma</a></li>
+                    <li><a href="{% url 'cotizacionproforma-listcotizar' %}">Cotizaciones a realizar</a></li>
+                    <li><a href="{% url 'cotizacionproforma-render-list' %}">Render de Cotizacion Proforma</a></li>
+                    <li><a href="{% url 'proforma-consultar-list' %}">Proforma</a></li>
+                    <li><a href="{% url 'proforma-list-aprobada' %}">Aprobacion Proforma</a></li>
+                    <li><a href="{% url 'pedido-list' %}">Pedido</a></li>
+                    <li><a href="{% url 'pedido-list-aprobada' %}">Aprobacion Pedido</a></li>
+                    <li><a href="{% url 'ordenproduccion-list' %}">Orden de Produccion</a></li>
+                    <li><a href="{% url 'ordenproduccion-list-aprobada' %}">Aprobacion de Orden de Produccion</a></li>
+                    <li><a href="{% url 'guiaremision-list' %}">Guia de Remision</a></li>
+                    <li><a href="{% url 'ordenservicio-list' %}">Orden de Servicio</a></li>
+                    <li class="has-sub">
+                        <a href="javascript:;">
+                            <b class="caret pull-right"></b>
+                            <i class="fa fa-archive"></i>
+                            <span>Configuracion</span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li><a href="{% url 'areas-list' %}">Areas</a></li>
+                            <li><a href="{% url 'ambientes-list' %}">Ambientes</a></li>
+                            <li><a href="{% url 'vehiculo-list' %}">Vehiculos</a></li>
+                            <li><a href="{% url 'tipomueb-list' %}">Tipos de Muebles</a></li>
+                        </ul>
+                    </li>
+                    <li class="has-sub">
+                        <a href="javascript:;">
+                            <b class="caret pull-right"></b>
+                            <i class="fa fa-archive"></i>
+                            <span>Reporte</span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li><a href="{% url 'proforma-seguimiento' %}">Seguimiento de Reuniones</a></li>
+
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li class="has-sub">
+                <a href="javascript:;">
+                    <b class="caret pull-right"></b>
+                    <i class="fa fa-archive"></i>
+                    <span>Bodega</span>
+                </a>
+                <ul class="sub-menu">
+                    <li><a href="{% url 'bodegarecepcion-list' %}">Recepcion de Bodega</a></li>
+
+
+                </ul>
+            </li>
+            <li class="has-sub">
+                <a href="javascript:;">
+                    <b class="caret pull-right"></b>
+                    <i class="fa fa-building"></i>
+                    <span>Puntos de Venta</span>
+                </a>
+                <ul class="sub-menu">
+
+                    <li><a href="{% url 'puntosventa-list' %}">Puntos de Venta</a></li>
+                    <li><a href="{% url 'liquidaciones-list' %}">Liquidaciones de Comisiones</a></li>
+                    <li><a href="{% url 'reporte-principal' %}">Reportes de Pto. Ventas</a></li>
+
+                </ul>
+
+            </li>
+            <li class="has-sub">
+                <a href="javascript:;">
+                    <b class="caret pull-right"></b>
+                    <i class="fa fa-exchange"></i>
+                    <span>Transacciones</span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="has-sub">
+                        <a href="javascript:;">
+                            <b class="caret pull-right"></b>
+                            <span>Proformas</span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li><a href="{% url 'transacciones-register-proforma' %}">Registrar</a></li>
+                            <li><a href="{% url 'transacciones-consult-proforma' %}">Consultar</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="{% url 'proforma-factura-list-aprobada' %}">Aprobar Proformas</a></li>
+                    <li class="has-sub">
+                        <a href="javascript:;">
+                            <b class="caret pull-right"></b>
+                            <i class="fa fa-archive"></i>
+                            <span>Compra</span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li><a href="{% url 'documento-nuevo' %}">Factura</a></li>
+                            <li><a href="#">Nota de crédito</a></li>
+                            <li><a href="{% url 'movimiento-list' %}">Nota de débito</a></li>
+                            <li><a href="{% url 'docuento-compra-retencion' %}">Comprobante de retención</a></li>
+                        </ul>
+                    </li>
+                    <li class="has-sub">
+                        <a href="javascript:;">
+                            <b class="caret pull-right"></b>
+                            <i class="fa fa-archive"></i>
+                            <span>Venta</span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li><a href="{% url 'documento-venta-nuevo' %}">Factura</a></li>
+                            <li><a href="#">Nota de crédito</a></li>
+                            <li><a href="{% url 'movimiento-list' %}">Nota de débito</a></li>
+                            <li><a href="{% url 'docuento-retencion-venta' %}">Comprobante de retención</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="{% url 'registrar-cobro-pago-list' %}">Cobros/Pagos</a></li>
+                    <li><a href="{% url 'deposito-list' %}">Depositos</a></li>
+                </ul>
+            </li>
+            <li class="has-sub">
+                <a href="javascript:;">
+                    <b class="caret pull-right"></b>
+                    <i class="fa fa-dollar"></i>
+                    <span>Bancos</span>
+                </a>
+                <ul class="sub-menu">
+                    <li><a href="{% url 'bancos-list' %}">Mis Bancos</a></li>
+                    <li class="has-sub">
+                        <a href="javascript:;">
+                            <b class="caret pull-right"></b>
+                            <i class="fa fa-archive"></i>
+                            <span>Movimiento</span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li><a href="{% url 'movimiento-nuevo' %}">Registro de anticipo</a></li>
+                            <li><a href="{% url 'movimiento-list' %}">Consultar</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="{% url 'cheque-protestados-list' %}">Cheques Protestados</a></li>
+                    <li><a href="{% url 'conciliaciones-list' %}">Conciliaciones</a></li>
+                    <li><a href="{% url 'estado-cuenta-list' %}">Estado de Cuenta</a></li>
+                </ul>
+            </li>
+            <li class="has-sub">
+                <a href="javascript:;">
+                    <b class="caret pull-right"></b>
+                    <i class="fa fa-file"></i>
+                    <span>Reportes</span>
+                </a>
+                <ul class="sub-menu">
+                    <li><a href="{% url 'menu-list' %}">Panel de Control</a></li>
+                    <li><a href="{% url 'secuenciales-list' %}">Reportes Financieros</a></li>
+                    <li><a href="{% url 'menu-list' %}">Ventas</a></li>
+                    <li><a href="{% url 'secuenciales-list' %}">Reportes de Gestion</a></li>
+                    <li><a href="{% url 'menu-list' %}">Inventario</a></li>
+                    <li><a href="{% url 'menu-list' %}">Consulta Cuentas /Mayor</a></li>
+                    <li><a href="{% url 'menu-list' %}">Reportes SRI</a></li>
+                    <li><a href="{% url 'menu-list' %}">Compras/Ventas</a></li>
+                    <li><a href="{% url 'menu-list' %}">Log de actividades</a></li>
+                </ul>
+            </li>
+            <li class="has-sub">
+                <a href="javascript:;">
+                    <b class="caret pull-right"></b>
+                    <i class="fa fa-wrench"></i>
+                    <span>Configuraciones Generales</span>
+                </a>
+                <ul class="sub-menu">
+
+                    <li><a href="{% url 'menu-list' %}">Menu</a></li>
+                    <li><a href="{% url 'secuenciales-list' %}">Secuenciales</a></li>
+                </ul>
+
+            </li>
+
+            <li class="has-sub">
+                <a href="javascript:;">
+                    <b class="caret pull-right"></b>
+                    <i class="fa fa-certificate"></i>
+                    <span>Mantenimiento</span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="has-sub">
+                        <a href="javascript:;">
+                            <b class="caret pull-right"></b>
+                            <i class="fa fa-paperclip"></i>
+                            <span>SRI</span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li><a href="{% url 'retenciones-list' %}">C&oacute;digo Retenci&oacute;n</a></li>
+                            <li><a href="{% url 'formaspagos-list' %}">Formas de Pagos</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+
+        {% else %}
+        {% endif %}
+{% endif %}

@@ -1,0 +1,156 @@
+<!doctype html>
+{% load humanize %}
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>COMPROBANTE DE RETENCIÓN - MUEDIRSA</title>
+</head>
+<style>
+
+    .head {
+        width: 100%;
+        text-align: left;
+        font-size: 7pt;
+        font-weight: bold;
+
+    }
+
+    #detail {
+        width: 100%;
+        font-size: 7pt;
+        font-weight: bold;
+    }
+
+    .contenido {
+        width: 100%;
+        font-size: 7pt;
+        font-weight: bold;
+    }
+
+    .contenido td {
+        text-align: right;
+        font-size: 7pt;
+    }
+
+    .foot {
+        text-align: center;
+        font-size: 7pt;
+    }
+
+    @page {
+        size: a5 landscape;
+        /*size: a5 landscape;*/
+        margin: 1cm;
+        margin-top: 0.93cm;
+    }
+
+    @font-face {
+        font-family: Monospaced;
+        font-weight: bold;
+    }
+
+
+</style>
+<body>
+<div class="head">
+     <h1 style="width:100%;text-align: center">MUEDIRSA</h1>
+
+    <table width="100%">
+        <tr>
+            <td style="text-align: right">FECHA: {{ retencion.fecha_emision |date:'Y-m-d' }}</td>
+        </tr>
+         <tr>
+            <td style="text-align: left">USUARIO: {{ usuario }} {{ fecha |date:'Y-m-d H:i' }}</td>
+        </tr>
+    </table>
+    <hr>
+    <table width="100%">
+        <tr>
+            <td width="200">COMENTARIO:</td><td>{{retencion.descripcion}}</td>
+        </tr>
+        <tr>
+            <td>COMPROBANTE RT.:</td><td style="font-size: 9pt">{{retencion.establecimiento}}-{{retencion.punto_emision}}-{{retencion.secuencial}}</td>
+            <td></td><td></td>
+        </tr>
+        
+      
+    </table>
+  
+    
+   
+</div>
+ <hr>
+<div class="contenido">
+
+    <table border="0">
+        <tbody>
+            <tr style="border-bottom:1px solid black">
+           <td style="text-align:center;width:20px">TIPO</td>
+           <td style="text-align:center;width:80px">NUMERO</td>
+           <td style="text-align:center;width:80px">CLIENTE</td>
+           <td style="text-align:center;width:200px">NOMBRE</td>
+           <td style="text-align:center;width:80px">TOTAL</td>
+           <td style="text-align:center">COMENTARIO</td>
+        </tr>
+        <tr style="border-bottom:1px solid black;padding-top: 5px ">
+            <td style="text-align:center">FA</td>
+            <td style="text-align:center"> {{documento.establecimiento}}-{{documento.punto_emision}}-{{documento.secuencial}}</td>
+            <td style="text-align:center"> {{ documento.cliente.codigo_cliente}}</td>
+            <td style="text-align:center"> {{ documento.cliente.nombre_cliente}}</td>
+           <td style="text-align:right"> {{ total }}</td>
+            <td style="text-align:center">{{ retencion.descripcion}}</td>
+        </tr>
+
+   
+        <tr style="padding-top: 5px "><td colspan="4" style="text-align: right">TOTAL EFECTIVO:</td><td></td></tr>
+        <tr><td colspan="4" style="text-align: right">TOTAL CHEQUE:</td><td></td></tr>
+        <tr><td colspan="4" style="text-align: right">TOTAL DEPOSITO:</td><td></td></tr>
+        <tr><td colspan="4" style="text-align: right">TOTAL NTA/CREDITO:</td><td></td></tr>
+        <tr>
+            <td style="text-align: right" colspan="4">TOTAL RETENCION:</td>
+            <td style="text-align: right">$ {{ total | floatformat:2 }}</td>
+
+        </tr>
+        <tr><td colspan="4" style="text-align: right">TOTAL INGRESO CAJA :</td><td></td></tr>
+         <tr>
+            <td style="text-align: right" colspan="4">TOTAL GENERAL:</td>
+            <td style="text-align: right">$ {{ total | floatformat:2 }}</td>
+
+        </tr>
+    
+        </tbody>
+
+    </table>
+ <br><br>
+    <table width="100%">
+         <tr>
+            <td width="120" style="text-align: center;">ELABORADO POR:</td>
+            <td></td>
+            <td width="120" style="text-align: center;">REVISADO POR:</td>
+            <td></td>
+            <td width="120" style="text-align: center;">VENDEDOR</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td> &nbsp;</td>
+            <td>&nbsp;</td>
+            <td> &nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">___________________</td>
+            <td></td>
+            <td style="text-align: center;">___________________</td>
+            <td></td>
+            <td style="text-align: center;">___________________</td>
+        </tr>
+    </table>
+
+
+
+</div>
+
+
+</body>
+</html>
+

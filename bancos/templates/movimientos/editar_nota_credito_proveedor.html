@@ -1,0 +1,485 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block css %}
+    {{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+{% block section_title %} Registrar Nota Credito Proveedor{% endblock %}
+{% block content %}
+<style>
+    .panel-border {
+        border: 1px solid #ddd !important;
+    }
+
+    .form-group {
+        margin-bottom: 0px !important;
+    }
+
+    .input-group input {
+        border-right: 0px solid transparent;
+    }
+
+    .input-group .input-group-addon {
+        background-color: transparent;
+        border-left: 0px solid transparent;
+    }
+
+    .panel-border {
+        border: 1px solid #ddd !important
+    }
+
+    .highlighter {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .no-border-input {
+        border: none !important;
+        background-color: #fff !important;
+        border-bottom: 1px solid #eee !important;
+    }
+</style>
+    <div class="row">
+        <!-- begin col-6 -->
+        <div class="col-md-12">
+            <form id="formulario" class="form-horizontal" method="post">
+                {% csrf_token %}
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                               data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                <i class="fa fa-plus-circle pull-right"></i>
+                                Datos generales
+                            </a>
+                        </h3>
+                    </div>
+                   
+                        <div class="panel-body panel-border">
+                    <div class="col-md-8">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Tipo</label>
+                                <div class="col-sm-6">
+                                            <select class="form-control" name="tipo_anticipo" id="tipo_anticipo">
+                                                {% for tipo_anticipo in tipo_anticipos %}
+                                                    <option value="{{ tipo_anticipo.id }}">{{ tipo_anticipo.descripcion }}</option>
+                                                {% endfor %}
+                                            </select>
+                                       
+                                        <div  style="display: none">
+                                            <select class="form-control" name="tipo_documento">
+                                                {% for tipo_documento in tipo_documentos %}
+                                                    <option value="{{ tipo_documento.id }}">{{ tipo_documento.descripcion }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                          
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Fecha de emisión</label>
+                                <div class="col-sm-6">
+                                   <input type="text" class="form-control" value="{{ movimiento.fecha_emision}}">
+                                </div>
+                            </div>
+
+                            
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Proveedor</label>
+                                
+                                <div class="col-sm-4">
+ <input type="text" class="form-control" value="{{ movimiento.proveedor}}" />
+                                </div>
+                            </div>
+                         
+                             <div class="form-group">
+                            <label class="col-sm-4 control-label">Nro Nota de Credito</label>
+                            <div class="col-sm-2">
+ <input type="text" class="form-control" value="{{ movimiento.nc_establecimiento }}" />
+                            </div>
+                            <div class="col-sm-2">
+ <input type="text" class="form-control" value="{{ movimiento.nc_punto_emision }}" />
+                            </div>
+                            <div class="col-sm-2">
+ <input type="text" class="form-control" value="{{ movimiento.nc_secuencial }}" />
+                            </div>
+                        </div>
+                             
+                           <div class="form-group">
+                                <label class="col-sm-4 control-label">Autorizacion</label>
+                                <div class="col-sm-6">
+ <input type="text" class="form-control" value="{{ movimiento.nc_autorizacion }}" />                               </div>
+                            </div>
+            
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Descripción</label>
+                                <div class="col-sm-6">
+ <textarea  class="form-control">{{ movimiento.descripcion }}
+                                </textarea></div>
+                            </div>
+                                                      <br />  
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Facturas</label>
+                                <div class="col-sm-6">
+                                    {{ nota_credito.documento_compra.establecimiento }}- {{ nota_credito.documento_compra.punto_emision }} -{{ nota_credito.documento_compra.secuencial  }}|{{ nota_credito.documento_compra.descripcion }}
+  
+                                </div>
+                            </div>
+ <br />
+                        </div>
+                             <div class="col-md-4">
+                                          
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Subtotal</label>
+                                    <div class="col-sm-8">
+                                                              <input type="text" id="subtotal"  class="form-control" value="{{ movimiento.subtotal  }}" />
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Subtotal 0%</label>
+                                    <div class="col-sm-8">
+                                      <input type="text" class="form-control" id="subtotal_0" value="{{ movimiento.subtotal_0 }}" />
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">RISE</label>
+                                    <div class="col-sm-8">
+                                       <input type="text" class="form-control" id="rise"  value="{{ movimiento.rise }}" />  
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                <div class="col-sm-3">
+
+ <input type="text" class="form-control" value="{{ movimiento.porcentaje_iva }} " id="porcentaje_iva"  />                               </div>
+
+                                <label class="col-sm-3 control-label">% IVA</label>
+                                    <div class="col-sm-4">
+                                       <input type="text" class="form-control" value=" 0" id="iva" />
+                                    </div>
+                                </div>
+
+                              
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">TOTAL</label>
+                                    <div class="col-sm-8">
+                                       <input type="text" class="form-control" value=" {{ movimiento.monto }} " /> 
+                                    </div>
+                                </div>
+                         
+                        
+                        
+                        </div>
+                
+                    
+                </div>
+                <div class="panel panel-inverse panel-with-tabs">
+                    <div class="panel-heading p-0">
+                        <!-- begin nav-tabs -->
+                        <ul class="nav nav-tabs nav-tabs-inverse">
+                            <li class="active"><a href="#nav-tab-1" data-toggle="tab">Asientos</a></li>
+                        </ul>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade active in" id="nav-tab-1">
+                      
+                            <table class="table table-bordered" id="tabla-asiento">
+                                <thead style="background-color: #ccd0d4">
+                                <tr>
+                                    <th style="display:none;">Id</th>
+
+                                    <th style="text-align: center">Código</th>
+                                    <th style="text-align: center">Cuenta</th>
+                                    <th style="text-align: center; width: 15%;">Debe</th>
+                                    <th style="text-align: center; width: 15%;">Haber</th>
+                                    <th style="text-align: center">Concepto</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if detalle_asientos %}
+                                                    {% for de  in detalle_asientos %}
+                                <tr class="asiento-row" >
+                                    <td name="asiento-plan-cuenta-id" style="display:none;">
+                                        {{ de.cuenta_id}}
+                                   <input type="hidden" value="{{de.tipo}}" name="estado" id="estado"/>
+                                    {% if de.debe > 0 %}
+                                   <input type="hidden" value="debe" name="tipo" id="tipo"/>
+                                   {% else %}
+                                    <input type="hidden" value="haber" name="tipo" id="tipo"/>
+                                   {% endif %}
+                                    <input type="hidden" value="{{de.asiento_id}}" name="ida" id="ida" />
+                                   <input type="hidden" value="{{de.subtipo}}" name="subtipo" id="subtipo" />
+ </td>
+
+                        <td name="asiento-codigo">{{ asientos.codigo_asiento}}</td>
+                        <td><div class="input-group add-on" style="width:100%"><input class="form-control" type="text" name="asiento-plan-cuenta-descripcion" value="{{ de.cuenta.nombre_plan}}"   readonly>
+                        </div>
+                        </td>
+                        <td>
+
+
+                            <input style="text-align: right;" class="form-control" type="number" step="0.01" name="asiento-debe" value="{{ de.debe}}" readonly>
+                        </td>
+                        <td align="right" >
+                            <input style="text-align: right;" class="form-control" type="number" step="0.01" name="asiento-haber" value="{{ de.haber}}" readonly >
+                        </td>
+                                      <td align="right" >
+                                          <textarea class="form-control" name="concepto-asiento"> {{ de.concepto}}</textarea>
+                        </td>
+                    </tr>
+                                {% endfor %}
+                                {% endif %}
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td><input type="hidden" id="total-debe-asiento" name="total-debe-asiento"  /><input type="hidden" id="total-haber-asiento" name="total-haber-asiento" /></td>
+
+
+                                    <td><strong>TOTAL:</strong></td>
+                                    <td align="right" name="asiento-total-debe"><strong>{{asientos.total_debe}}</strong></td>
+                                    <td align="right" name="asiento-total-haber"><strong>{{asientos.total_haber}}</strong></td><td></td>
+                                </tr>
+                                </tfoot>
+                            </table>
+
+                           
+                            
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+              <a class="default btn btn-link" href="/bancos/movimiento/proveedor/nota_credito"><button type="button" class="btn btn-inverse">  Regresar</button></a>
+
+               
+            </form>
+        </div>
+    </div>
+    <!-- Modal Cliente-->
+    <div class="modal fade bs-example-modal-lg" id="modal-cliente">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cliente</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-cliente">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Ruc</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for cliente  in clientes %}
+                                <tr>
+                                    <td>{{ cliente.codigo_cliente }}</td>
+                                    <td>{{ cliente.nombre_cliente }}</td>
+                                    <td>{{ cliente.ruc }}</td>
+                                    <td onclick="cargar_cliente('{{ cliente.id_cliente }}','{{ cliente.nombre_cliente }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Proveedor-->
+    <div class="modal fade bs-example-modal-lg" id="modal-proveedor">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Proveedor</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-proveedor">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Ruc</th>
+                                <th>Acción</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for proveedor  in proveedores %}
+                                <tr>
+                                    <td>{{ proveedor.codigo_proveedor }}</td>
+                                    <td>{{ proveedor.nombre_proveedor }}</td>
+                                    <td>{{ proveedor.ruc }}</td>
+                                    <td onclick="cargar_proveedor('{{ proveedor.proveedor_id }}', '{{ proveedor.nombre_proveedor }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Banco -->
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cuenta bancaria</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped " width="100%" id="tabla_cuenta">
+                            <thead>
+                            <tr>
+
+                                <th>Banco</th>
+                                <th>Tipo</th>
+                                <th>Número cuenta</th>
+                                <th>Estado</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for banco  in bancos %}
+                                <tr>
+
+                                    <td>{{ banco.nombre }}</td>
+                                    <td>{{ banco.tipo_cuenta }}</td>
+                                    <td>{{ banco.numero_cuenta }}</td>
+                                    {% if banco.estado == True %}
+                                        <td>Activo</td>
+                                    {% else %}
+                                        <td>Inactivo</td>
+                                    {% endif %}
+                                    <td onclick="cargar_banco('{{ banco.id }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Plan Cuenta-->
+    <div class="modal fade bs-example-modal-lg" id="modal-plan-cuenta">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Plan de cuenta</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-plan-cuenta">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>Código</th>
+                                <th>Descripción</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for cuenta  in cuentas %}
+                                <tr>
+                                    <td onclick="cargar_plan_cuenta('{{ cuenta.plan_id }}','{{ cuenta.codigo_plan }}','{{ cuenta.nombre_plan }}')">
+                                        <a class="btn btn-inverse btn-sm remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                    <td>{{ cuenta.codigo_plan }}</td>
+                                    <td>{{ cuenta.nombre_plan }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+
+    <script>
+          $(document).ready(function () {
+            actualizar_total();
+            
+          });
+                 function actualizar_total(){
+    var suma=$('#id_monto').val();
+    var t=0;
+    var totalT=0;
+    var iva2=0;
+        var subtotal=$('#subtotal').val();
+         var subtotal0=$('#subtotal0').val();
+          var iva=$('#iva').val();
+          
+        var piva=$('#porcentaje_iva').val();
+        if (subtotal0==0){
+            
+            $('#iva').val(0);
+        }else{
+               suma=parseFloat(suma);
+    t=parseFloat(subtotal+subtotal0).toFixed(2);
+    iva2=parseFloat(t*piva/100).toFixed(2);
+    $('#iva').val(iva2);
+   // alert(suma);
+        }
+ 
+    
+
+
+}
+
+
+
+    </script>
+
+{% endblock %}

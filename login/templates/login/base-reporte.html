@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title>Reportes | Pegaso</title>
+        <style type="text/css">
+            @page {
+                size: {% block page-size %}a4{% endblock %};
+                margin: 1.5cm 1cm;
+                top: {% block page-top %}0.5cm{% endblock %};
+                bottom: 2cm;
+                @frame header {
+                    -pdf-frame-content: headerContent;
+                    top: 1cm;
+                    margin-left: 1cm;
+                    margin-right: 1cm;
+                    height: {% block header-height %}0.5cm{% endblock %};
+                }
+                @frame footer {
+                    -pdf-frame-content: footerContent;
+                    bottom: 0.5cm;
+                    margin-left: 1cm;
+                    margin-right: 1cm;
+                    height: {% block footer-height %}0.5cm{% endblock %};
+                }
+            }
+            table.tabla th {
+                background-color: #CAE2FD;
+                color: black;
+                font-weight: bold;
+                padding: 2px;
+                line-height: 12px;
+            }
+            table.tabla td {
+                border: 1px solid black;
+                padding: 2px;
+                line-height: 12px;
+            }
+            table td.sxl {
+                width: 2cm;
+            }
+            table td.sl {
+                width: 1.4cm;
+            }
+            table td.sm {
+                width: 1cm;
+            }
+            table td.sx {
+                width: 0.50cm;
+            }
+            table td.md-x {
+                width: 4cm;
+            }
+            table td.md {
+                width: 6cm;
+            }
+            table.tabla .grouper {
+                background-color:#333;
+                color: #FFF;
+                padding: 3px;
+                font-size: 12px;
+                line-height: 12px;
+            }
+            table.tabla td.caption {
+                background-color: #FBFF72;
+                color: black;
+                font-weight: bold;
+            }
+            .caption-2 {
+                background-color: #FDE5CA;
+            }
+            .caption-3 {
+                background-color: #FAFFDD;
+            }
+            table.tabla tr.total {
+                font-weight: bold;
+            }
+            .sinborde{ border: none;}
+
+			/*h1, h2, h3, h4, h5{line-height: 12px;}*/
+			.separador{ margin-top: 5cm; }
+			.text-center{ text-align: center; }
+			.text-left{ text-align: left; }
+			.text-right{ text-align: right; }
+        </style>
+    </head>
+    <body>
+        <div id="headerContent">
+            <table>
+                <tr>
+                    <td></td>
+                    <td align="right">
+                    </td>
+                </tr>
+            </table>
+            {% block header-content %}{% endblock %}
+        </div>
+        <div class="informe-page">
+		    {% block content %}{% endblock %}
+		</div>
+
+        <div id="footerContent">
+            {% block footer-content %}{% endblock %}
+            {% block footer-pagina-no %}
+            <table>
+                <tr>
+                    <td></td>
+                    <td width="100px" align="right">
+                        Página <pdf:pagenumber>
+                    </td>
+                </tr>
+            </table>
+            {% endblock %}
+        </div>
+    </body>
+</html>

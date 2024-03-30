@@ -1,0 +1,383 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block css %}
+    {{ block.super }}
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"
+          xmlns="http://www.w3.org/1999/html"/>
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+{% block section_title %} Registro de cheques girados y no cobrados {% endblock %}
+{% block content %}
+    <style>
+        .panel-border {
+            border: 1px solid #ddd !important;
+        }
+
+        .form-group {
+            margin-bottom: 0px !important;
+        }
+    </style>
+    <div class="row">
+        <!-- begin col-6 -->
+        <div class="col-md-12">
+            <form id="formulario" class="form-horizontal" method="post" action="{% url 'cheque-no-cobrado-crear'  %}">
+                {% csrf_token %}
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                               data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                <i class="fa fa-plus-circle pull-right"></i>
+                                Datos generales
+                            </a>
+                        </h3>
+                    </div>
+                    <div id="collapseOne" aria-expanded="true" id="collapseOne" class="panel-collapse collapse in">
+                        <div class="panel-body panel-border">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Fecha de emisión</label>
+                                <div class="col-sm-4">
+                                    <input id="fecha_emision" class="form-control" type="text"
+                                           name="fecha_emision" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Cuenta bancaria</label>
+                                <div class="col-sm-4">
+                                    <select class="form-control" name="banco">
+                                        {% for banco  in bancos %}
+                                            <option value="{{ banco.id }}">{{ banco.nombre }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Proveedor</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" name="nombre_proveedor" type="text" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Número de cheque</label>
+                                <div class="col-sm-4">
+                                    <div class="input-group add-on">
+
+                                        <input class="form-control" name="numero_cheque" type="text" >
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Valor cheque</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="number" step="0.01" placeholder="0.00" type="text" name="valor_cheque" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Descripción</label>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control" name="descripcion" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              <button type="submit" class="btn btn-inverse"><i class="fa fa-save"></i> Guardar</button>
+            </form>
+        </div>
+    </div>
+    <!-- Modal Cheques-->
+    <div class="modal fade bs-example-modal-lg" id="modal-cheques">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cheques</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-cheques">
+                            <thead>
+                            <tr>
+                                <th>Fecha emision</th>
+                                <th>Banco</th>
+                                <th>Número cheque</th>
+                                <th>Acción</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Banco -->
+    <div class="modal fade bd-example-modal-lg" id="modal-banco">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cuenta bancaria</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped " width="100%" id="tabla_cuenta">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Cuenta</th>
+                                <th>Estado</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for banco  in bancos %}
+                                <tr>
+                                    <td>{{ banco.codigo }}</td>
+                                    <td>{{ banco.nombre }}</td>
+                                    {% if banco.estado == True %}
+                                        <td>Activo</td>
+                                    {% else %}
+                                        <td>Inactivo</td>
+                                    {% endif %}
+                                    <td onclick="cargar_banco('{{ banco.id }}','{{ banco.nombre }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+
+    <script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/data-table.js' %}"></script>
+    <script>
+
+         $('#fecha_emision').datepicker({todayHighlight:true,autoclose:true,format:'yyyy-mm-dd'});
+ $('#fecha_cheque').datepicker({todayHighlight:true,autoclose:true,format:'yyyy-mm-dd'});
+
+        $(document).ready(function () {
+            $('#tabla2').DataTable();
+            $('#tabla-plan-cuenta').DataTable();
+            $('#tabla_cuenta').DataTable();
+            $("select[name='tipo_anticipo_documento']").change(function () {
+                if ($(this).val() == "9") {//Transf
+                    $('.mostrar-cheque').attr('style', 'display: none;');
+                    $('.mostrar-transf').removeAttr('style')
+                }
+                if ($(this).val() == "8") {
+                    $('.mostrar-transf').attr('style', 'display: none;');
+                    $('.mostrar-cheque').removeAttr('style')
+                }
+            });
+        });
+
+        $(document).on("click", ".eliminar", function () {
+            var parent = $(this).parent();
+            $(parent).remove();
+            calcular_totales_asiento();
+        });
+
+        function cargar_banco(id, nombre) {
+            $('#cuenta_bancaria_id').val(id);
+            $('#cuenta_bancaria').val(nombre);
+            $("#modal-banco").modal('toggle');
+        }
+
+        function cargar_persona(id, nombre) {
+            $('#persona_id').val(id);
+            $('#persona').val(nombre);
+            $("#modal-persona").modal('toggle');
+            $.ajax({
+                type: "POST",
+                url: "{% url "consultar-cheques-clientes" %}",
+                data: {
+                    'id': id,
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: function (response) {
+                    if(response.length > 0) {
+                        for (var i = 0; i < response.length; i++) {
+                            add_items_cheques(response[i][0], response[i][1], response[i][2], response[i][3]);
+                        }
+                    }
+                    else {
+                       // alert('No tiene cheques asociados.');
+                    }
+                }
+            });
+        }
+
+        function add_items_cheques(id, fecha, banco, numero) {
+            var cheque = '';
+            cheque =
+                    '<tr>' +
+                        '<td>' + fecha + '</td>' +
+                        '<td>' + banco + '</td>' +
+                        '<td>' + numero + '</td>' +
+                        '<td onclick="cargar_cheque(' + id + ',' + numero + ')">' +
+                            '<a class="btn btn-inverse remove_fields">' +
+                                '<i class=" glyphicon glyphicon-plus icon-white"></i>' +
+                            '</a>' +
+                        '</td>' +
+                    '</tr>';
+            $('#tabla-cheques tbody').append(cheque);
+        }
+
+        function cargar_cheque(id, numero){
+            $('input[name="cheque_id"]').val(id);
+            $('input[name="numero_cheque"]').val(numero);
+            $("#modal-cheques").modal('toggle');
+        }
+
+        /*---------------- Asiento ---------------------------*/
+
+        var row_clicked_asiento;
+
+        function cuenta_contable(id_cuenta) {
+            $.ajax({
+                type: "POST",
+                url: "{% url "consultar-cuenta-contable" %}",
+                data: {'id': id_cuenta, csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val() },
+                success: function (response) {
+                    for (var i = 0; i < response.length; i++) {
+                        var plan_id = response[i][0];
+                        var codigo_plan = response[i][1];
+                        var nombre_plan = response[i][2];
+                        var deber = 0;
+                        var haber = 0;
+                        cargarasiento(plan_id, codigo_plan, nombre_plan, deber, haber);
+                    }
+                },
+                error: function (response) {
+                    alert(response);
+                }
+            });
+        }
+
+        $(document).ready(function(){
+            $("#tabla-asiento").delegate("tr.asiento-row", "click", function(){
+                row_clicked_asiento = $(this).closest('tr');
+            });
+        });
+
+        function cargar_plan_cuenta(id, codigo_plan, nombre) {
+            $('td[name="asiento-plan-cuenta-id"]', row_clicked_asiento).text(id);
+            $('input[name="asiento-plan-cuenta-descripcion"]', row_clicked_asiento).val(nombre);
+            $('td[name="asiento-codigo"]', row_clicked_asiento).text(codigo_plan)
+            $('#modal-plan-cuenta').modal('toggle');
+        }
+
+        function cargarasiento(plan_id, codigo, descripcion, debe, haber) {
+            var asiento = '';
+            asiento =
+                    '<tr class="asiento-row" >' +
+                        '<td name="asiento-plan-cuenta-id" style="display:none;">' + plan_id + '</td>' +
+                        '<td class="eliminar">' +
+                            '<a class="btn btn-danger remove-field-secuencia">' +
+                                '<i class="glyphicon glyphicon-trash icon-white"></i>' +
+                            '</a>' +
+                        '</td>' +
+                        '<td name="asiento-codigo">' + codigo + '</td>' +
+                        '<td>' +
+                            '<div class="input-group add-on">' +
+                                '<input class="form-control" type="text" name="asiento-plan-cuenta-descripcion" value="'+descripcion+'"   readonly>' +
+                                '<div class="input-group-btn">' +
+                                    '<a class="btn btn-inverse" data-toggle="modal" data-target="#modal-plan-cuenta">' +
+                                        '<i class="glyphicon glyphicon-search icon-white"></i>' +
+                                    '</a>' +
+                                '</div>' +
+                            '</div>' +
+                        '</td>' +
+                        '<td>' +
+                            '<input style="text-align: right;" class="form-control" type="number" step="0.01" name="asiento-debe" value="'+parseFloat(debe).toFixed(2)+'" >' +
+                        '</td>' +
+                        '<td align="right" >' +
+                            '<input style="text-align: right;" class="form-control" type="number" step="0.01" name="asiento-haber" value="'+parseFloat(haber).toFixed(2)+'" >' +
+                        '</td>' +
+                    '</tr>';
+            $('#tabla-asiento tbody').append(asiento);
+            //numero_asiento++;
+        }
+
+        $('#agregar-asiento').click(function () {
+            cargarasiento('','','',0,0);
+        });
+
+        $('#tabla-asiento').on('change', 'input', function () {
+            calcular_totales_asiento();
+        });
+
+        function calcular_totales_asiento() {
+            var suma_debe = 0;
+            var suma_haber = 0;
+            $('#tabla-asiento tbody tr').each(function () {
+                var row = $(this).closest('tr');
+                var debe = $('input[name="asiento-debe"]', row).val();
+                var haber = $('input[name="asiento-haber"]', row).val();
+                suma_debe = +suma_debe + +debe;
+                suma_haber = +suma_haber + +haber;
+            });
+            $('td[name="asiento-total-debe"]').text(parseFloat(suma_debe).toFixed(2));
+            $('td[name="asiento-total-haber"]').text(parseFloat(suma_haber).toFixed(2));
+        }
+
+        function get_array_asientos() {
+            var asientos = [];
+            $('#tabla-asiento tbody tr').each(function () {
+                var row = $(this).closest('tr');
+                var id = $('td[name="asiento-plan-cuenta-id"]', row).text();
+                var codigo = $('td[name="asiento-codigo"]', row).text();
+                var cuenta = $('input[name="asiento-plan-cuenta-descripcion"]', row).val();
+                var debe = $('input[name="asiento-debe"]', row).val();
+                var haber = $('input[name="asiento-haber"]', row).val();
+                var asiento = {"id_plancuenta": id, "codigo": codigo, "cuenta": cuenta, "debe": debe, "haber": haber};
+                asientos.push(asiento);
+            });
+            return asientos;
+        }
+
+        /*-------------------------------------------*/
+
+//        $('#formulario').submit(function () {
+//
+//            var data = $(this).serialize() ;
+//
+//            $.ajax({
+//                type: "POST",
+//                url: "{% url "cheque-no-cobrado-crear" %}",
+//                data: data
+//            });
+//            alert("gurdando");
+//        });
+
+
+    </script>
+{% endblock %}

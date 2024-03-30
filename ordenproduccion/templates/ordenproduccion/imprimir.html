@@ -1,0 +1,514 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <title>ORDEN DE PRODUCCI&Oacute;N - MUEDIRSA</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<style>
+    
+    .head{
+        width: 100%;
+        text-align: center;
+        
+    }
+    
+    #detail{
+        width: 100%;
+     
+    }
+    
+    .contenido{
+        width: 100%;
+        font-size: 11pt;
+
+    }
+    
+    .contenido td{
+        text-align: left;
+        padding-top: 2px;
+        padding-left:5px;
+        padding-right:5px;
+        padding-bottom: -1px;
+
+    }
+    .contenido th{
+        text-align: center;
+        padding-top: 2px;
+        padding-left:5px;
+        padding-right:5px;
+        padding-bottom: 0px;
+        background-color: #EEEEEE;
+    }
+    
+    .foot{
+        text-align: center;
+        padding: 0;
+        margin-bottom:-1px;
+    }
+    @page {
+        /*size: a4 landscape;*/
+        size: 21.5cm 31.7cm;
+        margin-top: 0.4cm;
+        margin-left: 0.4cm;
+
+        margin-right: 0.4cm;
+
+        font-size: 11pt;
+        
+    }
+    div .detalle{
+        font-size: 11pt;
+        text-align: justify;
+       
+
+    }
+    
+</style>
+<body>
+   
+    <div id="detail" >
+    </div>
+    <div class="contenido">
+      
+        <table border="1">
+            <tr>
+                <td colspan="3"><b>Fecha abono:</b>
+                    {% if ordenproduccion.pedido.abono %}
+                        {{pedido.abono}}
+                    {% else %}
+                    {% endif %}
+                </td>
+                <td rowspan="2" colspan="2" ><span style="font-size:14pt"><b>{{ordenproduccion.tipo}} # {{ordenproduccion.codigo}}</b></span><br> Fecha: {{ordenproduccion.fecha |date:"d/m/Y"}} <br> Pedido#
+                {% if ordenproduccion.pedido %}
+                    {{ordenproduccion.pedido.abreviatura_codigo}} {{ordenproduccion.pedido_codigo }}
+                {% else %}
+                    {{ordenproduccion.pedido_codigo }}
+                {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3"><b>Cliente:</b> {{ordenproduccion.cliente}} </td>
+            </tr>
+            <tr>
+{#                <td colspan="1" style="text-align:left">#}
+{#                    {{ordenproduccion.area_ebanisteria }}#}
+{#                </td>#}
+                <td colspan="2" style="text-align:left">
+                    <img {% if ordenproduccion.area_ebanisteria %} src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                        {% else %} src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"  {% endif %}
+                    />&nbsp;Ebanisteria <br>
+                    <img {% if ordenproduccion.area_enchape %} src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                        {% else %} src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"  {% endif %}
+                    />&nbsp;&nbsp;Enchape <br>
+                    <img {% if ordenproduccion.area_lacado_madera %} src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                        {% else %} src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"  {% endif %}
+                    />&nbsp;&nbsp;Lacado Madera <br>
+                    <img {% if ordenproduccion.area_arte %} src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                        {% else %} src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"  {% endif %}
+                    />&nbsp;&nbsp;Arte <br>
+                    <img {% if ordenproduccion.area_cerrajeria %} src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                        {% else %} src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"  {% endif %}
+                    />&nbsp;&nbsp;Cerrajeria <br>
+                    <img {% if ordenproduccion.area_fundicion %} src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                        {% else %} src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"  {% endif %}
+                    />&nbsp;&nbsp;Fundición <br>
+                    <img {% if ordenproduccion.area_matriceria %} src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                        {% else %} src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"  {% endif %}
+                    />&nbsp;&nbsp;Matriceria <br>
+                    <img {% if ordenproduccion.area_lacado_hierro %} src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                        {% else %} src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"  {% endif %}
+                    />&nbsp;&nbsp;Lacado Hierro <br>
+                    <img {% if ordenproduccion.area_marmol %} src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                        {% else %} src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg" {% endif %}
+                    />&nbsp;&nbsp;Mármol <br>
+                    <img {% if ordenproduccion.area_espejos_vidrios %} src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                        {% else %} src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"  {% endif %}
+                    />&nbsp;&nbsp;Espejos Vidrios <br>
+                    <img {% if ordenproduccion.area_tapiceria %} src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                        {% else %} src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"  {% endif %}
+                    />&nbsp;&nbsp;Tapicería <br>
+                    <img {% if ordenproduccion.area_dimid %} src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                        {% else %} src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"  {% endif %}
+                    />&nbsp;&nbsp;Dimid <br>
+                    <img {% if ordenproduccion.area_pan_oro_plata %} src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                        {% else %} src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"  {% endif %}
+                    />&nbsp;&nbsp;Pan Oro/Pan Plata <br>
+
+
+                    <img src="{{media_root}}{{ordenproduccion.imagen_global}}" alt="logo producto" width="500" height="300">
+                </td>
+                <td colspan="3" style="text-align:center">
+{#                    <b>Imagen 2</b>#}
+                    {% if ordenproduccion.imagen %}
+                        <img src="{{media_root}}{{ordenproduccion.imagen}}" alt="logo producto" width="600" height="500">
+                    {% else %}
+                        <img src="{{media_root}}imagenes/producto/error.jpg" alt="logo producto" width="600px" height="500px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td><b>C&oacute;digo</b></td><td colspan="2">{{ordenproduccion.codigo_item}}</td>
+                <td  colspan="2">
+                             <b>Cantidad</b> 
+                                  {{ordenproduccion.cantidad}}
+
+
+                </td>
+            </tr>
+            <tr >
+                <td ><b>Descripci&oacute;n</b></td>
+                <td colspan="4" width="170px" style="line-height:2.2;padding-bottom:5px;">
+                <table>
+                	<tr>
+                		<td width="98%" >                {{ordenproduccion.detalle |linebreaksbr }}
+            </td>
+                    <td>&nbsp;<br />
+                	<span>&nbsp; </span><br />
+                	<span>&nbsp; </span><br />
+                	<span>&nbsp; </span><br />
+                	<span>&nbsp; </span><br />
+                	<span>&nbsp; </span><br />
+                	<span>&nbsp; </span><br /></td>
+                	</tr>
+                </table>
+              
+
+                </td>
+            </tr>
+
+            <tr style="background-color:#CACACA">
+                <th colspan="5" style="background-color:#CACACA">MEDIDAS </th>
+            </tr>
+
+            <tr>
+            <td  colspan="5" style="padding:0;margin:0">
+            	<table border="1" width="1200px" style="border-right: 0;border-left:0;margin:0">
+            	<tr style="text-align:center">
+            	<td style="text-align:center">LARGO</td>
+            	<td style="text-align:center">FONDO</td>
+            	<td style="text-align:center">ALTO</td>        
+				</tr>
+				<tr style="border-top: 1px black solid;border-right: 1px black solid;border-left: 1px black solid;">
+
+                <td style="text-align:center">&nbsp;{{ordenproduccion.largo}}</td>
+                <td style="text-align:center">&nbsp;{{ordenproduccion.fondo}} </td>
+                <td style="text-align:center">&nbsp;{{ordenproduccion.alto}}</td>
+                </tr>
+                </table>
+            </td>
+            </tr>
+             
+                  <tr>
+                <td colspan="2" >
+                    <img
+                        {% if ordenproduccion.enchape %}
+                            src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                        {% else %}
+                            src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                        {% endif %}
+                    />&nbsp;&nbsp;Enchape &nbsp;{{ordenproduccion.enchape_detalle}}</td>
+                <td colspan="3"><b>TONO:</b>&nbsp;{{ordenproduccion.tono}} </td>
+            </tr>
+                <tr>
+                	<td  colspan="5" style="padding:0;margin:0">
+            	<table border="1" width="1200px" style="border-right: 0;border-left:0;margin:0">
+            	<tr style="text-align:center">
+            	<th style="text-align:center;background-color:#CACACA">TOPE EN </th>
+            	<th style="text-align:center;background-color:#CACACA">ACABADO</th>
+            	<th style="text-align:center;background-color:#CACACA">TIPO MATERIAL</th>        
+				</tr>
+				<tr style="border-top: 1px black solid;border-right: 1px black solid;border-left: 1px black solid;">
+
+                <td >
+                    <img
+                            {% if ordenproduccion.madera %}
+                                src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}>&nbsp;Madera &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <br />
+                    <img
+                            {% if ordenproduccion.vidrio %}
+                                src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}>&nbsp;&nbsp;Vidrio
+                    <br />
+                    <img
+                            {% if ordenproduccion.hierro %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                 src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %} >&nbsp;&nbsp;Hierro
+                    <br />
+                    <img
+                            {% if ordenproduccion.marmol %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                 src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %} >&nbsp;&nbsp;Marmol
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                </td>
+                <td >
+                    <img
+                            {% if ordenproduccion.mate %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                                {% else %}
+                                 src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>&nbsp;Mate &nbsp;
+                            <br />
+                                
+                    <img
+                            {% if ordenproduccion.semimate %}
+                                src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>&nbsp;&nbsp;Semimate
+                            <br />
+                    <img
+                            {% if ordenproduccion.brillante %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>&nbsp;&nbsp;Brillante&nbsp;
+                            <br />
+                    <img
+                            {% if ordenproduccion.pulido %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>&nbsp;&nbsp;Pulido &nbsp;&nbsp;
+                            <br />
+                    <img
+                            {% if ordenproduccion.poroabierto %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                 src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>&nbsp;&nbsp;Poro Abierto
+                            <br />
+                    <img
+                            {% if ordenproduccion.semiabierto %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                 src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>&nbsp;&nbsp;Semi Abierto
+                            <br />
+                    <img
+                            {% if ordenproduccion.polyester %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                 src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>&nbsp;&nbsp;Polyester
+                </td>
+                <td >
+                    <img
+                            {% if ordenproduccion.hierro %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                 src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>&nbsp;Hierro
+                            <br />
+                                {% if ordenproduccion.metal_hierro %}
+                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Patina color:&nbsp;
+                                *{{ordenproduccion.patina_color}}
+                                {% else %}
+                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Patina color:
+                                {% endif %}
+                                 <br />
+                    <img
+                            {% if ordenproduccion.acero %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                 src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>&nbsp;&nbsp;Acero
+                    <br />
+                                 &nbsp;&nbsp;&nbsp;&nbsp;
+                    <img
+                            {% if ordenproduccion.satinado %}
+                                src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>&nbsp;&nbsp;Satinado
+                                         &nbsp;&nbsp;&nbsp;&nbsp;
+                    <img
+                            {% if ordenproduccion.acero_brillante %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                 src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>&nbsp;Brillante
+                    <br>
+                               
+                    <img
+                            {% if ordenproduccion.aluminio %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                 src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>&nbsp;&nbsp;Aluminio
+                    <br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                    <img
+                            {% if ordenproduccion.abrillantado %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                 src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>&nbsp;Abrillantado
+                    <br>
+                            {% if ordenproduccion.aluminio %}
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Patina color:&nbsp;{{ordenproduccion.patina_color}}
+                            {% else %}
+                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Patina color:&nbsp;
+                            {% endif %}
+                    <br />
+                </td>
+                </tr>
+                </table>
+                </td>
+                </tr>
+                <tr>
+                    <th style="background-color:#CACACA">HERRAJES ESPECIALES </th><th style="background-color:#CACACA" >TOPE DE</th><th style="background-color:#CACACA">DETALLES</th><th style="background-color:#CACACA">TELAS</th><th style="background-color:#CACACA">Cueros</th>
+                </tr>
+                <tr>
+                <td>
+                    <img
+                            {% if ordenproduccion.retractil %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                 src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>&nbsp;Retractil
+                    <br />
+
+                    <img
+                            {% if ordenproduccion.corredizo %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                 src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>&nbsp;&nbsp;Corredizo
+                    <br />
+                    <br />
+                </td>
+                <td>
+                    <img
+                            {% if ordenproduccion.engrampe %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                 src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>&nbsp;Engrampe
+                    <br />
+
+                    <img
+                            {% if ordenproduccion.impulso %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                 src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>&nbsp;&nbsp;Impulso
+                    <br />
+
+                    <img
+                            {% if ordenproduccion.neumatico %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                 src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>&nbsp;&nbsp;Neumatico
+                </td>
+                <td >
+                    <img
+                            {% if ordenproduccion.pintado %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                 src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>
+                    <span style="font-size:11pt">&nbsp;Pintado a Mano&nbsp;</span>
+                    <br />
+                    <img
+                            {% if ordenproduccion.conchaperla %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                 src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/><span style="font-size:11pt">&nbsp;&nbsp;Concha Perla&nbsp;</span>
+                    <br />
+                    <br />
+                </td>
+                    <td>
+                        <img
+                            {% if ordenproduccion.tela_almacen %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                 src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>&nbsp;Almacen
+                        <br/>
+                        <img
+                            {% if ordenproduccion.tela_cliente %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                            {% else %}
+                                src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                            {% endif %}/>&nbsp;&nbsp;Cliente
+                        <br />
+                        <br />
+                    </td>
+                    <td>
+                        <img
+                                {% if ordenproduccion.cuero_almacen %}
+                                    src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                                {% else %}
+                                    src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                                {% endif %}/>&nbsp;Almacen <br/>
+                        <img
+                                {% if ordenproduccion.cuero_cliente %}
+                                    src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                                {% else %}
+                                    src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                                {% endif %}/>&nbsp;&nbsp;Cliente
+                        <br />
+                        <br />
+                    </td>
+            </tr>
+
+            
+            <tr>
+                <th colspan="1" style="background-color:#CACACA">FECHA INICIO</th><td>{{ordenproduccion.fechainicio | date:"d/M/Y" }}</td>
+            
+                <th colspan="2" style="background-color:#CACACA">FECHA TOPE DE ENTREGA</th><td>{{ordenproduccion.fechaentrega| date:"d/M/Y" }}</td>
+            </tr>
+            <tr>
+                <td colspan="5" style="text-align:center">
+                	   <img {% if ordenproduccion.venta_local %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                                        {% else %}
+                                          src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+                                        {% endif %}/>&nbsp;<span style="font-size:11pt">&nbsp;Venta Local<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <img {% if ordenproduccion.exportacion %}
+                                 src="{{media_root}}imagenes/pedido_detalle/rsz_check.jpg"
+                                        {% else %}
+                                          src="{{media_root}}imagenes/pedido_detalle/Checkbox.jpg"
+
+                                        {% endif %}/>&nbsp;Exportacion
+                </td>
+            
+            </tr>
+            
+            
+        </table>
+        
+    </div>
+    <div class="foot">
+        <br><br><br>
+        <table>
+            
+                <tr>
+                    <td>___________________</td><td> ___________________</td>
+                </tr>
+                <tr>
+                    <td>RECIBI CONFORME</td><td> ENTREGADO POR</td>
+                </tr>
+            </tbody>
+            
+        </table>
+    </div>
+   
+   
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!doctype html>
+{% load humanize %}
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>FACTURA - MUEDIRSA</title>
+</head>
+<style>
+    
+    .head{
+        width: 100%;
+        text-align: left;
+        font-size: 11pt;
+        font-weight: bold;
+        padding-top: 1.6px; 
+
+        
+    }
+    
+    #detail{
+        width: 100%;
+       font-size: 10pt;
+
+     
+    }
+    
+    .contenido{
+        width: 100%;
+        padding: 2px 0;
+        font-size: 10pt;
+        font-weight: bold;
+        
+    }
+    
+    .contenido td{
+        text-align: right;
+        font-size: 10pt;
+        padding: 2px 5px;
+        font-weight: bold;
+    }
+    
+    .foot{
+        text-align: center;
+        font-size: 10pt;
+        font-weight: bold;
+    }
+    @page { 
+        size: a4 ;
+        margin: 1cm;
+        margin-top: 0.1cm;
+        
+    }
+     @font-face {
+        font-family: Monospaced;
+        font-weight: bold;
+    }
+   .muestra td{
+        padding: 1px ;
+        font-weight: bold;
+    }
+     #client td{
+        padding: -0.75px;
+        font-weight: bold;
+    }
+
+     #fecha td{
+        padding: 0.5px;
+        font-weight: bold;
+    }
+
+     #fecha2 td{
+        padding:-0.5px;
+        font-weight: bold;
+    }
+ #vehiculo td{
+        padding: -0.5px;
+        font-weight: bold;
+    }
+</style>
+<body>
+    
+<div class="head">
+    <br />
+    <br />
+    <br />
+   <br />
+    <br />
+    <br />
+    
+    <table>
+        
+<tr>
+    
+            <td style="width:108px">&nbsp;&nbsp;&nbsp;</td><td width="300" style="text-align: left;"></td>
+            <td></td><td></td>
+        </tr>
+        <tr>
+            <td style="width:108px">&nbsp;&nbsp;&nbsp;</td><td width="300" style="text-align: left;">{{documento.fecha_emision | date:'Y-m-d'}}</td>
+            <td></td><td></td>
+        </tr>
+        <tr>
+            {% if documento.razon_social %}
+            <td></td><td style="text-align: left;" >{{documento.razon_social.nombre | default_if_none:''|truncatechars:45}}</td>
+            {% else %}
+            <td></td><td style="text-align: left;">{{documento.cliente.nombre_cliente | default_if_none:''|truncatechars:45}}</td>
+            {% endif %}
+            <td></td><td style="text-align: left;padding-bottom:1px !important ">{{documento.ruc}}</td>
+        </tr>
+        <tr>
+            <td style="width:108px"></td><td width="300" style="text-align: left;"></td>
+            <td></td><td></td>
+        </tr>
+        <tr>
+            <td></td><td style="text-align: left;" >{{documento.direccion | default_if_none:''|truncatechars:42}}</td>
+            <td></td><td style="text-align: left;">{{documento.telefono | default_if_none:''}}</td>
+        </tr>
+
+
+    </table>
+
+
+
+</div>
+
+<br /><br /><br /><br />
+<br /><br />
+<div class="contenido">
+    <table border="0" width="100%">
+        <tbody>
+        {% if detalle %}
+        {% for kit in detalle %}
+        <tr>
+            <td style="text-align:center;width:100px" >{{ kit.cantidad | floatformat:2 }}</td>
+            <td  width="530" style="text-align:left">{{ kit.descripcion}}</td>
+            <td style="text-align:center" width="100"> {{ kit.base_iva | floatformat:2}}</td>
+            <td style="text-align:right" width="100"> {{ kit.subtotal | floatformat:2 }}</td>
+        </tr>
+
+        {% endfor %}
+        {% for i in rango %}
+        <tr><td colspan="4"> &nbsp;</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <br />
+    <div style="padding:1px">&nbsp;</div>
+    <table border="0" class="footer" width="100%">
+        <tbody>
+         <tr>
+            <td style="text-align:center;" colspan="3"></td>
+            <td style="text-align:right"></td>
+        </tr>
+        <tr>
+            <td style="text-align:center;" colspan="3"></td>
+            <td style="text-align:right">{{ documento.subtotal | floatformat:2 }}</td>
+
+        </tr>
+        <tr>
+            <td style="text-align:center" colspan="3"></td>
+            <td style="text-align:right">{{ documento.descuento | floatformat:2 }}</td>
+
+        </tr>
+        
+         <tr>
+            <td style="text-align:left;width:775px !important" colspan="3" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ documento.total_en_letras | default_if_none:'' }}</td>
+            <td style="text-align:center"></td>
+
+        </tr>
+        <tr>
+            <td style="text-align:center" colspan="3"></td>
+            <td style="text-align:right">{{ documento.valor_iva | floatformat:2 }}</td>
+
+        </tr>
+        <tr>
+            <td style="text-align:center" colspan="3"></td>
+            <td style="text-align:right">{{ documento.total | floatformat:2 }}</td>
+
+        </tr>
+        {% else %}
+        {% endif %}
+        </tbody>
+
+    </table>
+
+</div>
+
+</body>
+<script>
+    $(document).ready(function () {
+
+        window.save();
+    });
+</script>
+</html>

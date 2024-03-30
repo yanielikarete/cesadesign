@@ -1,0 +1,695 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block css %}
+    {{ block.super }}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css' %}" rel="stylesheet"/>
+    <link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+{% block section_title %} Retenciones en compra {% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+    <style>
+        .panel-border {
+            border: 1px solid #ddd !important;
+        }
+
+        .form-group {
+            margin-bottom: 0px !important;
+        }
+
+        .panel-border {
+            border: 1px solid #ddd !important
+        }
+    </style>
+    <div class="row">
+        <!-- begin col-6 -->
+        <div class="col-md-12">
+            <form id="formulario" class="form-horizontal" method="post">
+                {% csrf_token %}
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                               data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                <i class="fa fa-plus-circle pull-right"></i>
+                                Datos generales
+                            </a>
+                        </h3>
+                    </div>
+                    <div id="collapseOne" aria-expanded="true" id="collapseOne" class="panel-collapse collapse in">
+                        <div class="panel-body panel-border">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Fecha de emisión</label>
+                                <div class="col-sm-3">
+                                    <input class="form-control" type="text" name="fecha_emision">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Proveedor</label>
+                                <div class="col-sm-4">
+                                    <div class="input-group add-on">
+                                        <input type="hidden" name="proveedor-id"/>
+                                        <input class="form-control" placeholder="..." name="proveedor-descripcion"
+                                               type="text" readonly>
+                                        <div class="input-group-btn">
+                                            <a class="btn btn-inverse" data-toggle="modal"
+                                               data-target="#modal-proveedor">
+                                                <i class=" glyphicon glyphicon-search icon-white"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Factura</label>
+                                <div class="col-sm-4">
+                                    <div class="input-group add-on">
+                                        <input type="hidden" name="documento_compra"/>
+                                        <input class="form-control" placeholder="..." name="factura-descripcion"
+                                               type="text" readonly>
+                                        <div class="input-group-btn">
+                                            <a class="btn btn-inverse" data-toggle="modal"
+                                               data-target="#modal-factura">
+                                                <i class=" glyphicon glyphicon-search icon-white"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Número de documento</label>
+                                <div class="col-sm-2">
+                                    <input class="form-control" type="text" placeholder="Establecimiento"
+                                           name="establecimiento" required>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input class="form-control" type="text" placeholder="Punto de emisión"
+                                           name="punto_emision" required>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input class="form-control" type="text" placeholder="Secuencial"
+                                           name="secuencial" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"  >Base IVA 0%</label>
+                                <div class="col-sm-2">
+                                    <input class="form-control" type="text" name="base_cero" readonly>
+                                </div>
+                                <label class="col-sm-2 control-label">Autorización</label>
+                                <div class="col-sm-3">
+                                    <input class="form-control" type="text" name="autorizacion">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" name="label-base-iva" >Base IVA %</label>
+                                <div class="col-sm-2">
+                                    <input class="form-control" type="text" name="base_iva" readonly>
+                                </div>
+                                <label class="col-sm-2 control-label">Valor IVA 14%</label>
+                                <div class="col-sm-2">
+                                    <input class="form-control" type="text" name="valor_iva" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Descripción</label>
+                                <div class="col-sm-5">
+                                    <textarea class="form-control" name="descripcion" rows="5"></textarea>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="panel panel-inverse panel-with-tabs">
+                                <div class="panel-heading p-0">
+                                    <!-- begin nav-tabs -->
+                                    <ul class="nav nav-tabs nav-tabs-inverse">
+                                        <li class="active"><a href="#nav-tab-1" data-toggle="tab">Retención</a></li>
+                                        <li class=""><a href="#nav-tab-2" data-toggle="tab">Asiento</a></li>
+                                    </ul>
+                                </div>
+                                <div class="tab-content">
+                                    <div class="tab-pane fade active in" id="nav-tab-1">
+                                        <div class="table-responsive">
+                                <table class="table table-striped" id="tabla-retencion">
+                                    <thead style="background-color: #ccd0d4">
+                                    <tr>
+                                        <th style="display:none;">Id</th>
+                                        <th>Acción</th>
+                                        <th>Código</th>
+                                        <th>Concepto</th>
+                                        <th>Base imponible</th>
+                                        <th>% retención</th>
+                                        <th>Valor retenido</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td style="display:none;"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><strong>TOTAL RETENIDO:</strong></td>
+                                        <td><input type="number" class="form-control" name="retencion_total_retenido"
+                                                   placeholder="0.00" required readonly></td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                                        <button style="margin-left: 1%;" type="button" class="btn btn-inverse" data-toggle="modal"
+                                    data-target="#modal-retencion-fuente">
+                                <i class="fa fa-plus-circle"></i>
+                                Retención fuente
+                            </button>
+                                        <button style="margin-left: 1%;" type="button" class="btn btn-inverse" data-toggle="modal"
+                                    data-target="#modal-retencion-iva">
+                                <i class="fa fa-plus-circle"></i>
+                                Retención IVA
+                            </button>
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-tab-2">
+                                        <table class="table table-bordered" id="tabla-asiento">
+                                            <thead style="background-color: #ccd0d4">
+                                            <tr>
+                                                <th style="display:none;">Id</th>
+                                                <th style="text-align: center">Acción</th>
+                                                <th style="text-align: center">Código</th>
+                                                <th style="text-align: center">Cuenta</th>
+                                                <th style="text-align: center">Debe</th>
+                                                <th style="text-align: center">Haber</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td><strong>TOTAL:</strong></td>
+                                                <td align="right" name="asiento-total-debe"><strong>0.00</strong></td>
+                                                <td align="right" name="asiento-total-haber"><strong>0.00</strong></td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-inverse"><i class="fa fa-save"></i> Guardar</button>
+            </form>
+        </div>
+    </div>
+    <!-- Modal Proveedor-->
+    <div class="modal fade bs-example-modal-lg" id="modal-proveedor">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Proveedor</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-proveedor">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Ruc</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for proveedor  in proveedores %}
+                                <tr>
+                                    <td>{{ proveedor.codigo_proveedor }}</td>
+                                    <td>{{ proveedor.nombre_proveedor }}</td>
+                                    <td>{{ proveedor.ruc }}</td>
+                                    <td onclick="cargar_proveedor('{{ proveedor.proveedor_id }}','{{ proveedor.nombre_proveedor }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+   <!-- Modal Retencion fuente-->
+    <div class="modal fade bs-example-modal-lg" id="modal-retencion-fuente">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Retención en la fuente</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-retencion-fuente">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Porcentaje</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for retencion_fuente  in retenciones_fuente %}
+                                <tr>
+                                    <td>{{ retencion_fuente.codigo }}</td>
+                                    <td>{{ retencion_fuente.descripcion }}</td>
+                                    <td>{{ retencion_fuente.porcentaje }}</td>
+                                    <td onclick="cargar_retencion('{{ retencion_fuente.id }}','{{ retencion_fuente.codigo }}','{{ retencion_fuente.descripcion }}','{{ retencion_fuente.porcentaje }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Retencion iva-->
+    <div class="modal fade bs-example-modal-lg" id="modal-retencion-iva">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Retención en IVA</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-retencion-iva">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Porcentaje</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for retencion_iva  in retenciones_iva %}
+                                <tr>
+                                    <td>{{ retencion_iva.codigo }}</td>
+                                    <td>{{ retencion_iva.descripcion }}</td>
+                                    <td>{{ retencion_iva.porcentaje }}</td>
+                                    <td onclick="cargar_retencion_iva('{{ retencion_iva.id }}','{{ retencion_iva.codigo }}','{{ retencion_iva.descripcion }}','{{ retencion_iva.porcentaje }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Forma de pago-->
+    <div class="modal fade bs-example-modal-lg" id="modal-forma-pago">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Formas de pago</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-forma-pago">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Direccion</th>
+                                <th>Acción</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for forma_pago  in formas_pago %}
+                                <tr>
+                                    <td>{{ forma_pago.codigo }}</td>
+                                    <td>{{ forma_pago.descripcion }}</td>
+                                    <td onclick="cargar_forma_pago('{{ forma_pago.id }}','{{ forma_pago.codigo }}', '{{ forma_pago.descripcion }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Facturas-->
+    <div class="modal fade bs-example-modal-lg" id="modal-factura">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Facturas</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-factura">
+                            <thead>
+                            <tr>
+                                <th>Fecha emision</th>
+                                <th>Número factura</th>
+                                <th>Total</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Plan Cuenta-->
+    <div class="modal fade bs-example-modal-lg" id="modal-plan-cuenta">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Plan de cuenta</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table2 table-striped" width="100%" id="tabla-plan-cuenta">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Acción</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for cuenta  in cuentas %}
+                                <tr>
+                                    <td>{{ cuenta.codigo_plan }}</td>
+                                    <td>{{ cuenta.nombre_plan }}</td>
+                                    <td onclick="cargar_plan_cuenta('{{ cuenta.plan_id }}','{{ cuenta.codigo_plan }}','{{ cuenta.nombre_plan }}')">
+                                        <a class="btn btn-inverse remove_fields">
+                                            <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+    <script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+
+    <script>
+        $('input[name="fecha_emision"]').datepicker({todayHighlight: true, autoclose: true});
+        $('input[name="fecha_emision"]').val(getFechaHoy());
+        $('input[name="retencion-fecha-emision"]').datepicker({todayHighlight: true, autoclose: true});
+        $('input[name="retencion-fecha-emision"]').val(getFechaHoy());
+        var row_clicked_asiento;
+
+        function getFechaHoy() {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear();
+
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+            today = dd + '/' + mm + '/' + yyyy;
+            return today;
+        }
+
+        $(document).ready(function () {
+            $('#tabla-proveedor').DataTable();
+            $('#tabla-retencion-fuente').DataTable();
+            $('#tabla-retencion-iva').DataTable();
+            $('#tabla-plan-cuenta').DataTable();
+            $('#tabla-forma-pago').DataTable();
+        });
+
+        function cargar_plan_cuenta(id, codigo_plan, nombre) {
+            $('td[name="asiento-plan-cuenta-id"]', row_clicked_asiento).text(id);
+            $('input[name="asiento-plan-cuenta-descripcion"]', row_clicked_asiento).val(nombre);
+            $('td[name="asiento-codigo"]', row_clicked_asiento).text(codigo_plan)
+            $('#modal-plan-cuenta').modal('toggle');
+        }
+
+        function cargar_proveedor(id, descripcion) {
+            $('input[name="proveedor-id"]').val(id);
+            $('input[name="proveedor-descripcion"]').val(descripcion);
+            $("#modal-proveedor").modal('toggle');
+            $('input[name="factura-descripcion"]').val("");
+            $.ajax({
+                type: "POST",
+                url: "{% url "documento-compra-consultar-facturas" %}",
+                data: {'id': id, csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()},
+                success: function (response) {
+                    var factura = '';
+                    var facturas = '';
+                    for (var i = 0; i < response.length; i++) {
+                        var nun_fac = response[i][1] + '-' + response[i][2] + '-' + response[i][3];
+                        var porcentaje_iva = response[i][4];
+                        var base_iva = response[i][5];
+                        var base_iva_cero = response[i][6];
+                        var valor_iva = response[i][7];
+                        factura = '<tr>' +
+                                    '<td>' + nun_fac + '</td>' +
+                                    '<td>' + response[i][4] + '</td>' +
+                                    '<td onclick="cargar_factura(' + response[i][0] + ',' + nun_fac + ' ,' + porcentaje_iva + ' ,' + base_iva + ' ,' + base_iva_cero + ' ,' + valor_iva + ')">' +
+                                        '<a class="btn btn-inverse remove_fields">' +
+                                            '<i class=" glyphicon glyphicon-plus icon-white"></i>' +
+                                        '</a>' +
+                                    '</td>' +
+                                '</tr>';
+                        facturas = facturas + factura;
+                    }
+                    if(response.length == 0){
+                        alert("Proveedor no tiene facturas asociadas");
+                    }else {
+                        $('#tabla-factura tbody').append(facturas);
+                    }
+                },
+                error: function (response) {
+                    alert(response);
+                }
+            });
+        }
+
+        function cargar_factura(id, descripcion, porcentaje_iva, base_iva, base_iva_cero, valor_iva) {
+            $('input[name="documento_compra"]').val(id);
+            $('input[name="factura-descripcion"]').val(descripcion);
+            $('label[name="label-base-iva"]').text("Base IVA " + porcentaje_iva + "%");
+            $('input[name="base_iva"]').val(parseFloat(base_iva).toFixed(2));
+            $('input[name="base_cero"]').val(parseFloat(base_iva_cero).toFixed(2));
+            $('input[name="valor_iva"]').val(parseFloat(valor_iva).toFixed(2));
+            $("#modal-factura").modal('toggle');
+            //$("#tabla-retencion tbody tr").remove();
+        }
+
+        function cargar_retencion(id, codigo, descripcion, porcentaje) {
+            var retencion =
+                    '<tr id='+id+'>' +
+                        '<td style="display:none;" name="retencion-id">' + id + '</td>' +
+                        '<td class="eliminar">' +
+                            '<a class="btn btn-danger remove-field-secuencia">' +
+                                '<i class="glyphicon glyphicon-trash icon-white"></i>' +
+                            '</a>' +
+                        '</td>' +
+                        '<td name="retencion-codigo">' + codigo + '</td>' +
+                        '<td name="retencion-descripcion">' + descripcion + '</td>' +
+                        '<td >' +
+                            '<input type="number" step="0.01" value="0.00" name="retencion-base" class="form-control" required>' +
+                        '</td>' +
+                        '<td name="retencion-porcentaje">' + parseFloat(porcentaje).toFixed(2) + '</td>' +
+                        '<td name="retencion-valor-retenido" class="retencion-valor-retenido"></td>' +
+                    '</tr>';
+            var resultado = validar_registro_tabla('tabla-retencion', id, 'retencion-id');
+            if (resultado) {
+                alert("Registro ya se encuentra en la tabla.");
+            }
+            else {
+                $('#tabla-retencion').append(retencion);
+                $('#modal-retencion-fuente').modal('toggle');
+            }
+        }
+
+        function cargar_retencion_iva(id, codigo, descripcion, porcentaje) {
+            var retencion =
+                    '<tr id='+id+'>' +
+                        '<td style="display:none;" name="retencion-id">' + id + '</td>' +
+                        '<td class="eliminar">' +
+                            '<a class="btn btn-danger remove-field-secuencia">' +
+                                '<i class="glyphicon glyphicon-trash icon-white"></i>' +
+                            '</a>' +
+                        '</td>' +
+                        '<td name="retencion-codigo">' + codigo + '</td>' +
+                        '<td name="retencion-descripcion" >' + descripcion + '</td>' +
+                        '<td>' +
+                            '<input type="number"  step="0.01" value="0.00"  name="retencion-base" class="form-control">' +
+                        '</td>' +
+                        '<td name="retencion-porcentaje">' + parseFloat(porcentaje).toFixed(2) + '</td>' +
+                        '<td name="retencion-valor-retenido" class="retencion-valor-retenido"></td>' +
+                    '</tr>';
+            var resultado = validar_registro_tabla('tabla-retencion', id, 'retencion-id');
+            if (resultado) {
+                alert("Registro ya se encuentra en la tabla.");
+            }
+            else {
+                $('#tabla-retencion tbody').append(retencion);
+                $('#modal-retencion-iva').modal('toggle');
+            }
+        }
+
+        function get_array_retenciones() {
+            var retenciones = [];
+            $('#tabla-retencion tbody tr').each(function () {
+                var row = $(this).closest('tr');
+                var id = $('td[name="retencion-id"]', row).text();
+                var codigo = $('td[name="retencion-codigo"]', row).text();
+                var descripcion = $('td[name="retencion-descripcion"]', row).text();
+                var base = $('input[name="retencion-base"]', row).val();
+                var porcentaje = $('td[name="retencion-porcentaje"]', row).text();
+                var valor_retenido = $('td[name="retencion-valor-retenido"]', row).text();
+                var retencion = {
+                    "id": id,
+                    "codigo": codigo,
+                    "descripcion": descripcion,
+                    "base": base,
+                    "porcentaje": porcentaje,
+                    "valor_retenido": parseFloat(valor_retenido).toFixed(2)
+                };
+                retenciones.push(retencion);
+            });
+            return retenciones;
+        }
+
+        $('#tabla-retencion').on('change', 'input', function () {
+            var row = $(this).closest('tr');
+            var base = 0;
+            var porcentaje = 0;
+            var valor_retenido = 0;
+            base = Number($('input', row).val());
+            porcentaje = parseFloat($('td[name="retencion-porcentaje"]', row).text()).toFixed(2) / 100;
+            valor_retenido = base * porcentaje;
+            $('.retencion-valor-retenido', row).text(parseFloat(valor_retenido).toFixed(2));
+            actualizar_tabla_retencion();
+        });
+
+        function actualizar_tabla_retencion() {
+            var valor_retenido = parseFloat(0).toFixed(2);
+            var subtotal_retenido = parseFloat(0).toFixed(2);
+            $('#tabla-retencion tbody tr').each(function () {
+                var row = $(this).closest('tr');
+                valor_retenido = parseFloat($('.retencion-valor-retenido', row).text()).toFixed(2);
+                subtotal_retenido = +subtotal_retenido + +valor_retenido;
+            });
+            $('input[name="retencion_total_retenido"]').val(parseFloat(subtotal_retenido).toFixed(2));
+        }
+
+        function validar_registro_tabla(nombre_tabla, id, name) {
+            var resultado = false;
+            $("#" + nombre_tabla + " tbody tr").each(function () {
+                var row = $(this).closest('tr');
+                var value = $('td[name="' + name + '"]', row).text();
+                if (value.localeCompare(id) == 0) {
+                    resultado = true;
+                }
+            });
+            return resultado;
+        }
+
+        function get_array_asientos() {
+            var asientos = [];
+            $('#tabla-asiento tbody tr').each(function () {
+                var row = $(this).closest('tr');
+                var id = $('td[name="asiento-id"]', row).text();
+                var codigo = $('td[name="asiento-codigo"]', row).text();
+                var cuenta = $('td[name="asiento-descripcion"]', row).text();
+                var debe = $('td[name="asiento-debe"]', row).text();
+                var haber = $('td[name="asiento-haber"]', row).text();
+                var asiento = {"id_plancuenta": id, "codigo": codigo, "cuenta": cuenta, "debe": debe, "haber": haber};
+                asientos.push(asiento);
+            });
+            return asientos;
+        }
+
+        $(document).on("click", ".eliminar", function () {
+            var parent = $(this).parent();
+            $(parent).remove();
+            actualizar_tabla_retencion();
+        });
+
+        $(document).ready(function(){
+            $("#tabla-asiento").delegate("tr.asiento-row", "click", function(){
+                row_clicked_asiento = $(this).closest('tr');
+            });
+        });
+
+        $('#formulario').submit(function () {
+            var retenciones = JSON.stringify(get_array_retenciones());
+            var asientos = JSON.stringify(get_array_asientos());
+            var data = $(this).serialize() +
+                    '&arreglo_retenciones=' + retenciones +
+                    '&arreglo_asientos=' + asientos;
+            $.ajax({
+                type: "POST",
+                url: "{% url "documento-compra-retencion-crear" %}",
+                data: data
+            });
+        });
+
+    </script>
+
+{% endblock %}
+

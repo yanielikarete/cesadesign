@@ -1,0 +1,361 @@
+{% extends "login/base-create.html" %}
+{% load staticfiles %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block css %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+<link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css' %}" rel="stylesheet"/>
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css' %}" rel="stylesheet"/>
+<link href="{% static 'color_admin/assets/plugins/bootstrap-tokenfield/css/bootstrap-tokenfield.css' %}"
+      rel="stylesheet"/>
+<!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %} Cierre Mensual {% endblock %}
+{% block content %}
+<style>
+    .panel-border {
+        border: 1px solid #ddd !important;
+    }
+
+    .form-group {
+        margin-bottom: 0px !important;
+    }
+
+    .panel-border {
+        border: 1px solid #ddd !important
+    }
+
+    .highlighter {
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .no-border-input{
+        border: none !important;
+        background-color: #fff !important;
+        border-bottom: 1px solid #eee !important;
+    }
+     .btn {
+    padding: 6px 6px !important;}
+  
+          .bold-option{font-weight: bolder;}
+
+</style>
+<div class="row">
+    <!-- begin col-6 -->
+    <div class="col-md-12">
+        <form id="formulario" class="form-horizontal" method="post">
+            {% csrf_token %}
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a aria-expanded="true" class="accordion-toggle accordion-toggle-styled"
+                           data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                            <i class="fa fa-plus-circle pull-right"></i>
+                            Datos generales de la factura
+                        </a>
+                    </h3>
+                </div>
+                <div id="collapseOne" aria-expanded="true" id="collapseOne" class="panel-collapse collapse in">
+                    <div class="panel-body panel-border">
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="col-md-3 col-sm-1 control-label"> Año: </label>
+				                            <div class="col-md-3 col-sm-3">
+												<select class="select-input form-control input-sm" id="id_anio" name="anio">
+												{% for a in anio %}
+												<option value="{{a.nombre}}">{{a.nombre}}</option>
+												{% endfor %}
+												</select>
+												</div>
+
+
+
+				                            <label class="col-md-1 col-sm-1 control-label"> Mes: </label>
+				                            <div class="col-md-3 col-sm-3">
+                                                <select class="select-input form-control input-sm" id="id_mes" name="mes">
+												<option value="1">Enero</option>
+												<option value="2">Febrero</option>
+												<option value="3">Marzo</option>
+												<option value="4" selected="selected">Abril</option>
+												<option value="5">Mayo</option>
+												<option value="6">Junio</option>
+												<option value="7">Julio</option>
+												<option value="8">Agosto</option>
+												<option value="9">Septiembre</option>
+												<option value="10">Octubre</option>
+												<option value="11">Noviembre</option>
+												<option value="12">Diciembre</option>
+												</select></div>
+                                            
+                                            <a class="default btn btn-link"  onclick="consultar()"> <button type="button" class="btn btn-primary btn-lg">  Consultar</button> </a>
+                                              
+
+                                </div>
+
+                            
+                            
+                            </div>
+                            
+                            
+                            <h3>Resultados</h3>
+             <div class="row" style="width:100%!important">
+                                            <div class="panel panel-default panel-border">
+                                                <!-- Default panel contents -->
+                                                <div class="panel-heading"></div>
+                                                <div class="panel-body"  id="valor_receta">
+
+
+						</div>
+					</div>
+											<button type="submit" class="btn btn-inverse"
+                    onclick="return confirm('¿Está seguro de guardar el costeo ?')"><i class="fa fa-save"></i> Guardar
+            </button>
+					
+				</div>
+             
+           
+				</div>
+                            
+            </div>
+                </div>
+            </div>
+          
+            </div>
+            
+			
+			
+			
+        </form>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-tokenfield/js/bootstrap-tokenfield.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/masked-input/NumeroALetras.js' %}"></script>
+
+<script>
+    $('#fecha_emision').datepicker({todayHighlight: true, autoclose: true, format: 'yyyy-mm-dd'});
+    $('#fecha_emision').val(getFechaHoy());
+    $('#fecha_vencimiento').datepicker({todayHighlight: true, autoclose: true, format: 'yyyy-mm-dd'});
+    $('#fecha_vencimiento').val(getFechaHoy());
+    $('input[name="retencion-fecha-emision"]').datepicker({
+        todayHighlight: true,
+        autoclose: true,
+        format: 'yyyy-mm-dd'
+    });
+    $('input[name="retencion-fecha-emision"]').val(getFechaHoy());
+    $(".mask_float").maskMoney({thousands: '', decimal: '.', allowZero: true});
+    $('input[name="secuencial"]').mask('000999999');
+    $('input[name="punto_emision"]').mask('999');
+    $('input[name="establecimiento"]').mask('999');
+    //$('input[name="retencion-secuencial"]').mask('000999999');
+    $("#columnas_receta").val("0");
+    $("#columnas_detalle").val("0");
+    var cuenta_contable_venta_id = 0;
+    var cuenta_contable_cobrar_id = 0;
+    var cuenta_contable_iva=0;
+    var valor_retencion_fuente = 0;
+    var valor_retenvion_iva = 0;
+
+    
+    function getFechaHoy() {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+        var yyyy = today.getFullYear();
+
+        if (dd < 10) {
+            dd = '0' + dd
+        }
+        if (mm < 10) {
+            mm = '0' + mm
+        }
+        today = yyyy + '-' + mm + '-' + dd;
+        return today;
+    }
+
+    $(document).ready(function () {
+
+        $('#tabla-producto').DataTable();
+        $('#tabla-item').DataTable();
+        $('#tabla-retencion-fuente').DataTable();
+        $('#tabla-retencion-iva').DataTable();
+        $('#tabla-plan-cuenta').DataTable();
+
+
+        $('#agregar-item').click(function () {
+            var row = get_item();
+            $('#tabla-productos tbody').append(row);
+        });
+
+        $('#tokenfield').tokenfield({
+            showAutocompleteOnFocus: true
+        })
+
+        //cargar secuenciales y datos de la FACTURA de la empresa
+        var autorizacion = $('input[name="autorizacion"]').val();
+        var establecimiento = $('input[name="establecimiento"]').val();
+        var punto = $('input[name="punto"]').val();
+        var secuencial = $('input[name="secuencial"]').val();
+
+      
+       
+        
+
+
+    });
+
+    function consultar(){
+		
+		var mes=$("#id_mes").val();
+		var anio=$("#id_anio").val();
+
+          $.ajax({
+                url: "/subordenproduccion/consultar_analisis_receta_mes/", // the endpoint
+                type : "POST", // http method
+                data : { mes : mes,anio : anio,'csrfmiddlewaretoken': '{{ csrf_token }}'}, 
+                success:function(data){
+                //$("#tabla tbody tr").remove();
+				//alert(data);
+                  $("#valor_receta").html(data);
+                },
+                error: function(){
+                 
+                },
+              });
+          
+          
+          
+    }
+	
+ $('#formulario').submit(function (event) {
+        var costeos = JSON.stringify(get_array_costeo());
+        
+        var data = $(this).serialize() +
+                '&arreglo_costeos=' + costeos;
+        //console.log(data);
+        event.preventDefault();
+        
+            $.ajax({
+                type: "POST",
+                url: "{% url 'cierre-mensual-produccion' %}",
+                data: data,
+                success: function (response) {
+
+                    console.log(response);
+                    alert(response['result']);
+                    alert("COSTEO INGRESADO");
+                    document.location.href = '/subordenproduccion/costeo_produccion_list';
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });
+       
+
+    });
+
+
+  function get_array_costeo() {
+        var costeos = [];
+        $('#tabla tbody tr').each(function () {
+            var row = $(this).closest('tr');
+            var id = $('input[name="op_id"]', row).val();
+            var horas = $('td[name="horas"]', row).text();
+            var factor = $('td[name="factor"]', row).text();
+            
+            var nomina = $('td[name="nomina_md"]', row).text();
+            var nomina_md = $('td[name="nomina_md"]', row).text();
+			var bodega = $('td[name="bodega"]', row).text();
+            var nomina_mi = $('td[name="nomina_mi"]', row).text();
+			var bs_md = $('td[name="bs_md"]', row).text();
+            var bs_mi = $('td[name="bs_mi"]', row).text();
+			var alimentacion = $('td[name="alimentacion"]', row).text();
+            var otros = $('td[name="otros"]', row).text();
+			var planta = $('td[name="planta"]', row).text();
+			var mantenimiento = $('td[name="mantenimiento"]', row).text();
+            var depreciacion = $('td[name="depreciacion"]', row).text();
+			var aporte_patronal = $('td[name="aporte_patronal"]', row).text();
+            var fondo_reserva = $('td[name="fondo_reserva"]', row).text();
+			 var imp_renta = $('td[name="imp_renta"]', row).text();
+			var iess_asumido = $('td[name="iess_asumido"]', row).text();
+			 var total = $('td[name="total"]', row).text();
+            var costeo = {
+                "id": id,
+                "horas": horas,
+				"factor": factor,
+                "nomina": nomina,
+                "nomina_md":nomina_md,
+				"bodega": bodega,
+                "nomina_mi": nomina_mi,
+				"bs_md": bs_md,
+				"bs_mi": bs_mi,
+				"alimentacion": alimentacion,
+				"otros": otros,
+				"planta": planta,
+				"mantenimiento": mantenimiento,
+				"depreciacion":depreciacion,
+				"aporte_patronal": aporte_patronal,
+				"fondo_reserva": fondo_reserva,
+				"imp_renta": imp_renta,
+				"iess_asumido":iess_asumido,
+				"total": total
+				
+            };
+            costeos.push(costeo);
+        });
+        return costeos;
+    }
+         function validarFecha(){
+                          var fecha=$('#fecha_emision').val();
+                                                  
+
+             $.ajax({
+                                    url: '/bancos/movimiento/validarBloqueoPeriodo/',
+                                    type: "POST",
+                                    data: {fecha: fecha},
+                                    dataType: "json",
+                                    async:false,
+                                   success: function (response) {
+                                  // alert(response.length);
+                                            if (response.length != 0){
+                                                 var mensaje="No se puede ingresar ningun movimiento en este mes debido a que se encuentra bloqueado. Por favor ingrese otra fecha ";
+                                                  alert(mensaje);
+                                                  $('#fecha_emision').val('');
+                                                event.preventDefault();
+                                               
+                                            }else{   
+                                               
+                                            }
+                                            
+                                  
+                                    
+                                    },
+                            });
+                     
+                 
+            
+        }
+
+       
+  
+</script>
+
+{% endblock %}
+

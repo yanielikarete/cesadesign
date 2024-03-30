@@ -1,0 +1,190 @@
+{% extends "login/base_nuevo.html" %}
+{% load static from staticfiles %}
+{% load extra_filters %}
+{% load staticfiles %}
+{% block css %}{{ block.super }}
+
+<!-- ================== BEGIN PAGE CSS ================== -->
+    <link href="{% static 'color_admin/assets/plugins/nvd3/build/nv.d3.css' %}" rel="stylesheet" />
+{% endblock %}
+{% block breadcrumb %} {% endblock %}
+{% block section_title %}{% endblock %}
+{% block section_subtitle %}{% endblock %}
+{% block content %}
+<!-- begin row -->
+<div class="row">
+    <!-- begin col-6 -->
+    <div class="col-md-6">
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i
+                            class="fa fa-expand"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i
+                            class="fa fa-repeat"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
+                       data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"
+                       data-click="panel-remove"><i class="fa fa-times"></i></a>
+                </div>
+                <h4 class="panel-title">Indice gastos por Inversión</h4>
+            </div>
+            <div class="panel-body">
+                <div id="nv-line-chart" class="height-sm"></div>
+            </div>
+        </div>
+    </div>
+    <!-- end col-6 -->
+    <!-- begin col-6 -->
+    <div class="col-md-6">
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i
+                            class="fa fa-expand"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i
+                            class="fa fa-repeat"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
+                       data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"
+                       data-click="panel-remove"><i class="fa fa-times"></i></a>
+                </div>
+                <h4 class="panel-title">Ingresos x Año 2017</h4>
+            </div>
+            <div class="panel-body">
+                <div id="nv-bar-chart" class="height-sm"></div>
+            </div>
+        </div>
+    </div>
+    <!-- end col-6 -->
+</div>
+<!-- end row -->
+<!-- begin row -->
+<div class="row">
+    <!-- begin col-6 -->
+    <div class="col-md-6">
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i
+                            class="fa fa-expand"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i
+                            class="fa fa-repeat"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
+                       data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"
+                       data-click="panel-remove"><i class="fa fa-times"></i></a>
+                </div>
+                <h4 class="panel-title">Indice de Eficiencia</h4>
+            </div>
+            <div class="panel-body">
+                <div id="nv-stacked-area-chart" class="height-sm"></div>
+            </div>
+        </div>
+    </div>
+    <!-- end col-6 -->
+    <!-- begin col-6 -->
+    <div class="col-md-6">
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i
+                            class="fa fa-expand"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i
+                            class="fa fa-repeat"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
+                       data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"
+                       data-click="panel-remove"><i class="fa fa-times"></i></a>
+                </div>
+                <h4 class="panel-title">Indice de gastos</h4>
+            </div>
+            <div class="panel-body">
+                <div id="nv-stacked-bar-chart" class="height-sm"></div>
+            </div>
+        </div>
+    </div>
+    <!-- end col-6 -->
+</div>
+<!-- end row -->
+<!-- begin row -->
+<div class="row">
+    <!-- begin col-6 -->
+
+    <!-- end col-6 -->
+    <!-- begin col-6 -->
+    <div class="col-md-6">
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i
+                            class="fa fa-expand"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i
+                            class="fa fa-repeat"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
+                       data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"
+                       data-click="panel-remove"><i class="fa fa-times"></i></a>
+                </div>
+                <h4 class="panel-title">Indice de ejecución presupuestaria</h4>
+            </div>
+            <div class="panel-body">
+                <div id="nv-donut-chart" class="height-sm"></div>
+            </div>
+        </div>
+    </div>
+    <!-- end col-6 -->
+    <div class="col-md-6">
+        <div class="panel panel-inverse" data-sortable-id="index-5">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i
+                            class="fa fa-expand"></i></a>
+                    <a title="" data-original-title="" href="javascript:;"
+                       class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload-message"><i
+                            class="fa fa-repeat"></i></a>
+                    <a title="" data-original-title="" href="javascript:;"
+                       class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i
+                            class="fa fa-minus"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"
+                       data-click="panel-remove"><i class="fa fa-times"></i></a>
+                </div>
+                <h4 class="panel-title">Mensajes</h4>
+            </div>
+            <div class="panel-body">
+                <div style="position: relative; overflow: hidden; width: auto;" class="slimScrollDiv">
+                    <div data-init="true" style="overflow: hidden; width: auto;" class="height-sm"
+                         data-scrollbar="true">
+                        <ul id="user-messages" class="media-list media-list-with-divider media-messaging">
+                            <li class="media media-sm">
+                                <div class="media-body">
+                                    <h5 class="media-heading">Módulo 1</h5>
+                                    <p>Se ha creado una nueva reunion con el codigo 0022 el dia 2016-08-28 con el
+                                        cliente Abarca
+                                        Aguilar Francisco a cargo del vendedor XAVIER DALMAU Ninguno en especial solo
+                                        cotizar.</p>
+                                </div>
+                            </li>
+
+
+                        </ul>
+                    </div>
+                    <div style="background: rgb(0, 0, 0) none repeat scroll 0% 0%; width: 7px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 7px; z-index: 99; right: 1px; height: 234.987px;"
+                         class="slimScrollBar ui-draggable"></div>
+                    <div style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51) none repeat scroll 0% 0%; opacity: 0.2; z-index: 90; right: 1px;"
+                         class="slimScrollRail"></div>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+</div>
+<!-- end row -->
+</div>
+<!-- end #content -->
+
+
+{% endblock %}
+{% block javascript %}{{ block.super }}
+
+{% endblock %}

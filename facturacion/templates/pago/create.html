@@ -1,0 +1,1272 @@
+{% extends "login/base_nuevo.html" %}
+{% load staticfiles %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block css %}
+{{ block.super }}
+<!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+<link href="{% static 'color_admin/assets/plugins/bootstrap-wizard/css/bwizard.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker.css'%}" rel="stylesheet"/>
+<link href="{% static 'color_admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css'%}" rel="stylesheet"/>
+<!-- ================== END PAGE LEVEL STYLE ================== -->
+{% endblock %}
+
+{% block section_title %}Registrar Cobro Pago{% endblock %}
+{% block section_subtitle %}Por favor diligencie el siguiente formulario{% endblock %}
+{% block content %}
+
+<!-- begin row -->
+<style>
+    .panel-border {
+        border: 1px solid #ddd !important
+    }
+
+    .form-ajust .form-group {
+        margin-bottom: 0px !important
+    }
+
+    input[type="text"], select, input[type="number"] {
+
+        border: 1px solid #ccd0d4;
+        border-radius: 3px;
+        box-shadow: none;
+        font-size: 12px;
+        display: block;
+        width: 100%;
+        height: 34px;
+        padding: 6px 12px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+    }
+
+    .table2 {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 20px;
+        display: table
+    }
+
+    .table2 > tbody > tr > td, .table2 > tbody > tr > th, .table2 > tfoot > tr > td, .table2 > tfoot > tr > th {
+        border-color: #e2e7eb;
+        padding: 1px 0px;
+    }
+
+    .table2 > thead > tr > td, .table2 > thead > tr > th {
+        border-color: #e2e7eb;
+        padding: 10px 5px;
+    }
+
+</style>
+<form method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
+    {{ form.title.errors }}
+    <div class="row">
+        <!-- begin col-6 -->
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+
+                    <h3 class="panel-title">Registrar Cobro Pago</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12">
+                        <div>
+
+                            <!-- Nav tabs -->
+
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane fade in active" id="principales">
+                                    <div class="row">
+
+                                        <div class="panel panel-default panel-border">
+                                            <div class="panel-heading">Id del Registro</div>
+                                            <div class="panel-body">
+
+                                                <div class="col-md-4" style="display:none">
+                                                    <label for="exampleInputName2">Numero</label>
+                                                    {% bootstrap_field form.numero_documento show_label=False %}
+
+                                                </div>
+
+
+                                                <div class="col-md-12">
+                                                    <label for="exampleInputEmail2">Tipo Transacci&oacute;n</label>
+                                                    {% bootstrap_field form.tipo_transaccion show_label=False %}
+                                                </div>
+                                                <div class="col-md-12 cobro">
+                                                    <label for="exampleInputEmail2">Forma de Cobro</label>
+                                                    {% bootstrap_field form.forma_cobro show_label=False %}
+                                                </div>
+                                                <div class="col-md-12 pago">
+                                                    <label for="exampleInputEmail2">Forma de Pago</label>
+                                                    {% bootstrap_field form.transacciones_forma_pago show_label=False %}
+                                                </div>
+
+                                                <div class="col-md-12">
+                                                    <label for="exampleInputEmail2">Fecha de Emisi&oacute;n</label>
+                                                    {% bootstrap_field form.fecha show_label=False %}
+
+                                                </div>
+
+
+                                                <div class="col-md-11" style="display: none">
+                                                    <label for="exampleInputName2">Persona</label>
+                                                    {% bootstrap_field form.cliente show_label=False %}
+                                                    {% bootstrap_field form.proveedor show_label=False %}
+
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class=" " for="exampleInputEmail2">Persona</label>
+                                                    <div class="col-sm-12">
+                                                        <div class="input-group add-on">
+                                                            <input class="form-control" placeholder="..." id="persona"
+                                                                   name="persona" type="text">
+                                                            <input type="hidden" value="" id="persona_id"
+                                                                   name="persona_id"/>
+                                                            <div class="input-group-btn">
+                                                                <a href="javascript: personas()"
+                                                                   class="btn btn-xs btn-default" data-toggle="modal"><i
+                                                                        class="fa fa-plus"></i></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!--<div class="col-md-1">-->
+                                                <!--<span class="input-group-btn input" style="display: inline; width: 100px; float: right;" ><a href="javascript: personas()" class="btn btn-xs btn-default" data-toggle="modal"><i class="fa fa-plus"></i></a></span>-->
+
+
+                                                <!--</div>-->
+
+                                                <div class="col-md-12 pago">
+                                                    <label for="exampleInputName2">P&aacute;guese a la orden de:</label>
+                                                    {% bootstrap_field form.paguese_a show_label=False %}
+
+
+                                                </div>
+
+
+                                                <div class="col-md-12" style="display: none">
+                                                    <label for="exampleInputEmail2">Cuenta Pago/Cobro </label>
+                                                    {% bootstrap_field form.plan_cuenta show_label=False %}
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="" for="exampleInputEmail2">Cuenta Pago/Cobro</label>
+                                                    <div class="col-sm-12">
+                                                        <div class="input-group add-on">
+                                                            <input class="form-control" placeholder="..."
+                                                                   id="pago_cobro" name="pago_cobro" type="text">
+                                                            <input type="hidden" value="" id="pago_cobro_id"
+                                                                   name="pago_cobro_id"/>
+                                                            <div class="input-group-btn">
+                                                                <a href="javascript: cuentaPagoCobro()"
+                                                                   class="btn btn-xs btn-default" data-toggle="modal"><i
+                                                                        class="fa fa-plus"></i></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 pago">
+                                                    <label for="exampleInputEmail2">N&uacute;mero de cheque </label>
+                                                    {% bootstrap_field form.numero_cheque show_label=False %}
+                                                </div>
+                                                <div class="col-md-12 pago">
+                                                    <label for="exampleInputEmail2">Fecha de Cheque </label>
+                                                    {% bootstrap_field form.fecha_cheque show_label=False %}
+                                                </div>
+
+                                                <div class="col-md-12 cobro">
+                                                    <label for="exampleInputEmail2">N&uacute;mero Comprobante </label>
+                                                    {% bootstrap_field form.numero_comprobante show_label=False %}
+                                                </div>
+
+                                                <div class="col-md-12 tarjeta_cobro" style="display: none;">
+                                                    <label for="exampleInputEmail2">Lote </label>
+                                                    {% bootstrap_field form.numero_comprobante show_label=False %}
+                                                </div>
+
+                                                <div class="col-md-12 tarjeta_cobro" style="display: none;">
+                                                    <label for="exampleInputEmail2">Tipo Tarjeta </label>
+                                                    {% bootstrap_field form.numero_comprobante show_label=False %}
+                                                </div>
+
+                                                <div class="col-md-12 tarjeta_cobro" style="display: none;">
+                                                    <label for="exampleInputEmail2">Iva </label>
+                                                    {% bootstrap_field form.numero_comprobante show_label=False %}
+                                                </div>
+
+                                                <div class="col-md-12 tarjeta_cobro" style="display: none;">
+                                                    <label for="exampleInputEmail2">Servicio(Propinas) </label>
+                                                    {% bootstrap_field form.numero_comprobante show_label=False %}
+                                                </div>
+
+                                                <div class="col-md-12">
+                                                    <label for="exampleInputName2">Sucursal</label>
+                                                    {% bootstrap_field form.puntos_venta show_label=False %}
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="inputEmail3">Descripci&oacute;n</label>
+                                            {% bootstrap_field form.descripcion show_label=False %}
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+                            <div class="row" style="width:1200px!important">
+                                <div class="panel panel-default panel-border">
+                                    <!-- Default panel contents -->
+                                    <div class="panel-heading">Referencias de documento terminado</div>
+                                    <div class="panel-body">
+                                        <table class="table2 table-striped table-bordered" id="tabla">
+                                            <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Documento</th>
+                                                <!--<th>Nro Documento</th>-->
+                                                <th>Fecha Emision</th>
+                                                <th>Tipo Documento</th>
+                                                <th>Valor</th>
+                                                <th>Saldo</th>
+                                                <th>Valor a pagar</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+
+
+                                            {% if kits %}
+                                            {% for kit in kits %}
+
+                                            <tr>
+                                                <td class="eliminar"><a class="btn btn-danger remove_fields">
+                                                    <i class=" glyphicon glyphicon-trash icon-white"></i>
+                                                </a>
+                                                </td>
+                                                <!--<td><select id="tipos_kits{{ forloop.counter }}" name="tipos_kits{{ forloop.counter }}">-->
+                                                <!--<option value="PR">PR</option>-->
+                                                <!--<option value="FA">FA</option>-->
+                                                <!--</select></td>-->
+                                                <td>
+                                                    <input type="hidden" class="form-control"
+                                                           id="id_kits{{ forloop.counter }}"
+                                                           name="id_kits{{ forloop.counter }}" value="{{ kit.id }}"/>
+                                                    <input type="text" class="form-control"
+                                                           id="codigo_kits{{ forloop.counter }}"
+                                                           name="codigo_kits{{ forloop.counter }}"
+                                                           onfocus="mostrarProductos({{ forloop.counter }})"
+                                                           value="{{ kit.codigo }}"></td>
+                                                <td><input type="text" class="form-control"
+                                                           id="fecha_kits{{ forloop.counter }}"
+                                                           name="fecha_kits{{ forloop.counter }}"
+                                                           value="{{ kit.fecha_emision }}"></td>
+                                                <td><input type="text" class="form-control"
+                                                           id="tipo_documento_kits{{ forloop.counter }}"
+                                                           name="tipo_documento_kits{{ forloop.counter }}"
+                                                           onkeyup="actualizarCosto({{ forloop.counter }})"
+                                                           value="{{ kit.tipo_documento }}"></td>
+
+                                                <td><input type="text" class="form-control"
+                                                           id="valor_kits{{ forloop.counter }}"
+                                                           name="valor_kits{{ forloop.counter }}"
+                                                           value="{{ kit.valor }}"></td>
+                                                <td><input type="text" class="form-control"
+                                                           id="saldo_kits{{ forloop.counter }}"
+                                                           name="saldo_kits{{ forloop.counter }}"
+                                                           value="{{ kit.saldo }}"></td>
+                                                <td><input type="text" class="form-control"
+                                                           id="valor_pagar_kits{{ forloop.counter }}"
+                                                           name="valor_pagar_kits{{ forloop.counter }}"
+                                                           value="{{ kit.valor_pagar }}"
+                                                           onkeyup="actualizarValor({{ forloop.counter }})"></td>
+
+                                            </tr>
+                                            {% endfor %}
+                                            {% else %}
+                                            <tr>
+                                                <td class="eliminar"><a class="btn btn-danger remove_fields">
+                                                    <i class=" glyphicon glyphicon-trash icon-white"></i>
+                                                </a>
+                                                </td>
+                                                <!--<td><select id="tipos_kits1" name="tipos_kits1">-->
+                                                <!--<option value="PR">PR</option>-->
+                                                <!--<option value="FA">FA</option>-->
+                                                <!--</select></td>-->
+                                                <td>
+                                                    <input type="hidden" class="form-control" id="id_kits1"
+                                                           name="id_kits1"/>
+
+
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" id="codigo_kits1"
+                                                               name="codigo_kits1" onfocus="mostrarProductos(1)"
+                                                               readonly="readonly">
+
+                                                        <div class="input-group-btn">
+                                                            <a href="javascript: mostrarProductos(1)"
+                                                               class="btn btn-xs btn-default" data-toggle="modal"><i
+                                                                    class="fa fa-plus"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td><input type="text" class="form-control" id="fecha_kits1"
+                                                           name="fecha_kits1" readonly="readonly"></td>
+                                                <td><input type="text" class="form-control" id="tipo_documento_kits1"
+                                                           name="tipo_documento_kits1" onkeyup="actualizarCosto(1)"
+                                                           readonly="readonly"></td>
+                                                <td><input type="text" class="form-control" id="valor_kits1"
+                                                           name="valor_kits1" readonly="readonly"></td>
+                                                <td><input type="text" class="form-control" id="saldo_kits1"
+                                                           name="saldo_kits1" readonly="readonly"></td>
+                                                <td><input type="text" class="form-control" id="valor_pagar_kits1"
+                                                           name="valor_pagar_kits1" onkeyup="actualizarValor(1)">
+                                                </td>
+
+                                            </tr>
+
+                                            {% endif %}
+                                            </tbody>
+                                            <tfoot>
+
+                                            <tr>
+
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+
+                                                <th>Total:</th>
+                                                <th>
+                                                    <input type="text" class="form-control" id="total" name="total"
+                                                           required="required" readonly="readonly"/>
+                                                </th>
+
+                                                <th>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+
+                                    </div>
+
+                                    <!-- Table -->
+                                </div>
+                            </div>
+
+                            <p class="text-center">
+                                <button type="button" class="btn btn-primary btn-lg" id="add">Agregar</button>
+
+
+                            </p>
+
+
+                        </div>
+
+
+                        <div class="row" style="width:1200px!important">
+                            <div class="panel panel-default panel-border" style="width:900px">
+                                <!-- Default panel contents -->
+                                <div class="panel-heading">Asiento</div>
+                                <div class="panel-body">
+
+
+                                    <!-- Table -->
+                                    <table class="table2 table-striped table-bordered" id="tabla2">
+                                        <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Codigo</th>
+                                            <th>Cuenta</th>
+                                            <th>Concepto</th>
+                                            <th>Debe</th>
+                                            <th>Haber</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+
+                                        {% if kitscuentas %}
+                                        {% for kitc in kitscuentas %}
+
+                                        <tr>
+                                            <td class="eliminar"><a class="btn btn-danger remove_fields">
+                                                <i class=" glyphicon glyphicon-trash icon-white"></i>
+                                            </a>
+                                            </td>
+                                            <!--<td><select id="tipos_kits{{ forloop.counter }}" name="tipos_kits{{ forloop.counter }}">-->
+                                            <!--<option value="PR">PR</option>-->
+                                            <!--<option value="FA">FA</option>-->
+                                            <!--</select></td>-->
+                                            <td>
+                                                <input type="hidden" class="form-control"
+                                                       id="id_kitsc{{ forloop.counter }}"
+                                                       name="id_kitsc{{ forloop.counter }}" value="{{ kitc.id }}"/>
+                                                <input type="text" class="form-control"
+                                                       id="codigo_kitsc{{ forloop.counter }}"
+                                                       name="codigo_kitsc{{ forloop.counter }}"
+                                                       onfocus="mostrarCuentas({{ forloop.counter }})"
+                                                       value="{{ kitc.codigo }}"></td>
+                                            <td><input type="text" class="form-control"
+                                                       id="cuenta_kitsc{{ forloop.counter }}"
+                                                       name="cuenta_kitsc{{ forloop.counter }}"
+                                                       value="{{ kitc.cuenta }}"></td>
+                                            <td><input type="text" class="form-control"
+                                                       id="concepto_kitsc{{ forloop.counter }}"
+                                                       name="concepto_kitsc{{ forloop.counter }}"
+                                                       value="{{ kitc.concepto }}"></td>
+
+                                            <td><input type="text" class="form-control"
+                                                       id="debe_kitsc{{ forloop.counter }}"
+                                                       name="debe_kitsc{{ forloop.counter }}" value="{{ kitc.debe }}"
+                                                       onkeyup="actualizarValorCuenta({{ forloop.counter }})"></td>
+                                            <td><input type="text" class="form-control"
+                                                       id="hber_kitsc{{ forloop.counter }}"
+                                                       name="haber_kitsc{{ forloop.counter }}" value="{{ kitc.haber }}"
+                                                       onkeyup="actualizarValorCuenta({{ forloop.counter }})"></td>
+
+                                        </tr>
+                                        {% endfor %}
+                                        {% else %}
+                                        <tr>
+                                            <td>
+                                            </td>
+                                            <!--<td><select id="tipos_kits1" name="tipos_kits1">-->
+                                            <!--<option value="PR">PR</option>-->
+                                            <!--<option value="FA">FA</option>-->
+                                            <!--</select></td>-->
+                                            <td>
+                                                <input type="hidden" class="form-control" id="id_kitsc1"
+                                                       name="id_kitsc1"/>
+
+
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="codigo_kitsc1"
+                                                           name="codigo_kitsc1" onfocus="mostrarCuentas(1)"
+                                                           readonly="readonly">
+
+                                                    <div class="input-group-btn">
+                                                        <a href="javascript: mostrarCuentas(1)"
+                                                           class="btn btn-xs btn-default" data-toggle="modal"><i
+                                                                class="fa fa-plus"></i></a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><input type="text" class="form-control" id="cuenta_kitsc1"
+                                                       name="cuenta_kitsc1" readonly="readonly"></td>
+                                            <td><input type="text" class="form-control" id="concepto_kitsc1"
+                                                       name="concepto_kitsc1"></td>
+                                            <td><input type="text" class="form-control" id="debe_kitsc1"
+                                                       name="debe_kitsc1" onkeyup="actualizarValorCuenta(1)"></td>
+                                            <td><input type="text" class="form-control" id="haber_kitsc1"
+                                                       name="haber_kitsc1" onkeyup="actualizarValorCuenta(1)"></td>
+                                            </td>
+
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>
+                                            </td>
+                                            <!--<td><select id="tipos_kits1" name="tipos_kits1">-->
+                                            <!--<option value="PR">PR</option>-->
+                                            <!--<option value="FA">FA</option>-->
+                                            <!--</select></td>-->
+                                            <td>
+                                                <input type="hidden" class="form-control" id="id_kitsc2"
+                                                       name="id_kitsc2"/>
+
+
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="codigo_kitsc2"
+                                                           name="codigo_kitsc2" onfocus="mostrarCuentas(2)"
+                                                           readonly="readonly">
+
+                                                    <div class="input-group-btn">
+                                                        <a href="javascript: mostrarCuentas(2)"
+                                                           class="btn btn-xs btn-default" data-toggle="modal"><i
+                                                                class="fa fa-plus"></i></a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><input type="text" class="form-control" id="cuenta_kitsc2"
+                                                       name="cuenta_kitsc2" readonly="readonly"></td>
+                                            <td><input type="text" class="form-control" id="concepto_kitsc2"
+                                                       name="concepto_kitsc2"></td>
+                                            <td><input type="text" class="form-control" id="debe_kitsc2"
+                                                       name="debe_kitsc2" onkeyup="actualizarValorCuenta(2)"></td>
+                                            <td><input type="text" class="form-control" id="haber_kitsc2"
+                                                       name="haber_kitsc2" onkeyup="actualizarValorCuenta(2)"></td>
+                                            </td>
+
+                                        </tr>
+
+
+                                        {% endif %}
+                                        </tbody>
+                                        <tfoot>
+
+                                        <tr>
+
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+
+
+                                            <th>Total:</th>
+                                            <th>
+                                                <input type="text" class="form-control" id="total_debe"
+                                                       name="total_debe" required="required" readonly="readonly"/>
+                                            </th>
+                                            <th>
+                                                <input type="text" class="form-control" id="total_haber"
+                                                       name="total_haber" required="required" readonly="readonly"/>
+                                            </th>
+
+                                            <th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="text-center">
+                            <button type="button" class="btn btn-primary btn-lg" id="add2">Agregar</button>
+
+
+                        </p>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    </div>
+    </div>
+
+    <p class="text-center">
+
+        <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
+        <a class="default btn btn-link" href="/facturacion/registrarCobroPago">
+            <button type="button" class="btn btn-primary btn-lg"> Regresar</button>
+        </a>
+    </p>
+    {% if kits %}
+    <input type="hidden" name="columnas_receta" id="columnas_receta" value="{{ kits|length }}"/>
+    {% else %}
+    <input type="hidden" name="columnas_receta" id="columnas_receta" value="1"/>
+
+    {% endif %}
+
+    {% if kitscuentas %}
+    <input type="hidden" name="columnas_receta_asiento" id="columnas_receta_asiento" value="{{ kitscuentas|length }}"/>
+    {% else %}
+    <input type="hidden" name="columnas_receta_asiento" id="columnas_receta_asiento" value="2"/>
+
+    {% endif %}
+
+    <input type="hidden" name="id_fila_cambiar" id="id_fila_cambiar" value=""/>
+
+
+</form>
+<div aria-hidden="true" style="display: none;" id="dlgPersona" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 id="id_popup_person" class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="tipo_egreso_id" name="tipo_egreso" value=""/>
+                <div id="contenido_dlgPersona">
+                    <div class="indicator show"><span class="spinner spinner16"></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div aria-hidden="true" style="display: none;" id="dlgEgreso" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 id="id_popup_egreso" class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="tipo_egreso_id" name="tipo_egreso" value=""/>
+                <div id="contenido_dlgEgreso">
+                    <div class="indicator show"><span class="spinner spinner16"></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-sm" id="modal-dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered" id="tabla">
+                        <thead>
+                        <tr>
+                            <td></td>
+                            <th>Codigo</th>
+                            <th>Nombre</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for producto in productos %}
+                        <tr>
+                            <td onclick="cargarCodigoProducto('{{ producto.producto_id }}','{{ producto.codigo_producto }}','{{ producto.descripcion_producto }}','{{ producto.medida }}','{{ producto.costo }}')">
+                                <a class="btn btn-danger remove_fields">
+                                    <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                </a></td>
+                            <td>{{ producto.codigo_producto }}</td>
+                            <td>{{ producto.descripcion_producto }}</td>
+                        </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" onclick="cerrar()" class="btn btn-danger btn-block">Cerrar <i
+                        class=" glyphicon glyphicon-trash icon-white"></i></button>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/data-table.js' %}"></script>
+
+<script src="{% static 'color_admin/assets/plugins/parsley/dist/parsley.js' %}"></script>
+<script src="{% static 'color_admin/assets/plugins/bootstrap-wizard/js/bwizard.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/form-wizards-validation.demo.min.js' %}"></script>
+<script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
+
+<script>
+    $(document).ready(function () {
+        // App.init();
+        $('#tabla2').DataTable();
+        FormWizardValidation.init();
+        $(".parsley-errors-list").css('display', 'none');
+        $('#id_fecha').datepicker({todayHighlight: true, autoclose: true, format: 'yyyy-mm-dd'});
+        $("#id_fecha").datepicker('setDate', new Date());
+
+
+        cambiarTipoTransaccion();
+
+        $("#id_tipo_transaccion").change(function () {
+            cambiarTipoTransaccion();
+        });
+
+        $("#id_forma_cobro").change(function () {
+            cambiarFormaCobro();
+        });
+
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#id_codigo').each(function () {
+            $(this).attr('readonly', 'readonly');
+
+        });
+        $('#id_created_by').each(function () {
+            $(this).attr('readonly', 'readonly');
+        });
+        $('#id_updated_by').each(function () {
+            $(this).attr('readonly', 'readonly');
+        });
+        $('#id_created_at').each(function () {
+            $(this).attr('readonly', 'readonly');
+        });
+        $('#id_updated_at').each(function () {
+            $(this).attr('readonly', 'readonly');
+        });
+
+        var codigo = $("#id_numero_documento").val().length;
+        if (codigo < 1) {
+            $.ajax({
+                url: "/config/obtenerSecuencial/", // the endpoint
+                type: "POST", // http method
+                data: {id: 'registrarcobropago', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function (data) {
+                    $('#id_numero_documento').val('00' + data);
+
+                },
+                error: function () {
+
+                },
+            });
+            // var fecha=new Date().toJSON().slice(0,10);
+            // $('#id_fecha').val(fecha);
+        } else {
+            // alert(codigo);
+
+        }
+
+
+        var codigo_reunion = $("#id_reunion_codigo").val();
+        $("#id_tiempo_respuesta").val('30 dias');
+        $("#porcentaje_descuento").val('0.00');
+
+        $("#id_reunion_codigo").focusout(function () {
+            codigo_reunion = $("#id_reunion_codigo").val();
+            $.ajax({
+                url: "/config/obtenerReunion/", // the endpoint
+                type: "POST", // http method
+                data: {id: codigo_reunion, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function (data) {
+                    $('#id_cliente option[value=' + data['cliente'] + ']').attr('selected', 'selected');
+
+                    $('#id_vendedor option[value=' + data['vendedor'] + ']').attr('selected', 'selected');
+
+                    $("#id_direccion_entrega").val(data['direccion']);
+
+                },
+                error: function () {
+
+                },
+            });
+        });
+    });
+</script>
+<script>
+    function cambiarTipoTransaccion() {
+        var tipo = $('#id_tipo_transaccion').val();
+        var cobro = $('#id_forma_cobro').val();
+        if (tipo == 1) {
+            $(".cobro").css('display', 'block');
+            $(".pago").css('display', 'none');
+            if (tipo == 1 && cobro == 3) {
+                $(".tarjeta_cobro").css('display', 'block');
+
+
+            } else {
+                $(".tarjeta_cobro").css('display', 'none');
+
+
+            }
+
+
+        } else {
+            $(".pago").css('display', 'block');
+            $(".cobro").css('display', 'none');
+
+        }
+
+
+    }
+
+    function cambiarFormaCobro() {
+        var tipo = $('#id_tipo_transaccion').val();
+        var cobro = $('#id_forma_cobro').val();
+        if (tipo == 1 && cobro == 3) {
+            $(".tarjeta_cobro").css('display', 'block');
+
+
+        } else {
+            $(".tarjeta_cobro").css('display', 'none');
+
+
+        }
+
+
+    }
+
+    function personas() {
+        $("#id_popup_persona").html("<b>Persona</b>");
+        var id_tipo = $('#id_tipo_transaccion').val();
+        var parametros = {
+            'tipo': id_tipo,
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+
+        }
+
+        $.ajax({
+            url: "/facturacion/mostrar_personas/",
+            type: "POST",
+            async: true,
+            data: parametros,
+            success: function (data) {
+                $('#contenido_dlgPersona').html(data);
+
+
+            },
+            complete: function () {
+                $("#btn_guardar_egresos").show();
+            }
+        });
+        $('#dlgPersona').modal();
+    }
+
+
+    function cuentaPagoCobro() {
+        $("#id_popup_persona").html("<b>Seleccionar Cuenta</b>");
+        var id_tipo = $('#id_tipo_transaccion').val();
+        var parametros = {
+            'tipo': id_tipo,
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+
+        }
+
+        $.ajax({
+            url: "/facturacion/mostrar_cuenta/",
+            type: "POST",
+            async: true,
+            data: parametros,
+            success: function (data) {
+                $('#contenido_dlgPersona').html(data);
+
+
+            },
+            complete: function () {
+                $("#btn_guardar_egresos").show();
+            }
+        });
+        $('#dlgPersona').modal();
+    }
+
+
+    function mostrarCuentas(fila) {
+        $("#id_popup_persona").html("<b>Cuenta</b>");
+        var id_tipo = $('#id_tipo_transaccion').val();
+        var persona_id = $('#persona_id').val();
+        var parametros = {
+            'tipo': id_tipo,
+            'persona_id': persona_id,
+            'fila': fila,
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+
+        }
+
+        $.ajax({
+            url: "/facturacion/mostrar_cuenta_persona/",
+            type: "POST",
+            async: true,
+            data: parametros,
+            success: function (data) {
+                $('#contenido_dlgPersona').html(data);
+
+
+            },
+            complete: function () {
+                $("#btn_guardar_egresos").show();
+            }
+        });
+        $('#dlgPersona').modal();
+    }
+
+
+    function mostrarProductos(data) {
+
+        $('#id_fila_cambiar').val(data);
+
+
+        $("#id_popup_egresos").html("<b>Documento</b>");
+        var id_txt_otros_egresos = $('#id_cliente').val();
+        var tipo = $('#id_tipo_transaccion').val();
+        var fila = data;
+        var parametros = {
+            'tipo': tipo,
+            'cliente': id_txt_otros_egresos,
+            'fila': fila,
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+
+        };
+        if (id_txt_otros_egresos == 0) {
+            alert("Debe Seleccionar una persona");
+        } else {
+            $.ajax({
+                url: "/facturacion/mostrar_documento/",
+                type: "POST",
+                async: true,
+                data: parametros,
+                success: function (data) {
+                    $('#contenido_dlgEgreso').html(data);
+
+
+                },
+                complete: function () {
+                    // $("#btn_guardar_egresos").show();
+                }
+            });
+            $('#dlgEgreso').modal();
+
+        }
+
+    }
+    function cerrar() {
+        $(".modal").modal('toggle');
+    }
+
+    function cargarCodigoProducto(id, codigo, descripcion, medida, costo) {
+        var fila = $('#id_fila_cambiar').val();
+        $('#id_kits' + fila).val(id);
+        costo = costo.toString().replace(/\,/g, '.');
+
+
+        $('#codigo_kits' + fila).val(codigo);
+        $('#nombre_kits' + fila).val(descripcion);
+        $('#medida_kits' + fila).val(medida);
+        $('#costo_kits' + fila).val(costo);
+        $('#total_kits' + fila).val('');
+        $('#cantidad_kits' + fila).val('');
+        cerrar();
+
+    }
+    function actualizarCosto(data) {
+        var cantidad = $('#cantidad_kits' + data).val();
+        var costo = $('#costo_kits' + data).val();
+        var medida = $('#medida_kits' + data).val();
+
+
+        var valor = parseFloat(parseFloat(cantidad) * parseFloat(costo)).toFixed(2);
+
+        //  alert(data);
+        // alert(costo);
+        // alert(valor);
+        $('#total_kits' + data).val(valor);
+        actualizarTotal();
+    }
+    function actualizarTotal() {
+        var num_recetas = $('#columnas_receta').val();
+        var total = 0;
+        var cantidad = 0;
+        var descuento = 0;
+        var porcentaje_descuento = 0;
+        var totalidad = 0;
+
+        var i;
+        //alert(' BNUM RECETS'+num_recetas);
+        for (i = 1; i <= num_recetas; i++) {
+
+            if ($('#total_kits' + i).length) {
+                cantidad = $('#total_kits' + i).val();
+                total = parseFloat(total) + parseFloat(cantidad);
+            }
+
+
+        }
+        porcentaje_descuento = $('#porcentaje_descuento').val();
+        descuento = parseFloat(total * (porcentaje_descuento / 100));
+        total = total - descuento;
+        // total=(total).toFixed(2);
+        $('#subtotal').val((total).toFixed(2));
+        var iva = parseFloat(total * 0.12);
+        // iva=(iva).toFixed(2);
+        $('#iva').val((iva).toFixed(2));
+        $('#descuento').val((descuento).toFixed(2));
+
+        totalidad = parseFloat(total + iva);
+        $('#total').val((totalidad).toFixed(2));
+
+
+    }
+    function cargarCodigoProforma(cod) {
+
+        codigo_reunion = cod;
+        $.ajax({
+            url: "/config/obtenerProforma/", // the endpoint
+            type: "POST", // http method
+            data: {id: codigo_reunion, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            success: function (data) {
+                $('#id_cliente option[value=' + data['cliente'] + ']').attr('selected', 'selected');
+
+                $('#id_vendedor option[value=' + data['vendedor'] + ']').attr('selected', 'selected');
+                $('#id_proforma option[value=' + data['id'] + ']').attr('selected', 'selected');
+                $("#id_proforma_codigo").val(codigo_reunion);
+                $("#id_tiempo_respuesta").val(data['tiempo_respuesta']);
+                $("#id_clte_direccion1").val(data['direccion']);
+                $("#id_observacion").val(data['observacion']);
+                $("#id_total").val(data['total']);
+                $('#id_puntos_venta option[value=' + data['puntos_venta'] + ']').attr('selected', 'selected');
+                $("#id_ruc").val(data['ruc']);
+
+                deta = data['detalle'];
+                res = deta.split(",");
+                var trs = $("#tabla tr").length;
+
+
+                // Eliminamos la ultima columna
+                $("#tabla tbody tr").remove();
+
+
+                for (i = 0; i < res.length; i++) {
+
+
+                    if (res[i] != "") {
+
+                        $.ajax({
+                            url: "/facturacion/obtenerDetalleProformaFactura/", // the endpoint
+                            type: "POST", // http method
+                            data: {id: res[i], 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                            success: function (data) {
+                                //alert(data);
+                                $('#remover').remove();
+                                var num_recetas = $('#columnas_receta').val();
+                                num_recetas = parseInt(num_recetas) + 1;
+
+                                var tds = $("#tabla tr:first td").length;
+
+                                // Obtenemos el total de columnas (tr) del id "tabla"
+                                var trs = $("#tabla tr").length;
+                                var nuevaFila = '<tr><td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+
+                                nuevaFila += '<td><input type="hidden" class="form-control" id="id_kits' + num_recetas + '" name="id_kits' + num_recetas + '" value="' + data['id'] + '"> ';
+                                nuevaFila += '<input type="text" required="required" class="form-control" id="codigo_kits' + num_recetas + '" name="codigo_kits' + num_recetas + '" onfocus="mostrarProductos(' + num_recetas + ')" readonly="readonly" value="' + data['codigo'] + '"></td>';
+                                nuevaFila += '<td><input type="text"  id="nombre_kits' + num_recetas + '" name="nombre_kits' + num_recetas + '" value="' + data['nombre'] + '"></td>';
+
+                                nuevaFila += '<td><input type="text" class="form-control" required="required" id="cantidad_kits' + num_recetas + '" name="cantidad_kits' + num_recetas + '" onkeyup="actualizarCosto(' + num_recetas + ')" value="' + data['cantidad'] + '"></td>';
+                                nuevaFila += '<td><input type="text" class="form-control" id="medida_kits' + num_recetas + '" name="medida_kits' + num_recetas + '" value="' + data['medida'] + '"></td>';
+                                nuevaFila += '<td><input type="text" class="form-control" id="costo_kits' + num_recetas + '" name="costo_kits' + num_recetas + '" onkeyup="actualizarCosto(' + num_recetas + ')" value="' + data['precio_compra'] + '"></td>';
+                                nuevaFila += '<td><input type="text" class="form-control" id="total_kits' + num_recetas + '" name="total_kits' + num_recetas + '" readonly="readonly" value="' + data['total'] + '"></td>';
+
+                                nuevaFila += '</tr>';
+                                $("#tabla").append(nuevaFila);
+
+                                $('#columnas_receta').val(num_recetas);
+
+                                actualizarTotal();
+
+                            },
+                            error: function () {
+
+                            },
+                        });
+                    }
+                }
+
+
+            },
+            error: function () {
+
+            },
+        });
+
+        cerrarProforma()
+    }
+
+    function cerrar() {
+        $(".bs-example-modal-sm").modal('toggle');
+    }
+    function mostrarProforma() {
+        $('#proformas').modal('show');
+
+    }
+    function cerrarProforma() {
+        $(".bs-example-modal-lg").modal('toggle');
+    }
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        /**
+         * Funcion para añadir una nueva columna en la tabla
+         */
+        $("#add").click(function () {
+            // Obtenemos el numero de filas (td) que tiene la primera columna
+            // (tr) del id "tabla"
+            var num_recetas = $('#columnas_receta').val();
+            num_recetas = parseInt(num_recetas) + 1;
+
+            var tds = $("#tabla tr:first td").length;
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs = $("#tabla tr").length;
+            var nuevaFila = '<tr><td  class="eliminar"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+            // nuevaFila+=' <td><select id="tipos_kits'+num_recetas+'" name="tipos_kits'+num_recetas+'"><option value="PR">PR</option><option value="FA">FA</option></select></td>';
+            nuevaFila += '<td><input type="hidden" class="form-control" id="id_kits' + num_recetas + '" name="id_kits' + num_recetas + '"> ';
+
+            nuevaFila += '<input type="text" required="required" class="form-control" id="codigo_kits' + num_recetas + '" name="codigo_kits' + num_recetas + '" onfocus="mostrarProductos(' + num_recetas + ')" readonly="readonly"></td>';
+            nuevaFila += '<td><input type="text"  id="fecha_kits' + num_recetas + '" name="fecha_kits' + num_recetas + '" readonly="readonly" ></td>';
+            nuevaFila += '<td><input type="text" class="form-control" id="tipo_documento_kits' + num_recetas + '" name="tipo_documento_kits' + num_recetas + '" readonly="readonly"></td>';
+
+            nuevaFila += '<td><input type="text" class="form-control" id="valor_kits' + num_recetas + '" name="valor_kits' + num_recetas + '" readonly="readonly"></td>';
+            nuevaFila += '<td><input type="text" class="form-control" id="saldo_kits' + num_recetas + '" name="saldo_kits' + num_recetas + '" onkeyup="actualizarCosto(' + num_recetas + ')" readonly="readonly"></td>';
+            nuevaFila += '<td><input type="text" class="form-control" id="valor_pagar_kits' + num_recetas + '" name="valor_pagar_kits' + num_recetas + '"></td>';
+            nuevaFila += '</tr>';
+
+            $('#columnas_receta').val(num_recetas);
+            // for(var i=0;i<tds;i++){
+            //     // añadimos las columnas
+            //     nuevaFila+="<td>columna "+(i+1)+" Añadida con jquery</td>";
+            // }
+            // // Añadimos una columna con el numero total de columnas.
+            // // Añadimos uno al total, ya que cuando cargamos los valores para la
+            // // columna, todavia no esta añadida
+            // nuevaFila+="<td>"+(trs+1)+" columnas";
+            // nuevaFila+="</tr>";
+            $("#tabla").append(nuevaFila);
+        });
+
+        /**
+         * Funcion para eliminar la ultima columna de la tabla.
+         * Si unicamente queda una columna, esta no sera eliminada
+         */
+        $("#del").click(function () {
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs = $("#tabla tr").length;
+            if (trs > 1) {
+                // Eliminamos la ultima columna
+                $("#tabla tr:last").remove();
+            }
+            actualizarTotal();
+        });
+
+        $("#add2").click(function () {
+            // Obtenemos el numero de filas (td) que tiene la primera columna
+            // (tr) del id "tabla"
+            var num_recetas = $('#columnas_receta_asiento').val();
+            num_recetas = parseInt(num_recetas) + 1;
+
+            var tds = $("#tabla2 tr:first td").length;
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs = $("#tabla2 tr").length;
+            var nuevaFila = '<tr><td  class="eliminar2"><a class="btn btn-danger remove_fields "><i class=" glyphicon glyphicon-trash icon-white"></i></a></td>';
+            // nuevaFila+=' <td><select id="tipos_kits'+num_recetas+'" name="tipos_kits'+num_recetas+'"><option value="PR">PR</option><option value="FA">FA</option></select></td>';
+            nuevaFila += '<td><input type="hidden" class="form-control" id="id_kitsc' + num_recetas + '" name="id_kitsc' + num_recetas + '"> ';
+
+            nuevaFila += '<input type="text" required="required" class="form-control" id="codigo_kitsc' + num_recetas + '" name="codigo_kitsc' + num_recetas + '" onfocus="mostrarCuentas(' + num_recetas + ')" readonly="readonly"></td>';
+            nuevaFila += '<td><input type="text"  id="cuenta_kitsc' + num_recetas + '" name="cuenta_kitsc' + num_recetas + '" readonly="readonly" ></td>';
+            nuevaFila += '<td><input type="text" class="form-control" id="concepto_kitsc' + num_recetas + '" name="concepto_kitsc' + num_recetas + '" readonly="readonly"></td>';
+
+            nuevaFila += '<td><input type="text" class="form-control" id="debe_kitsc' + num_recetas + '" name="debe_kitsc' + num_recetas + '" onkeyup="actualizarCostoCuenta(' + num_recetas + ')"  readonly="readonly"></td>';
+            nuevaFila += '<td><input type="text" class="form-control" id="haber_kitsc' + num_recetas + '" name="haber_kitsc' + num_recetas + '" onkeyup="actualizarCostoCuenta(' + num_recetas + ')" readonly="readonly"></td>';
+            nuevaFila += '</tr>';
+
+            $('#columnas_receta_asiento').val(num_recetas);
+            // for(var i=0;i<tds;i++){
+            //     // añadimos las columnas
+            //     nuevaFila+="<td>columna "+(i+1)+" Añadida con jquery</td>";
+            // }
+            // // Añadimos una columna con el numero total de columnas.
+            // // Añadimos uno al total, ya que cuando cargamos los valores para la
+            // // columna, todavia no esta añadida
+            // nuevaFila+="<td>"+(trs+1)+" columnas";
+            // nuevaFila+="</tr>";
+            $("#tabla2").append(nuevaFila);
+        });
+
+
+        $("#del2").click(function () {
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs = $("#tabla2 tr").length;
+            if (trs > 1) {
+                // Eliminamos la ultima columna
+                $("#tabla2 tr:last").remove();
+            }
+            actualizarTotalCuenta();
+        });
+
+        $(document).on("click", ".eliminar", function () {
+            var parent = $(this).parent();
+            $(parent).remove();
+            actualizarTotal();
+        });
+
+        $(document).on("click", ".eliminar2", function () {
+            var parent = $(this).parent();
+            $(parent).remove();
+            actualizarTotalCuenta();
+        });
+
+    });
+
+    function actualizarValorCuenta(data) {
+        var num_recetas = $('#columnas_receta_asiento').val();
+        var total = 0;
+        var debe = 0;
+        var haber = 0;
+        var porcentaje_descuento = 0;
+        var total_debe = 0;
+        var total_haber = 0;
+
+
+        var i;
+        //alert(' BNUM RECETS'+num_recetas);
+        for (i = 1; i <= num_recetas; i++) {
+
+            if ($('#debe_kitsc' + i).length) {
+                debe = $('#debe_kitsc' + i).val();
+                total_debe = parseFloat(total_debe) + parseFloat(debe);
+            }
+
+            if ($('#haber_kitsc' + i).length) {
+                haber = $('#haber_kitsc' + i).val();
+                total_haber = parseFloat(total_haber) + parseFloat(haber);
+            }
+
+
+        }
+
+        $('#total_debe').val((total_debe).toFixed(2));
+
+        $('#total_haber').val((total_haber).toFixed(2));
+
+
+    }
+
+
+    function actualizarValor(data) {
+        var num_recetas = $('#columnas_receta').val();
+        var total = 0;
+        var cantidad = 0;
+        var descuento = 0;
+        var porcentaje_descuento = 0;
+        var totalidad = 0;
+
+        var i;
+        //alert(' BNUM RECETS'+num_recetas);
+        for (i = 1; i <= num_recetas; i++) {
+
+            if ($('#valor_pagar_kits' + i).length) {
+                cantidad = $('#valor_pagar_kits' + i).val();
+                total = parseFloat(total) + parseFloat(cantidad);
+            }
+
+
+        }
+
+        totalidad = parseFloat(total);
+        $('#total').val((totalidad).toFixed(2));
+
+
+    }
+</script>
+{% endblock %}                                                                                                                                                                                                                                                                

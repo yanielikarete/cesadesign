@@ -1,0 +1,123 @@
+body {
+  background: #F7F7F9;
+  color: #333;
+  transition: background-color 3s linear;
+}
+.navbar{ margin-bottom: 0px; border-radius: 0px;}
+.main-header{
+  height: 53px;
+
+  -moz-box-shadow: 1px 1px 1px white;
+  -webkit-box-shadow: 1px 1px 1px #FFF;
+  box-shadow: 1px 1px 1px #FFF;
+  background: #FFF;
+  border-bottom: 1px solid #E6E6E6;
+  overflow: hidden;
+}
+.avatar-name{
+  font-size: 2em;
+  line-height: 1.5em;
+  color: #1E1E2B;
+  float: left;
+  font-weight: bold;
+  height: 53px;
+  line-height: 53px;
+  padding-left: 0.375em;
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.main-content{
+  min-height: 400px;
+  background: #FFF;
+  padding: 2.25em;
+  margin: 20px 0;
+}
+h1 {
+  font-size: 1.75em;
+  line-height: 1.71429em;
+  margin-top: 0em;
+  margin-bottom: 0.42857em;
+  border-bottom: 1px solid #ccc;
+}
+.form-content{margin: 10px 0 important!;}
+.form-control, .chosen-container{
+  max-width: 600px;
+}
+.chosen-single{ height: 34px;}
+.table, .form-actions{ margin: 15px 0; }
+.action-checkbox{width:32px;}
+.bs-wizard-todo{ font-size: 14px; }
+.bs-wizard-sidebar>li>span {
+  font-size: 19px;
+}
+input.text-field{text-transform: uppercase;}
+#id_email{text-transform: none;}
+.error-popover{
+    color: #A94442;
+    background-color: #F2DEDE;
+    border-color: #EBCCD1;
+}
+.error-popover .arrow:after{
+    border-top-color: #F2DEDE;
+}
+.loading-ajax{
+  font-size: 93px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  background: rgba(255, 255, 255, 0.55);
+  width: 100%;
+  height: 100%;
+  display: none;
+  color: #08C;
+}
+
+.loading-ajax i{
+  position: relative;
+  top: 40%;
+  left: 46%;
+}
+body.loading .loading-ajax{
+    display: block;
+}
+/*.handsontable{
+    width: 400px;
+    height: 400px;
+    overflow: auto;
+}*/
+.handsontable .currentRow {
+  background-color: #E7E8EF;
+}
+.handsontable .currentCol {
+  background-color: #F9F9FB;
+}
+.handsontable .htDimmed{
+  background-color: #eee;
+}
+.handsontable .htNumeric.htDimmed{
+    color: #000;
+    font-weight: bold;
+    text-align: center;
+    background: #F4FBFF;
+}
+/*.ht_clone_top, .ht_clone_left, .ht_clone_corner{display: none;}*/
+.flecha{
+    position: absolute;
+    left: 55px;
+}
+.show-grid {
+  margin-bottom: 15px;
+}
+.tab-content{
+    padding: 15px;
+}
+.btn-block {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.perfil-pic{
+    border-radius: 50%;
+}

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>COMPRAS LOCALES</title>
+</head>
+<style>
+     .head{
+        width: 100%;
+        text-align: center;
+        font-size: 12pt;
+
+    }
+
+    #detail{
+        width: 100%;
+     font-size: 12pt;
+     letter-spacing: 2px
+    }
+
+    .contenido{
+        width: 100%;
+        padding: 2px 0;
+        font-size: 12pt;
+        letter-spacing: 2px;
+
+    }
+
+    .contenido td{
+        padding: 0px 0px;
+                text-align: center;
+        letter-spacing: 2px
+        font-size: 12pt;
+    }
+    .foot table td{
+        letter-spacing: 2px;
+        font-size: 12pt;
+    }
+    .valores{
+        text-align: right;
+        padding: 0px 5px;
+       font-size: 12pt;
+        margin: 0;
+    }
+
+    .foot{
+        text-align: center;
+        letter-spacing: 2px;
+    }
+    h1{
+        line-height: 1px;
+        width: 700px;
+        text-align: center;
+        font-size: 12pt;
+        letter-spacing: 2px;
+    }
+    h3{
+        line-height: 2px;
+        letter-spacing: 2px;
+    }
+
+    .foot{
+        text-align: left;
+        letter-spacing: 2px;
+        width: 100%;
+        font-size: 7pt;
+    }
+
+</style>
+<body>
+    <div class="head" style="width: 100%">
+        <b> MUEDIRSA-COMPRAS LOCALES-INGRESOS POR COMPRA NO.{{orden.codigo}} </b><span style="text-align: right;float:right;font-size: 12pt;">{{orden.codigo}}</span>
+    </div>
+    <br>
+    <div id="detail" >
+                    <b>ENTIDAD:</b>
+
+                    <span>{{orden.proveedor}}</span>
+                    <br>
+                    <b>CONCEPTO:</b>
+
+                    <span>{{orden.orden_compra.notas}}</span>
+                    <br>
+                    <b>COMPRA:</b>
+
+                    <span>{{orden.orden_compra.nro_compra}}</span>
+
+                    <b style="padding-left: 25px">Factura:</b>
+
+                    <span>{{orden.nro_fact_proveedor}}</span>
+                    <br>
+                    <b>BOD INTERNA:</b>
+
+                    <span>{{orden.orden_compra.bodega}}</span>
+
+                    <b style="padding-left: 25px">Fecha:</b>
+
+                    <span>{{orden.fecha}}</span>
+
+    </div>
+    <div class="contenido">
+        <table id="datatable" border="1" style="font-size:12px; margin-bottom: 8px;  font-family: 'Lucida Console'" cellpadding="0" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th style="width: 50px">ITEMS</th> <th style="width: 490px"> DESCRIPCION </th> <th style="width:80px;" > UNIDADES </th> <th width="70px">COSTO</th> <th style="width:80px;">SUBTOTAL</th>
+                </tr>
+            </thead>
+        </table>
+            <table border="0" style="font-size:14px; font-family: 'Lucida Console'" cellpadding="0" cellspacing="0" width="100%">
+            <tbody style="padding-top: 15px; margin: 0px; letter-spacing: 2px " >
+                 {% if detalle %}
+                     {% for kit  in detalle %}
+                          <tr>
+                            <td width="8%">  {{ kit.producto.codigo_producto }}</td>
+                            <td style="width:60%; text-align: left;">{{ kit.producto.descripcion_producto }}</td>
+                            <td width="10%" class="valores">{{ kit.cantidad |floatformat:2  }} {{ kit.unidad_medida }}</td>
+                            <td style="width: 20%px;" class="valores">{{ kit.precio_compra |floatformat:2   }}</td>
+                            <td class="valores">{{ kit.total |floatformat:2  }}</td>
+                          </tr>
+                     {% endfor %}
+                 {% else %}
+                          {% endif %}
+            </tbody>
+            <tbody>
+                <tr>
+                    <td colspan="3" ></td><td width="100px"><b>Subtotal</b></td><td class="valores">{{orden.subtotal |floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td colspan="3" ></td><td><b>Iva</b></td><td class="valores">{{orden.iva |floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td colspan="3" ></td><td><b>Total</b></td ><td class="valores">{{orden.total |floatformat:2 }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <div class="foot" style="font-size: 10pt;">
+        <br>
+        <pre>
+    <b style="font-size: 10pt">   ELABORADO POR            REVISADO POR           APROBADO POR    <br>
+        ___________________    ___________________     ___________________  <br>
+     {{orden.created_by}}       Jefe de Produccion    Gerente de Produccion</b>
+        </pre>
+    </div>
+ </body>
+    <div class="noPrint">
+        <a download="ordenes_compra.xls" href="#" onclick="return ExcellentExport.excel(this, 'detalle', 'Sheet Name Here');"><button type="button" class="btn btn-primary btn-lg">  Exportar</button></a>
+    </div>
+</body>
+</html>
+
+
+

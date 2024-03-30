@@ -1,0 +1,87 @@
+
+    <input type="hidden" value="{{fila}}" name="fila_id" id="fila_id">
+
+	<div class="alert alert-danger hide" id="msj_error_ingresos"></div>
+
+
+	<div class="panel panel-default-grey">
+	    <div class="panel-heading">
+	        <h3 class="panel-title">Detalles de Documento </h3>
+	    </div>
+	    <div class="panel-body">
+	        <div class="ingresos">
+				<table style="background-color: white" class="table table-bordered" id="tabla_otros_ingresos">
+					<thead>
+						<tr>
+							  <th></th>
+                                    <th style="text-align: center">Fecha emisión</th>
+                                       <th style="text-align: center">Numero de Cheque</th>
+                                    <th style="text-align: center">Comprobante de debito</th>
+                                    <th style="text-align: center">Total</th>
+                                    <th style="text-align: center">Cant.Abonada</th>
+ 
+									
+
+						</tr>
+					</thead>
+					<tbody id="tdetalle_ingreso">
+
+                                                  {% if ro %}
+                                                    {% for r  in ro %}
+
+                                                  <tr>
+                                                    <td class=""><a class="btn btn-danger add_fields" onclick="agregar('{{r.0}}','{{r.1}}','{{r.2}}','{{r.5}}','{{r.6}}')">
+                                                        <i class=" glyphicon glyphicon-plus icon-white"></i>
+                                                      </a>
+                                                    </td>
+
+                                                    <td>
+                                                   {{r.1 | date:'Y-m-d'}} 
+                                                 </td>
+													 <td>
+                                                   {{r.2}} 
+                                                 </td>
+<td >{{r.8}}
+                                                    </td>
+                                                      <td >{{r.5 | default_if_none:'0'}}</td>
+
+                                                  <td >{{r.6 | default_if_none:'0'}}
+                                                    </td>
+
+
+                                                  </tr>
+                                                        {% endfor %}
+
+
+                                                   {% endif %}
+
+
+					</tbody>
+				</table>
+				<br>
+
+
+<input type="hidden" name="fila" id="fila" value="{{ fila }}" />
+
+
+
+			</div>
+	    </div>
+	</div>
+
+
+
+</form>
+				 </div>
+							                </div>
+							            </div>
+							        </div>
+							    </div>
+
+
+
+
+
+    <script>
+
+        </script>
