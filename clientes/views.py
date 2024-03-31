@@ -181,19 +181,20 @@ class ClienteUpdateView(ObjectUpdateView):
             detalle = RazonSocialClientes.objects.filter(cliente_id=p_id)
             razonsocial = RazonSocial.objects.values('id', 'codigo_razon_social', 'nombre')
 
-            context = {
-                'section_title': 'Actualizar Proforma',
-                'button_text': 'Actualizar',
-                'form': form,
-                'detalle': detalle,
-                'razonsocial': razonsocial,
-                'cliente': cliente,
-                'mensaje': 'Proforma actualizada con exito'}
-
-            return render_to_response(
-                'clientes/create.html',
-                context,
-                context_instance=RequestContext(request))
+            # context = {
+            #     'section_title': 'Actualizar Proforma',
+            #     'button_text': 'Actualizar',
+            #     'form': form,
+            #     'detalle': detalle,
+            #     'razonsocial': razonsocial,
+            #     'cliente': cliente,
+            #     'mensaje': 'Proforma actualizada con exito'}
+            #
+            # return render_to_response(
+            #     'clientes/create.html',
+            #     context,
+            #     context_instance=RequestContext(request))
+            return HttpResponseRedirect('/clientes/clientes/')
 
         else:
             form = ClienteForm(request.POST)
