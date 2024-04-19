@@ -236,8 +236,8 @@
                                                     <th width="80px">Subtotal</th>
                                                     <th width="60px">Rep?</th>
                                                     <th width="60px">Alm?</th>
-<!--                                                     <th>Foto</th>
- -->                                                    <th width="180px">Observacion</th>
+                                                     <th width="180px">Foto</th>
+                                                     <th width="180px">Observacion</th>
                                                   </tr>
                                                 </thead>
                                                   <tbody>
@@ -273,10 +273,10 @@
                                                     <td>
                                                        <input type="checkbox" id="almacen_kits1" name="almacen_kits1" />
                                                     </td>
-                                                   <!--  <td> 
-                                                  <input type="file" class="form-control" id="imagen_kits1" name="imagen_kits1">
+                                                   <td>
+                                                      <input type="file" class="form-control" id="imagen_kits1" name="imagen_kits1">
 
-                                                   </td> -->
+                                                   </td>
                                                    <td><input type="text" class="form-control" id="observacion_kits1" name="observacion_kits1"></td>
                                                   </tr>
 
@@ -895,7 +895,7 @@ var porcentaje_iva=parseFloat($('#porcentaje_iva').val());
                 nuevaFila+='<td><input type="text" class="form-control" id="total_kits'+num_recetas+'" name="total_kits'+num_recetas+'" readonly="readonly"></td>';
                  nuevaFila+='<td><input type="checkbox" id="reparacion_kits'+num_recetas+'" name="reparacion_kits'+num_recetas+'" ></td>';
                   nuevaFila+='<td><input type="checkbox" id="almacen_kits'+num_recetas+'" name="almacen_kits'+num_recetas+'" ></td>';
-                     // nuevaFila+='<td><input type="file" class="form-control" id="imagen_kits'+num_recetas+'" name="imagen_kits'+num_recetas+'" ></td>';
+                      nuevaFila+='<td><input type="file" class="form-control" id="imagen_kits'+num_recetas+'" name="imagen_kits'+num_recetas+'" ></td>';
                 nuevaFila+='<td><input type="text" class="form-control" id="observacion_kits'+num_recetas+'" name="observacion_kits'+num_recetas+'" ></td>';
                 nuevaFila+='</tr>';
 
