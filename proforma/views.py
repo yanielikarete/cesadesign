@@ -176,7 +176,8 @@ def ProformaCreateView(request):
                                 # if (len(request.POST["imagen_kits"+str(i)])) != 0:
                                 #     print('prueba'+str(contador))
 
-                                proformadetalle.imagen = request.FILES["imagen_kits"+str(i)]
+                                if "imagen_kits" + str(i) in request.FILES:
+                                    proformadetalle.imagen = request.FILES["imagen_kits" + str(i)]
 
                                 proformadetalle.observaciones=request.POST["observacion_kits"+str(i)]
 
