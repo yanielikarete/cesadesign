@@ -1287,7 +1287,7 @@ def index(request,pk):
     proforma=Proforma.objects.get(id=pk)
     subt=proforma.subtotal+proforma.descuento
     cursor = connection.cursor();
-    cursor.execute("select distinct pd.ambiente_id,pd.nombre,pd.cantidad,pd.precio_compra,pd.total,pd.detalle,pd.id,pd.proforma_id  from proforma p,proforma_detalle pd where p.id=pd.proforma_id and (pd.no_producir is NULL or pd.no_producir=False) and p.id="+pk+" ORDER BY pd.id ASC ");
+    cursor.execute("select distinct pd.ambiente_id,pd.nombre,pd.cantidad,pd.precio_compra,pd.total,pd.detalle,pd.id,pd.proforma_id, pd.imagen from proforma p,proforma_detalle pd where p.id=pd.proforma_id and (pd.no_producir is NULL or pd.no_producir=False) and p.id="+pk+" ORDER BY pd.id ASC ");
     row = cursor.fetchall();
 
     anio = Parametros.objects.get(clave='anio_vigente')
