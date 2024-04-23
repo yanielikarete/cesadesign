@@ -182,8 +182,8 @@ def ProformaCreateView(request):
                                 proformadetalle.observaciones=request.POST["observacion_kits"+str(i)]
 
                                 #kits.costo=float(request.POST["costo_kits1"])
-                                proformadetalle.precio_compra=request.POST["costo_kits"+str(i)]
-                                proformadetalle.total=request.POST["total_kits"+str(i)]
+                                proformadetalle.precio_compra=request.POST["costo_kits"+str(i)] if len(request.POST["costo_kits"+str(i)]) > 0 else 0
+                                proformadetalle.total=request.POST["total_kits"+str(i)] if not request.POST["total_kits"+str(i)] == "NaN" else 0
                                 proformadetalle.almacen=request.POST.get('almacen_kits'+str(i), False)
                                 proformadetalle.reparacion=request.POST.get('reparacion_kits'+str(i), False)
                                 proformadetalle.save()
@@ -515,8 +515,9 @@ def ProformaAprobarByPkView(request, pk):
 
     objetos = Proforma.objects.filter(id= pk)
     for obj in objetos:
-        obj.aprobada = True
-        obj.save()
+        if obj.total > 0:
+            obj.aprobada = True
+            obj.save()
 
     return HttpResponseRedirect('/proforma/proformaAprobar')
 
