@@ -804,6 +804,11 @@ $('input:radio[name="tipo_lugar"]').filter('[value="'+data['tipo_lugar']+'"]').a
                          $('#id_proforma option[value='+data['id']+']').attr('selected','selected');
 $("#id_proforma_codigo").val(codigo_reunion);
                          $("#id_fecha").val(data['fecha']);
+                         const fechaInput = $("#id_fecha");
+                         const fechaEntregaInput = $("#id_fechaentrega");
+                         const fecha = new Date(fechaInput.val());
+                          const fechaEntrega = new Date(fecha.getTime() + 120 * 24 * 60 * 60 * 1000);
+                          fechaEntregaInput.val(fechaEntrega.toISOString().slice(0, 10));
                           $("#id_condiciones_fisicas").val(data['descripcion']);
                          $("#id_fuera_ciudad").val(data['fuera_ciudad']);
                           $("#id_tiempo_respuesta").val(data['tiempo_respuesta']);

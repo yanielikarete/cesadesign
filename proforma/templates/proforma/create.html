@@ -580,6 +580,11 @@ $('#tabla4').DataTable();
     $(".parsley-errors-list").css('display','none');
 $('#id_fecha').datepicker({todayHighlight:true,autoclose:true,format:'yyyy-mm-dd'});
       $('#id_fechapedido').datepicker({todayHighlight:true,autoclose:true,format:'yyyy-mm-dd'});
+      const fechaInput = $("#id_fecha");
+      const fechaEntregaInput = $("#id_fechapedido");
+      const fecha = new Date(fechaInput.val());
+      const fechaEntrega = new Date(fecha.getTime() + 120 * 24 * 60 * 60 * 1000);
+      $('#id_fechapedido').val(fechaEntrega.toISOString().slice(0, 10));
 cargarAbreviatura();
 
 $('#id_fecha').change(
