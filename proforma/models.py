@@ -1,5 +1,5 @@
 from django.db import models
-from os.path import basename
+# from os.path import basename
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
@@ -11,6 +11,8 @@ from vendedor.models import *
 from inventario.models import *
 from reunion.models import *
 from datetime import datetime    
+
+from django.core.exceptions import ValidationError
 
 
 # Create your models here.
@@ -129,6 +131,10 @@ class CotizacionProformaDetalle(models.Model):
 
 
 class Proforma(models.Model):
+    def validate_numero(value):
+        if not value.isdigit():
+            raise ValidationError("Solo se permiten numeros.")
+        
     codigo = models.CharField(max_length=250, blank=True)
     fecha = models.DateField(default=datetime.now,blank=True, null=True)
     cliente = models.ForeignKey(Cliente, blank=True, null=True)
@@ -184,7 +190,7 @@ class Proforma(models.Model):
     updated_at = models.DateTimeField(blank=True, null=True)
     ambiente = models.CharField(max_length=250, blank=True)
     fuera_ciudad = models.BooleanField()
-    tiempo_respuesta = models.CharField(max_length=250, blank=True)
+    tiempo_respuesta = models.CharField(max_length=250, blank=True, validators=[validate_numero])
     vendedor = models.ForeignKey(Vendedor, blank=True, null=True)
     observacion= models.TextField(blank=True)
     forma_pago =models.ForeignKey(FormaPago, blank=True, null=True)
@@ -211,6 +217,10 @@ class Proforma(models.Model):
     class Meta:
         managed = False
         db_table = 'proforma'
+
+    
+
+
 
 class ProformaDetalle(models.Model):
     proforma = models.ForeignKey(Proforma, blank=True, null=True)
