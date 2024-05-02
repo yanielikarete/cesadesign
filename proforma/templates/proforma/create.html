@@ -80,8 +80,7 @@
     width: 120px;
   }
 </style>
-<form id="formulario" method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {%
-  csrf_token %}
+<form id="formulario" method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
   {{ form.title.errors }}
   <div class="row">
     <!-- begin col-6 -->
