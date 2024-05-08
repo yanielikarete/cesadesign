@@ -420,10 +420,11 @@ class ProformaUpdateView(ObjectUpdateView):
             'mensaje':'Proforma actualizada con exito'}
 
 
-            return render_to_response(
-                'proforma/actualizar.html',
-                context,
-                context_instance=RequestContext(request))
+            # return render_to_response(
+            #     'proforma/actualizar.html',
+            #     context,
+            #     context_instance=RequestContext(request))
+            return HttpResponseRedirect('/proforma/consultarproforma/')
         else:
 
             proforma_form=ProformaForm(request.POST)

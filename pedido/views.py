@@ -314,10 +314,11 @@ class PedidoUpdateView(ObjectUpdateView):
             'mensaje':'Pedido actualizada con exito'}
 
 
-            return render_to_response(
-                'pedido/actualizar.html',
-                context,
-                context_instance=RequestContext(request))
+            # return render_to_response(
+            #     'pedido/actualizar.html',
+            #     context,
+            #     context_instance=RequestContext(request))
+            return HttpResponseRedirect('/pedido/pedido/')
         else:
 
             pedido_form=PedidoForm(request.POST)
