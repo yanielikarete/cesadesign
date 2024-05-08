@@ -652,6 +652,15 @@
           }
     });
 
+    $('#id_fechapedido').on('change', function (r) {
+      if (!new Date($('#id_fechapedido').val()) > new Date($('#id_fecha').val())) {
+        alert("La fecha de entrega debe ser mayor que la fecha.")
+      }
+      var diff = new Date($('#id_fechapedido').val()) - new Date($('#id_fecha').val());
+      var diffDays = Math.ceil(diff / (1000 * 3600 * 24));
+      $('#id_tiempo_respuesta').val(diffDays);
+    })
+
     $('#id_fecha').change(
       function () {
 
