@@ -80,6 +80,7 @@
     width: 120px;
   }
 </style>
+
 <form id="formulario" method="post" data-parsley-validate="true" name="form-wizard" enctype="multipart/form-data"> {% csrf_token %}
   {{ form.title.errors }}
   <div class="row">
@@ -200,8 +201,8 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="inputEmail3">Observaci&oacute;n</label>
-                        <div>
-                          {% bootstrap_field form.observacion show_label=False %}
+                        <div id="elm1">
+<!--                          {% bootstrap_field form.observacion show_label=False %}-->
                         </div>
                       </div>
                     </div>
@@ -612,6 +613,10 @@
 <script src="{% static 'color_admin/assets/js/apps.min.js' %}"></script>
 <script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/jquery.dataTables.js' %}"></script>
 <script src="{% static 'color_admin/assets/plugins/DataTables-1.9.4/js/data-table.js' %}"></script>
+<!-- Tinymce wysihtml5 js -->
+<script src="{% static 'libs/tinymce/tinymce.min.js' %}"></script>
+<!-- File upload js -->
+<script src="{% static 'js/pages/form-editor.init.js' %}"></script>
 
 <script>
   $(document).ready(function () {
@@ -696,6 +701,22 @@
   });
 </script>
 <script>
+  if(document.getElementById("elm1")){
+                                            tinymce.init({
+                                                selector: 'textarea#elm1',
+                                                height: 350,
+                                                plugins: [
+                                                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                                                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                                                    'insertdatetime', 'media', 'table', 'help', 'wordcount'
+                                                ],
+                                                toolbar: 'undo redo | blocks | ' +
+                                                    'bold italic backcolor | alignleft aligncenter ' +
+                                                    'alignright alignjustify | bullist numlist outdent indent | ' +
+                                                    'removeformat | help',
+                                                content_style: 'body { font-family:"Poppins",sans-serif; font-size:16px }'
+                                            });
+                                            }
   $(document).ready(function () {
 
     $("#id_cliente").change(function () {

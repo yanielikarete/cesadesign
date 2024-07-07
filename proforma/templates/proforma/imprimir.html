@@ -249,7 +249,11 @@
         <br />
         <br />
         <span><strong>Validez del Presupuesto</strong><span style="color: red;"> 30 dias</span></span>
-
+        {% if proforma.hasObservacion %}
+            {% for linea in proforma.parragrahs %}
+                <p>{{ linea }}</p>
+            {% endfor %}
+        {% else %}
         <p class="notas"><b>Diseño de Mobiliario:</b>
             <br>
             Para el caso de algunos muebles complejos o de disenos que tendrán variaciones a las imagenes. Cesa Design
@@ -321,7 +325,7 @@
         En caso de que no se vayan a trabajar cliente podrá retirar el mobiliario con su personal y transporte o podemos
         ofrecer el servicio de entrega por 550 más iva dentro de condiciones normales.
         </p>
-
+        {% endif %}
     </div>
     <div class="foot">
         <br><br><br>

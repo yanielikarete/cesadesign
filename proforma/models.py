@@ -15,6 +15,7 @@ from datetime import datetime
 from django.core.exceptions import ValidationError
 
 
+
 # Create your models here.
 class CotizacionProforma(models.Model):
     codigo = models.CharField(max_length=250, blank=True)
@@ -190,7 +191,7 @@ class Proforma(models.Model):
     updated_at = models.DateTimeField(blank=True, null=True)
     ambiente = models.CharField(max_length=250, blank=True)
     fuera_ciudad = models.BooleanField()
-    tiempo_respuesta = models.CharField(max_length=250, blank=True, validators=[validate_numero])
+    tiempo_respuesta = models.CharField(max_length=250, blank=True)
     vendedor = models.ForeignKey(Vendedor, blank=True, null=True)
     observacion= models.TextField(blank=True)
     forma_pago =models.ForeignKey(FormaPago, blank=True, null=True)
@@ -233,6 +234,7 @@ class ProformaDetalle(models.Model):
     medida = models.CharField(max_length=255, blank=True)
     imagen = models.ImageField(null=True,blank=True,upload_to = "imagenes/proforma_detalle/")
     observaciones = models.CharField(max_length=255, blank=True)
+    # observaciones = models.CharField(max_length=255, blank=True)
     created_by = models.CharField(max_length=255, blank=True)
     updated_by = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(blank=True, null=True)

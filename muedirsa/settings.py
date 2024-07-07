@@ -70,7 +70,7 @@ INSTALLED_APPS = (
     'bancos',
     'mantenimiento',
     'ats',
-    'ajustes',
+    'ajustes'
 )
 
 MIDDLEWARE_CLASSES = (

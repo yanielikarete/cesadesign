@@ -331,6 +331,7 @@ class ProformaUpdateView(ObjectUpdateView):
 
     def post(sel, request, *args, **kwargs):
         proforma = Proforma.objects.get(id=kwargs['pk'])
+
         proforma_form = ProformaForm(request.POST,request.FILES,instance=proforma)
         p_id=kwargs['pk']
         print(p_id)
@@ -438,10 +439,12 @@ class ProformaUpdateView(ObjectUpdateView):
             'detalle':detalle,
             'mensaje':'Proforma actualizada con exito'}
 
-        return render_to_response(
-            'proforma/actualizar.html',
-            context,
-            context_instance=RequestContext(request))
+        # return render_to_response(
+        #     'proforma/actualizar.html',
+        #     context,
+        #     context_instance=RequestContext(request))
+
+        return render(request, 'proforma/actualizar.html', context)
 
 
 
@@ -1330,8 +1333,14 @@ def index(request,pk):
             ambientes.append(r)
             x = x + 1
 
+    proforma.hasObservacion = len(proforma.observacion.strip()) > 0
+    # proforma.parragrahs = proforma.observacion.split('\n')
+    parragrahs = proforma.observacion.split('\n')
+    for parragrah in parragrahs:
+        if len(parragrah.strip()) == 0:
+            parragrahs.remove(parragrah)
 
-
+    proforma.parragrahs = parragrahs
 
 
     html = render_to_string('proforma/imprimir.html', {'pagesize':'A4','proforma':proforma,'subt':subt,'row':row,'anio':anio_vigente,'ambiente':ambientes,'media_root':settings.MEDIA_ROOT}, context_instance=RequestContext(request))

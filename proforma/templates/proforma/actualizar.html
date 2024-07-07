@@ -241,11 +241,11 @@
                                                     </td>
                                                      <td ><select class="form-control" name="ambientes_kits{{ forloop.counter }}" id="ambientes_kits{{ forloop.counter }}">
                                                          {% for am  in ambientes %}
-                                                           <option value="{{ am.id }}"
-                                                           {% if kit.ambiente_id == am.id %}
-                                                           selected="selected" 
-                                                           {% endif %}
-                                                           > {{ am.descripcion }}</option>
+                                                           <option value="{{ am.id }}"> {{ am.descripcion }}</option>
+<!--                                                           {% if kit.ambiente_id == am.id %}-->
+<!--                                                           selected="selected" -->
+<!--                                                           {% endif %}-->
+
                                                         {% endfor %} 
                                                      </select>
                                                     </td>
@@ -262,13 +262,12 @@
                                                     <td><input type="text" class="form-control" id="costo_kits{{ forloop.counter }}" name="costo_kits{{ forloop.counter }}" value="{{ kit.precio_compra }}" onkeyup="actualizarCosto({{ forloop.counter }})" required="required"></td>
                                                     <td><input type="text" class="form-control" id="total_kits{{ forloop.counter }}" name="total_kits{{ forloop.counter }}" value="{{ kit.total }}" readonly="readonly"></td>
                                                      <td>
-                                                       <input type="checkbox" id="reparacion_kits{{ forloop.counter }}" name="reparacion_kits{{ forloop.counter }}"  {% if kit.reparacion == True %}
-                                                           checked="checked"
-                                                           {% endif %}/>                                                    </td>
+                                                       <input type="checkbox" id="reparacion_kits{{ forloop.counter }}" name="reparacion_kits{{ forloop.counter }}" checked="checked"   />
+<!--&lt;!&ndash;                                                              {% if kit.reparacion == True %}&ndash;&gt;-->
+<!--                                                           checked="checked"-->
+<!--&lt;!&ndash;                                                           {% endif %}                                                  </td>&ndash;&gt;-->
                                                     <td>
-                                                       <input type="checkbox" id="almacen_kits{{ forloop.counter }}" name="almacen_kits{{ forloop.counter }}" {% if kit.almacen == True %}
-                                                           checked="checked"
-                                                           {% endif %} />
+                                                       <input type="checkbox" id="almacen_kits{{ forloop.counter }}" name="almacen_kits{{ forloop.counter }}" checked="checked" />
                                                     </td>
                                                     <td><input type="text" class="form-control" id="codigo_produccion_kits{{ forloop.counter }}" name="codigo_produccion_kits{{ forloop.counter }}" value="{{ kit.codigo_produccion }}"></td>
                                                     <td> 
@@ -457,7 +456,7 @@
                 </div>
             </div>
         </div>
-      
+
      <p class="text-center">
 
                                     <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-cog"></i> Guardar</button>
