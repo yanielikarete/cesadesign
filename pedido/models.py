@@ -59,6 +59,7 @@ class Pedido(models.Model):
     porcentaje_iva = models.FloatField(blank=True, null=True)
     finalizar_maqueteado = models.BooleanField(default=False)
     proforma = models.ForeignKey(Proforma, blank=True, null=True)
+    saldo = models.FloatField(blank=True, null=True)
     class Meta:
         managed = False
         db_table = 'pedido'

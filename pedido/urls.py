@@ -7,8 +7,14 @@ urlpatterns = patterns('',
 
     url(
         r'^pedido/$',
-        'pedido.views.PedidoListView',
+            'pedido.views.PedidoListView',
         name='pedido-list',
+    ),
+
+url(
+         r'^pedido/(?P<pk>\d+)/actualizarsaldo',
+         'pedido.views.actualizar_saldo',
+         name='pedido-actualizar-saldo',
     ),
 
    url(
@@ -144,3 +150,4 @@ url(
 
 
                        )
+

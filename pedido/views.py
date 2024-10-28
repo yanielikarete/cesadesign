@@ -1269,7 +1269,7 @@ def pedido_api_view(request):
         _order_dir=request.GET['order[0][dir]']
         cursor = connection.cursor()
         #sql="  select m.id,t.descripcion,m.fecha_emision,m.numero_comprobante,m.paguese_a,p.ruc,td.descripcion,m.numero_cheque,b.nombre,m.monto_cheque,m.monto,m.descripcion,m.activo,m.conciliacion_id from movimiento m left join proveedor p on p.proveedor_id=m.proveedor_id left join tipo_documento td on td.id=m.tipo_documento_id and td.id=1 left join tipo_anticipo t on t.id=m.tipo_anticipo_id and t.id=1 left join banco b on b.id=m.banco_id where m.tipo_anticipo_id=1 and m.tipo_documento_id=1 "
-        sql="select p.id,p.codigo,p.fecha,c.nombre_cliente,p.subtotal,p.porcentaje_descuento,p.descuento,p.iva,p.total,p.proforma_codigo,p.abreviatura_codigo,p.anulada,p.aprobada,p.finalizar_maqueteado from pedido p left join cliente c on c.id_cliente=p.cliente_id left join proforma pr on pr.id=p.proforma_id where 1=1 "
+        sql="select p.id,p.codigo,p.fecha,c.nombre_cliente,p.subtotal,p.porcentaje_descuento,p.descuento,p.iva,p.total,p.proforma_codigo,p.abreviatura_codigo,p.anulada,p.aprobada,p.finalizar_maqueteado, COALESCE(p.saldo, 0) AS saldo  from pedido p left join cliente c on c.id_cliente=p.cliente_id left join proforma pr on pr.id=p.proforma_id where 1=1 "
         if _search_value:
             sql+=" and ( UPPER(p.codigo) like '%"+_search_value+"%' or UPPER(c.nombre_cliente) like '%"+_search_value.upper()+"%' or CAST(p.porcentaje_descuento as VARCHAR)  like '%"+_search_value.upper()+"%'  or CAST(p.descuento as VARCHAR)  like '%"+_search_value.upper()+"%'  or CAST(p.iva as VARCHAR)  like '%"+_search_value.upper()+"%' or CAST(p.subtotal as VARCHAR)  like '%"+_search_value.upper()+"%' or CAST(p.total as VARCHAR)  like '%"+_search_value.upper()+"%' or CAST(p.fecha as VARCHAR)  like '%"+_search_value+"%' or UPPER(p.proforma_codigo) like '%"+_search_value.upper()+"%' or UPPER(p.abreviatura_codigo) like '%"+_search_value.upper()+"%'"
         
@@ -1331,6 +1331,7 @@ def pedido_api_view(request):
             compras_obj.append(o[5])
             compras_obj.append(o[6])
             compras_obj.append(o[7])
+            compras_obj.append(o[14])
             compras_obj.append(o[8])
             codigo=str(o[10])+'-'+str(o[9])
             compras_obj.append(codigo)
@@ -1353,6 +1354,7 @@ def pedido_api_view(request):
                     
             html+='<a href="http://'+str( request.META['HTTP_HOST'])+'/pedido/imprimir/'+str(o[0])+'/" style="" target="_blank"><button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Imprimir</button></a>'
             html+='<a href="http://'+str( request.META['HTTP_HOST'])+'/pedido/imprimirValores/'+str(o[0])+'/" style="" target="_blank"><button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Imprimir Valores</button></a>'
+            html+='<button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#quantityModal" data-product-id="'+str(o[0])+'"><i class="fa fa-cog"></i> Act. Totales</button>'
             
                    
             
@@ -1369,3 +1371,14 @@ def pedido_api_view(request):
     else:
         raise Http404
     return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+def actualizar_saldo(request):
+    if request.method == 'POST':
+        pedido_id = request.POST.get('pedido_id')
+        cantidad = request.POST.get('cantidad')
+        # try:
+        pedido = Pedido.objects.get(id=pedido_id)
+        pedido.saldo += cantidad
+        pedido.save()
+        return HttpResponse('lista_pedidos', 200)  # Redirige a una vista de lista de pedidos o cualquier otra vista
+    return HttpResponse("Pedido no encontrado", status=404)

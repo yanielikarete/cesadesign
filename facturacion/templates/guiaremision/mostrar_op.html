@@ -6,7 +6,7 @@
 
 	<div class="panel panel-default-grey">
 	    <div class="panel-heading">
-	        <h3 class="panel-title">Productos </h3>
+	        <h3 class="panel-title">Productos Yaniel</h3>
 	    </div>
 	    <div class="panel-body">
 	        <div class="ingresos">
@@ -22,22 +22,22 @@
 					</thead>
 					<tbody id="tdetalle_ingreso">
 
-                                                  {% if row %}
-                                                    {% for kit  in row %}
+						  {% if row %}
+							{% for kit  in row %}
 
-                                                  <tr>
-                                                    <td><a class="btn btn-danger remove_fields"  onclick="agregarProducto('{{ kit.1 }}','{{ kit.2 }}','{{ kit.3 }}','{{ kit.4 }}','{{ kit.0}}','{{ kit.6}}','{{ kit.7}}')">
-                                                        <i class=" glyphicon glyphicon-plus icon-white"></i>
-                                                      </a>
-                                                    </td>
-													  <td>{{ kit.2}}</td>
-                                                     <td>{{ kit.3}}</td>
+						  <tr>
+							<td><a class="btn btn-danger remove_fields"  onclick="agregarProducto('{{ kit.1 }}','{{ kit.2 }}','{{ kit.3}}','{{ kit.0}}','{{ kit.4}}','{{ kit.5}}', 0)">
+								<i class=" glyphicon glyphicon-plus icon-white"></i>
+							  </a>
+							</td>
+							  <td>{{ kit.2}}</td>
+							 <td>{{ kit.3}}</td>
 
-                                                  </tr>
-                                                        {% endfor %}
+						  </tr>
+								{% endfor %}
 
 
-                                                   {% endif %}
+						   {% endif %}
 
 
 					</tbody>
@@ -205,7 +205,8 @@ actualizarTotal();
                     }
                 });
     }
-    function agregarProducto(id,descripcion,cantidad,bodega,documento,valor,codigo) {
+    function agregarProducto(id,descripcion,cantidad,documento,valor,codigo, bodega = 0) {
+    	debugger;
 		var num_recetas=$('#columnas_receta').val();
 		var producto_tabla;
 		var bodega_tabla;
@@ -213,10 +214,6 @@ actualizarTotal();
 				 for (i = 1; i <= num_recetas; i++) {
 					 producto_tabla = $('#id_kits' + i).val();
 					  bodega_tabla = $('#bodega_kits' + i).val();
-					 //alert(producto_tabla);
-					 //alert(bodega_tabla);
-					 //alert(id);
-					 //alert(bodega);
 
 					 if (producto_tabla==id && bodega_tabla==bodega){
 					 	cont++;
@@ -253,6 +250,6 @@ actualizarTotal();
 		 	alert('Ya ingreso en el detalle ese item');
 		 }
 		 
-		  actualizarTotal();
+		  //actualizarTotal();
 	}
         </script>
