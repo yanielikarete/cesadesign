@@ -13,7 +13,7 @@ urlpatterns = patterns('',
 
 url(
          r'^pedido/(?P<pk>\d+)/actualizarsaldo',
-         'pedido.views.actualizar_saldo',
+         'pedido.views.actualizarsaldo',
          name='pedido-actualizar-saldo',
     ),
 

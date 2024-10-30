@@ -215,7 +215,7 @@
 
 
 	function detalledeCompra(id){
-          $.ajax({
+			  $.ajax({
                 url: "/config/obtenerDetalleCompra/", // the endpoint
                 type : "POST", // http method
                 data : { id : id,'csrfmiddlewaretoken': '{{ csrf_token }}'}, 
@@ -242,38 +242,46 @@
 	<script type="text/javascript">
 		$('#acceptButton').on('click', function() {
 			const quantity = $('#quantityInput').val(); // Obtener la cantidad entrada en el input
-			const productId = $(this).data('product-id'); // Get the product ID from the button
+			const pedidoId = $(this).data('product-id'); // Get the product ID from the button
+			const totalP = $(this).data('total-p'); // Get the product ID from the button
+
 			if (quantity == "" || quantity.trim() == "") {
 				alert("Debe entrar una cantidad");
 				return;
 			}
 
-			// Here you can handle the logic to subtract the quantity from the total
-			console.log(`Product ID: ${productId}, Quantity: ${quantity}`);
+			if (parseFloat(quantity) > parseFloat(totalP)) {
+				alert("El valor entrado excede la cantidad pendiente (" + totalP + ") para alcanzar el total");
+				$('#quantityInput').focus();
+			} else {
+				// Here you can handle the logic to subtract the quantity from the total
+				console.log(`Pedido ID: ${pedidoId}, Quantity: ${quantity}`);
 
-			$.ajax({
-                url: "/pedido/pedido/" + productId + "/actualizarsaldo", // the endpoint
-                type : "POST", // http method
-                data : { cantidad : quantity},
-                success:function(data){
-
-                  $("#detalle tr").remove();
-
-                  $("#detalle").append(data);
-                },
-                error: function(){
-
-                },
-              });
-
-			// Cerrar el modal
-			$('#quantityModal').modal('hide');
+				$.ajax({
+					url: "/pedido/pedido/" + pedidoId + "/actualizarsaldo", // the endpoint
+					type : "POST", // http method
+					data : {
+						cantidad : quantity,
+						'csrfmiddlewaretoken': '{{ csrf_token }}'
+					},
+					success:function(data){
+						// Cerrar el modal
+						$('#quantityModal').modal('hide');
+						location.reload();
+					},
+					error: function(){
+						console.log('Error', error);
+					},
+			  	});
+			}
 		});
 
 		 $('#quantityModal').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget); // Botón que abrió el modal
 			var productId = button.data('productId'); // Extraer información del atributo data-row
+			var totalP = button.data('pendiente')
 			$('#acceptButton').data('product-id', productId);
+			$('#acceptButton').data('total-p', totalP);
 		});
     </script>
 {% endblock %}

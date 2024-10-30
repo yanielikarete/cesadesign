@@ -64,6 +64,21 @@ def PedidoListView(request):
 
     return render_to_response('pedido/index.html', {'pedidos': pedido}, RequestContext(request))
 
+#=====================================================#
+
+def actualizarsaldo(request, pk):
+    if request.method == 'POST':
+        # pedido_id = request.POST.get('pedido_id')
+        cantidad = request.POST.get('cantidad')
+        pedido = Pedido.objects.get(id=pk)
+        # validar que saldo nunca sea mayor que el total
+        if pedido.saldo is None:
+            pedido.saldo = float(cantidad)
+        else:
+            pedido.saldo += float(cantidad)
+        pedido.save()
+        return HttpResponse('pedido-list', 200)  # Redirige a una vista de lista de pedidos o cualquier otra vista
+
 
 #=====================================================#
 class PedidoDetailView(ObjectDetailView):
@@ -1354,7 +1369,7 @@ def pedido_api_view(request):
                     
             html+='<a href="http://'+str( request.META['HTTP_HOST'])+'/pedido/imprimir/'+str(o[0])+'/" style="" target="_blank"><button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Imprimir</button></a>'
             html+='<a href="http://'+str( request.META['HTTP_HOST'])+'/pedido/imprimirValores/'+str(o[0])+'/" style="" target="_blank"><button type="button" class="btn btn-info btn-xs"><i class="fa fa-cog"></i> Imprimir Valores</button></a>'
-            html+='<button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#quantityModal" data-product-id="'+str(o[0])+'"><i class="fa fa-cog"></i> Act. Totales</button>'
+            html+='<button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#quantityModal" data-pendiente="'+str(float(o[8])-float(o[14]))+'" data-product-id="'+str(o[0])+'"><i class="fa fa-cog"></i> Act. Totales</button>'
             
                    
             
@@ -1372,13 +1387,4 @@ def pedido_api_view(request):
         raise Http404
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
-def actualizar_saldo(request):
-    if request.method == 'POST':
-        pedido_id = request.POST.get('pedido_id')
-        cantidad = request.POST.get('cantidad')
-        # try:
-        pedido = Pedido.objects.get(id=pedido_id)
-        pedido.saldo += cantidad
-        pedido.save()
-        return HttpResponse('lista_pedidos', 200)  # Redirige a una vista de lista de pedidos o cualquier otra vista
-    return HttpResponse("Pedido no encontrado", status=404)
+
