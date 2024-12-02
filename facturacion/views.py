@@ -148,7 +148,10 @@ def GuiaRemisionCreateView(request):
                 new_guia.updated_at = datetime.now()
                 new_guia.total=request.POST["total"]
                 new_guia.puntos_venta_id=request.POST["punto_venta_descripcion"]
-
+                if new_guia.saldo==0:
+                    new_guia.estado='C'
+                else:
+                    new_guia.estado='P'
                 new_guia.save()
                 try:
                     secuencial = Secuenciales.objects.get(modulo='guiaremision')
@@ -1407,17 +1410,17 @@ def MostrarOPView(request):
         #   from orden_produccion_bodega opb,orden_produccion op,producto p where  p.producto_id=opb.producto_id and opb.orden_produccion_id=op.id and opb.ingresado_bodega=true and op.cliente_id='+str(cliente)+' and opb.bodega_id='+str(bodega)+' and opb.cantidad_sobrante>0 ;'
 
         sql = ('''SELECT op.id, p.producto_id,p.descripcion_producto, op.cantidad, op.costo_final,
-                op.costo_final, op.codigo_item, op.cliente_id,op.descripcion
+                op.costo_final, op.codigo_item, op.cliente_id,op.descripcion, op.codigo
                 FROM orden_produccion op
                 INNER JOIN pedido_detalle pd ON op.pedido_detalle_id = pd.id
                 INNER JOIN producto p on pd.producto_id = p.producto_id
                 WHERE op.cliente_id='''+str(cliente)+'''
                 UNION
                 select pb.producto_bodega_id, pb.producto_id,p.descripcion_producto,pb.cantidad, 
-                p.costo,p.costo, p.codigo_producto, p.producto_id, p.descripcion_producto 
+                p.costo,p.costo, p.codigo_producto, p.producto_id, p.descripcion_producto, '0' as codigo
                 from producto p
                 inner join producto_en_bodega pb on p.producto_id=pb.producto_id 
-                where pb.cantidad > 0''')
+                where pb.cantidad > 0''')        
         print(sql)
     else:
         # sql = 'select pb.producto_bodega_id, pb.producto_id,p.descripcion_producto,pb.cantidad, pb.bodega_id,p.precio1,p.costo,p.codigo_producto from producto p,producto_en_bodega pb where p.producto_id=pb.producto_id and pb.cantidad>0 and pb.bodega_id=' + str(bodega) + ';'
