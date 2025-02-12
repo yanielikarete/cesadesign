@@ -10,6 +10,7 @@ from contabilidad.models import *
 from vendedor.models import *
 #from transacciones.models import RegistroDocumento,DocumentoVenta
 from bancos.models import Movimiento,TipoNotaCredito
+from pedido.models import *
 
 # Create your models here.
 #verificar
@@ -50,7 +51,6 @@ class GuiaRemision(models.Model):
     fecha_inicio = models.DateField(default=datetime.now,blank=True, null=True)
     fecha_fin = models.DateField(default=datetime.now,blank=True, null=True)
     tipo_documento = models.CharField(max_length=20,blank=True, null=True)
-    #fecha_emision = models.DateField(default=datetime.now,blank=True, null=True)
     fecha_emision = models.DateField(default=datetime.now)
     nro_autorizacion = models.CharField(max_length=30,blank=True,)
     nro_comprobante = models.CharField(max_length=30,blank=True,)
@@ -96,6 +96,7 @@ class GuiaRemision(models.Model):
     anulada = models.BooleanField(default=False,blank=True)
     total = models.DecimalField(max_digits=18, decimal_places=2)
     facturacion_eletronica = models.BooleanField(default=False,blank=True)
+    pedido = models.ForeignKey(Pedido, blank=True, null=True)
 
     def __unicode__(self):
         return "%s %s %s" % (self.nro_guia, self.fecha_inicio, self.tipo_guia)
@@ -111,7 +112,6 @@ class GuiaDetalle(models.Model):
     nro_documento=models.IntegerField(blank=True,default=0)
     precio_compra = models.DecimalField(max_digits=18, decimal_places=2)
     total = models.DecimalField(max_digits=18, decimal_places=2)
-
 
 
 # class NotaCredito(models.Model):
@@ -171,15 +171,15 @@ class GuiaDetalle(models.Model):
 #     puntos_venta = models.ForeignKey(PuntosVenta, blank=True, null=True)
 #     ruc = models.CharField(max_length=20, blank=True)
 #     bodega = models.ForeignKey(Bodega, blank=True, null=True)
-#     
+#
 #     razon_social = models.ForeignKey(RazonSocial, blank=True, null=True)
 #     factura_codigo = models.CharField(max_length=20, blank=True)
 #     tipo_nota_credito = models.ForeignKey(TipoNotaCredito, blank=True, null=True)
-#     
+#
 #     class Meta:
 #         managed = False
 #         db_table = 'nota_credito'
-# 
+
 # class NotaCreditoDetalle(models.Model):
 #     nota_credito = models.ForeignKey(NotaCredito, blank=True, null=True)
 #     fecha = models.DateTimeField(blank=True, null=True)
@@ -214,7 +214,7 @@ class TipoTransaccion(models.Model):
         managed = False
         db_table = 'tipo_transaccion'
     def __unicode__(self):
-       return self.nombre 
+       return self.nombre
 
 class TransaccionesFormapago(models.Model):
     descripcion = models.CharField(max_length=250, blank=True)

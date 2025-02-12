@@ -133,11 +133,18 @@ class GuiaRemisionDetailView(ObjectDetailView):
 
 @transaction.atomic
 def GuiaRemisionCreateView(request):
-    puntos_venta = ''
+    pedido_id = None
     if request.method == 'POST':
         guiaremision_form=GuiaRemisionForm(request.POST)
 
-
+        request.POST["no_pedido"]
+        
+        try:
+            pedido = Pedido.objects.get(id=request.POST["no_pedido"])
+            pedido_id = pedido.id
+        except:
+            pedido_id = None
+        
         if guiaremision_form.is_valid():
             with transaction.atomic():
                 new_guia=guiaremision_form.save()
@@ -148,10 +155,11 @@ def GuiaRemisionCreateView(request):
                 new_guia.updated_at = datetime.now()
                 new_guia.total=request.POST["total"]
                 new_guia.puntos_venta_id=request.POST["punto_venta_descripcion"]
-                if new_guia.saldo==0:
-                    new_guia.estado='C'
-                else:
-                    new_guia.estado='P'
+                new_guia.pedido_id = pedido_id
+                # if new_guia.saldo==0:
+                #     new_guia.estado='C'
+                # else:
+                #     new_guia.estado='P'
                 new_guia.save()
                 try:
                     secuencial = Secuenciales.objects.get(modulo='guiaremision')
@@ -1401,40 +1409,81 @@ def MostrarOPView(request):
     cliente = request.POST["id_cliente"]
     bodega = request.POST["id_bodega"]
     tipo_guia = request.POST["id_tipo_guia"]
+    pedido = request.POST.get('no_pedido', '').strip()
     cursor = connection.cursor()
+    params = []
     print(tipo_guia)
-    if tipo_guia == '1':
-        # sql = 'select opb.id, opb.producto_id, p.descripcion_producto, opb.cantidad_sobrante, opb.bodega_id,
-        # op.costo_final,op.costo_final,op.codigo_item,opb.medida,opb.orden_produccion_id,opb.cantidad_recibida,opb.ingresado_bodega,
-        # op.cliente_id,op.descripcion
-        #   from orden_produccion_bodega opb,orden_produccion op,producto p where  p.producto_id=opb.producto_id and opb.orden_produccion_id=op.id and opb.ingresado_bodega=true and op.cliente_id='+str(cliente)+' and opb.bodega_id='+str(bodega)+' and opb.cantidad_sobrante>0 ;'
-
-        sql = ('''SELECT op.id, p.producto_id,p.descripcion_producto, op.cantidad, op.costo_final,
-                op.costo_final, op.codigo_item, op.cliente_id,op.descripcion, op.codigo
+    if tipo_guia == '1': 
+        if pedido:
+            # Construir la consulta base
+            sql = """
+                SELECT 
+                    op.id,
+                    p.producto_id,
+                    p.descripcion_producto,
+                    (op.cantidad - COALESCE(SUM(fgd.cantidad), 0)) AS cantidad,
+                    op.costo_final,
+                    op.costo_final,
+                    op.codigo_item,
+                    op.cliente_id,
+                    op.descripcion,
+                    op.codigo
                 FROM orden_produccion op
                 INNER JOIN pedido_detalle pd ON op.pedido_detalle_id = pd.id
-                INNER JOIN producto p on pd.producto_id = p.producto_id
-                WHERE op.cliente_id='''+str(cliente)+'''
-                UNION
-                select pb.producto_bodega_id, pb.producto_id,p.descripcion_producto,pb.cantidad, 
-                p.costo,p.costo, p.codigo_producto, p.producto_id, p.descripcion_producto, '0' as codigo
-                from producto p
-                inner join producto_en_bodega pb on p.producto_id=pb.producto_id 
-                where pb.cantidad > 0''')        
-        print(sql)
+                INNER JOIN producto p ON pd.producto_id = p.producto_id
+                LEFT JOIN facturacion_guiadetalle fgd ON p.producto_id = fgd.producto_id
+                LEFT JOIN facturacion_guiaremision fg ON fgd.guia_id = fg.guia_id AND fg.cliente_id = op.cliente_id
+                WHERE op.cliente_id = %s
+                GROUP BY op.id, p.producto_id, p.descripcion_producto, op.cantidad, op.costo_final, op.codigo_item, op.cliente_id, op.descripcion, op.codigo
+                HAVING (op.cantidad - COALESCE(SUM(fgd.cantidad), 0)) > 0
+            """
+            params.append(cliente)
+            
+            sql += " AND op.pedido_id = %s"
+            params.append(pedido)
+        else:
+            sql = """
+                SELECT 
+                    pb.producto_bodega_id,
+                    pb.producto_id,
+                    p.descripcion_producto,
+                    pb.cantidad,
+                    p.costo,
+                    p.costo,
+                    p.codigo_producto,
+                    p.producto_id,
+                    p.descripcion_producto,
+                    '0' as codigo
+                FROM producto p
+                INNER JOIN producto_en_bodega pb ON p.producto_id = pb.producto_id
+                WHERE pb.cantidad > 0
+            """
+        
     else:
-        # sql = 'select pb.producto_bodega_id, pb.producto_id,p.descripcion_producto,pb.cantidad, pb.bodega_id,p.precio1,p.costo,p.codigo_producto from producto p,producto_en_bodega pb where p.producto_id=pb.producto_id and pb.cantidad>0 and pb.bodega_id=' + str(bodega) + ';'
+        sql = """
+            SELECT 
+                pb.producto_bodega_id,
+                pb.producto_id,
+                p.descripcion_producto,
+                pb.cantidad,
+                p.costo,
+                p.costo,
+                p.codigo_producto,
+                p.producto_id,
+                p.descripcion_producto
+            FROM producto p
+            INNER JOIN producto_en_bodega pb ON p.producto_id = pb.producto_id
+            WHERE pb.cantidad > 0
+            AND pb.bodega_id = %s
+        """
+        params.append(bodega)
+        
+    print(sql)
 
-        sql = '''select pb.producto_bodega_id, pb.producto_id,p.descripcion_producto,pb.cantidad, 
-                p.costo,p.costo, p.codigo_producto, p.producto_id, p.descripcion_producto
-                from producto p
-                inner join producto_en_bodega pb on p.producto_id=pb.producto_id 
-                where pb.cantidad > 0 and pb.bodega_id=''' + str(bodega) + ''';'''
-        print(sql)
 
-
-    cursor.execute(sql)
-    row= cursor.fetchall()
+    cursor.execute(sql, params)
+    row = cursor.fetchall()
+    cursor.close()
 
     if request.method == 'POST':
         return render_to_response('guiaremision/mostrar_op.html',{'row': row,'tipo_guia': tipo_guia}, RequestContext(request))

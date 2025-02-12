@@ -2,6 +2,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from muedirsa.forms import LoginForm
 from django.contrib.auth import authenticate, login
+from muedirsa.models import Empresa
 
 def login_page(request):
 	message= None
@@ -11,8 +12,8 @@ def login_page(request):
 			username= request.POST['username']
 			password= request.POST['password']
 			empresa= request.POST['empresa']
-			user=authenticate(username=username, password=password)
-                        empresa=Empresa.objects
+			empresa = Empresa.objects.get(id=request.POST['empresa'])
+			empresa=Empresa.objects
 			if user is not None:
 				if user.is_active:
 					login(request, user)
