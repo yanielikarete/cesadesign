@@ -115,8 +115,9 @@ input[type="text"],select,input[type="number"]
                             {% bootstrap_field guiaremision_form.tipo_documento show_label=False %}
                             <!-- <div class="col-md-3"> -->
                               <br
-                              <label for="id_no_pedido">No. Pedido</label>
-                              <input type="text" id="id_no_pedido" name="no_pedido" class="form-control">
+                              <label for="no_pedido">No. Pedido</label>
+                              <!-- <input type="text" id="no_pedido" name="no_pedido" class="form-control" placeholder="No. Pedido"> -->
+                              {% bootstrap_field guiaremision_form.pedido show_label=False %}
                             <!-- </div> -->
                             
                           </div>
@@ -692,6 +693,7 @@ function cargarCodigoProducto(id,codigo,descripcion,medida,costo){
             var id_cliente=$("#id_cliente").val();
              var tipo_guia=$('input:radio[name=tipo_guia]:checked').val();
              var bodega=$("#id_bodega").val();
+             var no_pedido=$("#no_pedido").val();
              var mensaje='Debe ingresar: ';
              var cont=0;
             // alert(tipo_guia);
@@ -721,6 +723,7 @@ function cargarCodigoProducto(id,codigo,descripcion,medida,costo){
                      'id_cliente': id_cliente,
                      'id_bodega': bodega,
                      'id_tipo_guia': tipo_guia,
+                     'no_pedido': no_pedido,
 
                      'csrfmiddlewaretoken': '{{ csrf_token }}'
 
