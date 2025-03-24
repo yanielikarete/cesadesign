@@ -42,6 +42,7 @@ from django.views.generic import TemplateView
 from django.forms.extras.widgets import *
 from django.contrib.auth import authenticate, login
 from datetime import datetime, timedelta
+from django.core.serializers.json import DjangoJSONEncoder
 
 import csv
 from django.utils.encoding import *
@@ -9465,4 +9466,201 @@ def obtenerInventarioNuevoContable(request):
     else:
         raise Http404
 
+@csrf_exempt 
+def reporteStatusEntregas(request):
+    clientes = Cliente.objects.values('id_cliente', 'codigo_cliente', 'nombre_cliente')
+    return render_to_response('ordenproduccion/reporteStatusEntregas.html', {'clientes': clientes}, RequestContext(request))
 
+def json_serial(obj):
+    """JSON serializer for objects not serializable by default json code"""
+    if hasattr(obj, 'isoformat'):
+        return obj.isoformat()
+    elif hasattr(obj, 'strftime'):
+        return obj.strftime('%Y-%m-%d %H:%M:%S')
+    raise TypeError ("Type %s not serializable" % type(obj))
+
+@csrf_exempt
+def obtenePedidosCliente(request):
+    cliente_id = request.POST.get('cliente_id')
+
+    if not cliente_id:
+        return HttpResponse(json.dumps({'error': 'Cliente ID es requerido'}),
+                            content_type='application/json',
+                            status=400)
+
+    try:
+        # Convert QuerySet to list of dictionaries
+        pedidos = list(Pedido.objects.filter(cliente_id=cliente_id).values())
+
+        if not pedidos:
+            return HttpResponse(json.dumps({'error': 'No se encontraron pedidos'}),
+                                content_type='application/json',
+                                status=200)
+
+        # Use json_serial function to handle datetime serialization
+        response_data = json.dumps(pedidos, default=json_serial)
+        return HttpResponse(response_data, content_type='application/json')
+
+    except Exception as e:
+        # Catch and log any unexpected errors
+        return HttpResponse(json.dumps({
+            'error': 'Error al procesar la solicitud',
+            'detalle': str(e)
+        }), content_type='application/json', status=500)
+        
+@csrf_exempt
+def obtenerReporteStatusEntregas(request):
+    if request.method == 'POST':
+        cliente_id = request.POST.get('cliente_id')
+        pedido_id = request.POST.get('pedido_id')
+
+        if not cliente_id or not pedido_id:
+            return HttpResponse(json.dumps({'error': 'Cliente ID y Pedido ID son requeridos'}),
+                                content_type='application/json', status=400)
+
+        try:
+            cursor = connection.cursor()
+
+            # Primera consulta: Obtener detalles del pedido
+            sql_pedido = """
+            SELECT p.id, c.nombre_cliente 
+            FROM pedido p
+            INNER JOIN cliente c ON p.cliente_id = c.id_cliente
+            WHERE p.id = %s AND p.cliente_id = %s
+            """
+            cursor.execute(sql_pedido, [pedido_id, cliente_id])
+            pedido = cursor.fetchone()
+
+            if not pedido:
+                return HttpResponse(json.dumps({'error': 'No se encontró el pedido'}),
+                                    content_type='application/json', status=200)
+
+            pedido_data = {
+                'id': pedido[0],
+                'cliente': pedido[1]
+            }
+
+            # Segunda consulta: Obtener guías asociadas al pedido
+            sql_guias = """
+            SELECT fg.fecha_emision, fg.nro_guia, COUNT(op.id) AS items_op, 
+                   p.id, c.nombre_cliente, p.fechapedido 
+            FROM facturacion_guiaremision fg
+            LEFT JOIN pedido p ON fg.pedido_id = p.id
+            LEFT JOIN cliente c ON p.cliente_id = c.id_cliente
+            LEFT JOIN orden_produccion op ON p.id = op.pedido_id
+            WHERE fg.pedido_id = %s AND p.cliente_id = %s
+            GROUP BY fg.fecha_emision, fg.nro_guia, p.id, c.nombre_cliente, p.fechapedido;
+            """
+            cursor.execute(sql_guias, [pedido_id, cliente_id])
+            guias = cursor.fetchall()
+
+            guias_data = [
+                {
+                    'fecha_emision': g[0].strftime('%d/%m/%Y') if g[0] else None,
+                    'nro_guia': g[1],
+                    'items_op': g[2],
+                    'pedido': g[3],
+                    'cliente': g[4],
+                    'fecha_pedido': g[5].strftime('%d/%m/%Y') if g[5] else None
+                }
+                for g in guias
+            ]
+
+            return HttpResponse(json.dumps({'status_pedidos': [pedido_data], 'guias': guias_data}),
+                                content_type='application/json')
+
+        except Exception as e:
+            return HttpResponse(json.dumps({
+                'error': 'Error al procesar la solicitud',
+                'detalle': str(e)
+            }), content_type='application/json', status=500)
+    if request.method == 'POST':
+        cliente_id = request.POST.get('cliente_id')
+        pedido_id = request.POST.get('pedido_id')
+
+        if not cliente_id or not pedido_id:
+            return HttpResponse(json.dumps({'error': 'Cliente ID y Pedido ID son requeridos'}),
+                    content_type='application/json',
+                    status=400)
+
+        try:
+            cursor = connection.cursor()
+
+            # Primera consulta: Obtener detalles del pedido
+            sql_pedido = """
+            SELECT p.id AS pedido,
+                c.nombre_cliente AS cliente
+            FROM pedido p
+            INNER JOIN cliente c ON p.cliente_id = c.id_cliente
+            LEFT JOIN orden_produccion op ON p.id = op.pedido_id
+            LEFT JOIN facturacion_guiaremision fg ON p.id = fg.pedido_id
+            WHERE p.id = %s AND p.cliente_id = %s
+            GROUP BY p.id, c.nombre_cliente
+            """
+            cursor.execute(sql_pedido, [pedido_id, cliente_id])
+            status_pedidos = cursor.fetchone()
+
+            if not status_pedidos:
+                return HttpResponse(json.dumps({'error': 'No se encontró el pedido'}),
+                        content_type='application/json',
+                        status=200)
+
+            # Segunda consulta: Obtener productos asociados al pedido
+            sql_productos = """
+            SELECT
+                fg.fecha_emision,
+                fg.nro_guia,
+                COUNT(op.id) AS items_op,
+                p.id AS pedido,
+                c.nombre_cliente AS cliente,
+                p.fechapedido
+            FROM
+                facturacion_guiaremision fg
+            LEFT JOIN
+                pedido p ON fg.pedido_id = p.id
+            LEFT JOIN
+                cliente c ON p.cliente_id = c.id_cliente
+            LEFT JOIN
+                orden_produccion op ON p.id = op.pedido_id
+            WHERE fg.pedido_id = %s AND p.cliente_id = %s
+            GROUP BY
+                fg.fecha_emision, fg.nro_guia, p.id, c.nombre_cliente, p.fechapedido;
+            """
+            cursor.execute(sql_productos, [pedido_id, cliente_id])
+            guias = cursor.fetchall()
+
+            if not guias:
+                return HttpResponse(json.dumps({'error': 'No se encontró informacion de guias'}),
+                        content_type='application/json',
+                        status=200)
+            else:
+                # Formatear los resultados
+                pedido_data = {
+                'pedido': {
+                    'id': pedido_detalle[0],
+                    'codigo': pedido_detalle[1],
+                    'fecha': pedido_detalle[2],
+                    'estado': pedido_detalle[3],
+                    'cliente': pedido_detalle[4],
+                },
+                'productos': [
+                    {
+                    'producto_id': p[0],
+                    'codigo_producto': p[1],
+                    'descripcion_producto': p[2],
+                    'cantidad': p[3],
+                    'precio_unitario': p[4],
+                    }
+                    for p in productos
+                ]
+                }
+
+                return HttpResponse(json.dumps(pedido_data, default=json_serial),
+                        content_type='application/json')
+
+        except Exception as e:
+            return HttpResponse(json.dumps({
+            'error': 'Error al procesar la solicitud',
+            'detalle': str(e)
+            }), content_type='application/json', status=500)
+        

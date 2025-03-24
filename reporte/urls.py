@@ -667,4 +667,19 @@ url(
                            'reporte.views.obtenerInventarioNuevoContable',
                            name='obtener-inventario-nuevo-contable',
                        ),
-                       )
+                       url(
+                           r'^reporteStatusEntregas/$',
+                           'reporte.views.reporteStatusEntregas',
+                           name='reporte-status-entregas',
+                       ),
+                       url(
+                           r'^obtener_pedidos_cliente/',
+                           'reporte.views.obtenePedidosCliente',
+                           name='obtener_pedidos_cliente',
+                       ),
+                       url(
+                           r'^obtener_reporte_status_entregas/$',
+                           'reporte.views.obtenerReporteStatusEntregas',
+                           name='obtener_reporte_status_entregas',
+                       ),
+)
