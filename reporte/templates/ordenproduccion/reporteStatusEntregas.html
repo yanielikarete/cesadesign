@@ -232,6 +232,14 @@
             },
             success: function(data) {
                 console.log('Data:', data);
+                return data;
+                // Aquí puedes actualizar la tabla con los datos recibidos  
+                // Por ejemplo, puedes usar jQuery para vaciar la tabla y llenarla con los nuevos datos
+                // $('#tabla-reporte tbody').empty();
+                // $.each(data, function(index, item) {──
+                //     $('#tabla-reporte tbody').append('<tr><td>' + item.campo1 + '</td><td>' + item.campo2 + '</td></tr>');
+                // });
+                // $('#tabla-reporte').DataTable().draw(); // Si estás usando DataTables para la tabla
             },
             error: function(xhr, status, error) {
                 console.error('Error al obtener el reporte:', error);
